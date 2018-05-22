@@ -20,16 +20,15 @@ Kubernetes-Saltstack provide an easy way to deploy H/A **Kubernetes Cluster** us
 Let's clone the git repo on Salt-Master and create CA & Certificates on the `certs/` directory using **`CfSSL`** tools:
 
 ```bash
-git clone https://github.com/valentin2105/Kubernetes-Saltstack.git /srv/salt
-ln -s /srv/salt/pillar /srv/pillar
+git clone https://github.com/fjudith/saltstack-kubernetes
+ln -s saltstack-kubernetes/salt /srv/salt
+ln -s saltstack-kubernetes/pillar /srv/pillar
 
-wget -q --show-progress --https-only --timestamping \
-   https://pkg.cfssl.org/R1.2/cfssl_linux-amd64 \
-   https://pkg.cfssl.org/R1.2/cfssljson_linux-amd64
+sudo curl -fsSL -o /usr/local/bin/cfssl https://pkg.cfssl.org/R1.2/cfssl_linux-amd64
+sudo curl -fsSL -o /usr/local/bin/cfssl-certinfo https://pkg.cfssl.org/R1.2/cfssl-certinfo_linux-amd64
+sudo curl -fsSL -o /usr/local/bin/cfssljson https://pkg.cfssl.org/R1.2/cfssljson_linux-amd64
 
-chmod +x cfssl_linux-amd64 cfssljson_linux-amd64
-sudo mv cfssl_linux-amd64 /usr/local/bin/cfssl
-sudo mv cfssljson_linux-amd64 /usr/local/bin/cfssljson
+sudo chmod +x /usr/local/bin/cfssl /usr/local/bin/cfssljson /usr/local/bin/cfssl-certinfo
 ```
 
 ### IMPORTANT Point
@@ -39,7 +38,7 @@ Because we need to generate our own CA and Certificates for the cluster, You MUS
 You can use either public or private names, but they must be registered somewhere (DNS provider, internal DNS server, `/etc/hosts` file).
 
 ```bash
-cd /srv/salt/k8s-certs
+cd /srv/salt/certs
 cfssl gencert -initca ca-csr.json | cfssljson -bare ca
 
 # Don't forget to edit kubernetes-csr.json before this point !
@@ -131,19 +130,19 @@ If you want a small cluster, a Master can be a worker too.
 ```bash
 # Kubernetes Masters
 cat << EOF > /etc/salt/grains
-role: k8s-master
+role: master
 EOF
 
 # Kubernetes Workers
 cat << EOF > /etc/salt/grains
-role: k8s-worker
+role: worker
 EOF
 
 # Kubernetes Master & Workers
 cat << EOF > /etc/salt/grains
 role: 
-  - k8s-master
-  - k8s-worker
+  - master
+  - worker
 EOF
 
 service salt-minion restart 
@@ -153,7 +152,7 @@ After that, you can apply your configuration (`highstate`) :
 
 ```bash
 # Apply Kubernetes Master configurations
-salt -G 'role:k8s-master' state.highstate 
+salt -G 'role:master' state.highstate 
 
 ~# kubectl get componentstatuses
 NAME                 STATUS    MESSAGE              ERROR
@@ -164,7 +163,7 @@ etcd-1               Healthy   {"health": "true"}
 etcd-2               Healthy   {"health": "true"}
 
 # Apply Kubernetes Worker configurations
-salt -G 'role:k8s-worker' state.highstate
+salt -G 'role:worker' state.highstate
 
 ~# kubectl get nodes
 NAME                STATUS    ROLES     AGE       VERSION   EXTERNAL-IP   OS-IMAGE 
@@ -200,7 +199,7 @@ kube-system   monitoring-influxdb-85cb4985d4-rd776    1/1       Running   0     
 If you want to add a node on your Kubernetes cluster, just add the new **Hostname** on `kubernetes-csr.json` and run theses commands :
 
 ```bash
-cd /srv/salt/k8s-certs
+cd /srv/salt/certs
 
 cfssl gencert \
   -ca=ca.pem \
@@ -209,8 +208,8 @@ cfssl gencert \
   -profile=kubernetes \
   kubernetes-csr.json | cfssljson -bare kubernetes
 
-salt -G 'role:k8s-master' state.highstate
-salt -G 'role:k8s-worker' state.highstate
+salt -G 'role:master' state.highstate
+salt -G 'role:worker' state.highstate
 ```
 
 Last `highstate` reload your Kubernetes Master and configure automaticly new Workers.

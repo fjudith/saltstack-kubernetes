@@ -1,0 +1,12 @@
+saltmaster-ubuntu:
+  - master
+
+kubernetes-master-ubuntu:
+  - master01
+  - master02
+  - master03
+
+kubernetes-node-ubuntu:
+  - node01
+  - node02
+  - node03

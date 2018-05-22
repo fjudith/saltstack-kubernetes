@@ -8,10 +8,10 @@
     "master01.domain.tld",
     "master02.domain.tld",
     "master03.domain.tld",
-    "worker01.domain.tld",
-    "worker02.domain.tld",
-    "worker03.domain.tld",
-    "worker04.domain.tld",
+    "node01.domain.tld",
+    "node02.domain.tld",
+    "node03.domain.tld",
+    "node04.domain.tld",
     "127.0.0.1"
   ],
   "key": {

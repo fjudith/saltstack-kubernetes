@@ -4,7 +4,7 @@ base:
     - certs
     - master
   {% endif %}
-  {% if "worker" in grains.get('role', []) %}
+  {% if "node" in grains.get('role', []) %}
     - certs
-    - worker
+    - node
   {% endif %}

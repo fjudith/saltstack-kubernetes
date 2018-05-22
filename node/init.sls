@@ -1,11 +1,11 @@
 {%- set k8sVersion = pillar['kubernetes']['version'] -%}
 {%- set os = salt['grains.get']('os') -%}
-{%- set enableIPv6 = pillar['kubernetes']['worker']['networking']['calico']['ipv6']['enable'] -%}
-{%- set criProvider = pillar['kubernetes']['worker']['runtime']['provider'] -%}
+{%- set enableIPv6 = pillar['kubernetes']['node']['networking']['calico']['ipv6']['enable'] -%}
+{%- set criProvider = pillar['kubernetes']['node']['runtime']['provider'] -%}
 
 include:
-  - worker/cri/{{ criProvider }}
-  - worker/cni
+  - node/cri/{{ criProvider }}
+  - node/cni
 {% if os == "Debian" or os == "Ubuntu" %}
 glusterfs-client:
   pkg.latest
@@ -46,7 +46,7 @@ vm.max_map_count:
 
 /var/lib/kubelet/kubeconfig:
     file.managed:
-    - source: salt://worker/kubeconfig
+    - source: salt://node/kubeconfig
     - user: root
     - template: jinja
     - group: root
@@ -54,7 +54,7 @@ vm.max_map_count:
 
 /etc/systemd/system/kubelet.service:
     file.managed:
-    - source: salt://worker/kubelet.service
+    - source: salt://node/kubelet.service
     - user: root
     - template: jinja
     - group: root
@@ -62,7 +62,7 @@ vm.max_map_count:
 
 /etc/systemd/system/kube-proxy.service:
   file.managed:
-    - source: salt://worker/kube-proxy.service
+    - source: salt://node/kube-proxy.service
     - user: root
     - template: jinja
     - group: root

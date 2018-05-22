@@ -73,12 +73,12 @@ include:
     - group: root
     - mode: 644
 
-{%- set cniProvider = pillar['kubernetes']['worker']['networking']['provider'] -%}
+{%- set cniProvider = pillar['kubernetes']['node']['networking']['provider'] -%}
 {% if cniProvider == "calico" %}
 
 /opt/calico.yaml:
     file.managed:
-    - source: salt://worker/cni/calico/calico.tmpl.yaml
+    - source: salt://node/cni/calico/calico.tmpl.yaml
     - user: root
     - template: jinja
     - group: root

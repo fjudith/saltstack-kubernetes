@@ -1,5 +1,5 @@
-{%- set dockerVersion = pillar['kubernetes']['worker']['runtime']['docker']['version'] -%}
-{%- set dockerdata = pillar['kubernetes']['worker']['runtime']['docker']['data-dir'] -%}
+{%- set dockerVersion = pillar['kubernetes']['node']['runtime']['docker']['version'] -%}
+{%- set dockerdata = pillar['kubernetes']['node']['runtime']['docker']['data-dir'] -%}
 
 {{ dockerdata }}:
   file.directory:
@@ -45,7 +45,7 @@ docker-latest-archive:
 
 /etc/systemd/system/docker.service:
     file.managed:
-    - source: salt://worker/cri/docker/docker.service
+    - source: salt://node/cri/docker/docker.service
     - user: root
     - template: jinja
     - group: root

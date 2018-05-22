@@ -1,5 +1,5 @@
-{%- set calicoCniVersion = pillar['kubernetes']['worker']['networking']['calico']['cni-version'] -%}
-{%- set calicoctlVersion = pillar['kubernetes']['worker']['networking']['calico']['calicoctl-version'] -%}
+{%- set calicoCniVersion = pillar['kubernetes']['node']['networking']['calico']['cni-version'] -%}
+{%- set calicoctlVersion = pillar['kubernetes']['node']['networking']['calico']['calicoctl-version'] -%}
 
 /usr/bin/calicoctl:
   file.managed:
@@ -40,7 +40,7 @@
     - group: root
     - mode: 755
     - require:
-      - sls: worker/cni
+      - sls: node/cni
 
 /opt/cni/bin/calico-ipam:
   file.managed:
@@ -49,25 +49,25 @@
     - group: root
     - mode: 755
     - require:
-      - sls: worker/cni
+      - sls: node/cni
 
 /etc/calico/kube/kubeconfig:
     file.managed:
-    - source: salt://worker/cni/calico/kubeconfig
+    - source: salt://node/cni/calico/kubeconfig
     - user: root
     - template: jinja
     - group: root
     - mode: 640
     - require:
-      - sls: worker/cni
+      - sls: node/cni
 
 /etc/cni/net.d/10-calico.conf:
     file.managed:
-    - source: salt://worker/cni/calico/10-calico.conf
+    - source: salt://node/cni/calico/10-calico.conf
     - user: root
     - template: jinja
     - group: root
     - mode: 644
     - require:
-      - sls: worker/cni
+      - sls: node/cni
 

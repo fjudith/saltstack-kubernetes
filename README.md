@@ -33,7 +33,7 @@ sudo chmod +x /usr/local/bin/cfssl /usr/local/bin/cfssljson /usr/local/bin/cfssl
 
 ### IMPORTANT Point
 
-Because we need to generate our own CA and Certificates for the cluster, You MUST put **every hostnames of the Kubernetes cluster** (Master & Workers) in the `certs/kubernetes-csr.json` (`hosts` field). You can also modify the `certs/*json` files to match your cluster-name / country. (optional)  
+Because we need to generate our own CA and Certificates for the cluster, You MUST put **every hostnames of the Kubernetes cluster** (Master & nodes) in the `certs/kubernetes-csr.json` (`hosts` field). You can also modify the `certs/*json` files to match your cluster-name / country. (optional)  
 
 You can use either public or private names, but they must be registered somewhere (DNS provider, internal DNS server, `/etc/hosts` file).
 
@@ -74,7 +74,7 @@ kubernetes:
     encryption-key: 'w3RNESCMG+o3GCHTUcrCHANGEMEq6CFV72q/Zik9LAO8uEc='
     etcd:
       version: v3.3.5
-  worker:
+  node:
     runtime:
       provider: docker
       docker:
@@ -108,7 +108,7 @@ kubernetes:
 ```
 ##### Don't forget to change hostnames & tokens  using command like `pwgen 64` !
 
-If you want to enable IPv6 on pod's side, you need to change `kubernetes.worker.networking.calico.ipv6.enable` to `true`.
+If you want to enable IPv6 on pod's side, you need to change `kubernetes.node.networking.calico.ipv6.enable` to `true`.
 
 ## Deployment
 
@@ -121,11 +121,11 @@ The configuration is done to use the Salt-Master as the Kubernetes Master. You c
 
 - one or three Kubernetes-Master (Salt-Master & Minion)
 
-- one or more Kubernetes-Workers (Salt-minion)
+- one or more Kubernetes-nodes (Salt-minion)
 
 The Minion's roles are matched with `Salt Grains` (kind of inventory), so you need to define theses grains on your servers :
 
-If you want a small cluster, a Master can be a worker too. 
+If you want a small cluster, a Master can be a node too. 
 
 ```bash
 # Kubernetes Masters
@@ -133,16 +133,16 @@ cat << EOF > /etc/salt/grains
 role: master
 EOF
 
-# Kubernetes Workers
+# Kubernetes nodes
 cat << EOF > /etc/salt/grains
-role: worker
+role: node
 EOF
 
-# Kubernetes Master & Workers
+# Kubernetes Master & nodes
 cat << EOF > /etc/salt/grains
 role: 
   - master
-  - worker
+  - node
 EOF
 
 service salt-minion restart 
@@ -162,15 +162,15 @@ etcd-0               Healthy   {"health": "true"}
 etcd-1               Healthy   {"health": "true"}
 etcd-2               Healthy   {"health": "true"}
 
-# Apply Kubernetes Worker configurations
-salt -G 'role:worker' state.highstate
+# Apply Kubernetes node configurations
+salt -G 'role:node' state.highstate
 
 ~# kubectl get nodes
 NAME                STATUS    ROLES     AGE       VERSION   EXTERNAL-IP   OS-IMAGE 
-k8s-salt-worker01   Ready     <none>     5m       v1.10.1    <none>        Ubuntu 18.04.1 LTS 
-k8s-salt-worker02   Ready     <none>     5m       v1.10.1    <none>        Ubuntu 18.04.1 LTS 
-k8s-salt-worker03   Ready     <none>     5m       v1.10.1    <none>        Ubuntu 18.04.1 LTS 
-k8s-salt-worker04   Ready     <none>     5m       v1.10.1    <none>        Ubuntu 18.04.1 LTS 
+k8s-salt-node01   Ready     <none>     5m       v1.10.1    <none>        Ubuntu 18.04.1 LTS 
+k8s-salt-node02   Ready     <none>     5m       v1.10.1    <none>        Ubuntu 18.04.1 LTS 
+k8s-salt-node03   Ready     <none>     5m       v1.10.1    <none>        Ubuntu 18.04.1 LTS 
+k8s-salt-node04   Ready     <none>     5m       v1.10.1    <none>        Ubuntu 18.04.1 LTS 
 ```
 
 To enable add-ons on the Kubernetes cluster, you can launch the `post_install/setup.sh` script :
@@ -209,16 +209,16 @@ cfssl gencert \
   kubernetes-csr.json | cfssljson -bare kubernetes
 
 salt -G 'role:master' state.highstate
-salt -G 'role:worker' state.highstate
+salt -G 'role:node' state.highstate
 ```
 
-Last `highstate` reload your Kubernetes Master and configure automaticly new Workers.
+Last `highstate` reload your Kubernetes Master and configure automaticly new nodes.
 
 - Tested on Debian, Ubuntu and Fedora.
 - You can easily upgrade software version on your cluster by changing values in `pillar/cluster_config.sls` and apply a `state.highstate`.
 - This configuration use ECDSA certificates (you can switch to `rsa` if needed in `certs/*.json`).
 - You can tweak Pod's IPv4 Pool, enable IPv6, change IPv6 Pool, enable IPv6 NAT (for no-public networks), change BGP AS number, Enable IPinIP (to allow routes sharing of different cloud providers).
-- If you use `salt-ssh` or `salt-cloud` you can quickly scale new workers.
+- If you use `salt-ssh` or `salt-cloud` you can quickly scale new nodes.
 
 
 ## Support on Beerpay

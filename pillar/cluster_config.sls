@@ -19,7 +19,7 @@ kubernetes:
     encryption-key: 'w3RNESCMG+o3GCHTUcrQUUdq6CFV72q/Zik9LAO8uEc='
     etcd:
       version: v3.3.5
-  worker:
+  node:
     runtime:
       provider: docker
       docker:

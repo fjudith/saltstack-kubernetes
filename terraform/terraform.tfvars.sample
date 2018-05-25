@@ -1,0 +1,37 @@
+web_proxy_host = "web-proxy.domain.tld"
+
+organization_key = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+
+secret_key = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+
+region = "par1"
+
+architecture = "x86_64"
+
+image = "Ubuntu Xenial"
+
+ssh_user = "root"
+
+ssh_public_key = "~/.ssh/id_rsa.pub"
+
+ssh_private_key = "~/.ssh/id_rsa.insecure"
+
+ssh_bastion_host = "svc.swiftsure.io"
+
+saltmaster_host = "master.domain.tld"
+
+saltsyndic_host = "syndic.domain.tld"
+
+etcd_instance_count = "1"
+
+etcd_instance_type = "START1-S"
+
+master_instance_count = "1"
+
+master_instance_type = "START1-S"
+
+node_instance_count = "1"
+
+node_instance_type = "START1-M"
+
+proxy_instance_type ="START1-S"

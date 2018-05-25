@@ -1,5 +1,7 @@
-saltmaster-ubuntu:
-  - master
+# kubernetes-etcd-ubuntu:
+#   - etcd01
+#   - etcd02
+#   - etcd03
 
 kubernetes-master-ubuntu:
   - master01

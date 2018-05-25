@@ -53,7 +53,7 @@ resource "scaleway_server" "etcd" {
   }
 
   provisioner "file" {
-    content     = "SALTetcd=${var.saltsyndic_host}"
+    content     = "SALTMASTER=${var.saltsyndic_host}"
     destination = "/tmp/saltmaster.host"
   }
 
@@ -212,21 +212,21 @@ resource "scaleway_server" "proxy0" {
   }
 
   provisioner "file" {
-    content     = "SALTMASTER=${var.saltmaster_host}"
-    destination = "/tmp/saltmaster.host"
+    source      = "lib/install-salt-minion.sh"
+    destination = "/tmp/install-salt-minion.sh"
   }
 
   provisioner "file" {
-    source      = "lib/install-salt-syndic.sh"
-    destination = "/tmp/install-salt-syndic.sh"
+    content     = "SALTMASTER=${var.saltsyndic_host}"
+    destination = "/tmp/saltmaster.host"
   }
 
   provisioner "remote-exec" {
     inline = [
       "echo 'http_proxy=${var.web_proxy_host}' >> /etc/environment",
       "echo 'https_proxy=${var.web_proxy_host}' >> /etc/environment",
-      "chmod +x /tmp/install-salt-syndic.sh",
-      "/tmp/install-salt-syndic.sh",
+      "chmod +x /tmp/install-salt-minion.sh",
+      "/tmp/install-salt-minion.sh",
     ]
   }
 
@@ -268,21 +268,21 @@ resource "scaleway_server" "proxy1" {
   }
 
   provisioner "file" {
-    content     = "SALTMASTER=${var.saltmaster_host}"
-    destination = "/tmp/saltmaster.host"
+    source      = "lib/install-salt-minion.sh"
+    destination = "/tmp/install-salt-minion.sh"
   }
 
   provisioner "file" {
-    source      = "lib/install-salt-syndic.sh"
-    destination = "/tmp/install-salt-syndic.sh"
+    content     = "SALTMASTER=${var.saltsyndic_host}"
+    destination = "/tmp/saltmaster.host"
   }
 
   provisioner "remote-exec" {
     inline = [
       "echo 'http_proxy=${var.web_proxy_host}' >> /etc/environment",
       "echo 'https_proxy=${var.web_proxy_host}' >> /etc/environment",
-      "chmod +x /tmp/install-salt-syndic.sh",
-      "/tmp/install-salt-syndic.sh",
+      "chmod +x /tmp/install-salt-minion.sh",
+      "/tmp/install-salt-minion.sh",
     ]
   }
 }

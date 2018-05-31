@@ -36,7 +36,7 @@ cat << EOF | curl -X POST -H "Authorization: Bearer ${ZT_API_KEY}" -d @- "https:
     "name": "$(hostname)",
     "config": {
         "authorized": true,
-        "noAutoAssignIps": true,
+        "noAutoAssignIps":true,
         "ipAssignments": ["${ZT_IP}"]
     }
 }

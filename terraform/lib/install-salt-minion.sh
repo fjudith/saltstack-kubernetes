@@ -1,8 +1,6 @@
 #!/bin/bash
 set -e
 
-source /tmp/saltmaster.host
-
 sudo apt-get update -y
 sudo apt-get install -y curl wget
 sudo cat << EOF > /etc/apt/sources.list.d/salt.list
@@ -18,7 +16,6 @@ sudo apt-get install -yqq \
     salt-ssh \
     reclass
 
-sudo sed -ri "s/#(master:).*/\1 ${SALTMASTER}/g" /etc/salt/minion
 
 sudo service salt-minion restart
 sudo systemctl enable salt-minion

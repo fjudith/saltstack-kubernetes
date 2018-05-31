@@ -8,3 +8,7 @@ base:
     - certs
     - node
   {% endif %}
+  {% if "etcd" in grains.get('role', []) %}
+    - certs
+    - etcd
+  {% endif %}

@@ -35,3 +35,15 @@ node_instance_count = "1"
 node_instance_type = "START1-M"
 
 proxy_instance_type ="START1-S"
+
+zerotier_api_key = "01234567890123456789012345678901"
+
+zerotier_cidr = "172.16.4.0/24"
+
+etcdIP = "50"
+
+masterIP = "70"
+
+nodeIP = "100"
+
+proxyIP = "40"

@@ -93,3 +93,33 @@ variable "IFACE" {
   description = "Network "
   default     = "web-proxy.domain.tld"
 }
+
+variable "zerotier_api_key" {
+  description = "Zerotier MeshVPN API key"
+  default     = "01234567890123456789012345678901"
+}
+
+variable "zerotier_cidr" {
+  description = "Zerotier MeshVPN subnet CIDR"
+  default     = "172.16.4.0/24"
+}
+
+variable "etcdIP" {
+  description = "Zerotier etcd starting IP"
+  default     = "50"
+}
+
+variable "masterIP" {
+  description = "Zerotier master starting IP"
+  default     = "100"
+}
+
+variable "nodeIP" {
+  description = "Zerotier node starting IP"
+  default     = "200"
+}
+
+variable "proxyIP" {
+  description = "Zerotier proxy starting IP"
+  default     = "40"
+}

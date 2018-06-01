@@ -3,12 +3,12 @@ variable "region" {
   default     = "par1"
 }
 
-variable "organization_key" {
+variable "scaleway_organization" {
   description = "Scaleway access_key"
   default     = "12345678-1234-1234-1234-123456789abc"
 }
 
-variable "secret_key" {
+variable "scaleway_token" {
   description = "Scaleway secret_key"
   default     = "12345678-1234-1234-1234-123456789abc"
 }
@@ -94,16 +94,6 @@ variable "IFACE" {
   default     = "web-proxy.domain.tld"
 }
 
-variable "zerotier_api_key" {
-  description = "Zerotier MeshVPN API key"
-  default     = "01234567890123456789012345678901"
-}
-
-variable "zerotier_cidr" {
-  description = "Zerotier MeshVPN subnet CIDR"
-  default     = "172.16.4.0/24"
-}
-
 variable "etcdIP" {
   description = "Zerotier etcd starting IP"
   default     = "50"
@@ -122,4 +112,14 @@ variable "nodeIP" {
 variable "proxyIP" {
   description = "Zerotier proxy starting IP"
   default     = "40"
+}
+
+variable "zerotier_api_key" {
+  description = "Zerotier MeshVPN API key"
+  default     = "01234567890123456789012345678901"
+}
+
+variable "zerotier_cidr" {
+  description = "Zerotier MeshVPN subnet CIDR"
+  default     = "172.16.4.0/24"
 }

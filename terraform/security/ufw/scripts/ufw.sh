@@ -1,9 +1,10 @@
 #!/bin/bash
 set -e
 
-ZT_NET=$1
-
-apt-get udpate && apt-get install ufw
+sudo apt-get clean -yqq
+sudo apt-get update -yqq
+sudo apt-get install -yqq \
+    ufw
 
 # Allow Incoming connection by default
 sed -i -r 's/^(DEFAULT_INPUT_POLICY=).*/\1"ACCEPT"/g' /etc/default/ufw
@@ -18,6 +19,13 @@ sudo ufw default allow FORWARD
 # Drop All connection after processing all intermediate rules
 sed -i -r 's|^COMMIT|-A ufw-reject-input -j DROP\nCOMMIT|g' /etc/ufw/after.rules
 
+# Allow VPN
+# sudo ufw allow in on ${private_interface} to any port ${vpn_port} # vpn on private interface
+# sudo ufw allow in on ${vpn_interface}
+
+# Allow Kubernetes
+# sudo ufw allow in on ${kubernetes_interface} # Kubernetes pod overlay interface
+
 # Disable Logging
 sudo ufw logging off
 
@@ -25,10 +33,18 @@ sudo ufw logging off
 sudo ufw allow ssh
 
 # Allow Saltstack
-sudo ufw allow salt
+sudo ufw allow 4505
+sudo ufw allow 4506
 
-# Allow HTTPS
+# Allow HTTP and HTTPS
+sudo ufw allow http
 sudo ufw allow https
+
+# Allow Kubernetes API secure port
+sudo ufw allow 6443
 
 # Enable UFW
 sudo ufw --force enable
+
+# Display UFW status
+sudo ufw status verbose

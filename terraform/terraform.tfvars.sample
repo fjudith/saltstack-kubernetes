@@ -1,8 +1,8 @@
 web_proxy_host = "web-proxy.domain.tld"
 
-organization_key = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+organization = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 
-secret_key = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+token = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 
 region = "par1"
 

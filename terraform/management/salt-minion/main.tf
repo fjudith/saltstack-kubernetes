@@ -33,16 +33,8 @@ resource "null_resource" "salt-minion" {
     bastion_private_key = "${file(var.ssh_private_key)}"
   }
 
-  provisioner "file" {
-    source      = "${path.module}/scripts/salt-minion.sh"
-    destination = "/tmp/salt-minion.sh"
-  }
-
   provisioner "remote-exec" {
-    inline = [
-      "chmod +x /tmp/salt-minion.sh",
-      "/tmp/salt-minion.sh",
-    ]
+    script = "${path.module}/scripts/salt-minion.sh"
   }
 
   provisioner "file" {

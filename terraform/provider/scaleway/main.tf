@@ -130,14 +130,15 @@ resource "scaleway_server" "proxy00" {
     inline = [
       "echo 'http_proxy=http://localhost:8888' >> /etc/environment",
       "echo 'https_proxy=http://localhost:8888' >> /etc/environment",
-      "apt-get update",
-      "apt-get install -yq apt-transport-https ufw tinyproxy ${join(" ", var.apt_packages)}",
+      "apt-get update -yqq",
+      "apt-get install -yqq apt-transport-https ufw tinyproxy ${join(" ", var.apt_packages)}",
+      "systemctl enable tinyproxy",
       "echo 'Allow 127.0.0.1' >> /etc/tinyproxy.conf",
       "echo 'Allow 192.168.0.0/16' >> /etc/tinyproxy.conf",
       "echo 'Allow 172.16.0.0/12' >> /etc/tinyproxy.conf",
       "echo 'Allow 10.0.0.0/8' >> /etc/tinyproxy.conf",
-      "systemctl enable tinyproxy",
-      "systemctl start tinyproxy",
+      "systemctl daemon-reload",
+      "systemctl restart tinyproxy",
     ]
   }
 
@@ -191,8 +192,8 @@ resource "scaleway_server" "proxy01" {
 
   provisioner "remote-exec" {
     inline = [
-      "apt-get update",
-      "apt-get install -yq apt-transport-https ufw ${join(" ", var.apt_packages)}",
+      "apt-get update -yqq",
+      "apt-get install -yqq apt-transport-https ufw ${join(" ", var.apt_packages)}",
     ]
   }
 
@@ -238,8 +239,8 @@ resource "scaleway_server" "etcd" {
 
   provisioner "remote-exec" {
     inline = [
-      "apt-get update",
-      "apt-get install -yq apt-transport-https ufw ${join(" ", var.apt_packages)}",
+      "apt-get update -yqq",
+      "apt-get install -yqq apt-transport-https ufw ${join(" ", var.apt_packages)}",
     ]
   }
 
@@ -285,8 +286,8 @@ resource "scaleway_server" "master" {
 
   provisioner "remote-exec" {
     inline = [
-      "apt-get update",
-      "apt-get install -yq apt-transport-https ufw ${join(" ", var.apt_packages)}",
+      "apt-get update -yqq",
+      "apt-get install -yqq apt-transport-https ufw ${join(" ", var.apt_packages)}",
     ]
   }
 
@@ -335,8 +336,8 @@ resource "scaleway_server" "node" {
 
   provisioner "remote-exec" {
     inline = [
-      "apt-get update",
-      "apt-get install -yq apt-transport-https ufw ${join(" ", var.apt_packages)}",
+      "apt-get update -yqq",
+      "apt-get install -yqq apt-transport-https ufw ${join(" ", var.apt_packages)}",
     ]
   }
 
@@ -363,6 +364,19 @@ output "hostnames" {
     "${scaleway_server.etcd.*.name}",
     "${scaleway_server.master.*.name}",
     "${scaleway_server.node.*.name}",
+  ]
+}
+
+output "proxy_hostnames" {
+  value = [
+    "${scaleway_server.proxy00.*.name}",
+    "${scaleway_server.proxy01.*.name}",
+  ]
+}
+
+output "proxy_hostname" {
+  value = [
+    "${scaleway_server.proxy00.*.name}",
   ]
 }
 
@@ -414,4 +428,11 @@ output "proxy01_private_ips" {
 
 output "public_ip" {
   value = ["${scaleway_server.proxy00.*.public_ip}"]
+}
+
+output "public_ips" {
+  value = [
+    "${scaleway_server.proxy00.*.public_ip}",
+    "${scaleway_server.proxy01.*.public_ip}",
+  ]
 }

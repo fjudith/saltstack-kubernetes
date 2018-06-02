@@ -47,3 +47,10 @@ masterIP = "70"
 nodeIP = "100"
 
 proxyIP = "40"
+
+cloudflare_email = "user@domain.tld"
+
+cloudflare_token = "0123456789012345678901234567890134567"
+
+domain = "domain.tld"
+7eb3c7f932777ea8cf743d61ee78472d547cc

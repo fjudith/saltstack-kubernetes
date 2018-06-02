@@ -127,3 +127,15 @@ variable "zerotier_cidr" {
 variable "overlay_cidr" {
   default = "10.96.0.0/16"
 }
+
+variable "cloudflare_email" {
+  default = "user@domain.tld"
+}
+
+variable "cloudflare_token" {
+  default = "01234567890123456789012345678901234567"
+}
+
+variable "domain" {
+  default = "domain.tld"
+}

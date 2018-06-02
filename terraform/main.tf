@@ -1,4 +1,3 @@
-##################################################
 # Scaleway
 ##################################################
 module "provider" {
@@ -13,6 +12,17 @@ module "provider" {
   node_count   = "${var.node_count}"
   node_type    = "${var.node_type}"
   region       = "${var.scaleway_region}"
+}
+
+module "dns" {
+  source = "dns/cloudflare"
+
+  count      = 1
+  email      = "${var.cloudflare_email}"
+  token      = "${var.cloudflare_token}"
+  domain     = "${var.domain}"
+  public_ips = "${module.provider.public_ip}"
+  hostnames  = "${module.provider.proxy_hostname}"
 }
 
 # module "zerotier" {
@@ -50,7 +60,6 @@ module "wireguard" {
 # module "firewall" {
 #   source = "security/ufw"
 
-
 #   count        = "${var.etcd_count + var.master_count + var.node_count + 2}"
 #   bastion_host = "${scaleway_server.proxy00.0.public_ip}"
 #   # vpn_interface        = "${module.wireguard.vpn_interface}"
@@ -59,3 +68,18 @@ module "wireguard" {
 #   connections = "${module.provider.private_ips}"
 # }
 
+output "hostnames" {
+  value = "${module.provider.hostnames}"
+}
+
+output "proxy_hostnames" {
+  value = "${module.provider.proxy_hostnames}"
+}
+
+output "private_ips" {
+  value = "${module.provider.private_ips}"
+}
+
+output "public_ips" {
+  value = "${module.provider.public_ips}"
+}

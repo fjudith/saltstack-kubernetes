@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 
-sudo apt-get update -y
-sudo apt-get install -y curl wget
+sudo apt-get update -yqq
+sudo apt-get install -yqq curl wget
 sudo cat << EOF > /etc/apt/sources.list.d/salt.list
 deb http://repo.saltstack.com/apt/ubuntu/16.04/amd64/2018.3 xenial main
 EOF

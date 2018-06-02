@@ -43,7 +43,7 @@ variable "node_type" {
 }
 
 variable "node_volume_size" {
-  default = 100
+  default = 50
 }
 
 variable "node_count" {

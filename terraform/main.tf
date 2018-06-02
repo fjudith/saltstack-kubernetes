@@ -8,10 +8,10 @@ module "provider" {
   token        = "${var.scaleway_token}"
   etcd_count   = "${var.etcd_count}"
   etcd_type    = "${var.etcd_type}"
-  master_count = "${var.etcd_count}"
-  master_type  = "${var.etcd_type}"
-  node_count   = "${var.etcd_count}"
-  node_type    = "${var.etcd_type}"
+  master_count = "${var.master_count}"
+  master_type  = "${var.master_type}"
+  node_count   = "${var.node_count}"
+  node_type    = "${var.node_type}"
   region       = "${var.scaleway_region}"
 }
 

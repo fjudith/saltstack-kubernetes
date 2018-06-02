@@ -48,14 +48,14 @@ variable "node_type" {
 }
 
 variable "node_volume_size" {
-  default = 100
+  default = 50
 }
 
 variable "node_count" {
   default = 3
 }
 
-variable "proxy_instance_type" {
+variable "proxy_type" {
   default = "START1-S"
 }
 
@@ -113,7 +113,7 @@ resource "scaleway_server" "proxy00" {
   name       = "proxy00"
   image      = "${data.scaleway_image.ubuntu.id}"
   bootscript = "${data.scaleway_bootscript.bootscript.id}"
-  type       = "${var.proxy_instance_type}"
+  type       = "${var.proxy_type}"
   public_ip  = "${element(scaleway_ip.public_ip.*.ip, count.index)}"
   state      = "running"
   tags       = ["proxy", "primary"]
@@ -167,7 +167,7 @@ resource "scaleway_server" "proxy01" {
   name       = "proxy01"
   image      = "${data.scaleway_image.ubuntu.id}"
   bootscript = "${data.scaleway_bootscript.bootscript.id}"
-  type       = "${var.proxy_instance_type}"
+  type       = "${var.proxy_type}"
   state      = "running"
   tags       = ["proxy", "secondary"]
 
@@ -322,7 +322,7 @@ resource "scaleway_server" "node" {
   }
 
   volume {
-    size_in_gb = 50
+    size_in_gb = "${var.node_volume_size}"
     type       = "l_ssd"
   }
 

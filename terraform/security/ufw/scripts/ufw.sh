@@ -6,6 +6,8 @@ sudo apt-get update -yqq
 sudo apt-get install -yqq \
     ufw
 
+ufw --force reset
+
 # Allow Incoming connection by default
 sed -i -r 's/^(DEFAULT_INPUT_POLICY=).*/\1"ACCEPT"/g' /etc/default/ufw
 

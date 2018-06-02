@@ -4,7 +4,7 @@ organization = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 
 token = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 
-region = "par1"
+scaleway_region = "par1"
 
 architecture = "x86_64"
 
@@ -22,17 +22,17 @@ saltmaster_host = "master.domain.tld"
 
 saltsyndic_host = "syndic.domain.tld"
 
-etcd_instance_count = "1"
+etcd_count = "1"
 
-etcd_instance_type = "START1-S"
+etcd_type = "START1-S"
 
-master_instance_count = "1"
+master_count = "1"
 
-master_instance_type = "START1-S"
+master_type = "START1-S"
 
-node_instance_count = "1"
+node_count = "1"
 
-node_instance_type = "START1-M"
+node_type = "START1-M"
 
 proxy_instance_type ="START1-S"
 

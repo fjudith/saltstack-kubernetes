@@ -1,4 +1,4 @@
-variable "region" {
+variable "scaleway_region" {
   description = "Scaleway hosting region: Paris (par1), Amsterdam (ams1)"
   default     = "par1"
 }
@@ -22,23 +22,23 @@ variable "image" {
   default = "Ubuntu Xenial"
 }
 
-variable "etcd_instance_type" {
+variable "etcd_type" {
   default = "START1-XS"
 }
 
-variable "etcd_instance_count" {
+variable "etcd_count" {
   default = 3
 }
 
-variable "master_instance_type" {
+variable "master_type" {
   default = "START1-S"
 }
 
-variable "master_instance_count" {
+variable "master_count" {
   default = 3
 }
 
-variable "node_instance_type" {
+variable "node_type" {
   default = "START1-M"
 }
 
@@ -46,7 +46,7 @@ variable "node_volume_size" {
   default = 100
 }
 
-variable "node_instance_count" {
+variable "node_count" {
   default = 3
 }
 
@@ -122,4 +122,8 @@ variable "zerotier_api_key" {
 variable "zerotier_cidr" {
   description = "Zerotier MeshVPN subnet CIDR"
   default     = "172.16.4.0/24"
+}
+
+variable "overlay_cidr" {
+  default = "10.96.0.0/16"
 }

@@ -22,8 +22,8 @@ sudo ufw default allow FORWARD
 sed -i -r 's|^COMMIT|-A ufw-reject-input -j DROP\nCOMMIT|g' /etc/ufw/after.rules
 
 # Allow VPN
-# sudo ufw allow in on ${private_interface} to any port ${vpn_port} # vpn on private interface
-# sudo ufw allow in on ${vpn_interface}
+sudo ufw allow in on ${private_interface} to any port ${vpn_port} # vpn on private interface
+sudo ufw allow in on ${vpn_interface}
 
 # Allow Kubernetes
 # sudo ufw allow in on ${kubernetes_interface} # Kubernetes pod overlay interface

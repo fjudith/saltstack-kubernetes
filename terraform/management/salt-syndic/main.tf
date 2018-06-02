@@ -38,13 +38,22 @@ resource "null_resource" "salt-minion" {
   }
 
   provisioner "file" {
-    content     = "master: localhost"
-    destination = "/etc/salt/minion.d/master.conf"
+    content = <<EOF
+open_mode: True
+auto_accept: True
+EOF
+
+    destination = "/etc/salt/master.d/auto-accept.conf"
   }
 
   provisioner "file" {
     content     = "syndic_master: ${var.salt_master_host}"
     destination = "/etc/salt/master.d/syndic_master.conf"
+  }
+
+  provisioner "file" {
+    content     = "master: localhost"
+    destination = "/etc/salt/minion.d/master.conf"
   }
 
   provisioner "remote-exec" {

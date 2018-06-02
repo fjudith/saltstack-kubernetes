@@ -128,6 +128,11 @@ variable "overlay_cidr" {
   default = "10.96.0.0/16"
 }
 
+variable "vpn_iprange" {
+  description = "Wireguard MeshVPN subnet CIDR"
+  default     = "172.16.4.0/24"
+}
+
 variable "cloudflare_email" {
   default = "user@domain.tld"
 }

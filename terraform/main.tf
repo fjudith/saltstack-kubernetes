@@ -14,16 +14,16 @@ module "provider" {
   region       = "${var.scaleway_region}"
 }
 
-module "dns" {
-  source = "dns/cloudflare"
+# module "dns" {
+#   source = "dns/cloudflare"
 
-  count      = 1
-  email      = "${var.cloudflare_email}"
-  token      = "${var.cloudflare_token}"
-  domain     = "${var.domain}"
-  public_ips = "${module.provider.public_ip}"
-  hostnames  = "${module.provider.proxy_hostname}"
-}
+#   count      = 1
+#   email      = "${var.cloudflare_email}"
+#   token      = "${var.cloudflare_token}"
+#   domain     = "${var.domain}"
+#   public_ips = "${module.provider.public_ip}"
+#   hostnames  = "${module.provider.proxy_hostname}"
+# }
 
 module "wireguard" {
   source = "security/wireguard"
@@ -57,16 +57,17 @@ module "salt-minion" {
   connections      = "${module.provider.salt_minion}"
 }
 
-# module "firewall" {
-#   source = "security/ufw"
+module "firewall" {
+  source = "security/ufw"
 
-#   count        = "${var.etcd_count + var.master_count + var.node_count + 2}"
-#   bastion_host = "${scaleway_server.proxy00.0.public_ip}"
-#   # vpn_interface        = "${module.wireguard.vpn_interface}"
-#   # vpn_port             = "${module.wireguard.vpn_port}"
-#   # kubernetes_interface = "${module.kubernetes.overlay_interface}"
-#   connections = "${module.provider.private_ips}"
-# }
+  count         = "${var.etcd_count + var.master_count + var.node_count + 2}"
+  bastion_host  = "${scaleway_server.proxy00.0.public_ip}"
+  vpn_interface = "${module.wireguard.vpn_interface}"
+  vpn_port      = "${module.wireguard.vpn_port}"
+
+  # kubernetes_interface = "${module.kubernetes.overlay_interface}"
+  connections = "${module.provider.private_ips}"
+}
 
 output "hostnames" {
   value = "${module.provider.hostnames}"

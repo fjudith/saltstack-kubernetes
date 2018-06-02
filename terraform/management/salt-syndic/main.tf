@@ -38,14 +38,21 @@ resource "null_resource" "salt-minion" {
   }
 
   provisioner "file" {
-    content     = "master: ${var.salt_master_host}"
+    content     = "master: localhost"
     destination = "/etc/salt/minion.d/master.conf"
+  }
+
+  provisioner "file" {
+    content     = "syndic_master: ${var.salt_master_host}"
+    destination = "/etc/salt/master.d/syndic_master.conf"
   }
 
   provisioner "remote-exec" {
     inline = [
       "systemctl daemon-reload",
       "systemctl restart salt-minion",
+      "systemctl restart salt-master",
+      "systemctl restart salt-syndic",
     ]
   }
 }

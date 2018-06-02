@@ -25,6 +25,17 @@ module "dns" {
   hostnames  = "${module.provider.proxy_hostname}"
 }
 
+module "wireguard" {
+  source = "security/wireguard"
+
+  count        = "${var.etcd_count + var.master_count + var.node_count + 2}"
+  bastion_host = "${module.provider.bastion_host}"
+  private_ips  = "${module.provider.private_ips}"
+  hostnames    = "${module.provider.hostnames}"
+  overlay_cidr = "${var.overlay_cidr}"
+  connections  = "${module.provider.private_ips}"
+}
+
 # module "zerotier" {
 #   source = "security/zerotier"
 
@@ -44,17 +55,6 @@ module "salt-minion" {
   bastion_host     = "${module.provider.bastion_host}"
   salt_master_host = "${var.saltsyndic_host}"
   connections      = "${module.provider.salt_minion}"
-}
-
-module "wireguard" {
-  source = "security/wireguard"
-
-  count        = "${var.etcd_count + var.master_count + var.node_count + 2}"
-  bastion_host = "${module.provider.bastion_host}"
-  private_ips  = "${module.provider.private_ips}"
-  hostnames    = "${module.provider.hostnames}"
-  overlay_cidr = "${var.overlay_cidr}"
-  connections  = "${module.provider.private_ips}"
 }
 
 # module "firewall" {

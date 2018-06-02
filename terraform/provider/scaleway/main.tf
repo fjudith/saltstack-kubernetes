@@ -184,8 +184,13 @@ resource "scaleway_server" "proxy01" {
 
   provisioner "remote-exec" {
     inline = [
-      "echo 'http_proxy=${var.web_proxy_host}' >> /etc/environment",
-      "echo 'https_proxy=${var.web_proxy_host}' >> /etc/environment",
+      "echo 'http_proxy=http://${scaleway_server.proxy00.0.private_ip}:8888' >> /etc/environment",
+      "echo 'https_proxy=http://${scaleway_server.proxy00.0.private_ip}:8888' >> /etc/environment",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
       "apt-get update",
       "apt-get install -yq apt-transport-https ufw ${join(" ", var.apt_packages)}",
     ]
@@ -206,7 +211,7 @@ resource "scaleway_server" "etcd" {
   count      = "${var.etcd_count}"
   name       = "${format("etcd%02d", count.index)}"
   image      = "${data.scaleway_image.ubuntu.id}"
-  bootscript = "${scaleway_server.proxy00.0.public_ip}"
+  bootscript = "${data.scaleway_bootscript.bootscript.id}"
   type       = "${var.etcd_type}"
 
   #public_ip = "${element(scaleway_ip.public_ip.*.ip, count.index)}"
@@ -219,15 +224,20 @@ resource "scaleway_server" "etcd" {
     user                = "${var.ssh_user}"
     private_key         = "${file(var.ssh_private_key)}"
     agent               = false
-    bastion_host        = "${var.ssh_bastion_host}"
+    bastion_host        = "${scaleway_server.proxy00.0.public_ip}"
     bastion_user        = "${var.ssh_user}"
     bastion_private_key = "${file(var.ssh_private_key)}"
   }
 
   provisioner "remote-exec" {
     inline = [
-      "echo 'http_proxy=${var.web_proxy_host}' >> /etc/environment",
-      "echo 'https_proxy=${var.web_proxy_host}' >> /etc/environment",
+      "echo 'http_proxy=http://${scaleway_server.proxy00.0.private_ip}:8888' >> /etc/environment",
+      "echo 'https_proxy=http://${scaleway_server.proxy00.0.private_ip}:8888' >> /etc/environment",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
       "apt-get update",
       "apt-get install -yq apt-transport-https ufw ${join(" ", var.apt_packages)}",
     ]
@@ -268,8 +278,13 @@ resource "scaleway_server" "master" {
 
   provisioner "remote-exec" {
     inline = [
-      "echo 'http_proxy=${var.web_proxy_host}' >> /etc/environment",
-      "echo 'https_proxy=${var.web_proxy_host}' >> /etc/environment",
+      "echo 'http_proxy=http://${scaleway_server.proxy00.0.private_ip}:8888' >> /etc/environment",
+      "echo 'https_proxy=http://${scaleway_server.proxy00.0.private_ip}:8888' >> /etc/environment",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
       "apt-get update",
       "apt-get install -yq apt-transport-https ufw ${join(" ", var.apt_packages)}",
     ]
@@ -313,8 +328,13 @@ resource "scaleway_server" "node" {
 
   provisioner "remote-exec" {
     inline = [
-      "echo 'http_proxy=${var.web_proxy_host}' >> /etc/environment",
-      "echo 'https_proxy=${var.web_proxy_host}' >> /etc/environment",
+      "echo 'http_proxy=http://${scaleway_server.proxy00.0.private_ip}:8888' >> /etc/environment",
+      "echo 'https_proxy=http://${scaleway_server.proxy00.0.private_ip}:8888' >> /etc/environment",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
       "apt-get update",
       "apt-get install -yq apt-transport-https ufw ${join(" ", var.apt_packages)}",
     ]

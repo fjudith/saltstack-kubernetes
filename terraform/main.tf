@@ -1,7 +1,7 @@
 # Scaleway
 ##################################################
 module "provider" {
-  source = "provider/scaleway"
+  source = "./provider/scaleway"
 
   organization = "${var.scaleway_organization}"
   token        = "${var.scaleway_token}"
@@ -15,7 +15,7 @@ module "provider" {
 }
 
 # module "dns" {
-#   source = "dns/cloudflare"
+#   source = "./dns/cloudflare"
 
 #   count      = 1
 #   email      = "${var.cloudflare_email}"
@@ -26,7 +26,7 @@ module "provider" {
 # }
 
 module "wireguard" {
-  source = "security/wireguard"
+  source = "./security/wireguard"
 
   count        = "${var.etcd_count + var.master_count + var.node_count + 2}"
   bastion_host = "${module.provider.bastion_host}"
@@ -37,7 +37,7 @@ module "wireguard" {
 }
 
 # module "zerotier" {
-#   source = "security/zerotier"
+#   source = "./security/zerotier"
 
 #   count            = "${var.etcd_count + var.master_count + var.node_count + 1}"
 #   bastion_host     = "${module.provider.bastion_host}"
@@ -48,25 +48,72 @@ module "wireguard" {
 #   connections = "${module.provider.private_ips}"
 # }
 
-module "salt-minion" {
-  source = "management/salt-minion"
+module "salt-syndic" {
+  source = "./management/salt-syndic"
 
-  count            = "${var.etcd_count + var.master_count + var.node_count + 2}"
+  count            = 1
+  bastion_host     = "${module.provider.bastion_host}"
+  salt_master_host = "${var.saltmaster_host}"
+  connections      = "${module.provider.salt_syndic}"
+}
+
+module "salt-minion" {
+  source = "./management/salt-minion"
+
+  count            = "${var.etcd_count + var.master_count + var.node_count + 1}"
   bastion_host     = "${module.provider.bastion_host}"
   salt_master_host = "${var.saltsyndic_host}"
   connections      = "${module.provider.salt_minion}"
 }
 
-module "firewall" {
-  source = "security/ufw"
+module "firewall-proxy" {
+  source = "./security/ufw/proxy"
 
-  count         = "${var.etcd_count + var.master_count + var.node_count + 2}"
-  bastion_host  = "${scaleway_server.proxy00.0.public_ip}"
-  vpn_interface = "${module.wireguard.vpn_interface}"
-  vpn_port      = "${module.wireguard.vpn_port}"
+  count             = 2
+  bastion_host      = "${module.provider.bastion_host}"
+  private_interface = "${module.provider.private_network_interface}"
+  vpn_interface     = "${module.wireguard.vpn_interface}"
+  vpn_port          = "${module.wireguard.vpn_port}"
+  connections       = "${module.provider.proxy_private_ips}"
+}
+
+module "firewall-etcd" {
+  source = "./security/ufw/etcd"
+
+  count             = "${var.etcd_count}"
+  bastion_host      = "${module.provider.bastion_host}"
+  private_interface = "${module.provider.private_network_interface}"
+  vpn_interface     = "${module.wireguard.vpn_interface}"
+  vpn_port          = "${module.wireguard.vpn_port}"
+  connections       = "${module.provider.etcd_private_ips}"
+}
+
+module "firewall-master" {
+  source = "./security/ufw/master"
+
+  count                = "${var.master_count}"
+  bastion_host         = "${module.provider.bastion_host}"
+  private_interface    = "${module.provider.private_network_interface}"
+  vpn_interface        = "${module.wireguard.vpn_interface}"
+  vpn_port             = "${module.wireguard.vpn_port}"
+  kubernetes_interface = "${var.overlay_interface}"
 
   # kubernetes_interface = "${module.kubernetes.overlay_interface}"
-  connections = "${module.provider.private_ips}"
+  connections = "${module.provider.master_private_ips}"
+}
+
+module "firewall-node" {
+  source = "./security/ufw/node"
+
+  count                = "${var.node_count}"
+  bastion_host         = "${module.provider.bastion_host}"
+  private_interface    = "${module.provider.private_network_interface}"
+  vpn_interface        = "${module.wireguard.vpn_interface}"
+  vpn_port             = "${module.wireguard.vpn_port}"
+  kubernetes_interface = "${var.overlay_interface}"
+
+  # kubernetes_interface = "${module.kubernetes.overlay_interface}"
+  connections = "${module.provider.node_private_ips}"
 }
 
 output "hostnames" {

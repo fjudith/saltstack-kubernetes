@@ -144,3 +144,7 @@ variable "cloudflare_token" {
 variable "domain" {
   default = "domain.tld"
 }
+
+variable "overlay_interface" {
+  default = "flannel.0"
+}

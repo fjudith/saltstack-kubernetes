@@ -382,7 +382,6 @@ output "proxy_hostname" {
 
 output "salt_minion" {
   value = [
-    "${scaleway_server.proxy00.*.private_ip}",
     "${scaleway_server.proxy01.*.private_ip}",
     "${scaleway_server.etcd.*.private_ip}",
     "${scaleway_server.master.*.private_ip}",
@@ -390,8 +389,21 @@ output "salt_minion" {
   ]
 }
 
+output "salt_syndic" {
+  value = [
+    "${scaleway_server.proxy00.*.private_ip}",
+  ]
+}
+
 output "bastion_host" {
   value = "${scaleway_server.proxy00.0.public_ip}"
+}
+
+output "proxy_private_ips" {
+  value = [
+    "${scaleway_server.proxy00.*.private_ip}",
+    "${scaleway_server.proxy01.*.private_ip}",
+  ]
 }
 
 output "etcd_private_ips" {
@@ -435,4 +447,8 @@ output "public_ips" {
     "${scaleway_server.proxy00.*.public_ip}",
     "${scaleway_server.proxy01.*.public_ip}",
   ]
+}
+
+output "private_network_interface" {
+  value = "enp0s2"
 }

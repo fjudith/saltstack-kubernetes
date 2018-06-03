@@ -34,7 +34,7 @@ resource "null_resource" "salt-minion" {
   }
 
   provisioner "remote-exec" {
-    script = "${path.module}/scripts/salt-minion.sh"
+    script = "${path.module}/scripts/salt-syndic.sh"
   }
 
   provisioner "file" {

@@ -25,9 +25,6 @@ sed -i -r 's|^COMMIT|-A ufw-reject-input -j DROP\nCOMMIT|g' /etc/ufw/after.rules
 sudo ufw allow in on ${private_interface} to any port ${vpn_port} # vpn on private interface
 sudo ufw allow in on ${vpn_interface}
 
-# Allow Kubernetes
-# sudo ufw allow in on ${kubernetes_interface} # Kubernetes pod overlay interface
-
 # Disable Logging
 sudo ufw logging off
 
@@ -42,8 +39,8 @@ sudo ufw allow 4506
 sudo ufw allow http
 sudo ufw allow https
 
-# Allow Kubernetes API secure port
-sudo ufw allow 6443
+# Allow Tinyproxy
+sudo ufw allow 8888
 
 # Enable UFW
 sudo ufw --force enable

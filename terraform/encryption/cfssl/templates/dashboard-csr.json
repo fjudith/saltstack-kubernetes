@@ -1,0 +1,14 @@
+{
+    "CN": "system:serviceaccount:kube-system:kubernetes-dashboard",
+    "hosts": [],
+    "key": {
+      "algo": "ecdsa",
+      "size": 256
+    },
+    "names": [
+      {
+        "O": "system:serviceaccounts:kube-system",
+        "OU": "Kubernetes cluster"
+      }
+    ]
+  }

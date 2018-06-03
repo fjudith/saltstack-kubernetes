@@ -1,0 +1,13 @@
+{
+    "CN": "system:node:${IP_ADDRESS}",
+    "key": {
+      "algo": "ecdsa",
+      "size": 256
+    },
+    "names": [
+      {
+        "O": "system:nodes",
+        "OU": "Kubernetes cluster"
+      }
+    ]
+  }

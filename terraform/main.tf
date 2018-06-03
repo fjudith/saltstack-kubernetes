@@ -116,6 +116,19 @@ module "firewall-node" {
   connections = "${module.provider.node_private_ips}"
 }
 
+module "encryption" {
+  source = "./encryption/cfssl"
+
+  etcd_count         = "${var.etcd_count}"
+  etcd_private_ips   = "${module.provider.etcd_private_ips}"
+  master_count       = "${var.master_count}"
+  master_private_ips = "${module.provider.master_private_ips}"
+  node_count         = "${var.node_count}"
+  node_private_ips   = "${module.provider.node_private_ips}"
+
+  # node_private_ips   = "${var.etcd_private_ips}"
+}
+
 output "hostnames" {
   value = "${module.provider.hostnames}"
 }

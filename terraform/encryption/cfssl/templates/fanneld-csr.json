@@ -1,0 +1,14 @@
+{
+    "CN": "flanneld",
+    "hosts": [],
+    "key": {
+      "algo": "ecdsa",
+      "size": 256
+    },
+    "names": [
+      {
+        "O": "Kubernetes",
+        "OU": "Kubernetes cluster"
+      }
+    ]
+  }

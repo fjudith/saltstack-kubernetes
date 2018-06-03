@@ -5,3 +5,4 @@ terraform.tfstate.backup
 .terraform.tfstate.lock.info
 public_ips.txt
 private_ips.txt
+ssl

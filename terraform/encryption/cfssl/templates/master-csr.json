@@ -1,0 +1,23 @@
+{
+    "CN": "system:node:${master_private_ip}",
+    "hosts": [
+      "127.0.0.1",
+      "${master_private_ips}",
+      "localhost",
+      "kubernetes",
+      "kubernetes.default",
+      "kubernetes.default.svc",
+      "kubernetes.default.svc.cluster",
+      "kubernetes.default.svc.cluster.local"
+    ],
+    "key": {
+      "algo": "rsa",
+      "size": 2048
+    },
+    "names": [
+      {
+        "O": "system:nodes",
+        "OU": "CoreOS Kubernetes"
+      }
+    ]
+  }

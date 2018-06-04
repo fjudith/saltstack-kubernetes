@@ -94,24 +94,24 @@ variable "IFACE" {
   default     = "web-proxy.domain.tld"
 }
 
-variable "etcdIP" {
+variable "etcd_bit" {
   description = "Zerotier etcd starting IP"
-  default     = "50"
+  default     = 50
 }
 
-variable "masterIP" {
+variable "master_bit" {
   description = "Zerotier master starting IP"
-  default     = "100"
+  default     = 100
 }
 
-variable "nodeIP" {
+variable "node_bit" {
   description = "Zerotier node starting IP"
-  default     = "200"
+  default     = 200
 }
 
-variable "proxyIP" {
+variable "proxy_bit" {
   description = "Zerotier proxy starting IP"
-  default     = "40"
+  default     = 250
 }
 
 variable "zerotier_api_key" {

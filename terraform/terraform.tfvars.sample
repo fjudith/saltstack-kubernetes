@@ -40,13 +40,13 @@ zerotier_api_key = "01234567890123456789012345678901"
 
 zerotier_cidr = "172.16.4.0/24"
 
-etcdIP = "50"
+etcd_bit = "50"
 
-masterIP = "70"
+master_bit = "70"
 
-nodeIP = "100"
+node_bit = "100"
 
-proxyIP = "40"
+proxy_bit = "40"
 
 cloudflare_email = "user@domain.tld"
 

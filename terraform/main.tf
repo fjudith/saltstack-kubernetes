@@ -31,6 +31,14 @@ module "wireguard" {
   count        = "${var.etcd_count + var.master_count + var.node_count + 2}"
   bastion_host = "${module.provider.bastion_host}"
   private_ips  = "${module.provider.private_ips}"
+  proxy_count  = 2
+  proxy_bit    = "${var.proxy_bit}"
+  etcd_count   = "${var.etcd_count}"
+  etcd_bit     = "${var.etcd_bit}"
+  master_count = "${var.master_count}"
+  master_bit   = "${var.master_bit}"
+  node_count   = "${var.node_count}"
+  node_bit     = "${var.node_bit}"
   hostnames    = "${module.provider.hostnames}"
   overlay_cidr = "${var.overlay_cidr}"
   connections  = "${module.provider.private_ips}"
@@ -41,7 +49,7 @@ module "wireguard" {
 
 #   count            = "${var.etcd_count + var.master_count + var.node_count + 1}"
 #   bastion_host     = "${module.provider.bastion_host}"
-#   bit              = "${var.proxyIP}"
+#   bit              = "${var.proxy_bit}"
 #   zerotier_api_key = "${var.zerotier_api_key}"
 #   zerotier_cidr    = "${var.zerotier_cidr}"
 
@@ -62,7 +70,7 @@ module "salt-minion" {
 
   count            = "${var.etcd_count + var.master_count + var.node_count + 1}"
   bastion_host     = "${module.provider.bastion_host}"
-  salt_master_host = "${var.saltsyndic_host}"
+  salt_master_host = "${module.wireguard.proxy_vpn_ips[0]}"
   connections      = "${module.provider.salt_minion}"
 }
 
@@ -119,12 +127,13 @@ module "firewall-node" {
 module "encryption" {
   source = "./encryption/cfssl"
 
+  bastion_host       = "${module.provider.bastion_host}"
   etcd_count         = "${var.etcd_count}"
-  etcd_private_ips   = "${module.provider.etcd_private_ips}"
+  etcd_private_ips   = "${module.wireguard.etcd_vpn_ips}"
   master_count       = "${var.master_count}"
-  master_private_ips = "${module.provider.master_private_ips}"
+  master_private_ips = "${module.wireguard.master_vpn_ips}"
   node_count         = "${var.node_count}"
-  node_private_ips   = "${module.provider.node_private_ips}"
+  node_private_ips   = "${module.wireguard.node_vpn_ips}"
 
   # node_private_ips   = "${var.etcd_private_ips}"
 }
@@ -139,6 +148,10 @@ output "proxy_hostnames" {
 
 output "private_ips" {
   value = "${module.provider.private_ips}"
+}
+
+output "vpn_ips" {
+  value = "${module.wireguard.vpn_ips}"
 }
 
 output "public_ips" {

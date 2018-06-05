@@ -70,6 +70,8 @@ module "salt-minion" {
 
   bastion_host       = "${module.provider.bastion_host}"
   salt_master_host   = "${module.wireguard.proxy_vpn_ips[0]}"
+  http_proxy_host    = "${module.wireguard.proxy_vpn_ips[0]}"
+  http_proxy_port    = 8888
   proxy_count        = 2
   proxy_private_ips  = "${module.wireguard.proxy_vpn_ips}"
   etcd_count         = "${var.etcd_count}"

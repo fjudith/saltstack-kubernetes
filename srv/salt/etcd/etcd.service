@@ -8,10 +8,10 @@ Documentation=https://github.com/coreos
 ExecStart=/usr/bin/etcd  \
 --name {{ clusterDomain }} \
 --data-dir=/var/lib/etcd \
---cert-file=/etc/etcd/kubernetes.pem  \
---key-file=/etc/etcd/kubernetes-key.pem \
---peer-cert-file=/etc/etcd/kubernetes.pem \
---peer-key-file=/etc/etcd/kubernetes-key.pem \
+--cert-file=/etc/etcd/etcd.pem  \
+--key-file=/etc/etcd/etcd-key.pem \
+--peer-cert-file=/etc/etcd/etcd.pem \
+--peer-key-file=/etc/etcd/etcd-key.pem \
 --trusted-ca-file=/etc/etcd/ca.pem \
 --listen-client-urls http://0.0.0.0:2379 \
 --advertise-client-urls http://0.0.0.0:2379 \

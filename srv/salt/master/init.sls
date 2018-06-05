@@ -1,8 +1,8 @@
 {%- set k8sVersion = pillar['kubernetes']['version'] -%}
 {%- set masterCount = pillar['kubernetes']['master']['count'] -%}
 
-include:
-  - master/etcd
+{# include:
+  - master/etcd #}
 
 /usr/bin/kube-apiserver:
   file.managed:

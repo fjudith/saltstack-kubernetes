@@ -10,13 +10,13 @@
 
 /etc/etcd/etcd-key.pem:
   file.symlink:
-    - target: /etc/var/lib/etcd/ssl/etcd-key.pem
+    - target: /var/lib/etcd/ssl/etcd-key.pem
 /etc/etcd/etcd.pem:
   file.symlink:
-    - target: /etc/var/lib/etcd/ssl/etcd.pem
+    - target: /var/lib/etcd/ssl/etcd.pem
 /etc/etcd/ca.pem:
   file.symlink:
-    - target: /etc/var/lib/etcd/ssl/ca.pem
+    - target: /var/lib/etcd/ssl/ca.pem
 
 etcd-latest-archive:
   archive.extracted:
@@ -27,10 +27,11 @@ etcd-latest-archive:
 
 etcd-certificate-archive:
   archive.extracted:
-    - name: /etc/var/lib/etcd/ssl
+    - name: /var/lib/etcd/ssl
     - source: salt://certs/etcd.tar
     - skip_verify: true
     - archive_format: tar
+    - enforce_toplevel: false
 
 /usr/bin/etcd:
   file.symlink:

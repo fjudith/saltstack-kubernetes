@@ -59,7 +59,7 @@ variable "overlay_cidr" {
 }
 
 variable "vpn_iprange" {
-  default = "10.0.1.0/24"
+  default = "172.16.4.0/24"
 }
 
 resource "null_resource" "wireguard" {

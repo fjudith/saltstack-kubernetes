@@ -1,5 +1,5 @@
 base:
   '*':
-  {% if "master" in grains.get('role', []) or "node" in grains.get('role', []) %}
+  {% if "etcd" in grains.get('role', []) or "master" or "node" in grains.get('role', []) %}
     - cluster_config
   {% endif %}

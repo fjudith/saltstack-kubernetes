@@ -68,10 +68,16 @@ module "salt-syndic" {
 module "salt-minion" {
   source = "./management/salt-minion"
 
-  count            = "${var.etcd_count + var.master_count + var.node_count + 1}"
-  bastion_host     = "${module.provider.bastion_host}"
-  salt_master_host = "${module.wireguard.proxy_vpn_ips[0]}"
-  connections      = "${module.provider.salt_minion}"
+  bastion_host       = "${module.provider.bastion_host}"
+  salt_master_host   = "${module.wireguard.proxy_vpn_ips[0]}"
+  proxy_count        = 2
+  proxy_private_ips  = "${module.wireguard.proxy_vpn_ips}"
+  etcd_count         = "${var.etcd_count}"
+  etcd_private_ips   = "${module.wireguard.etcd_vpn_ips}"
+  master_count       = "${var.master_count}"
+  master_private_ips = "${module.wireguard.master_vpn_ips}"
+  node_count         = "${var.node_count}"
+  node_private_ips   = "${module.wireguard.node_vpn_ips}"
 }
 
 module "firewall-proxy" {
@@ -134,8 +140,6 @@ module "encryption" {
   master_private_ips = "${module.wireguard.master_vpn_ips}"
   node_count         = "${var.node_count}"
   node_private_ips   = "${module.wireguard.node_vpn_ips}"
-
-  # node_private_ips   = "${var.etcd_private_ips}"
 }
 
 output "hostnames" {

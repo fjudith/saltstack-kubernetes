@@ -1,6 +1,19 @@
 kubernetes:
   version: v1.10.1
   domain: cluster.local
+  etcd:
+    count: 3
+    cluster:
+      etcd01:
+        hostname: etcd01.domain.tld
+        ipaddr: 172.16.4.51
+      etcd02:
+        hostname: etcd02.domain.tld
+        ipaddr: 172.16.4.52
+      etcd03:
+        hostname: etcd03.domain.tld
+        ipaddr: 172.16.4.53
+    version: v3.3.5
   master:
 #    count: 1
 #    hostname: master.domain.tld
@@ -9,16 +22,14 @@ kubernetes:
     cluster:
       node01:
         hostname: master01.domain.tld
-        ipaddr: 10.240.0.10
+        ipaddr: 172.16.4.101
       node02:
         hostname: master02.domain.tld
-        ipaddr: 10.240.0.20
+        ipaddr: 172.16.4.102
       node03:
         hostname: master03.domain.tld
-        ipaddr: 10.240.0.30
+        ipaddr: 172.16.4.103
     encryption-key: 'w3RNESCMG+o3GCHTUcrQUUdq6CFV72q/Zik9LAO8uEc='
-    etcd:
-      version: v3.3.5
   node:
     runtime:
       provider: docker
@@ -45,7 +56,7 @@ kubernetes:
           interface: ens18
           range: fd80:24e2:f998:72d6::/64
   global:
-    clusterIP-range: 10.32.0.0/16
+    clusterIP-range: 10.96.0.0/16
     helm-version: v2.8.2
     dashboard-version: v1.8.3
     admin-token: Haim8kay1rarCHANGEMEHaim8kay1rar

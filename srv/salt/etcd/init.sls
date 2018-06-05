@@ -1,4 +1,5 @@
-{%- set etcdVersion = pillar['kubernetes']['master']['etcd']['version'] -%}
+{%- set etcdVersion = pillar['kubernetes']['etcd']['version'] -%}
+{%- set etcdCount = pillar['kubernetes']['etcd']['count'] -%}
 {%- set masterCount = pillar['kubernetes']['master']['count'] -%}
 
 /etc/etcd:
@@ -7,20 +8,27 @@
     - group: root
     - dir_mode: 750
 
-/etc/etcd/kubernetes-key.pem:
+/etc/etcd/etcd-key.pem:
   file.symlink:
-    - target: /var/lib/kubernetes/kubernetes-key.pem
-/etc/etcd/kubernetes.pem:
+    - target: /etc/var/lib/etcd/ssl/etcd-key.pem
+/etc/etcd/etcd.pem:
   file.symlink:
-    - target: /var/lib/kubernetes/kubernetes.pem
+    - target: /etc/var/lib/etcd/ssl/etcd.pem
 /etc/etcd/ca.pem:
   file.symlink:
-    - target: /var/lib/kubernetes/ca.pem
+    - target: /etc/var/lib/etcd/ssl/ca.pem
 
 etcd-latest-archive:
   archive.extracted:
     - name: /opt/
     - source: https://github.com/coreos/etcd/releases/download/{{ etcdVersion }}/etcd-{{ etcdVersion }}-linux-amd64.tar.gz
+    - skip_verify: true
+    - archive_format: tar
+
+etcd-certificate-archive:
+  archive.extracted:
+    - name: /etc/var/lib/etcd/ssl
+    - source: salt://certs/etcd.tar
     - skip_verify: true
     - archive_format: tar
 
@@ -31,10 +39,18 @@ etcd-latest-archive:
   file.symlink:
     - target: /opt/etcd-{{ etcdVersion }}-linux-amd64/etcdctl
 
-{% elif masterCount == 3 %}
+{% if masterCount == 1 %}
 /etc/systemd/system/etcd.service:
   file.managed:
-    - source: salt://master/etcd/etcd-ha.service
+    - source: salt://etcd/etcd.service
+    - user: root
+    - template: jinja
+    - group: root
+    - mode: 644
+{% elif etcdCount == 3 %}
+/etc/systemd/system/etcd.service:
+  file.managed:
+    - source: salt://etcd/etcd-cluster.service
     - user: root
     - template: jinja
     - group: root

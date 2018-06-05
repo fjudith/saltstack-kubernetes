@@ -108,9 +108,9 @@ resource "scaleway_ip" "public_ip" {
 ##################################################
 # Proxy 0
 ##################################################
-resource "scaleway_server" "proxy00" {
+resource "scaleway_server" "proxy01" {
   count      = 1
-  name       = "proxy00"
+  name       = "proxy01"
   image      = "${data.scaleway_image.ubuntu.id}"
   bootscript = "${data.scaleway_bootscript.bootscript.id}"
   type       = "${var.proxy_type}"
@@ -159,13 +159,13 @@ resource "scaleway_server" "proxy00" {
 }
 
 ##################################################
-# proxy01
+# proxy02
 ##################################################
-resource "scaleway_server" "proxy01" {
-  depends_on = ["scaleway_server.proxy00"]
+resource "scaleway_server" "proxy02" {
+  depends_on = ["scaleway_server.proxy01"]
 
   count      = 1
-  name       = "proxy01"
+  name       = "proxy02"
   image      = "${data.scaleway_image.ubuntu.id}"
   bootscript = "${data.scaleway_bootscript.bootscript.id}"
   type       = "${var.proxy_type}"
@@ -178,15 +178,15 @@ resource "scaleway_server" "proxy01" {
     user                = "${var.ssh_user}"
     private_key         = "${file(var.ssh_private_key)}"
     agent               = false
-    bastion_host        = "${scaleway_server.proxy00.0.public_ip}"
+    bastion_host        = "${scaleway_server.proxy01.0.public_ip}"
     bastion_user        = "${var.ssh_user}"
     bastion_private_key = "${file(var.ssh_private_key)}"
   }
 
   provisioner "remote-exec" {
     inline = [
-      "echo 'http_proxy=http://${scaleway_server.proxy00.0.private_ip}:8888' >> /etc/environment",
-      "echo 'https_proxy=http://${scaleway_server.proxy00.0.private_ip}:8888' >> /etc/environment",
+      "echo 'http_proxy=http://${scaleway_server.proxy01.0.private_ip}:8888' >> /etc/environment",
+      "echo 'https_proxy=http://${scaleway_server.proxy01.0.private_ip}:8888' >> /etc/environment",
     ]
   }
 
@@ -207,10 +207,10 @@ resource "scaleway_server" "proxy01" {
 # etcd
 ##################################################
 resource "scaleway_server" "etcd" {
-  depends_on = ["scaleway_server.proxy00"]
+  depends_on = ["scaleway_server.proxy01"]
 
   count      = "${var.etcd_count}"
-  name       = "${format("etcd%02d", count.index)}"
+  name       = "${format("etcd%02d", count.index + 1)}"
   image      = "${data.scaleway_image.ubuntu.id}"
   bootscript = "${data.scaleway_bootscript.bootscript.id}"
   type       = "${var.etcd_type}"
@@ -225,15 +225,15 @@ resource "scaleway_server" "etcd" {
     user                = "${var.ssh_user}"
     private_key         = "${file(var.ssh_private_key)}"
     agent               = false
-    bastion_host        = "${scaleway_server.proxy00.0.public_ip}"
+    bastion_host        = "${scaleway_server.proxy01.0.public_ip}"
     bastion_user        = "${var.ssh_user}"
     bastion_private_key = "${file(var.ssh_private_key)}"
   }
 
   provisioner "remote-exec" {
     inline = [
-      "echo 'http_proxy=http://${scaleway_server.proxy00.0.private_ip}:8888' >> /etc/environment",
-      "echo 'https_proxy=http://${scaleway_server.proxy00.0.private_ip}:8888' >> /etc/environment",
+      "echo 'http_proxy=http://${scaleway_server.proxy01.0.private_ip}:8888' >> /etc/environment",
+      "echo 'https_proxy=http://${scaleway_server.proxy01.0.private_ip}:8888' >> /etc/environment",
     ]
   }
 
@@ -254,10 +254,10 @@ resource "scaleway_server" "etcd" {
 # Kubernetes Master
 ##################################################
 resource "scaleway_server" "master" {
-  depends_on = ["scaleway_server.proxy00", "scaleway_server.etcd"]
+  depends_on = ["scaleway_server.proxy01", "scaleway_server.etcd"]
 
   count      = "${var.master_count}"
-  name       = "${format("master%02d", count.index)}"
+  name       = "${format("master%02d", count.index + 1)}"
   image      = "${data.scaleway_image.ubuntu.id}"
   bootscript = "${data.scaleway_bootscript.bootscript.id}"
   type       = "${var.master_type}"
@@ -272,15 +272,15 @@ resource "scaleway_server" "master" {
     user                = "${var.ssh_user}"
     private_key         = "${file(var.ssh_private_key)}"
     agent               = false
-    bastion_host        = "${scaleway_server.proxy00.0.public_ip}"
+    bastion_host        = "${scaleway_server.proxy01.0.public_ip}"
     bastion_user        = "${var.ssh_user}"
     bastion_private_key = "${file(var.ssh_private_key)}"
   }
 
   provisioner "remote-exec" {
     inline = [
-      "echo 'http_proxy=http://${scaleway_server.proxy00.0.private_ip}:8888' >> /etc/environment",
-      "echo 'https_proxy=http://${scaleway_server.proxy00.0.private_ip}:8888' >> /etc/environment",
+      "echo 'http_proxy=http://${scaleway_server.proxy01.0.private_ip}:8888' >> /etc/environment",
+      "echo 'https_proxy=http://${scaleway_server.proxy01.0.private_ip}:8888' >> /etc/environment",
     ]
   }
 
@@ -301,10 +301,10 @@ resource "scaleway_server" "master" {
 # Kubernetes Node
 ##################################################
 resource "scaleway_server" "node" {
-  depends_on = ["scaleway_server.proxy00", "scaleway_server.master"]
+  depends_on = ["scaleway_server.proxy01", "scaleway_server.master"]
 
   count      = "${var.node_count}"
-  name       = "${format("node%02d", count.index)}"
+  name       = "${format("node%02d", count.index + 1)}"
   image      = "${data.scaleway_image.ubuntu.id}"
   bootscript = "${data.scaleway_bootscript.bootscript.id}"
   type       = "${var.node_type}"
@@ -317,7 +317,7 @@ resource "scaleway_server" "node" {
     user                = "${var.ssh_user}"
     private_key         = "${file(var.ssh_private_key)}"
     agent               = false
-    bastion_host        = "${scaleway_server.proxy00.0.public_ip}"
+    bastion_host        = "${scaleway_server.proxy01.0.public_ip}"
     bastion_user        = "${var.ssh_user}"
     bastion_private_key = "${file(var.ssh_private_key)}"
   }
@@ -329,8 +329,8 @@ resource "scaleway_server" "node" {
 
   provisioner "remote-exec" {
     inline = [
-      "echo 'http_proxy=http://${scaleway_server.proxy00.0.private_ip}:8888' >> /etc/environment",
-      "echo 'https_proxy=http://${scaleway_server.proxy00.0.private_ip}:8888' >> /etc/environment",
+      "echo 'http_proxy=http://${scaleway_server.proxy01.0.private_ip}:8888' >> /etc/environment",
+      "echo 'https_proxy=http://${scaleway_server.proxy01.0.private_ip}:8888' >> /etc/environment",
     ]
   }
 
@@ -349,8 +349,8 @@ resource "scaleway_server" "node" {
 
 output "private_ips" {
   value = [
-    "${scaleway_server.proxy00.*.private_ip}",
     "${scaleway_server.proxy01.*.private_ip}",
+    "${scaleway_server.proxy02.*.private_ip}",
     "${scaleway_server.etcd.*.private_ip}",
     "${scaleway_server.master.*.private_ip}",
     "${scaleway_server.node.*.private_ip}",
@@ -359,8 +359,8 @@ output "private_ips" {
 
 output "hostnames" {
   value = [
-    "${scaleway_server.proxy00.*.name}",
     "${scaleway_server.proxy01.*.name}",
+    "${scaleway_server.proxy02.*.name}",
     "${scaleway_server.etcd.*.name}",
     "${scaleway_server.master.*.name}",
     "${scaleway_server.node.*.name}",
@@ -369,20 +369,20 @@ output "hostnames" {
 
 output "proxy_hostnames" {
   value = [
-    "${scaleway_server.proxy00.*.name}",
     "${scaleway_server.proxy01.*.name}",
+    "${scaleway_server.proxy02.*.name}",
   ]
 }
 
 output "proxy_hostname" {
   value = [
-    "${scaleway_server.proxy00.*.name}",
+    "${scaleway_server.proxy01.*.name}",
   ]
 }
 
 output "salt_minion" {
   value = [
-    "${scaleway_server.proxy01.*.private_ip}",
+    "${scaleway_server.proxy02.*.private_ip}",
     "${scaleway_server.etcd.*.private_ip}",
     "${scaleway_server.master.*.private_ip}",
     "${scaleway_server.node.*.private_ip}",
@@ -391,18 +391,18 @@ output "salt_minion" {
 
 output "salt_syndic" {
   value = [
-    "${scaleway_server.proxy00.*.private_ip}",
+    "${scaleway_server.proxy01.*.private_ip}",
   ]
 }
 
 output "bastion_host" {
-  value = "${scaleway_server.proxy00.0.public_ip}"
+  value = "${scaleway_server.proxy01.0.public_ip}"
 }
 
 output "proxy_private_ips" {
   value = [
-    "${scaleway_server.proxy00.*.private_ip}",
     "${scaleway_server.proxy01.*.private_ip}",
+    "${scaleway_server.proxy02.*.private_ip}",
   ]
 }
 
@@ -430,22 +430,22 @@ output "node_public_ips" {
   value = ["${scaleway_server.node.*.public_ip}"]
 }
 
-output "proxy00_private_ips" {
-  value = ["${scaleway_server.proxy00.*.private_ip}"]
-}
-
 output "proxy01_private_ips" {
   value = ["${scaleway_server.proxy01.*.private_ip}"]
 }
 
+output "proxy02_private_ips" {
+  value = ["${scaleway_server.proxy02.*.private_ip}"]
+}
+
 output "public_ip" {
-  value = ["${scaleway_server.proxy00.*.public_ip}"]
+  value = ["${scaleway_server.proxy01.*.public_ip}"]
 }
 
 output "public_ips" {
   value = [
-    "${scaleway_server.proxy00.*.public_ip}",
     "${scaleway_server.proxy01.*.public_ip}",
+    "${scaleway_server.proxy02.*.public_ip}",
   ]
 }
 

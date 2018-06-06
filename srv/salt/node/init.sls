@@ -44,7 +44,7 @@ vm.max_map_count:
     - group: root
     - dir_mode: 700
 
-/var/lib/kubelet/kubeconfig:
+/etc/kubernetes/kubeconfig:
     file.managed:
     - source: salt://node/kubeconfig
     - user: root
@@ -55,6 +55,14 @@ vm.max_map_count:
 /etc/systemd/system/kubelet.service:
     file.managed:
     - source: salt://node/kubelet.service
+    - user: root
+    - template: jinja
+    - group: root
+    - mode: 644
+
+/etc/kubernetes/kube-proxy.kubeconfig:
+    file.managed:
+    - source: salt://node/kube-proxy.kubeconfig
     - user: root
     - template: jinja
     - group: root

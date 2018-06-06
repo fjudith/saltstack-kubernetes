@@ -8,7 +8,7 @@
     - group: root
     - dir_mode: 750
 
-/etc/etcd/etcd-key.pem:
+{# /etc/etcd/etcd-key.pem:
   file.symlink:
     - target: /var/lib/etcd/ssl/etcd-key.pem
 /etc/etcd/etcd.pem:
@@ -16,7 +16,7 @@
     - target: /var/lib/etcd/ssl/etcd.pem
 /etc/etcd/ca.pem:
   file.symlink:
-    - target: /var/lib/etcd/ssl/ca.pem
+    - target: /var/lib/etcd/ssl/ca.pem #}
 
 etcd-latest-archive:
   archive.extracted:
@@ -25,13 +25,15 @@ etcd-latest-archive:
     - skip_verify: true
     - archive_format: tar
 
+{# {% for key, ipaddr in pillar.get(['kubernetes']['etcd']['cluster']['etcd*'], {}).items() %}
 etcd-certificate-archive:
   archive.extracted:
     - name: /var/lib/etcd/ssl
-    - source: salt://certs/etcd.tar
+    - source: salt://certs/etcd-{{ ipaddr }}.tar
     - skip_verify: true
     - archive_format: tar
     - enforce_toplevel: false
+{% endfor %} #}
 
 /usr/bin/etcd:
   file.symlink:

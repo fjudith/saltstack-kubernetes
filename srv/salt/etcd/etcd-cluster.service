@@ -26,12 +26,12 @@ Documentation=https://github.com/coreos
 ExecStart=/usr/bin/etcd  \
 --name={{ hostname }} \
 --data-dir=/var/lib/etcd \
---cert-file=/etc/etcd/etcd.pem  \
---key-file=/etc/etcd/etcd-key.pem \
---peer-cert-file=/etc/etcd/etcd.pem \
---peer-key-file=/etc/etcd/etcd-key.pem \
---trusted-ca-file=/etc/etcd/ca.pem \
---peer-trusted-ca-file=/etc/etcd/ca.pem \
+--cert-file=/etc/etcd/ssl/etcd.pem  \
+--key-file=/etc/etcd/ssl/etcd-key.pem \
+--peer-cert-file=/etc/etcd/ssl/etcd.pem \
+--peer-key-file=/etc/etcd/ssl/etcd-key.pem \
+--trusted-ca-file=/etc/etcd/ssl/ca.pem \
+--peer-trusted-ca-file=/etc/etcd/ssl/ca.pem \
 --listen-client-urls https://{{ currentip }}:2379,http://127.0.0.1:2379 \
 --advertise-client-urls https://{{ currentip }}:2379 \
 --listen-peer-urls https://{{ currentip }}:2380 \

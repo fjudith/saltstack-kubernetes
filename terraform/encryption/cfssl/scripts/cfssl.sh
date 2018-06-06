@@ -109,16 +109,19 @@ EOF
 # Etcd certificate
 # ---------------------------------------------
 function write-ssl-etcd {
-    # Extracting the IP address from the CN (i.e node-xxx.xxx.xxx.xxx)
+    # Convert SANs to JSON supported array (e.g 1,2,3 --> "1","2","3",) 
     ETCD_IP=$(for i in $(printf ${SANS} | tr ',' '\n'); do printf "\"$i\","; done)
 
+    # Extracting the IP address from the CN (i.e node-xxx.xxx.xxx.xxx)
+    IP_ADDRESS=$(printf ${CN} | awk -F '-' '{print $2}')
+    
     # Write cfssl JSON template
     local TEMPLATE=$OUTDIR/${CERTBASE}-csr.json
     echo "local TEMPLATE: $TEMPLATE"
     mkdir -p $(dirname $TEMPLATE)
     cat << EOF > $TEMPLATE
 {
-  "CN": "${CN}",
+  "CN": "${IP_ADDRESS}",
   "hosts": [
     ${ETCD_IP}
     "127.0.0.1"

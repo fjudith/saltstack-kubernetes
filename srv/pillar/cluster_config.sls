@@ -5,13 +5,13 @@ kubernetes:
     count: 3
     cluster:
       etcd01:
-        hostname: etcd01.domain.tld
+        hostname: etcd01
         ipaddr: 172.16.4.51
       etcd02:
-        hostname: etcd02.domain.tld
+        hostname: etcd02
         ipaddr: 172.16.4.52
       etcd03:
-        hostname: etcd03.domain.tld
+        hostname: etcd03
         ipaddr: 172.16.4.53
     version: v3.3.5
   master:

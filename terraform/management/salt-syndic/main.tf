@@ -56,6 +56,12 @@ EOF
     destination = "/etc/salt/minion.d/master.conf"
   }
 
+  # Copy "salt" and "pillar" data into the salt syndic hosts
+  provisioner "file" {
+    source      = "../srv/"
+    destination = "/srv"
+  }
+
   provisioner "remote-exec" {
     inline = [
       "systemctl daemon-reload",

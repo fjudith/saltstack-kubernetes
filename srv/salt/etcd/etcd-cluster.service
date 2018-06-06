@@ -42,6 +42,7 @@ ExecStart=/usr/bin/etcd  \
 --peer-client-cert-auth \
 --client-cert-auth
 
+Type=notify
 Restart=on-failure
 RestartSec=5
 LimitNOFILE=30000

@@ -81,7 +81,7 @@ kubelet:
     - enable: True
     - watch:
       - /etc/systemd/system/kubelet.service
-      - /var/lib/kubernetes/kubernetes.pem
+      - /etc/kubernetes/ssl/node.pem
 
 kube-proxy:
   service.running:

@@ -10,11 +10,11 @@ ExecStart=/usr/bin/kube-controller-manager \
   --master=http://127.0.0.1:8080 \
   --leader-elect=true \
   --feature-gates=RotateKubeletServerCertificate=true \
-  --service-account-private-key-file=/var/lib/kubernetes/ca-key.pem \
-  --root-ca-file=/var/lib/kubernetes/ca.pem \
+  --service-account-private-key-file=/etc/kubernetes/ssl/ca-key.pem \
+  --root-ca-file=/etc/kubernetes/ssl/ca.pem \
   --flex-volume-plugin-dir=/etc/kubernetes/volumeplugins \
-  --cluster-signing-cert-file=/var/lib/kubernetes/ca.pem \
-  --cluster-signing-key-file=/var/lib/kubernetes/ca-key.pem \
+  --cluster-signing-cert-file=/etc/kubernetes/ssl/ca.pem \
+  --cluster-signing-key-file=/etc/kubernetes/ssl/ca-key.pem \
   --node-monitor-grace-period=40s \
   --node-monitor-period=5s \
   --node-startup-grace-period 30s \

@@ -152,6 +152,12 @@ resource "scaleway_server" "proxy01" {
     destination = "~/.ssh/id_rsa"
   }
 
+  provisioner "remote-exec" {
+    inline = [
+      "chmod 400 ~/.ssh/id_rsa",
+    ]
+  }
+
   provisioner "file" {
     content     = "${file(var.ssh_public_key)}"
     destination = "~/.ssh/id_rsa.pub"

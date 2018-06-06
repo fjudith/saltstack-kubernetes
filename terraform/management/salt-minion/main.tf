@@ -77,8 +77,8 @@ resource "null_resource" "salt-minion-proxy" {
 
   provisioner "file" {
     content = <<EOF
-"proxy_host: ${var.http_proxy_host}"
-"proxy_port: ${var.http_proxy_port}"
+proxy_host: ${var.http_proxy_host}
+proxy_port: ${var.http_proxy_port}
 EOF
 
     destination = "/etc/salt/minion.d/proxy.conf"
@@ -122,8 +122,8 @@ resource "null_resource" "salt-minion-etcd" {
 
   provisioner "file" {
     content = <<EOF
-"proxy_host: ${var.http_proxy_host}"
-"proxy_port: ${var.http_proxy_port}"
+proxy_host: ${var.http_proxy_host}
+proxy_port: ${var.http_proxy_port}
 EOF
 
     destination = "/etc/salt/minion.d/proxy.conf"
@@ -167,8 +167,8 @@ resource "null_resource" "salt-minion-master" {
 
   provisioner "file" {
     content = <<EOF
-"proxy_host: ${var.http_proxy_host}"
-"proxy_port: ${var.http_proxy_port}"
+proxy_host: ${var.http_proxy_host}
+proxy_port: ${var.http_proxy_port}
 EOF
 
     destination = "/etc/salt/minion.d/proxy.conf"
@@ -212,8 +212,8 @@ resource "null_resource" "salt-minion-node" {
 
   provisioner "file" {
     content = <<EOF
-"proxy_host: ${var.http_proxy_host}"
-"proxy_port: ${var.http_proxy_port}"
+proxy_host: ${var.http_proxy_host}
+proxy_port: ${var.http_proxy_port}
 EOF
 
     destination = "/etc/salt/minion.d/proxy.conf"

@@ -1,11 +1,14 @@
 ### THIS FILE IS MANAGED BY SALTSTACK
+{%- set clusterIpRange =  pillar['kubernetes']['global']['clusterIP-range'] -%}
 [Unit]
 Description=Kubernetes Kube Proxy
 Documentation=https://github.com/GoogleCloudPlatform/kubernetes
 
 [Service]
 ExecStart=/usr/bin/kube-proxy \
-  --kubeconfig=/var/lib/kubelet/kubeconfig \
+  --kubeconfig=/etc/kubernetes/kube-proxy.kubeconfig \
+  --cluster-cidr={{ clusterIpRange }}
+  --masquerade-all
   --proxy-mode=iptables \
   --iptables-min-sync-period=2s \
   --iptables-sync-period=5s \

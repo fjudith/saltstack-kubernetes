@@ -144,7 +144,7 @@ resource "null_resource" "cert-master" {
     inline = [
       "mkdir -p /etc/kubernetes/ssl",
       "tar -C /etc/kubernetes/ssl -xf /tmp/master.tar",
-      "tar -C /etc/kubernetes/ssl -xf /tmp/apiserver.tar",
+      "tar -C /etc/kubernetes/ssl -xf /tmp/kube-apiserver.tar",
       "tar -C /etc/kubernetes/ssl -xf /tmp/kubernetes-dashboard.tar",
     ]
   }

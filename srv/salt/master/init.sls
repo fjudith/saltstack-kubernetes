@@ -65,7 +65,7 @@
     - group: root
     - mode: 644
 
-/var/lib/kubernetes/encryption-config.yaml:    
+/etc/kubernetes/encryption-config.yaml:    
     file.managed:
     - source: salt://master/encryption-config.yaml
     - user: root
@@ -91,16 +91,16 @@ kube-apiserver:
     - enable: True
     - watch:
       - /etc/systemd/system/kube-apiserver.service
-      - /var/lib/kubernetes/kubernetes.pem
+      #- /etc/kubernetes/ssl/apiserver.pem
 kube-controller-manager:
   service.running:
     - enable: True
     - watch:
       - /etc/systemd/system/kube-controller-manager.service
-      - /var/lib/kubernetes/kubernetes.pem
+      #- /etc/kubernetes/ssl/apiserver.pem
 kube-scheduler:
   service.running:
    - enable: True
    - watch:
      - /etc/systemd/system/kube-scheduler.service
-     - /var/lib/kubernetes/kubernetes.pem
+     #- /etc/kubernetes/ssl/apiserver.pem

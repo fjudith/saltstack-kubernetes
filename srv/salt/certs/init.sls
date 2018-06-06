@@ -1,4 +1,4 @@
-/var/lib/kubernetes:
+{# /var/lib/kubernetes:
   file.directory:
     - user: root
     - group: root
@@ -26,10 +26,10 @@
   file.managed:
     - source:  salt://certs/kubernetes.pem
     - group: root
-    - mode: 644
+    - mode: 644 #}
 
 ## Token & Auth Policy
-/var/lib/kubernetes/token.csv:
+/etc/kubernetes/token.csv:
   file.managed:
     - source:  salt://certs/token.csv
     - template: jinja

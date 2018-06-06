@@ -84,11 +84,11 @@ resource "null_resource" "cert-etcd" {
 
   provisioner "local-exec" {
     interpreter = ["bash", "-c"]
-    command     = "${path.module}/scripts/cfssl.sh ssl etcd etcd ${join(",", var.etcd_private_ips)}"
+    command     = "${path.module}/scripts/cfssl.sh ssl etcd etcd-${element(var.etcd_private_ips, count.index)} ${join(",", var.etcd_private_ips)}"
   }
 
   provisioner "file" {
-    source      = "ssl/etcd.tar"
+    source      = "ssl/etcd-${element(var.etcd_private_ips, count.index)}.tar"
     destination = "/tmp/etcd.tar"
   }
 

@@ -65,6 +65,14 @@
     - group: root
     - mode: 644
 
+/etc/kubernetes/audit-policy.yaml:    
+    file.managed:
+    - source: salt://master/audit-policy.yaml
+    - user: root
+    - template: jinja
+    - group: root
+    - mode: 644
+
 /etc/kubernetes/encryption-config.yaml:    
     file.managed:
     - source: salt://master/encryption-config.yaml

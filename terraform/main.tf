@@ -14,6 +14,15 @@ module "provider" {
   region       = "${var.scaleway_region}"
 }
 
+module "proxy-exception" {
+  source = "./security/proxy-exceptions"
+
+  count        = "${var.etcd_count + var.master_count + var.node_count + 2}"
+  bastion_host = "${module.provider.bastion_host}"
+  vpn_iprange  = "${var.vpn_iprange}"
+  connections  = "${module.provider.private_ips}"
+}
+
 # module "dns" {
 #   source = "./dns/cloudflare"
 

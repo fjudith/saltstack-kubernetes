@@ -35,15 +35,15 @@ kubernetes:
     runtime:
       provider: docker
       docker:
-        version: 18.03.0-ce
+        version: 17.03.2-ce
         data-dir: /dockerFS
     networking:
       cni-version: v0.7.1
       provider: calico
       calico:
-        version: v3.1.1
-        cni-version: v3.1.1
-        calicoctl-version: v3.1.1
+        version: v3.1.3
+        cni-version: v3.1.3
+        calicoctl-version: v3.1.3
         controller-version: 3.1-release
         as-number: 64512
         token: hu0daeHais3aCHANGEMEhu0daeHais3a

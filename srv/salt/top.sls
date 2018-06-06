@@ -1,14 +1,14 @@
 base:
   '*':
   {% if "master" in grains.get('role', []) %}
-    - certs
+    #- certs
     - master
   {% endif %}
   {% if "node" in grains.get('role', []) %}
-    - certs
+    #- certs
     - node
   {% endif %}
   {% if "etcd" in grains.get('role', []) %}
-    - certs
+    #- certs
     - etcd
   {% endif %}

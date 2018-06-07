@@ -1,5 +1,5 @@
 kubernetes:
-  version: v1.10.1
+  version: v1.10.4
   domain: cluster.local
   clusterDNS: 10.32.0.10
   etcd:
@@ -14,7 +14,7 @@ kubernetes:
       etcd03:
         hostname: etcd03
         ipaddr: 172.16.4.53
-    version: v3.3.5
+    version: v3.2.22
   master:
 #    count: 1
 #    hostname: master.domain.tld

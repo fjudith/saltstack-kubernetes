@@ -65,4 +65,5 @@ kubernetes:
     helm-version: v2.8.2
     dashboard-version: v1.8.3
     admin-token: Haim8kay1rarCHANGEMEHaim8kay1rar
-    kubelet-token: ahT1eipae1wiCHANGEMEahT1eipae1wi  
+    kubelet-token: ahT1eipae1wiCHANGEMEahT1eipae1wi
+    bootstrap-token: c6925295f34652d872042f0d28170ca3

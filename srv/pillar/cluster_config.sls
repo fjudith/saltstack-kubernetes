@@ -36,7 +36,7 @@ kubernetes:
       provider: docker
       docker:
         version: 17.03.2-ce
-        data-dir: /dockerFS
+        data-dir: /var/lib/docker
     networking:
       cni-version: v0.7.1
       provider: calico
@@ -57,6 +57,10 @@ kubernetes:
           interface: ens18
           range: fd80:24e2:f998:72d6::/64
   global:
+    proxy:
+      ipaddr: 172.16.4.251
+      port: 8888
+    vpnIP-range: 172.16.4.0/24
     clusterIP-range: 10.96.0.0/16
     helm-version: v2.8.2
     dashboard-version: v1.8.3

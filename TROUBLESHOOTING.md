@@ -16,3 +16,11 @@ export ETCDCTL_API=3
 etcdctl endpoint health
 etcdctl check perf
 ```
+
+## Terminate salt Job
+
+```bash
+salt-run jobs.list_jobs
+salt '*' saltutil.term_job <job id>
+```
+

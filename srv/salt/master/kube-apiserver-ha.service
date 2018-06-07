@@ -24,7 +24,7 @@ Documentation=https://github.com/GoogleCloudPlatform/kubernetes
 
 [Service]
 ExecStart=/usr/bin/kube-apiserver \
-  --admission-control=NamespaceLifecycle,NodeRestriction,LimitRanger,ServiceAccount,PersistentVolumeLabel,DefaultStorageClass,DefaultTolerationSeconds,MutatingAdmissionWebhook,ValidatingAdmissionWebhook,ResourceQuota \
+  --enable-admission-plugin=NamespaceLifecycle,NodeRestriction,LimitRanger,ServiceAccount,PersistentVolumeLabel,DefaultStorageClass,DefaultTolerationSeconds,MutatingAdmissionWebhook,ValidatingAdmissionWebhook,ResourceQuota \
   --advertise-address={{ currentip }} \
   --allow-privileged=true \
   --anonymous-auth=false \
@@ -50,7 +50,7 @@ ExecStart=/usr/bin/kube-apiserver \
   --kubelet-client-certificate=/etc/kubernetes/ssl/apiserver.pem \
   --kubelet-client-key=/etc/kubernetes/ssl/apiserver-key.pem \
   --kubelet-https=true \
-  --runtime-config=batch/v2alpha1=true  \
+  --runtime-config=batch/v2alpha1=true \
   --service-account-key-file=/etc/kubernetes/ssl/ca-key.pem \
   --service-cluster-ip-range={{ clusterIpRange }} \
   --service-node-port-range=30000-50000 \

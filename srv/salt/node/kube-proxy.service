@@ -7,8 +7,8 @@ Documentation=https://github.com/GoogleCloudPlatform/kubernetes
 [Service]
 ExecStart=/usr/bin/kube-proxy \
   --kubeconfig=/etc/kubernetes/kube-proxy.kubeconfig \
-  --cluster-cidr={{ clusterIpRange }}
-  --masquerade-all
+  --cluster-cidr={{ clusterIpRange }} \
+  --masquerade-all \
   --proxy-mode=iptables \
   --iptables-min-sync-period=2s \
   --iptables-sync-period=5s \

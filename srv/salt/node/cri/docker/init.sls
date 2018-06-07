@@ -43,6 +43,14 @@ docker-latest-archive:
   file.symlink:
     - target: /opt/docker/docker-runc
 
+/etc/docker/daemon.json:
+    file.managed:
+    - source: salt://node/cri/docker/daemon.json
+    - user: root
+    - template: jinja
+    - group: root
+    - mode: 644
+
 /etc/systemd/system/docker.service:
     file.managed:
     - source: salt://node/cri/docker/docker.service
@@ -51,8 +59,33 @@ docker-latest-archive:
     - group: root
     - mode: 644
 
+/etc/systemd/system/docker.socket:
+    file.managed:
+    - source: salt://node/cri/docker/docker.socket
+    - user: root
+    - template: jinja
+    - group: root
+    - mode: 644
+
 docker:
+  group.present:
+    - gid: 1000
+    - system: True
+
+docker.socket:
   service.running:
     - enable: True
+    - reload: True
     - watch:
       - /etc/systemd/system/docker.service
+    - require:
+      - group: docker
+
+docker.service:
+  service.running:
+    - enable: True
+    - reload: True
+    - watch:
+      - /etc/systemd/system/docker.service
+    - require:
+      - group: docker

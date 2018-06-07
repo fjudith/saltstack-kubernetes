@@ -1,0 +1,4 @@
+{%- set dockerFS = pillar['kubernetes']['node']['runtime']['docker']['data-dir'] -%}
+{
+    "storage-driver": "overlay2"
+}

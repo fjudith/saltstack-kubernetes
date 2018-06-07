@@ -9,5 +9,10 @@ curl -L --noproxy '*' --cacert /etc/etcd/ssl/ca.pem --cert /etc/etcd/ssl/etcd.pe
 curl -L --noproxy '*' --cacert /etc/etcd/ssl/ca.pem --cert /etc/etcd/ssl/etcd.pem --key /etc/etcd/ssl/etcd-key.pem https://172.16.4.53:2379/health
 ```
 
-## etcd cluster-health
+## etcd cluster health
 
+```bash
+export ETCDCTL_API=3
+etcdctl endpoint health
+etcdctl check perf
+```

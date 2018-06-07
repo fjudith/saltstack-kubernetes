@@ -1,6 +1,20 @@
 <img src="https://i.imgur.com/SJAtDZk.png" width="460" height="125" >
 
-Kubernetes-Saltstack provide an easy way to deploy H/A **Kubernetes Cluster** using Salt.
+# Work-in-Progress
+
+`saltstack-kubernetes` aims to deploy and maintain a secure production ready **Kubernetes cluster** managed by:
+
+* [Terraform](https://www.terraform.io) for cloud server deployment.
+* [Saltstack](https://saltstack.io) for Kubernetes installation and configuration management.
+
+This project is a fusion of the [valentin2105/Kubernetes-Saltstack](https://github.com/valentin2105/Kubernetes-Saltstack) and [hobby-kube](https://github.com/hobby-kube/provisionning) customized to address the following requirements:
+
+* [ ] Single public IP support
+* [ ] Segregated etcd cluster
+* [ ] Proxied internet access from Kubernetes servers
+* [ ] Reverse proxy with ssl offload
+* [ ] Predicatble ip Adressing
+
 
 ## Features
 

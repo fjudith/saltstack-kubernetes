@@ -140,12 +140,18 @@ resource "null_resource" "cert-master" {
     destination = "/tmp/kubernetes-dashboard.tar"
   }
 
+  provisioner "file" {
+    source      = "ssl/ca-key.pem"
+    destination = "/tmp/ca-key.pem"
+  }
+
   provisioner "remote-exec" {
     inline = [
       "mkdir -p /etc/kubernetes/ssl",
       "tar -C /etc/kubernetes/ssl -xf /tmp/master.tar",
       "tar -C /etc/kubernetes/ssl -xf /tmp/kube-apiserver.tar",
       "tar -C /etc/kubernetes/ssl -xf /tmp/kubernetes-dashboard.tar",
+      "mv /tmp/ca-key.pem /etc/kubernetes/ssl/",
     ]
   }
 }

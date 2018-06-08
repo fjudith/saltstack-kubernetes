@@ -75,7 +75,6 @@ docker:
 docker.socket:
   service.running:
     - enable: True
-    - reload: True
     - watch:
       - /etc/systemd/system/docker.service
     - require:
@@ -84,7 +83,6 @@ docker.socket:
 docker.service:
   service.running:
     - enable: True
-    - reload: True
     - watch:
       - /etc/systemd/system/docker.service
     - require:

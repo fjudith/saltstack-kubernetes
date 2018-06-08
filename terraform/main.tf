@@ -23,16 +23,16 @@ module "proxy-exception" {
   connections  = "${module.provider.private_ips}"
 }
 
-# module "dns" {
-#   source = "./dns/cloudflare"
+module "dns" {
+  source = "./dns/cloudflare"
 
-#   count      = 1
-#   email      = "${var.cloudflare_email}"
-#   token      = "${var.cloudflare_token}"
-#   domain     = "${var.domain}"
-#   public_ips = "${module.provider.public_ip}"
-#   hostnames  = "${module.provider.proxy_hostname}"
-# }
+  count      = 1
+  email      = "${var.cloudflare_email}"
+  token      = "${var.cloudflare_token}"
+  domain     = "${var.domain}"
+  public_ips = "${module.provider.public_ip}"
+  hostnames  = "${module.provider.proxy_hostname}"
+}
 
 module "wireguard" {
   source = "./security/wireguard"

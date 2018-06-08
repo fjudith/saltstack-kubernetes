@@ -1,5 +1,5 @@
 kubernetes:
-  version: v1.10.4
+  version: v1.10.1
   domain: cluster.local
   clusterDNS: 10.32.0.10
   etcd:

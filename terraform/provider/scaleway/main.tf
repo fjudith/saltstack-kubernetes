@@ -137,6 +137,7 @@ resource "scaleway_server" "proxy01" {
       "echo 'Allow 192.168.0.0/16' >> /etc/tinyproxy.conf",
       "echo 'Allow 172.16.0.0/12' >> /etc/tinyproxy.conf",
       "echo 'Allow 10.0.0.0/8' >> /etc/tinyproxy.conf",
+      "echo 'MaxSessions 100' >> /etc/ssh/sshd_config",
       "systemctl daemon-reload",
       "systemctl restart tinyproxy",
     ]

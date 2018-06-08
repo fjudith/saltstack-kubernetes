@@ -14,3 +14,16 @@ proxy_server:
          http_proxy: http://{{ proxy_server }}:{{ proxy_port }}
          https_proxy: http://{{ proxy_server }}:{{ proxy_port }}
          no_proxy: "localhost, 127.0.0.1, *.{{ cluster_domain }} {{ vpn_subnet }}"
+
+query_cloudflare:
+  http.query:
+    - name: 'http://www.cloudflare.com/'
+    - status: 200
+query_github
+  http.query:
+    - name: 'http://github.com/'
+    - status: 200
+query_cncf:
+  http.query:
+    - name: 'http://cncf.io/'
+    - status: 200

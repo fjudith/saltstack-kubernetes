@@ -11,20 +11,20 @@ Requires=docker.service
 [Service]
 ExecStart=/usr/bin/kubelet \
   --allow-privileged=true \
-  --cluster-dns={{ clusterDNS }}  \
+  --cluster-dns={{ clusterDNS }} \
   --cluster-domain={{ clusterDomain }} \
   --hostname-override={{ hostname }} \
   --container-runtime=docker \
   --docker=unix:///var/run/docker.sock \
   --network-plugin=cni \
-  --kubeconfig=/var/lib/kubelet/kubeconfig \
+  --kubeconfig=/etc/kubernetes/kubeconfig \
   --runtime-cgroups=/systemd/system.slice \
   --kubelet-cgroups=/systemd/system.slice \
   --serialize-image-pulls=false \
   --register-node=true \
   --tls-cert-file=/etc/kubernetes/ssl/node.pem \
   --tls-private-key-file=/etc/kubernetes/ssl/node-key.pem \
-  --eviction-pressure-transition-period 30s \
+  --eviction-pressure-transition-period=30s \
   --cert-dir=/var/lib/kubelet \
   --v=2
 

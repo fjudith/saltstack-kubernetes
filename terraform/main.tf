@@ -147,10 +147,13 @@ module "encryption" {
   bastion_host       = "${module.provider.bastion_host}"
   etcd_count         = "${var.etcd_count}"
   etcd_private_ips   = "${module.wireguard.etcd_vpn_ips}"
+  etcd_hostnames     = "${module.provider.etcd_hostnames}"
   master_count       = "${var.master_count}"
   master_private_ips = "${module.wireguard.master_vpn_ips}"
+  master_hostnames   = "${module.provider.master_hostnames}"
   node_count         = "${var.node_count}"
   node_private_ips   = "${module.wireguard.node_vpn_ips}"
+  node_hostnames     = "${module.provider.node_hostnames}"
 }
 
 output "hostnames" {

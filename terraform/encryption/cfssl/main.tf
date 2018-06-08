@@ -21,13 +21,28 @@ variable "etcd_private_ips" {
   type        = "list"
 }
 
+variable "etcd_hostnames" {
+  description = "List of Etcd hostnames"
+  type        = "list"
+}
+
 variable "master_private_ips" {
   description = "List of Kubernetes master private ip adresses"
   type        = "list"
 }
 
+variable "master_hostnames" {
+  description = "List of Kubernetes master hostnames"
+  type        = "list"
+}
+
 variable "node_private_ips" {
   description = "List of Node private ip adresses"
+  type        = "list"
+}
+
+variable "node_hostnames" {
+  description = "List of Kubernetes node hostnames"
   type        = "list"
 }
 
@@ -84,7 +99,7 @@ resource "null_resource" "cert-etcd" {
 
   provisioner "local-exec" {
     interpreter = ["bash", "-c"]
-    command     = "${path.module}/scripts/cfssl.sh ssl etcd etcd-${element(var.etcd_private_ips, count.index)} ${join(",", var.etcd_private_ips)}"
+    command     = "${path.module}/scripts/cfssl.sh ssl etcd etcd-${element(var.etcd_private_ips, count.index)} ${join(",", concat(var.etcd_hostnames, var.etcd_private_ips))}"
   }
 
   provisioner "file" {
@@ -117,12 +132,12 @@ resource "null_resource" "cert-master" {
 
   provisioner "local-exec" {
     interpreter = ["bash", "-c"]
-    command     = "${path.module}/scripts/cfssl.sh ssl master master-${element(var.master_private_ips, count.index)} ${join(",", concat(var.master_private_ips, list(var.master_cluster_ip)))}"
+    command     = "${path.module}/scripts/cfssl.sh ssl master master-${element(var.master_private_ips, count.index)} ${join(",", concat(var.master_hostnames, var.master_private_ips, list(var.master_cluster_ip)))}"
   }
 
   provisioner "local-exec" {
     interpreter = ["bash", "-c"]
-    command     = "${path.module}/scripts/cfssl.sh ssl apiserver kube-apiserver-${element(var.master_private_ips, count.index)} ${join(",", concat(var.master_private_ips, list(var.master_cluster_ip)))}"
+    command     = "${path.module}/scripts/cfssl.sh ssl apiserver kube-apiserver-${element(var.master_private_ips, count.index)} ${join(",", concat(var.master_hostnames, var.master_private_ips, list(var.master_cluster_ip)))}"
   }
 
   provisioner "file" {

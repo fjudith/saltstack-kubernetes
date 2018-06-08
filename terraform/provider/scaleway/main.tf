@@ -380,6 +380,24 @@ output "proxy_hostnames" {
   ]
 }
 
+output "etcd_hostnames" {
+  value = [
+    "${scaleway_server.etcd.*.name}",
+  ]
+}
+
+output "master_hostnames" {
+  value = [
+    "${scaleway_server.master.*.name}",
+  ]
+}
+
+output "node_hostnames" {
+  value = [
+    "${scaleway_server.node.*.name}",
+  ]
+}
+
 output "proxy_hostname" {
   value = [
     "${scaleway_server.proxy01.*.name}",

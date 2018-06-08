@@ -19,10 +19,12 @@ query_cloudflare:
   http.query:
     - name: 'http://www.cloudflare.com/'
     - status: 200
-query_github
+
+query_github:
   http.query:
     - name: 'http://github.com/'
     - status: 200
+
 query_cncf:
   http.query:
     - name: 'http://cncf.io/'

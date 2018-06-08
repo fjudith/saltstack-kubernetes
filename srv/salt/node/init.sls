@@ -79,12 +79,14 @@ vm.max_map_count:
 kubelet:
   service.running:
     - enable: True
+    - reload: True
     - watch:
       - /etc/systemd/system/kubelet.service
 
 kube-proxy:
   service.running:
     - enable: True
+    - reload: True
     - watch:
       - /etc/systemd/system/kube-proxy.service
 

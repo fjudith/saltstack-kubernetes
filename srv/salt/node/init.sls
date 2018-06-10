@@ -38,6 +38,12 @@ vm.max_map_count:
     - group: root
     - mode: 755
 
+/etc/kubernetes/volumeplugins:
+  file.directory:
+    - user: root
+    - group: root
+    - dir_mode: 700
+
 /var/lib/kubelet:
   file.directory:
     - user: root

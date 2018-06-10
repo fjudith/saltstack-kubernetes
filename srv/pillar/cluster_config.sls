@@ -1,5 +1,5 @@
 kubernetes:
-  version: v1.10.1
+  version: v1.10.4
   domain: cluster.local
   clusterDNS: 10.3.0.10
   etcd:
@@ -61,7 +61,9 @@ kubernetes:
       ipaddr: 172.16.4.251
       port: 8888
     vpnIP-range: 172.16.4.0/24
-    clusterIP-range: 10.2.0.0/16
+    pod-network: 10.2.0.0/16
+    kubernetes-service-ip: 10.3.0.1
+    service-ip-range: 10.3.0.0/24
     helm-version: v2.8.2
     dashboard-version: v1.8.3
     admin-token: Haim8kay1rarCHANGEMEHaim8kay1rar

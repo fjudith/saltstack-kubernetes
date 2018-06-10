@@ -7,6 +7,12 @@
     - group:  root
     - mode:  '755'
 
+/etc/docker:
+  file.directory:
+    - user:  root
+    - group:  root
+    - mode:  '744'
+
 docker-latest-archive:
   archive.extracted:
     - name: /opt/

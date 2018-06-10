@@ -1,5 +1,5 @@
 ### THIS FILE IS MANAGED BY SALTSTACK
-{%- set clusterIpRange =  pillar['kubernetes']['global']['clusterIP-range'] -%} 
+{%- set serviceIpRange =  pillar['kubernetes']['global']['service-ip-range'] -%} 
 {%- set masterCount =  pillar['kubernetes']['master']['count'] -%} 
 {%- set hostname = salt['grains.get']('fqdn') -%}
 {%- set etcd01 =  pillar['kubernetes']['etcd']['cluster']['etcd01']['hostname'] -%} 
@@ -52,7 +52,7 @@ ExecStart=/usr/bin/kube-apiserver \
   --kubelet-https=true \
   --runtime-config=batch/v2alpha1=true \
   --service-account-key-file=/etc/kubernetes/ssl/ca-key.pem \
-  --service-cluster-ip-range={{ clusterIpRange }} \
+  --service-cluster-ip-range={{ serviceIpRange }} \
   --service-node-port-range=30000-50000 \
   --storage-media-type=application/json \
   --tls-cert-file=/etc/kubernetes/ssl/apiserver.pem \

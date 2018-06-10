@@ -1,5 +1,5 @@
 ### THIS FILE IS MANAGED BY SALTSTACK
-{%- set clusterIpRange =  pillar['kubernetes']['global']['clusterIP-range'] -%}
+{%- set podNetwork =  pillar['kubernetes']['global']['pod-network'] -%}
 [Unit]
 Description=Kubernetes Kube Proxy
 Documentation=https://github.com/GoogleCloudPlatform/kubernetes
@@ -7,7 +7,7 @@ Documentation=https://github.com/GoogleCloudPlatform/kubernetes
 [Service]
 ExecStart=/usr/bin/kube-proxy \
   --kubeconfig=/etc/kubernetes/kube-proxy.kubeconfig \
-  --cluster-cidr={{ clusterIpRange }} \
+  --cluster-cidr={{ podNetwork }} \
   --masquerade-all \
   --proxy-mode=iptables \
   --iptables-min-sync-period=2s \

@@ -114,7 +114,7 @@ kubernetes:
           interface: ens18
           range: fd80:24e2:f998:72d6::/64
   global:
-    clusterIP-range: 10.32.0.0/16
+    pod-network: 10.32.0.0/16
     helm-version: v2.8.2
     dashboard-version: v1.8.3
     admin-token: Haim8kay1rarCHANGEMEHaim8kay1rar

@@ -1,5 +1,5 @@
 ### THIS FILE IS MANAGED BY SALTSTACK
-{%- set clusterIpRange =  pillar['kubernetes']['global']['clusterIP-range'] -%} 
+{%- set clusterIpRange =  pillar['kubernetes']['global']['pod-network'] -%} 
 [Unit]
 Description=Kubernetes API Server
 Documentation=https://kubernetes.io/docs/reference/command-line-tools-reference/kube-apiserver/

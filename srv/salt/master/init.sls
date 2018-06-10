@@ -8,6 +8,7 @@
   file.managed:
     - source: https://storage.googleapis.com/kubernetes-release/release/{{ k8sVersion }}/bin/linux/amd64/kube-apiserver
     - skip_verify: true
+    - show_changes: False
     - group: root
     - mode: 755
 
@@ -15,6 +16,7 @@
   file.managed:
     - source: https://storage.googleapis.com/kubernetes-release/release/{{ k8sVersion }}/bin/linux/amd64/kube-controller-manager
     - skip_verify: true
+    - show_changes: False
     - group: root
     - mode: 755
 
@@ -22,6 +24,7 @@
   file.managed:
     - source: https://storage.googleapis.com/kubernetes-release/release/{{ k8sVersion }}/bin/linux/amd64/kube-scheduler
     - skip_verify: true
+    - show_changes: False
     - group: root
     - mode: 755
 
@@ -29,6 +32,7 @@
   file.managed:
     - source: https://storage.googleapis.com/kubernetes-release/release/{{ k8sVersion }}/bin/linux/amd64/kubectl
     - skip_verify: true
+    - show_changes: False
     - group: root
     - mode: 755
 {% if masterCount == 1 %}
@@ -97,18 +101,21 @@
 kube-apiserver:
   service.running:
     - enable: True
+    - reload: True
     - watch:
       - /etc/systemd/system/kube-apiserver.service
       #- /etc/kubernetes/ssl/apiserver.pem
 kube-controller-manager:
   service.running:
     - enable: True
+    - reload: True
     - watch:
       - /etc/systemd/system/kube-controller-manager.service
       #- /etc/kubernetes/ssl/apiserver.pem
 kube-scheduler:
   service.running:
    - enable: True
+   - reload: True
    - watch:
      - /etc/systemd/system/kube-scheduler.service
      #- /etc/kubernetes/ssl/apiserver.pem

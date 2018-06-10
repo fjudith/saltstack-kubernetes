@@ -9,7 +9,7 @@
 proxy_server:
    environ.setenv:
      - name: tinyproxy
-     - update_minion: True
+     - update_minion: true
      - value:
          http_proxy: http://{{ proxy_server }}:{{ proxy_port }}
          https_proxy: http://{{ proxy_server }}:{{ proxy_port }}

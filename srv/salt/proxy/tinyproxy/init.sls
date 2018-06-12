@@ -1,4 +1,4 @@
 include:
-  - tinyproxy.install
-  - tinyproxy.service
-  - tinyproyx.config
+  - proxy.tinyproxy.install
+  - proxy.tinyproxy.service
+  - proxy.tinyproxy.config

@@ -52,7 +52,11 @@ EOF
   }
 
   provisioner "file" {
-    content     = "master: localhost"
+    content = <<EOF
+master: localhost
+timeout: 30
+EOF
+
     destination = "/etc/salt/minion.d/master.conf"
   }
 

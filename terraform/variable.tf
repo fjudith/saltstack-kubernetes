@@ -13,6 +13,11 @@ variable "scaleway_token" {
   default     = "12345678-1234-1234-1234-123456789abc"
 }
 
+variable "cluster_public_dns" {
+  description = "Kubernetes cluster public DNS record"
+  default     = "kubernetes.domain.tld"
+}
+
 variable "architecture" {
   description = "Operating system image base architecture"
   default     = "x86_64"

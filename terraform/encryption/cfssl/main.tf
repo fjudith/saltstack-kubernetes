@@ -2,6 +2,8 @@ variable "etcd_count" {}
 variable "master_count" {}
 variable "node_count" {}
 variable "bastion_host" {}
+variable "domain" {}
+variable "cluster_public_dns" {}
 
 variable "ssh_user" {
   default = "root"
@@ -132,12 +134,12 @@ resource "null_resource" "cert-master" {
 
   provisioner "local-exec" {
     interpreter = ["bash", "-c"]
-    command     = "${path.module}/scripts/cfssl.sh ssl master master-${element(var.master_private_ips, count.index)} ${join(",", concat(var.master_hostnames, var.master_private_ips, list(var.master_cluster_ip)))}"
+    command     = "${path.module}/scripts/cfssl.sh ssl master master-${element(var.master_private_ips, count.index)} ${join(",", concat(var.master_hostnames, var.master_private_ips, list(var.master_cluster_ip), list(var.cluster_public_dns)))}"
   }
 
   provisioner "local-exec" {
     interpreter = ["bash", "-c"]
-    command     = "${path.module}/scripts/cfssl.sh ssl apiserver kube-apiserver-${element(var.master_private_ips, count.index)} ${join(",", concat(var.master_hostnames, var.master_private_ips, list(var.master_cluster_ip)))}"
+    command     = "${path.module}/scripts/cfssl.sh ssl apiserver kube-apiserver-${element(var.master_private_ips, count.index)} ${join(",", concat(var.master_hostnames, var.master_private_ips, list(var.master_cluster_ip), list(var.cluster_public_dns)))}"
   }
 
   provisioner "file" {

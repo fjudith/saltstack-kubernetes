@@ -154,6 +154,8 @@ module "encryption" {
   node_count         = "${var.node_count}"
   node_private_ips   = "${module.wireguard.node_vpn_ips}"
   node_hostnames     = "${module.provider.node_hostnames}"
+  cluster_public_dns = "${var.cluster_public_dns}"
+  domain             = "${var.domain}"
 }
 
 output "hostnames" {

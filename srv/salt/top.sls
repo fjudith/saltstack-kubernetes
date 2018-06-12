@@ -15,3 +15,7 @@ base:
     - certs
     - etcd
   {% endif %}
+  {% if "proxy" in grains.get('role', []) %}
+    - common
+    - proxy
+  {% endif %}

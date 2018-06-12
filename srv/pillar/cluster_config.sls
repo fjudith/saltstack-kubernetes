@@ -1,7 +1,6 @@
 kubernetes:
   version: v1.10.4
   domain: cluster.local
-  clusterDNS: 10.3.0.10
   etcd:
     count: 3
     cluster:
@@ -37,6 +36,8 @@ kubernetes:
       docker:
         version: 17.03.2-ce
         data-dir: /var/lib/docker
+      rkt:
+        version: 1.29.0
     networking:
       cni-version: v0.7.1
       provider: calico
@@ -64,8 +65,19 @@ kubernetes:
     pod-network: 10.2.0.0/16
     kubernetes-service-ip: 10.3.0.1
     service-ip-range: 10.3.0.0/24
+    clusterDNS: 10.3.0.10
     helm-version: v2.8.2
     dashboard-version: v1.8.3
     admin-token: Haim8kay1rarCHANGEMEHaim8kay1rar
     kubelet-token: ahT1eipae1wiCHANGEMEahT1eipae1wi
     bootstrap-token: c6925295f34652d872042f0d28170ca3
+tinyproxy:
+  MaxClients: 200
+  MinSpareServers: 10
+  MaxSpareServers: 40
+  StartServers: 20
+  Allow:
+    - 127.0.0.1
+    - 192.168.0.0/16
+    - 172.16.0.0/12
+    - 10.0.0.0/8

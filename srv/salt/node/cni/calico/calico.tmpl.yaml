@@ -69,13 +69,13 @@ spec:
             - name: ETCD_ENDPOINTS
               value: "https://{{ etcdEndpoint }}:2379"
             - name: ETCD_CA_CERT_FILE
-              value: "/var/lib/kubernetes/ca.pem"
+              value: "/srv/kubernetes/ca.pem"
             # Location of the client key for etcd.
             - name: ETCD_KEY_FILE
-              value: "/var/lib/kubernetes/kubernetes-key.pem"
+              value: "/srv/kubernetes/kubernetes-key.pem"
             # Location of the client certificate for etcd.
             - name: ETCD_CERT_FILE
-              value: "/var/lib/kubernetes/kubernetes.pem"
+              value: "/srv/kubernetes/kubernetes.pem"
             # Choose the backend to use.
             - name: CALICO_NETWORKING_BACKEND
               value: bird
@@ -107,13 +107,13 @@ spec:
               value: "info"
             # Location of the CA certificate for etcd.
             - name: ETCD_CA_CERT_FILE
-              value: "/var/lib/kubernetes/ca.pem"
+              value: "/srv/kubernetes/ca.pem"
             # Location of the client key for etcd.
             - name: ETCD_KEY_FILE
-              value: "/var/lib/kubernetes/kubernetes-key.pem"
+              value: "/srv/kubernetes/kubernetes-key.pem"
             # Location of the client certificate for etcd.
             - name: ETCD_CERT_FILE
-              value: "/var/lib/kubernetes/kubernetes.pem"
+              value: "/srv/kubernetes/kubernetes.pem"
             # Auto-detect the BGP IP address.
             - name: IP
               value: ""
@@ -149,7 +149,7 @@ spec:
             - mountPath: /var/run/calico
               name: var-run-calico
               readOnly: false
-            - mountPath: /var/lib/kubernetes
+            - mountPath: /srv/kubernetes
               name: var-lib-k8s
               readOnly: true
             - mountPath: /var/lib/calico
@@ -174,7 +174,7 @@ spec:
             path: /etc/cni/net.d
         - name: var-lib-k8s
           hostPath:
-            path: /var/lib/kubernetes
+            path: /srv/kubernetes
         - name: var-lib-calico
           hostPath:
             path: /var/lib/calico
@@ -218,13 +218,13 @@ spec:
               value: "https://{{ etcdEndpoint }}:2379"
             # Location of the CA certificate for etcd.
             - name: ETCD_CA_CERT_FILE
-              value: "/var/lib/kubernetes/ca.pem"
+              value: "/srv/kubernetes/ca.pem"
             # Location of the client key for etcd.
             - name: ETCD_KEY_FILE
-              value: "/var/lib/kubernetes/kubernetes-key.pem"
+              value: "/srv/kubernetes/kubernetes-key.pem"
             # Location of the client certificate for etcd.
             - name: ETCD_CERT_FILE
-              value: "/var/lib/kubernetes/kubernetes.pem"
+              value: "/srv/kubernetes/kubernetes.pem"
             # Auto-detect the BGP IP address.
             - name: ENABLED_CONTROLLERS
               value: policy,profile,workloadendpoint,node
@@ -235,7 +235,7 @@ spec:
             - name: KUBERNETES_SERVICE_PORT
               value: "6443"
           volumeMounts:
-            - mountPath: /var/lib/kubernetes
+            - mountPath: /srv/kubernetes
               name: var-lib-k8s
               readOnly: true
             - mountPath: /etc/cni/net.d
@@ -245,7 +245,7 @@ spec:
       volumes:
         - name: var-lib-k8s
           hostPath:
-            path: /var/lib/kubernetes
+            path: /srv/kubernetes
         - name: cni-net-dir
           hostPath:
             path: /etc/cni/net.d

@@ -1,28 +1,28 @@
-{# /var/lib/kubernetes:
+/etc/kubernetes:
   file.directory:
     - user: root
     - group: root
     - dir_mode: 750
 
-/var/lib/kubernetes/ca.pem:
+{# /srv/kubernetes/ca.pem:
   file.managed:
     - source:  salt://certs/ca.pem
     - group: root
     - mode: 644
 
-/var/lib/kubernetes/ca-key.pem:
+/srv/kubernetes/ca-key.pem:
   file.managed:
     - source:  salt://certs/ca-key.pem
     - group: root
     - mode: 600
 
-/var/lib/kubernetes/kubernetes-key.pem:
+/srv/kubernetes/kubernetes-key.pem:
   file.managed:
     - source:  salt://certs/kubernetes-key.pem
     - group: root
     - mode: 600
 
-/var/lib/kubernetes/kubernetes.pem:
+/srv/kubernetes/kubernetes.pem:
   file.managed:
     - source:  salt://certs/kubernetes.pem
     - group: root

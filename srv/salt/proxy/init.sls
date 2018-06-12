@@ -3,3 +3,4 @@ include:
   - node.cri.rkt
   - proxy.keepalived
   - proxy.tinyproxy
+  - proxy.haproxy

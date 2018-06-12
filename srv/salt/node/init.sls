@@ -87,16 +87,16 @@ vm.max_map_count:
 kubelet:
   service.running:
     - enable: True
-    - reload: True
     - watch:
       - /etc/systemd/system/kubelet.service
+      - /usr/bin/kubelet
 
 kube-proxy:
   service.running:
     - enable: True
-    - reload: True
     - watch:
       - /etc/systemd/system/kube-proxy.service
+      - /usr/bin/kube-proxy
 
 {% if enableIPv6 == true %}
 net.ipv6.conf.all.forwarding:

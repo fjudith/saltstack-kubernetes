@@ -232,6 +232,9 @@ EOF
 # Node certificate
 # ---------------------------------------------
 function write-ssl-node {
+    # Convert SANs to JSON supported array (e.g 1,2,3 --> "1","2","3",) 
+    NODE_IP=$(for i in $(printf ${SANS} | tr ',' '\n'); do printf "\"$i\","; done)
+
     # Extracting the IP address from the CN (i.e node-xxx.xxx.xxx.xxx)
     IP_ADDRESS=$(printf ${CN} | awk -F '-' '{print $2}')
     
@@ -242,6 +245,11 @@ function write-ssl-node {
     cat << EOF > $TEMPLATE
 {
   "CN": "system:node:${IP_ADDRESS}",
+  "hosts": [
+    "127.0.0.1",
+    ${NODE_IP}
+    "localhost"
+  ],
   "key": {
     "algo": "ecdsa",
     "size": 256

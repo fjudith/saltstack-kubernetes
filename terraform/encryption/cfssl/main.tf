@@ -190,7 +190,7 @@ resource "null_resource" "cert-node" {
 
   provisioner "local-exec" {
     interpreter = ["bash", "-c"]
-    command     = "${path.module}/scripts/cfssl.sh ssl node node-${element(var.node_private_ips, count.index)} ${join("," , var.node_private_ips)}"
+    command     = "${path.module}/scripts/cfssl.sh ssl node node-${element(var.node_private_ips, count.index)} ${join("," , concat(list(element(var.node_private_ips, count.index), element(var.node_hostnames, count.index))))}"
   }
 
   provisioner "file" {

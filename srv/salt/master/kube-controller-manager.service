@@ -10,7 +10,7 @@ ExecStart=/usr/bin/kube-controller-manager \
   --master=http://127.0.0.1:8080 \
   --leader-elect=true \
   --feature-gates=RotateKubeletServerCertificate=true \
-  --service-account-private-key-file=/etc/kubernetes/ssl/ca-key.pem \
+  --service-account-private-key-file=/etc/kubernetes/ssl/apiserver-key.pem \
   --root-ca-file=/etc/kubernetes/ssl/ca.pem \
   --flex-volume-plugin-dir=/etc/kubernetes/volumeplugins \
   --cluster-signing-cert-file=/etc/kubernetes/ssl/ca.pem \
@@ -19,8 +19,6 @@ ExecStart=/usr/bin/kube-controller-manager \
   --node-monitor-period=5s \
   --node-startup-grace-period 30s \
   --pod-eviction-timeout=5m0s \
-  --cluster-name=kubernetes \
-  --service-cluster-ip-range={{ clusterIpRange }} \
   --v=2
 
 Restart=on-failure

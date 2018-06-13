@@ -39,6 +39,9 @@ sudo ufw allow 4506
 sudo ufw allow http
 sudo ufw allow https
 
+# Allow Kubernetes API Server
+sudo ufw allow 6443
+
 # Allow Tinyproxy
 sudo ufw allow 8888
 

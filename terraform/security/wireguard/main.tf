@@ -78,6 +78,7 @@ resource "null_resource" "wireguard" {
     bastion_host        = "${var.bastion_host}"
     bastion_user        = "${var.ssh_user}"
     bastion_private_key = "${file(var.ssh_private_key)}"
+    timeout             = "1m"
   }
 
   provisioner "remote-exec" {
@@ -89,7 +90,7 @@ resource "null_resource" "wireguard" {
 
   provisioner "remote-exec" {
     inline = [
-      "apt-get install -yq software-properties-common build-essential",
+      "apt-get install -yq libmnl-dev libelf-dev pkg-config software-properties-common build-essential",
       "add-apt-repository -y ppa:wireguard/wireguard",
       "apt-get update",
     ]
@@ -220,6 +221,11 @@ data "template_file" "vpn_ips" {
   vars {
     ip = "${element(concat(data.template_file.proxy_vpn_ips.*.rendered, data.template_file.etcd_vpn_ips.*.rendered, data.template_file.master_vpn_ips.*.rendered, data.template_file.node_vpn_ips.*.rendered), count.index)}"
   }
+}
+
+output "gateway_vpn_ips" {
+  depends_on = ["null_resource.wireguard"]
+  value      = ["${data.template_file.proxy_vpn_ips.0.rendered}"]
 }
 
 output "proxy_vpn_ips" {

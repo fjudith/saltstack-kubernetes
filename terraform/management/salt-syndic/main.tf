@@ -31,6 +31,7 @@ resource "null_resource" "salt-minion" {
     bastion_host        = "${var.bastion_host}"
     bastion_user        = "${var.ssh_user}"
     bastion_private_key = "${file(var.ssh_private_key)}"
+    timeout             = "1m"
   }
 
   provisioner "remote-exec" {

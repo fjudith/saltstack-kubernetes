@@ -124,6 +124,7 @@ resource "scaleway_server" "proxy01" {
     user        = "${var.ssh_user}"
     private_key = "${file(var.ssh_private_key)}"
     agent       = false
+    timeout     = "1m"
   }
 
   provisioner "remote-exec" {
@@ -137,9 +138,10 @@ resource "scaleway_server" "proxy01" {
       "echo 'Allow 192.168.0.0/16' >> /etc/tinyproxy.conf",
       "echo 'Allow 172.16.0.0/12' >> /etc/tinyproxy.conf",
       "echo 'Allow 10.0.0.0/8' >> /etc/tinyproxy.conf",
-      "echo 'MaxSessions 100' >> /etc/ssh/sshd_config",
+      "echo 'MaxSessions 50' >> /etc/ssh/sshd_config",
       "systemctl daemon-reload",
       "systemctl restart tinyproxy",
+      "systemctl reload sshd",
     ]
   }
 
@@ -188,6 +190,7 @@ resource "scaleway_server" "proxy02" {
     bastion_host        = "${scaleway_server.proxy01.0.public_ip}"
     bastion_user        = "${var.ssh_user}"
     bastion_private_key = "${file(var.ssh_private_key)}"
+    timeout             = "1m"
   }
 
   provisioner "remote-exec" {
@@ -235,6 +238,7 @@ resource "scaleway_server" "etcd" {
     bastion_host        = "${scaleway_server.proxy01.0.public_ip}"
     bastion_user        = "${var.ssh_user}"
     bastion_private_key = "${file(var.ssh_private_key)}"
+    timeout             = "1m"
   }
 
   provisioner "remote-exec" {
@@ -282,6 +286,7 @@ resource "scaleway_server" "master" {
     bastion_host        = "${scaleway_server.proxy01.0.public_ip}"
     bastion_user        = "${var.ssh_user}"
     bastion_private_key = "${file(var.ssh_private_key)}"
+    timeout             = "1m"
   }
 
   provisioner "remote-exec" {
@@ -327,6 +332,7 @@ resource "scaleway_server" "node" {
     bastion_host        = "${scaleway_server.proxy01.0.public_ip}"
     bastion_user        = "${var.ssh_user}"
     bastion_private_key = "${file(var.ssh_private_key)}"
+    timeout             = "1m"
   }
 
   volume {

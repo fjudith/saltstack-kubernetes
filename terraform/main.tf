@@ -158,6 +158,16 @@ module "encryption" {
   domain             = "${var.domain}"
 }
 
+module "default-route-vpn" {
+  source = "./routing"
+
+  count         = "${var.etcd_count + var.master_count + var.node_count + 1}"
+  bastion_host  = "${module.provider.bastion_host}"
+  vpn_interface = "${module.wireguard.vpn_interface}"
+  gateway       = "${element(module.wireguard.gateway_vpn_ips,0)}"
+  connections   = "${concat(list(module.wireguard.proxy_vpn_ips[1]), module.wireguard.etcd_vpn_ips, module.wireguard.master_vpn_ips, module.wireguard.node_vpn_ips)}"
+}
+
 output "hostnames" {
   value = "${module.provider.hostnames}"
 }

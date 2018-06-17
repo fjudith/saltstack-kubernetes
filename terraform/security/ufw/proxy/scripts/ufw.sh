@@ -18,6 +18,14 @@ sed -i -r 's|^#(net/ipv6/conf/all/forwarding).*|\1=1|g' /etc/ufw/sysctl.conf
 
 sudo ufw default allow FORWARD
 
+# Enable vpn routing to internet
+cat << EOF >> /etc/ufw/before.rules
+*nat
+:POSTROUTING ACCEPT [0:0]
+-A POSTROUTING -o ${private_interface} -j MASQUERADE
+COMMIT
+EOF
+
 # Drop All connection after processing all intermediate rules
 sed -i -r 's|^COMMIT|-A ufw-reject-input -j DROP\nCOMMIT|g' /etc/ufw/after.rules
 

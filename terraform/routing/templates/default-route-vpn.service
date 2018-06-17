@@ -1,0 +1,19 @@
+[Unit]
+Description=Provides Internet Access via Wireguard VPN
+After=wg-quick@wg0.service
+
+[Service]
+Type=oneshot
+User=root
+ExecStartPre=/bin/sh -c "echo VPN_NIC=wg0 > /run/default_gateway.env"
+ExecStartPre=/bin/sh -c "echo GW=$$(/sbin/ip route | awk '/default/ { print $$3 }') >> /run/default_gateway.env"
+ExecStartPre=/bin/sh -c "echo NIC=$$(/sbin/ip route | awk '/default/ { print $$NF }') >> /run/default_gateway.env"
+ExecStart=/bin/bash -c "source /run/default_gateway.env && \
+/sbin/ip route add 10.0.0.0/8 via $GW dev $NIC && \
+/sbin/ip route add 169.254.0.0/16 via $GW dev $NIC && \
+/sbin/ip route add 172.16.0.0/12 via $GW dev $NIC && \
+/sbin/ip route add 192.168.0.0/16 via $GW dev $NIC && \
+/sbin/ip route replace default via ${gateway}"
+
+[Install]
+WantedBy=multi-user.target

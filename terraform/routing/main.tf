@@ -57,18 +57,6 @@ resource "null_resource" "default-gateway" {
       "${element(data.template_file.wireguard-config-script.*.rendered, count.index)}",
     ]
   }
-
-  # provisioner "file" {
-  #   content     = "${element(data.template_file.wireguard-config-script.*.rendered, count.index)}"
-  #   destination = "/tmp/wireguard_config.sh"
-  # }
-
-  # provisioner "remote-exec" {
-  #   inline = [
-  #     "chmod 700 /tmp/wireguard_config.sh",
-  #     "/tmp/wireguard_config.sh",
-  #   ]
-  # }
 }
 
 data "template_file" "default-route-vpn-service" {

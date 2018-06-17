@@ -57,17 +57,25 @@ docker-latest-archive:
     - group: root
     - mode: 644
 
-/etc/systemd/system/docker.service:
+/etc/systemd/system/docker-docker0.service:
     file.managed:
-    - source: salt://node/cri/docker/docker.service
+    - source: salt://node/cri/docker/docker-docker0.service
     - user: root
     - template: jinja
     - group: root
     - mode: 644
 
-/etc/systemd/system/docker.socket:
+/etc/systemd/system/sockets.target.wants/docker.socket:
     file.managed:
     - source: salt://node/cri/docker/docker.socket
+    - user: root
+    - template: jinja
+    - group: root
+    - mode: 644
+
+/etc/systemd/system/docker.service:
+    file.managed:
+    - source: salt://node/cri/docker/docker.service
     - user: root
     - template: jinja
     - group: root
@@ -77,6 +85,14 @@ docker:
   group.present:
     - gid: 1000
     - system: True
+
+docker-docker0.service:
+  service.running:
+    - enable: True
+    - watch:
+      - /etc/systemd/system/docker-docker0.service
+    - require:
+      - group: docker
 
 docker.socket:
   service.running:

@@ -166,8 +166,6 @@ data "template_file" "peer-conf" {
     public_key = "${element(data.external.keys.*.result.public_key, count.index)}"
 
     allowed_ips = "${element(data.template_file.vpn_ips.*.rendered, count.index)}/32,${element(data.template_file.vpn_ipv6s.*.rendered, count.index)}/128"
-
-    #allowed_ips = "${join(",",list(join("/",list(element(data.template_file.vpn_ips.*.rendered, count.index),"32"),join("/",list(element(data.template_file.vpn_ipv6s.*.rendered, count.index),"64")))))}"
   }
 }
 

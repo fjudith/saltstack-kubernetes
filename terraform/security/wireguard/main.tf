@@ -62,6 +62,10 @@ variable "vpn_iprange" {
   default = "172.16.4.0/24"
 }
 
+variable "vpn_ipv6range" {
+  default = "fd86:ea04:1115::/64"
+}
+
 resource "null_resource" "wireguard" {
   count = "${var.proxy_count + var.etcd_count + var.master_count + var.node_count }"
 
@@ -84,6 +88,7 @@ resource "null_resource" "wireguard" {
   provisioner "remote-exec" {
     inline = [
       "echo net.ipv4.ip_forward=1 >> /etc/sysctl.conf",
+      "echo net.ipv6.conf.all.forwarding=1 >> /etc/sysctl.conf",
       "sysctl -p",
     ]
   }
@@ -144,6 +149,7 @@ data "template_file" "interface-conf" {
 
   vars {
     address     = "${element(data.template_file.vpn_ips.*.rendered, count.index)}"
+    addressv6   = "${element(data.template_file.vpn_ipv6s.*.rendered, count.index)}"
     port        = "${var.vpn_port}"
     private_key = "${element(data.external.keys.*.result.private_key, count.index)}"
     peers       = "${replace(join("\n", data.template_file.peer-conf.*.rendered), element(data.template_file.peer-conf.*.rendered, count.index), "")}"
@@ -155,10 +161,13 @@ data "template_file" "peer-conf" {
   template = "${file("${path.module}/templates/peer.conf")}"
 
   vars {
-    endpoint    = "${element(var.private_ips, count.index)}"
-    port        = "${var.vpn_port}"
-    public_key  = "${element(data.external.keys.*.result.public_key, count.index)}"
-    allowed_ips = "${element(data.template_file.vpn_ips.*.rendered, count.index)}/32"
+    endpoint   = "${element(var.private_ips, count.index)}"
+    port       = "${var.vpn_port}"
+    public_key = "${element(data.external.keys.*.result.public_key, count.index)}"
+
+    allowed_ips = "${element(data.template_file.vpn_ips.*.rendered, count.index)}/32,${element(data.template_file.vpn_ipv6s.*.rendered, count.index)}/128"
+
+    #allowed_ips = "${join(",",list(join("/",list(element(data.template_file.vpn_ips.*.rendered, count.index),"32"),join("/",list(element(data.template_file.vpn_ipv6s.*.rendered, count.index),"64")))))}"
   }
 }
 
@@ -187,12 +196,30 @@ data "template_file" "proxy_vpn_ips" {
   }
 }
 
+data "template_file" "proxy_vpn_ipv6s" {
+  count    = "${var.proxy_count}"
+  template = "$${ipv6}"
+
+  vars {
+    ipv6 = "${cidrhost(var.vpn_ipv6range, var.proxy_bit + count.index + 1)}"
+  }
+}
+
 data "template_file" "etcd_vpn_ips" {
   count    = "${var.etcd_count}"
   template = "$${ip}"
 
   vars {
     ip = "${cidrhost(var.vpn_iprange, var.etcd_bit + count.index + 1)}"
+  }
+}
+
+data "template_file" "etcd_vpn_ipv6s" {
+  count    = "${var.etcd_count}"
+  template = "$${ipv6}"
+
+  vars {
+    ipv6 = "${cidrhost(var.vpn_ipv6range, var.etcd_bit + count.index + 1)}"
   }
 }
 
@@ -205,6 +232,15 @@ data "template_file" "master_vpn_ips" {
   }
 }
 
+data "template_file" "master_vpn_ipv6s" {
+  count    = "${var.master_count}"
+  template = "$${ipv6}"
+
+  vars {
+    ipv6 = "${cidrhost(var.vpn_ipv6range, var.master_bit + count.index + 1)}"
+  }
+}
+
 data "template_file" "node_vpn_ips" {
   count    = "${var.node_count}"
   template = "$${ip}"
@@ -214,12 +250,30 @@ data "template_file" "node_vpn_ips" {
   }
 }
 
+data "template_file" "node_vpn_ipv6s" {
+  count    = "${var.node_count}"
+  template = "$${ipv6}"
+
+  vars {
+    ipv6 = "${cidrhost(var.vpn_ipv6range, var.node_bit + count.index + 1)}"
+  }
+}
+
 data "template_file" "vpn_ips" {
   count    = "${var.proxy_count + var.etcd_count + var.master_count + var.node_count }"
   template = "$${ip}"
 
   vars {
     ip = "${element(concat(data.template_file.proxy_vpn_ips.*.rendered, data.template_file.etcd_vpn_ips.*.rendered, data.template_file.master_vpn_ips.*.rendered, data.template_file.node_vpn_ips.*.rendered), count.index)}"
+  }
+}
+
+data "template_file" "vpn_ipv6s" {
+  count    = "${var.proxy_count + var.etcd_count + var.master_count + var.node_count }"
+  template = "$${ipv6}"
+
+  vars {
+    ipv6 = "${element(concat(data.template_file.proxy_vpn_ipv6s.*.rendered, data.template_file.etcd_vpn_ipv6s.*.rendered, data.template_file.master_vpn_ipv6s.*.rendered, data.template_file.node_vpn_ipv6s.*.rendered), count.index)}"
   }
 }
 
@@ -251,6 +305,31 @@ output "node_vpn_ips" {
 output "vpn_ips" {
   depends_on = ["null_resource.wireguard"]
   value      = ["${data.template_file.vpn_ips.*.rendered}"]
+}
+
+output "proxy_vpn_ipv6s" {
+  depends_on = ["null_resource.wireguard"]
+  value      = ["${data.template_file.proxy_vpn_ipv6s.*.rendered}"]
+}
+
+output "etcd_vpn_ipv6s" {
+  depends_on = ["null_resource.wireguard"]
+  value      = ["${data.template_file.etcd_vpn_ipv6s.*.rendered}"]
+}
+
+output "master_vpn_ipv6s" {
+  depends_on = ["null_resource.wireguard"]
+  value      = ["${data.template_file.master_vpn_ipv6s.*.rendered}"]
+}
+
+output "node_vpn_ipv6s" {
+  depends_on = ["null_resource.wireguard"]
+  value      = ["${data.template_file.node_vpn_ipv6s.*.rendered}"]
+}
+
+output "vpn_ipv6s" {
+  depends_on = ["null_resource.wireguard"]
+  value      = ["${data.template_file.vpn_ipv6s.*.rendered}"]
 }
 
 output "vpn_unit" {

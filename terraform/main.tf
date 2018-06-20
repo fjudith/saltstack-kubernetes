@@ -94,12 +94,14 @@ module "salt-minion" {
 module "firewall-proxy" {
   source = "./security/ufw/proxy"
 
-  count             = 2
-  bastion_host      = "${module.provider.bastion_host}"
-  private_interface = "${module.provider.private_network_interface}"
-  vpn_interface     = "${module.wireguard.vpn_interface}"
-  vpn_port          = "${module.wireguard.vpn_port}"
-  connections       = "${module.provider.proxy_private_ips}"
+  count                = 2
+  bastion_host         = "${module.provider.bastion_host}"
+  private_interface    = "${module.provider.private_network_interface}"
+  vpn_interface        = "${module.wireguard.vpn_interface}"
+  vpn_port             = "${module.wireguard.vpn_port}"
+  docker_interface     = "${var.docker_interface}"
+  kubernetes_interface = "${var.overlay_interface}"
+  connections          = "${module.provider.proxy_private_ips}"
 }
 
 module "firewall-etcd" {
@@ -110,6 +112,7 @@ module "firewall-etcd" {
   private_interface = "${module.provider.private_network_interface}"
   vpn_interface     = "${module.wireguard.vpn_interface}"
   vpn_port          = "${module.wireguard.vpn_port}"
+  docker_interface  = "${var.docker_interface}"
   connections       = "${module.provider.etcd_private_ips}"
 }
 
@@ -121,10 +124,9 @@ module "firewall-master" {
   private_interface    = "${module.provider.private_network_interface}"
   vpn_interface        = "${module.wireguard.vpn_interface}"
   vpn_port             = "${module.wireguard.vpn_port}"
+  docker_interface     = "${var.docker_interface}"
   kubernetes_interface = "${var.overlay_interface}"
-
-  # kubernetes_interface = "${module.kubernetes.overlay_interface}"
-  connections = "${module.provider.master_private_ips}"
+  connections          = "${module.provider.master_private_ips}"
 }
 
 module "firewall-node" {
@@ -135,10 +137,9 @@ module "firewall-node" {
   private_interface    = "${module.provider.private_network_interface}"
   vpn_interface        = "${module.wireguard.vpn_interface}"
   vpn_port             = "${module.wireguard.vpn_port}"
+  docker_interface     = "${var.docker_interface}"
   kubernetes_interface = "${var.overlay_interface}"
-
-  # kubernetes_interface = "${module.kubernetes.overlay_interface}"
-  connections = "${module.provider.node_private_ips}"
+  connections          = "${module.provider.node_private_ips}"
 }
 
 module "encryption" {

@@ -18,6 +18,10 @@ variable "private_interface" {
   type = "string"
 }
 
+variable "docker_interface" {
+  type = "string"
+}
+
 variable "vpn_interface" {
   type = "string"
 }
@@ -64,5 +68,6 @@ data "template_file" "ufw" {
     kubernetes_interface = "${var.kubernetes_interface}"
     vpn_interface        = "${var.vpn_interface}"
     vpn_port             = "${var.vpn_port}"
+    docker_interface     = "${var.docker_interface}"
   }
 }

@@ -109,14 +109,15 @@ resource "scaleway_ip" "public_ip" {
 # Proxy 0
 ##################################################
 resource "scaleway_server" "proxy01" {
-  count      = 1
-  name       = "proxy01"
-  image      = "${data.scaleway_image.ubuntu.id}"
-  bootscript = "${data.scaleway_bootscript.bootscript.id}"
-  type       = "${var.proxy_type}"
-  public_ip  = "${element(scaleway_ip.public_ip.*.ip, count.index)}"
-  state      = "running"
-  tags       = ["proxy", "primary"]
+  count       = 1
+  name        = "proxy01"
+  image       = "${data.scaleway_image.ubuntu.id}"
+  bootscript  = "${data.scaleway_bootscript.bootscript.id}"
+  type        = "${var.proxy_type}"
+  public_ip   = "${element(scaleway_ip.public_ip.*.ip, count.index)}"
+  state       = "running"
+  enable_ipv6 = true
+  tags        = ["proxy", "primary"]
 
   connection {
     type        = "ssh"
@@ -173,13 +174,14 @@ resource "scaleway_server" "proxy01" {
 resource "scaleway_server" "proxy02" {
   depends_on = ["scaleway_server.proxy01"]
 
-  count      = 1
-  name       = "proxy02"
-  image      = "${data.scaleway_image.ubuntu.id}"
-  bootscript = "${data.scaleway_bootscript.bootscript.id}"
-  type       = "${var.proxy_type}"
-  state      = "running"
-  tags       = ["proxy", "secondary"]
+  count       = 1
+  name        = "proxy02"
+  image       = "${data.scaleway_image.ubuntu.id}"
+  bootscript  = "${data.scaleway_bootscript.bootscript.id}"
+  type        = "${var.proxy_type}"
+  state       = "running"
+  enable_ipv6 = true
+  tags        = ["proxy", "secondary"]
 
   connection {
     type                = "ssh"
@@ -219,11 +221,12 @@ resource "scaleway_server" "proxy02" {
 resource "scaleway_server" "etcd" {
   depends_on = ["scaleway_server.proxy01"]
 
-  count      = "${var.etcd_count}"
-  name       = "${format("etcd%02d", count.index + 1)}"
-  image      = "${data.scaleway_image.ubuntu.id}"
-  bootscript = "${data.scaleway_bootscript.bootscript.id}"
-  type       = "${var.etcd_type}"
+  count       = "${var.etcd_count}"
+  name        = "${format("etcd%02d", count.index + 1)}"
+  image       = "${data.scaleway_image.ubuntu.id}"
+  bootscript  = "${data.scaleway_bootscript.bootscript.id}"
+  type        = "${var.etcd_type}"
+  enable_ipv6 = true
 
   #public_ip = "${element(scaleway_ip.public_ip.*.ip, count.index)}"
   state = "running"
@@ -274,8 +277,9 @@ resource "scaleway_server" "master" {
   type       = "${var.master_type}"
 
   #public_ip = "${element(scaleway_ip.public_ip.*.ip, count.index)}"
-  state = "running"
-  tags  = ["kubernetes", "master"]
+  state       = "running"
+  enable_ipv6 = true
+  tags        = ["kubernetes", "master"]
 
   connection {
     type                = "ssh"
@@ -315,13 +319,14 @@ resource "scaleway_server" "master" {
 resource "scaleway_server" "node" {
   depends_on = ["scaleway_server.proxy01", "scaleway_server.master"]
 
-  count      = "${var.node_count}"
-  name       = "${format("node%02d", count.index + 1)}"
-  image      = "${data.scaleway_image.ubuntu.id}"
-  bootscript = "${data.scaleway_bootscript.bootscript.id}"
-  type       = "${var.node_type}"
-  state      = "running"
-  tags       = ["kubernetes", "nodes"]
+  count       = "${var.node_count}"
+  name        = "${format("node%02d", count.index + 1)}"
+  image       = "${data.scaleway_image.ubuntu.id}"
+  bootscript  = "${data.scaleway_bootscript.bootscript.id}"
+  type        = "${var.node_type}"
+  state       = "running"
+  enable_ipv6 = true
+  tags        = ["kubernetes", "nodes"]
 
   connection {
     type                = "ssh"

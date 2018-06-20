@@ -130,20 +130,27 @@ variable "zerotier_cidr" {
 }
 
 variable "overlay_cidr" {
-  default = "10.96.0.0/16"
+  default = "10.2.0.0/16"
 }
 
 variable "vpn_iprange" {
-  description = "Wireguard MeshVPN subnet CIDR"
+  description = "Wireguard MeshVPN IPv4 subnet CIDR"
   default     = "172.16.4.0/24"
 }
 
+variable "vpn_ipv6range" {
+  description = "Wireguard MeshVPN IPv6 subnet"
+  default     = "fd86:ea04:1115::/64"
+}
+
 variable "cloudflare_email" {
-  default = "user@domain.tld"
+  description = "Cloudflare API access e-mail"
+  default     = "user@domain.tld"
 }
 
 variable "cloudflare_token" {
-  default = "01234567890123456789012345678901234567"
+  description = "Cloudflare API access token"
+  default     = "01234567890123456789012345678901234567"
 }
 
 variable "domain" {
@@ -151,5 +158,11 @@ variable "domain" {
 }
 
 variable "overlay_interface" {
-  default = "flannel.0"
+  description = "Kubernetes Pod Network interface"
+  default     = "tunl0@NONE"
+}
+
+variable "docker_interface" {
+  description = "Docker bridge interface"
+  default     = "docker0"
 }

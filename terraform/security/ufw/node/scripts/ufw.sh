@@ -13,7 +13,7 @@ sudo ufw allow in on ${private_interface} to any port ${vpn_port} # vpn on priva
 sudo ufw allow in on ${vpn_interface}
 
 # Allow Kubernetes
-# sudo ufw allow in on ${kubernetes_interface} # Kubernetes pod overlay interface
+sudo ufw allow in on ${kubernetes_interface} # Kubernetes pod overlay interface
 
 # Disable Logging
 sudo ufw logging off

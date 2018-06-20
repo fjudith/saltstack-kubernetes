@@ -55,3 +55,9 @@ cloudflare_email = "user@domain.tld"
 cloudflare_token = "0123456789012345678901234567890134567"
 
 domain = "domain.tld"
+
+docker_interface = "docker0"
+
+overlay_interface = "tunl0@none"
+
+overlay_cidr = "10.2.0.0/16"

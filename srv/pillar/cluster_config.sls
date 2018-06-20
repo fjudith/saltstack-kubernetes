@@ -49,14 +49,19 @@ kubernetes:
         as-number: 64512
         token: hu0daeHais3aCHANGEMEhu0daeHais3a
         ipv4:
-          range: 192.168.0.0/16
+          range: 10.2.0.0/16
           nat: true
           ip-in-ip: true
         ipv6:
           enable: false
           nat: true
-          interface: ens18
+          interface: wg0
           range: fd80:24e2:f998:72d6::/64
+      flannel:
+        version: v0.10.0-amd64
+        ipv4:
+          range:
+          interface: wg0
   global:
     proxy:
       ipaddr: 172.16.4.251
@@ -81,6 +86,10 @@ tinyproxy:
     - 192.168.0.0/16
     - 172.16.0.0/12
     - 10.0.0.0/8
+  ConnectPort:
+    - 443
+    - 563
+    - 6443
 keepalived:
   global_defs:
     router_id: LVS_DEVEL

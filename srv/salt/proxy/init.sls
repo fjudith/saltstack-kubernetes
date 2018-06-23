@@ -7,6 +7,7 @@ include:
   - proxy.keepalived
   - proxy.tinyproxy
   - proxy.haproxy
+  - kubernetes
 
 /root/.kube:
   file.directory:
@@ -31,6 +32,7 @@ include:
     - mode: 640
 
 {% if cniProvider == "calico" %}
+
 /opt/calico.yaml:
     file.managed:
     - source: salt://node/cni/calico/calico.tmpl.yaml
@@ -38,4 +40,17 @@ include:
     - template: jinja
     - group: root
     - mode: 644
+
+{% elif cniProvider == "flannel" %}
+
+/opt/flannel.yaml:
+    file.managed:
+    - source: salt://node/cni/flannel/flannel.tmpl.yaml
+    - user: root
+    - template: jinja
+    - group: root
+    - mode: 644
+
 {% endif %}
+
+

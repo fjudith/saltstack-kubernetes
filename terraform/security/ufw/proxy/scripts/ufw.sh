@@ -6,20 +6,20 @@ sudo apt-get update -yqq
 sudo apt-get install -yqq \
     ufw
 
-ufw --force reset
+sudo ufw --force reset
 
 # Allow Incoming connection by default
-sed -i -r 's/^(DEFAULT_INPUT_POLICY=).*/\1"ACCEPT"/g' /etc/default/ufw
+sudo sed -i -r 's/^(DEFAULT_INPUT_POLICY=).*/\1"ACCEPT"/g' /etc/default/ufw
 
 # Allow TCP forwarding
-sed -i -r 's|^#(net/ipv4/ip_forward).*|\1=1|g' /etc/ufw/sysctl.conf
-sed -i -r 's|^#(net/ipv6/conf/default/forwarding).*|\1=1|g' /etc/ufw/sysctl.conf
-sed -i -r 's|^#(net/ipv6/conf/all/forwarding).*|\1=1|g' /etc/ufw/sysctl.conf
+sudo sed -i -r 's|^#(net/ipv4/ip_forward).*|\1=1|g' /etc/ufw/sysctl.conf
+sudo sed -i -r 's|^#(net/ipv6/conf/default/forwarding).*|\1=1|g' /etc/ufw/sysctl.conf
+sudo sed -i -r 's|^#(net/ipv6/conf/all/forwarding).*|\1=1|g' /etc/ufw/sysctl.conf
 
 sudo ufw default allow FORWARD
 
 # Enable vpn routing to internet
-cat << EOF >> /etc/ufw/before.rules
+sudo cat << EOF >> /etc/ufw/before.rules
 *nat
 :POSTROUTING ACCEPT [0:0]
 -A POSTROUTING -o ${private_interface} -j MASQUERADE
@@ -27,7 +27,7 @@ COMMIT
 EOF
 
 # Drop All connection after processing all intermediate rules
-sed -i -r 's|^COMMIT|-A ufw-reject-input -j DROP\nCOMMIT|g' /etc/ufw/after.rules
+sudo sed -i -r 's|^COMMIT|-A ufw-reject-input -j DROP\nCOMMIT|g' /etc/ufw/after.rules
 
 # Allow VPN
 sudo ufw allow in on ${private_interface} to any port ${vpn_port} # vpn on private interface

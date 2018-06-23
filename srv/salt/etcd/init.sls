@@ -2,11 +2,45 @@
 {%- set etcdCount = pillar['kubernetes']['etcd']['count'] -%}
 {%- set masterCount = pillar['kubernetes']['master']['count'] -%}
 
+include:
+  - node.cri.docker
+  - node.cri.rkt
+
 /etc/etcd:
   file.directory:
     - user: root
     - group: root
     - dir_mode: 750
+
+/usr/lib/coreos:
+  file.directory:
+    - user: root
+    - group: root
+    - dir_mode: 750
+    - makedirs: True
+
+/var/lib/coreos:
+  file.directory:
+    - user: root
+    - group: root
+    - dir_mode: 750
+    - makedirs: True
+
+/usr/bin/mkdir:
+  file.symlink:
+    - target: /bin/mkdir
+
+/usr/bin/bash:
+  file.symlink:
+    - target: /bin/bash
+
+/usr/lib/coreos/etcd-wrapper:
+  file.managed:
+    - source: salt://etcd/etcd-wrapper
+    - user: root
+    - template: jinja
+    - group: root
+    - mode: 755
 
 {# /etc/etcd/etcd-key.pem:
   file.symlink:
@@ -51,17 +85,25 @@ etcd-certificate-archive:
     - group: root
     - mode: 644
 {% elif etcdCount == 3 %}
-/etc/systemd/system/etcd.service:
+{# /etc/systemd/system/etcd.service:
   file.managed:
     - source: salt://etcd/etcd-cluster.service
+    - user: root
+    - template: jinja
+    - group: root
+    - mode: 644 #}
+
+/etc/systemd/system/etcd-member.service:
+  file.managed:
+    - source: salt://etcd/etcd-member.service
     - user: root
     - template: jinja
     - group: root
     - mode: 644
 {% endif %}
 
-etcd:
+etcd-member.service:
   service.running:
     - enable: True
     - watch:
-      - /etc/systemd/system/etcd.service
+      - /etc/systemd/system/etcd-member.service

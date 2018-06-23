@@ -1,11 +1,9 @@
-{%- set flannelinterface =  pillar['kubernetes']['node']['networking']['flannel']['interface'] -%}
-{%- set podnetwork =  pillar['kubernetes']['global']['cluster']['pod-network'] -%}
-{%- set etcd01 =  pillar['kubernetes']['etcd']['cluster']['etcd01']['hostname'] -%} 
-{%- set etcd02 =  pillar['kubernetes']['etcd']['cluster']['etcd02']['hostname'] -%} 
-{%- set etcd03 =  pillar['kubernetes']['etcd']['cluster']['etcd03']['hostname'] -%} 
+{%- set flannelInterface =  pillar['kubernetes']['node']['networking']['flannel']['ipv4']['interface'] -%}
+{%- set flannelVersion =  pillar['kubernetes']['node']['networking']['flannel']['version'] -%}
+{%- set podNetwork =  pillar['kubernetes']['global']['pod-network'] -%}
 {%- set etcd01ip =  pillar['kubernetes']['etcd']['cluster']['etcd01']['ipaddr'] -%} 
 {%- set etcd02ip =  pillar['kubernetes']['etcd']['cluster']['etcd02']['ipaddr'] -%} 
-{%- set etcd03ip =  pillar['kubernetes']['etcd']['cluster']['etcd03']['ipaddr'] -%}
+{%- set etcd03ip =  pillar['kubernetes']['etcd']['cluster']['etcd03']['ipaddr'] -%} 
 
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1beta1
@@ -81,7 +79,7 @@ data:
     }
   net-conf.json: |
     {
-      "Network": "{{ podnetwork }}",
+      "Network": "{{ podNetwork }}",
       "Backend": {
         "Type": "vxlan"
       }
@@ -112,7 +110,7 @@ spec:
       serviceAccountName: flannel
       initContainers:
       - name: install-cni
-        image: quay.io/coreos/flannel:v0.10.0-amd64
+        image: quay.io/coreos/flannel:{{ flannelVersion }}
         command:
         - cp
         args:
@@ -131,7 +129,7 @@ spec:
         - /opt/bin/flanneld
         args:
         - --ip-masq
-        - --iface={{ flannelinterface }}
+        - --iface={{ flannelInterface }}
         #- --kube-subnet-mgr
         #- -v 10
         resources:
@@ -163,11 +161,16 @@ spec:
         - name: FLANNELD_ETCD_PREFIX
           value: /coreos.com/network
         volumeMounts:
+        - name: k8s-ssl
+          mountPath: /etc/kubernetes/ssl
         - name: run
           mountPath: /run
         - name: flannel-cfg
           mountPath: /etc/kube-flannel/
       volumes:
+        - name: k8s-ssl
+          hostPath:
+            path: /etc/kubernetes/ssl
         - name: run
           hostPath:
             path: /run

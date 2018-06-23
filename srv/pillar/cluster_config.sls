@@ -15,9 +15,6 @@ kubernetes:
         ipaddr: 172.16.4.53
     version: v3.2.22
   master:
-#    count: 1
-#    hostname: master.domain.tld
-#    ipaddr: 10.240.0.10
     count: 3
     cluster:
       node01:
@@ -40,7 +37,7 @@ kubernetes:
         version: 1.29.0
     networking:
       cni-version: v0.7.1
-      provider: calico
+      provider: flannel
       calico:
         version: v3.1.3
         cni-version: v3.1.3
@@ -60,7 +57,7 @@ kubernetes:
       flannel:
         version: v0.10.0-amd64
         ipv4:
-          range:
+          range: 10.2.0.0/16
           interface: wg0
   global:
     proxy:
@@ -90,6 +87,8 @@ tinyproxy:
     - 443
     - 563
     - 6443
+    - 2379
+    - 2380
 keepalived:
   global_defs:
     router_id: LVS_DEVEL

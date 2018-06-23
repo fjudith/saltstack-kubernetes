@@ -1,3 +1,7 @@
+{%- set clusterDNS = pillar['kubernetes']['global']['clusterDNS'] -%}
+{%- set clusterDomain = pillar['kubernetes']['domain'] -%}
+
+
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -56,7 +60,7 @@ data:
     .:53 {
         errors
         health
-        kubernetes {{ pillar['kubernetes']['domain'] }} in-addr.arpa ip6.arpa {
+        kubernetes {{ clusterDomain }} in-addr.arpa ip6.arpa {
             pods insecure
             upstream
             fallthrough in-addr.arpa ip6.arpa
@@ -168,7 +172,7 @@ metadata:
 spec:
   selector:
     k8s-app: kube-dns
-  clusterIP: {{ pillar['kubernetes']['global']['clusterDNS'] }}
+  clusterIP: {{ clusterDNS }}
   ports:
   - name: dns
     port: 53

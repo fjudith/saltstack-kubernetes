@@ -135,7 +135,7 @@ variable "overlay_cidr" {
 
 variable "vpn_iprange" {
   description = "Wireguard MeshVPN IPv4 subnet CIDR"
-  default     = "172.16.4.0/24"
+  default     = "172.17.4.0/24"
 }
 
 variable "vpn_ipv6range" {
@@ -159,7 +159,7 @@ variable "domain" {
 
 variable "overlay_interface" {
   description = "Kubernetes Pod Network interface"
-  default     = "tunl0@NONE"
+  default     = "flannel.1"
 }
 
 variable "docker_interface" {

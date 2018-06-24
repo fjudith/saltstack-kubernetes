@@ -1,0 +1,72 @@
+{%- set hostname = salt['grains.get']('fqdn') -%}
+{%- set hyperkubeImageRepo =  pillar['kubernetes']['hyperkube-image-repo'] -%}
+{%- set k8sVersion =  pillar['kubernetes']['version'] -%}
+{%- set containerRuntime =  pillar['kubernetes']['node']['runtime']['provider'] -%} 
+{%- set clusterDomain =  pillar['kubernetes']['domain'] -%}
+{%- set clusterDNS =  pillar['kubernetes']['global']['cluster-dns'] -%}
+{%- set cniProvider = pillar['kubernetes']['node']['networking']['provider'] -%}
+{% if cniProvider == "calico" %}
+  {%- set calicoOPTS = "--volume cni-bin,kind=host,source=/opt/cni/bin --mount volume=cni-bin,target=/opt/cni/bin" -%}
+{% elif cniProvider == "flannel" %}
+  {%- set calicoOPTS = "" -%}
+{% endif %}
+
+
+[Service]
+Environment=PATH=/opt/bin/:/usr/bin/:/usr/sbin:${PATH}
+Environment=KUBELET_IMAGE_TAG={{ k8sVersion }}
+Environment=KUBELET_IMAGE_URL={{ hyperkubeImageRepo }}
+Environment="RKT_RUN_ARGS=--uuid-file-save=/var/run/kubelet-pod.uuid \
+  --volume dns,kind=host,source=/etc/resolv.conf \
+  --mount volume=dns,target=/etc/resolv.conf \
+  --volume rkt,kind=host,source=/opt/bin/host-rkt \
+  --mount volume=rkt,target=/usr/bin/rkt \
+  --volume var-lib-rkt,kind=host,source=/var/lib/rkt \
+  --mount volume=var-lib-rkt,target=/var/lib/rkt \
+  --volume stage,kind=host,source=/tmp \
+  --mount volume=stage,target=/tmp \
+  --volume var-log,kind=host,source=/var/log \
+  --mount volume=var-log,target=/var/log \
+  --volume modprobe,kind=host,source=/usr/sbin/modprobe \
+  --mount volume=modprobe,target=/usr/sbin/modprobe \
+  --volume lib-modules,kind=host,source=/lib/modules \
+  --mount volume=lib-modules,target=/lib/modules \
+  --volume etc-cni-netd,kind=host,source=/etc/cni/net.d \
+  --mount volume=etc-cni-netd,target=/etc/cni/net.d \
+  {{ calicoOPTS }}"
+ExecStartPre=/usr/bin/mkdir -p /etc/kubernetes/manifests
+ExecStartPre=/usr/bin/mkdir -p /opt/cni/bin
+ExecStartPre=/usr/bin/mkdir -p /etc/cni/net.d
+ExecStartPre=/usr/bin/mkdir -p /var/log/containers
+ExecStartPre=-/usr/bin/rkt rm --uuid-file=/var/run/kubelet-pod.uuid
+ExecStartPre=/usr/bin/mkdir -p /var/lib/kubelet/volumeplugins
+ExecStartPre=/usr/bin/mkdir -p /var/lib/rook
+ExecStart=/usr/lib/coreos/kubelet-wrapper \
+  --anonymous-auth=false \
+  --cni-conf-dir=/etc/cni/net.d \
+  --cni-bin-dir=/opt/cni/bin \
+  --network-plugin=cni \
+  --container-runtime={{ containerRuntime }} \
+  --rkt-path=/usr/bin/rkt \
+  --allow-privileged=true \
+  --pod-manifest-path=/etc/kubernetes/manifests \
+  --kubeconfig=/etc/kubernetes/kubelet.kubeconfig \
+  --node-labels=kubernetes.io/role=master \
+  --register-with-taints=node-role.kubernetes.io/master=:NoSchedule \
+  --client-ca-file=/etc/kubernetes/ssl/ca.pem \
+  --hostname-override={{ hostname }} \
+  --cluster_dns={{ clusterDNS }} \
+  --cluster_domain={{ clusterDomain }} \
+  --volume-plugin-dir=/etc/kubernetes/volumeplugins \
+  --client-ca-file=/etc/kubernetes/ssl/ca.pem \
+  --tls-cert-file=/etc/kubernetes/ssl/master.pem \
+  --tls-private-key-file=/etc/kubernetes/ssl/master-key.pem \
+  --authentication-token-webhook=true \
+  --authorization-mode=Webhook \
+  --v=2
+ExecStop=-/usr/bin/rkt stop --uuid-file=/var/run/kubelet-pod.uuid
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

@@ -50,6 +50,7 @@ module "wireguard" {
   node_bit     = "${var.node_bit}"
   hostnames    = "${module.provider.hostnames}"
   overlay_cidr = "${var.overlay_cidr}"
+  vpn_iprange  = "${var.vpn_iprange}"
   connections  = "${module.provider.private_ips}"
 }
 

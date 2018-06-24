@@ -14,6 +14,7 @@ curl -L --noproxy '*' --cacert /etc/etcd/ssl/ca.pem --cert /etc/etcd/ssl/etcd.pe
 ```bash
 export ETCDCTL_API=3
 etcdctl endpoint health
+etcdctl member list
 etcdctl check perf
 ```
 

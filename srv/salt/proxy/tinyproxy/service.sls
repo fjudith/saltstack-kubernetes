@@ -7,3 +7,4 @@ tinyproxy.service:
     - enable: True
     - watch:
       - pkg: tinyproxy
+      - tinyproxy_config

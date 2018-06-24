@@ -1,0 +1,51 @@
+{%- set podNetwork =  pillar['kubernetes']['global']['pod-network'] -%}
+{%- set hyperkubeImageRepo =  pillar['kubernetes']['hyperkube-image-repo'] -%}
+{%- set k8sVersion =  pillar['kubernetes']['version'] -%}
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kube-proxy
+  namespace: kube-system
+  annotations:
+    rkt.alpha.kubernetes.io/stage1-name-override: coreos.com/rkt/stage1-fly
+spec:
+  hostNetwork: true
+  containers:
+  - name: kube-proxy
+    image: {{ hyperkubeImageRepo }}:{{ k8sVersion }}
+    command:
+    - /hyperkube
+    - proxy
+    - --master=http://127.0.0.1:8080
+    - --cluster-cidr={{ podNetwork }}
+    - --masquerade-all
+    - --kubeconfig=/etc/kubernetes/kube-proxy.kubeconfig
+    - --v=2
+    securityContext:
+      privileged: true
+    volumeMounts:
+    - mountPath: /etc/ssl/certs
+      name: "ssl-certs"
+    - mountPath: /etc/kubernetes/kube-proxy.kubeconfig
+      name: "kubeconfig"
+      readOnly: true
+    - mountPath: /etc/kubernetes/ssl
+      name: "etc-kube-ssl"
+      readOnly: true
+    - mountPath: /var/run/dbus
+      name: dbus
+      readOnly: false
+  volumes:
+  - name: "ssl-certs"
+    hostPath:
+      path: "/usr/share/ca-certificates"
+  - name: "kubeconfig"
+    hostPath:
+      path: "/etc/kubernetes/kube-proxy.kubeconfig"
+  - name: "etc-kube-ssl"
+    hostPath:
+      path: "/etc/kubernetes/ssl"
+  - hostPath:
+      path: /var/run/dbus
+    name: dbus

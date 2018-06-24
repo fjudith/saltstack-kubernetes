@@ -1,31 +1,33 @@
 kubernetes:
-  version: v1.10.4
+  hyperkube-image-repo: quay.io/coreos/hyperkube 
+  version: v1.10.3_coreos.0
+  binary-version: v1.10.4
   domain: cluster.local
   etcd:
     count: 3
     cluster:
       etcd01:
         hostname: etcd01
-        ipaddr: 172.16.4.51
+        ipaddr: 172.17.4.51
       etcd02:
         hostname: etcd02
-        ipaddr: 172.16.4.52
+        ipaddr: 172.17.4.52
       etcd03:
         hostname: etcd03
-        ipaddr: 172.16.4.53
-    version: v3.2.22
+        ipaddr: 172.17.4.53
+    version: v3.3.3
   master:
     count: 3
     cluster:
       node01:
         hostname: master01
-        ipaddr: 172.16.4.101
+        ipaddr: 172.17.4.101
       node02:
         hostname: master02
-        ipaddr: 172.16.4.102
+        ipaddr: 172.17.4.102
       node03:
         hostname: master03
-        ipaddr: 172.16.4.103
+        ipaddr: 172.17.4.103
     encryption-key: 'w3RNESCMG+o3GCHTUcrQUUdq6CFV72q/Zik9LAO8uEc='
   node:
     runtime:
@@ -67,7 +69,7 @@ kubernetes:
     pod-network: 10.2.0.0/16
     kubernetes-service-ip: 10.3.0.1
     service-ip-range: 10.3.0.0/24
-    clusterDNS: 10.3.0.10
+    cluster-dns: 10.3.0.10
     helm-version: v2.8.2
     dashboard-version: v1.8.3
     admin-token: Haim8kay1rarCHANGEMEHaim8kay1rar

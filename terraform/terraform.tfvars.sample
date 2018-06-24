@@ -58,6 +58,6 @@ domain = "domain.tld"
 
 docker_interface = "docker0"
 
-overlay_interface = "tunl0@none"
+overlay_interface = "weave"
 
 overlay_cidr = "10.2.0.0/16"

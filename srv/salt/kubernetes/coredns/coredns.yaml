@@ -1,4 +1,4 @@
-{%- set clusterDNS = pillar['kubernetes']['global']['clusterDNS'] -%}
+{%- set clusterDNS = pillar['kubernetes']['global']['cluster-dns'] -%}
 {%- set clusterDomain = pillar['kubernetes']['domain'] -%}
 
 

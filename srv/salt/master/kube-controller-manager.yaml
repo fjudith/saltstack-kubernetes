@@ -1,0 +1,59 @@
+{%- set hyperkubeImageRepo =  pillar['kubernetes']['hyperkube-image-repo'] -%}
+{%- set k8sVersion =  pillar['kubernetes']['version'] -%}
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kube-controller-manager
+  namespace: kube-system
+spec:
+  containers:
+  - name: kube-controller-manager
+    image: {{ hyperkubeImageRepo }}:{{ k8sVersion }}
+    command:
+    - /hyperkube
+    - controller-manager
+    - --address=0.0.0.0
+    - --master=http://127.0.0.1:8080
+    - --leader-elect=true
+    - --feature-gates=RotateKubeletServerCertificate=true
+    - --service-account-private-key-file=/etc/kubernetes/ssl/apiserver-key.pem
+    - --root-ca-file=/etc/kubernetes/ssl/ca.pem
+    - --flex-volume-plugin-dir=/etc/kubernetes/volumeplugins
+    - --cluster-signing-cert-file=/etc/kubernetes/ssl/ca.pem
+    - --cluster-signing-key-file=/etc/kubernetes/ssl/ca-key.pem
+    - --node-monitor-grace-period=40s
+    - --node-monitor-period=5s
+    - --pod-eviction-timeout=5m0s
+    - --v=2
+    resources:
+      requests:
+        cpu: 200m
+    livenessProbe:
+      httpGet:
+        host: 127.0.0.1
+        path: /healthz
+        port: 10252
+      initialDelaySeconds: 15
+      timeoutSeconds: 15
+    volumeMounts:
+    - mountPath: /etc/kubernetes/ssl
+      name: ssl-certs-kubernetes
+      readOnly: true
+    - mountPath: /etc/ssl/certs
+      name: ssl-certs-host
+      readOnly: true
+    - mountPath: /etc/kubernetes/volumeplugins
+      name: volumeplugins-host
+      readonly: false
+  hostNetwork: true
+  volumes:
+  - hostPath:
+      path: /etc/kubernetes/ssl
+    name: ssl-certs-kubernetes
+  - hostPath:
+      path: /usr/share/ca-certificates
+    name: ssl-certs-host
+  - hostPath:
+      path: /etc/kubernetes/volumeplugins
+    name: volumeplugins-host

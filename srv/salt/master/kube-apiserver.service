@@ -1,12 +1,12 @@
 ### THIS FILE IS MANAGED BY SALTSTACK
-{%- set clusterIpRange =  pillar['kubernetes']['global']['pod-service-ip-range'] -%} 
+{%- set clusterIpRange =  pillar['kubernetes']['global']['service-ip-range'] -%} 
 [Unit]
 Description=Kubernetes API Server
 Documentation=https://kubernetes.io/docs/reference/command-line-tools-reference/kube-apiserver/
 
 [Service]
 ExecStart=/usr/bin/kube-apiserver \
-  --admission-control=NamespaceLifecycle,NodeRestriction,LimitRanger,ServiceAccount,PersistentVolumeLabel,DefaultStorageClass,DefaultTolerationSeconds,MutatingAdmissionWebhook,ValidatingAdmissionWebhook,ResourceQuota \
+  --admission-control=NamespaceLifecycle,NodeRestriction,LimitRanger,ServiceAccount,DefaultStorageClass,DefaultTolerationSeconds,MutatingAdmissionWebhook,ValidatingAdmissionWebhook,ResourceQuota \
   --advertise-address=0.0.0.0 \
   --allow-privileged=true \
   --anonymous-auth=false \

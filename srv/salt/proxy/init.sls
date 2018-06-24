@@ -1,5 +1,5 @@
 {%- set cniProvider = pillar['kubernetes']['node']['networking']['provider'] -%}
-{%- set k8sVersion = pillar['kubernetes']['version'] -%}
+{%- set k8sVersion = pillar['kubernetes']['binary-version'] -%}
 
 include:
   - node.cri.docker

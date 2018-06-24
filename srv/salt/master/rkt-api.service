@@ -1,0 +1,10 @@
+[Unit]
+Before=kubelet.service
+
+[Service]
+ExecStart=/usr/bin/rkt api-service
+Restart=always
+RestartSec=10
+
+[Install]
+RequiredBy=kubelet.service

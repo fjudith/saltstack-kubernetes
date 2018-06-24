@@ -59,7 +59,7 @@ variable "overlay_cidr" {
 }
 
 variable "vpn_iprange" {
-  default = "172.16.4.0/24"
+  default = "172.17.4.0/24"
 }
 
 variable "vpn_ipv6range" {

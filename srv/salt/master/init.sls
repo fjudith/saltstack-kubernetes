@@ -80,49 +80,20 @@ include:
     - group: root
     - mode: 644
 
+/etc/kubernetes/bootstrap.kubeconfig:
+    file.managed:
+    - source: salt://master/bootstrap.kubeconfig
+    - user: root
+    - template: jinja
+    - group: root
+    - mode: 644
+
 kubelet:
   service.running:
     - enable: True
     - watch:
       - /etc/systemd/system/kubelet.service
       - /etc/kubernetes/kubelet.kubeconfig
-
-/opt/bin/host-rkt:
-    file.managed:
-    - source: salt://master/host-rkt
-    - user: root
-    - template: jinja
-    - group: root
-    - mode: 755
-
-
-/etc/systemd/system/load-rkt-stage1.service:
-    file.managed:
-    - source: salt://master/load-rkt-stage1.service
-    - user: root
-    - template: jinja
-    - group: root
-    - mode: 644
-
-load-rkt-stage1:
-  service.running:
-    - enable: True
-    - watch:
-      - /etc/systemd/system/load-rkt-stage1.service
-
-/etc/systemd/system/rkt-api.service:
-    file.managed:
-    - source: salt://master/rkt-api.service
-    - user: root
-    - template: jinja
-    - group: root
-    - mode: 644
-
-rkt-api:
-  service.running:
-    - enable: True
-    - watch:
-      - /etc/systemd/system/rkt-api.service
 
 /etc/kubernetes/kube-proxy.kubeconfig:
     file.managed:

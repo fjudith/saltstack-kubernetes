@@ -136,21 +136,21 @@ resource "null_resource" "cert-master" {
 
   provisioner "local-exec" {
     interpreter = ["bash", "-c"]
-    command     = "${path.module}/scripts/cfssl.sh ssl master master-${element(var.master_private_ips, count.index)} ${join(",", concat(var.master_hostnames, var.master_private_ips, list(var.master_cluster_ip), list(var.cluster_public_dns)))}"
+    command     = "${path.module}/scripts/cfssl.sh ssl master master-${element(var.master_hostnames, count.index)} ${join(",", concat(var.master_hostnames, var.master_private_ips, list(var.master_cluster_ip), list(var.cluster_public_dns)))}"
   }
 
   provisioner "local-exec" {
     interpreter = ["bash", "-c"]
-    command     = "${path.module}/scripts/cfssl.sh ssl apiserver kube-apiserver-${element(var.master_private_ips, count.index)} ${join(",", concat(var.master_hostnames, var.master_private_ips, list(var.master_cluster_ip), list(var.cluster_public_dns)))}"
+    command     = "${path.module}/scripts/cfssl.sh ssl apiserver kube-apiserver-${element(var.master_hostnames, count.index)} ${join(",", concat(var.master_hostnames, var.master_private_ips, list(var.master_cluster_ip), list(var.cluster_public_dns)))}"
   }
 
   provisioner "file" {
-    source      = "ssl/master-${element(var.master_private_ips, count.index)}.tar"
+    source      = "ssl/master-${element(var.master_hostnames, count.index)}.tar"
     destination = "/tmp/master.tar"
   }
 
   provisioner "file" {
-    source      = "ssl/kube-apiserver-${element(var.master_private_ips, count.index)}.tar"
+    source      = "ssl/kube-apiserver-${element(var.master_hostnames, count.index)}.tar"
     destination = "/tmp/kube-apiserver.tar"
   }
 
@@ -193,11 +193,11 @@ resource "null_resource" "cert-node" {
 
   provisioner "local-exec" {
     interpreter = ["bash", "-c"]
-    command     = "${path.module}/scripts/cfssl.sh ssl node node-${element(var.node_private_ips, count.index)} ${join("," , concat(list(element(var.node_private_ips, count.index), element(var.node_hostnames, count.index))))}"
+    command     = "${path.module}/scripts/cfssl.sh ssl node node-${element(var.node_hostnames, count.index)} ${join("," , concat(list(element(var.node_private_ips, count.index), element(var.node_hostnames, count.index))))}"
   }
 
   provisioner "file" {
-    source      = "ssl/node-${element(var.node_private_ips, count.index)}.tar"
+    source      = "ssl/node-${element(var.node_hostnames, count.index)}.tar"
     destination = "/tmp/node.tar"
   }
 

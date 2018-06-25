@@ -5,6 +5,13 @@ install_rkt:
     - sources:
       - rkt: https://github.com/rkt/rkt/releases/download/v{{ rktVersion }}/rkt_{{ rktVersion }}-1_amd64.deb
 
+/opt/bin:
+  file.directory:
+    - user: root
+    - group: root
+    - dir_mode: 750
+    - makedirs: True
+
 /opt/bin/host-rkt:
     file.managed:
     - source: salt://node/cri/rkt/host-rkt

@@ -76,3 +76,37 @@
     - template: jinja
     - group: root
     - mode: 644
+
+kubernetes-wait:
+  cmd.run:
+    - runas: root
+    - name: until curl --silent 'http://127.0.0.1:8080/version/'; do printf 'Kubernetes API and extension not ready' && sleep 5; done
+    - use_vt: True
+    - timeout: 300
+
+kubernetes-addon-install:
+  cmd.run:
+    - require:
+      - cmd: flannel-wait
+    - watch:
+      - file: /srv/kubernetes/manifests/kube-apiserver-crb/kube-apiserver-crb.yaml
+      - file: /srv/kubernetes/manifests/kubelet-crb/kubelet-crb.yaml
+      - file: /srv/kubernetes/manifests/coredns/coredns.yaml
+      - file: /srv/kubernetes/manifests/dns-horizontal-autoscaler/dns-horizontal-autoscaler.yaml
+      - file: /srv/kubernetes/manifests/heapster/heapster.yaml
+      - file: /srv/kubernetes/manifests/influxdb-grafana/influxdb-grafana.yaml
+      - file: /srv/kubernetes/manifests/traefik/kube-dashboard.yaml
+      - file: /srv/kubernetes/manifests/traefik/traefik.yaml
+    - runas: root
+    - use_vt: True
+    - name: |
+        kubectl apply -f /srv/kubernetes/manifests/kube-apiserver-crb/kube-apiserver-crb.yaml
+        kubectl apply -f /srv/kubernetes/manifests/kube-apiserver-crb/kube-apiserver-crb.yaml
+        kubectl apply -f /srv/kubernetes/manifests/kubelet-crb/kubelet-crb.yaml
+        kubectl apply -f /srv/kubernetes/manifests/coredns/coredns.yaml
+        kubectl apply -f /srv/kubernetes/manifests/dns-horizontal-autoscaler/dns-horizontal-autoscaler.yaml
+        kubectl apply -f /srv/kubernetes/manifests/heapster/heapster.yaml
+        kubectl apply -f /srv/kubernetes/manifests/influxdb-grafana/influxdb-grafana.yaml
+        if ! curl --silent http://127.0.0.1:8080/api/v1/namespaces/kube-system/secrets | kubectl --namespace kube-system create secret generic kubernetes-dashboard-certs --from-file=/etc/kubernetes/ssl/dashboard-key.pem --from-file=/etc/kubernetes/ssl/dashboard.pem; fi
+        kubectl apply -f /srv/kubernetes/manifests/traefik/kube-dashboard.yaml
+        kubectl apply -f /srv/kubernetes/manifests/traefik/traefik.yaml

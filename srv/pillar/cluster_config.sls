@@ -116,15 +116,27 @@ keepalived:
       persistence_timeout: 50
       protocol: TCP
       real_server:
-        172.16.4.101 6443:
+        172.17.4.101 6443:
           weight: 1
-        172.16.4.102 6443:
+        172.17.4.102 6443:
           weight: 2
-        172.16.4.103 6443:
+        172.17.4.103 6443:
           weight: 3
 haproxy:
   enabled: true
   overwrite: True
+  defaults:
+    timeouts:
+      - tunnel        3600s
+      - http-request    10s
+      - queue           1m
+      - connect         10s
+      - client          1m
+      - server          1m
+      - http-keep-alive 10s
+      - check 10s
+  stats:
+    - enable
   global:
     ssl-default-bind-ciphers: "ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA384"
     ssl-default-bind-options: "no-sslv3 no-tlsv10 no-tlsv11"
@@ -146,11 +158,11 @@ haproxy:
       sticktable: "type binary len 32 size 30k expire 30m"
       servers:
         master01:
-          host: 172.16.4.101
+          host: 172.17.4.101
           port: 6443
         master02:
-          host: 172.16.4.102
+          host: 172.17.4.102
           port: 6443
         master03:
-          host: 172.16.4.103
+          host: 172.17.4.103
           port: 6443

@@ -26,13 +26,6 @@ vm.max_map_count:
   sysctl.present:
     - value: 2097152
 
-/opt/bin:
-  file.directory:
-    - user: root
-    - group: root
-    - dir_mode: 750
-    - makedirs: True
-
 /usr/sbin/modprobe:
   file.symlink:
     - target: /sbin/modprobe

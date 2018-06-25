@@ -102,11 +102,11 @@ resource "null_resource" "cert-etcd" {
 
   provisioner "local-exec" {
     interpreter = ["bash", "-c"]
-    command     = "${path.module}/scripts/cfssl.sh ssl etcd etcd-${element(var.etcd_private_ips, count.index)} ${join(",", concat(var.etcd_hostnames, var.etcd_private_ips))}"
+    command     = "${path.module}/scripts/cfssl.sh ssl/etcd-${element(var.etcd_private_ips, count.index)} etcd etcd-${element(var.etcd_private_ips, count.index)} ${join(",", concat(var.etcd_hostnames, var.etcd_private_ips))}"
   }
 
   provisioner "file" {
-    source      = "ssl/etcd-${element(var.etcd_private_ips, count.index)}.tar"
+    source      = "ssl/etcd-${element(var.etcd_private_ips, count.index)}/etcd-${element(var.etcd_private_ips, count.index)}.tar"
     destination = "/tmp/etcd.tar"
   }
 
@@ -136,21 +136,21 @@ resource "null_resource" "cert-master" {
 
   provisioner "local-exec" {
     interpreter = ["bash", "-c"]
-    command     = "${path.module}/scripts/cfssl.sh ssl master master-${element(var.master_hostnames, count.index)} ${join(",", concat(var.master_hostnames, var.master_private_ips, list(var.master_cluster_ip), list(var.cluster_public_dns)))}"
+    command     = "${path.module}/scripts/cfssl.sh ssl/master-${element(var.master_hostnames, count.index)} master master-${element(var.master_hostnames, count.index)} ${join(",", concat(var.master_hostnames, var.master_private_ips, list(var.master_cluster_ip), list(var.cluster_public_dns)))}"
+  }
+
+  provisioner "file" {
+    source      = "ssl/master-${element(var.master_hostnames, count.index)}/master-${element(var.master_hostnames, count.index)}.tar"
+    destination = "/tmp/master.tar"
   }
 
   provisioner "local-exec" {
     interpreter = ["bash", "-c"]
-    command     = "${path.module}/scripts/cfssl.sh ssl apiserver kube-apiserver-${element(var.master_hostnames, count.index)} ${join(",", concat(var.master_hostnames, var.master_private_ips, list(var.master_cluster_ip), list(var.cluster_public_dns)))}"
+    command     = "${path.module}/scripts/cfssl.sh ssl/master-${element(var.master_hostnames, count.index)} apiserver kube-apiserver-${element(var.master_hostnames, count.index)} ${join(",", concat(var.master_hostnames, var.master_private_ips, list(var.master_cluster_ip), list(var.cluster_public_dns)))}"
   }
 
   provisioner "file" {
-    source      = "ssl/master-${element(var.master_hostnames, count.index)}.tar"
-    destination = "/tmp/master.tar"
-  }
-
-  provisioner "file" {
-    source      = "ssl/kube-apiserver-${element(var.master_hostnames, count.index)}.tar"
+    source      = "ssl/master-${element(var.master_hostnames, count.index)}/kube-apiserver-${element(var.master_hostnames, count.index)}.tar"
     destination = "/tmp/kube-apiserver.tar"
   }
 
@@ -164,12 +164,34 @@ resource "null_resource" "cert-master" {
     destination = "/tmp/ca-key.pem"
   }
 
+  provisioner "local-exec" {
+    interpreter = ["bash", "-c"]
+    command     = "${path.module}/scripts/cfssl.sh ssl/master-${element(var.master_hostnames, count.index)} kube-proxy kube-proxy-${element(var.master_private_ips, count.index)} ${join(",", var.master_private_ips)}"
+  }
+
+  provisioner "file" {
+    source      = "ssl/master-${element(var.master_hostnames, count.index)}/kube-proxy-${element(var.master_private_ips, count.index)}.tar"
+    destination = "/tmp/kube-proxy.tar"
+  }
+
+  provisioner "local-exec" {
+    interpreter = ["bash", "-c"]
+    command     = "${path.module}/scripts/cfssl.sh ssl/master-${element(var.master_hostnames, count.index)} flanneld flanneld-${element(var.master_private_ips, count.index)} ${join(",", var.master_private_ips)}"
+  }
+
+  provisioner "file" {
+    source      = "ssl/master-${element(var.master_hostnames, count.index)}/flanneld-${element(var.master_private_ips, count.index)}.tar"
+    destination = "/tmp/flanneld.tar"
+  }
+
   provisioner "remote-exec" {
     inline = [
       "mkdir -p /etc/kubernetes/ssl",
       "tar -C /etc/kubernetes/ssl -xf /tmp/master.tar",
       "tar -C /etc/kubernetes/ssl -xf /tmp/kube-apiserver.tar",
       "tar -C /etc/kubernetes/ssl -xf /tmp/kubernetes-dashboard.tar",
+      "tar -C /etc/kubernetes/ssl -xf /tmp/kube-proxy.tar",
+      "tar -C /etc/kubernetes/ssl -xf /tmp/flanneld.tar",
       "mv /tmp/ca-key.pem /etc/kubernetes/ssl/",
     ]
   }
@@ -193,85 +215,39 @@ resource "null_resource" "cert-node" {
 
   provisioner "local-exec" {
     interpreter = ["bash", "-c"]
-    command     = "${path.module}/scripts/cfssl.sh ssl node node-${element(var.node_hostnames, count.index)} ${join("," , concat(list(element(var.node_private_ips, count.index), element(var.node_hostnames, count.index))))}"
+    command     = "${path.module}/scripts/cfssl.sh ssl/node-${element(var.node_hostnames, count.index)} node node-${element(var.node_hostnames, count.index)} ${join("," , concat(list(element(var.node_private_ips, count.index), element(var.node_hostnames, count.index))))}"
   }
 
   provisioner "file" {
-    source      = "ssl/node-${element(var.node_hostnames, count.index)}.tar"
+    source      = "ssl/node-${element(var.node_hostnames, count.index)}/node-${element(var.node_hostnames, count.index)}.tar"
     destination = "/tmp/node.tar"
   }
 
-  provisioner "remote-exec" {
-    inline = [
-      "mkdir -p /etc/kubernetes/ssl",
-      "tar -C /etc/kubernetes/ssl -xf /tmp/node.tar",
-    ]
-  }
-}
-
-resource "null_resource" "cert-kube-proxy" {
-  depends_on = ["null_resource.cert-ca"]
-  count      = "${var.master_count + var.node_count}"
-
-  connection {
-    type                = "ssh"
-    host                = "${element(concat(var.master_private_ips, var.node_private_ips), count.index)}"
-    user                = "${var.ssh_user}"
-    private_key         = "${file(var.ssh_private_key)}"
-    agent               = false
-    bastion_host        = "${var.bastion_host}"
-    bastion_user        = "${var.ssh_user}"
-    bastion_private_key = "${file(var.ssh_private_key)}"
-    timeout             = "1m"
-  }
-
   provisioner "local-exec" {
     interpreter = ["bash", "-c"]
-    command     = "${path.module}/scripts/cfssl.sh ssl kube-proxy kube-proxy-${element(concat(var.master_private_ips, var.node_private_ips), count.index)} ${join(",", concat(var.master_private_ips, var.node_private_ips))}"
+    command     = "${path.module}/scripts/cfssl.sh ssl/node-${element(var.node_hostnames, count.index)} kube-proxy kube-proxy-${element(var.node_private_ips, count.index)} ${join(",", var.node_private_ips)}"
   }
 
   provisioner "file" {
-    source      = "ssl/kube-proxy-${element(concat(var.master_private_ips, var.node_private_ips), count.index)}.tar"
+    source      = "ssl/node-${element(var.node_hostnames, count.index)}/kube-proxy-${element(var.node_private_ips, count.index)}.tar"
     destination = "/tmp/kube-proxy.tar"
   }
 
-  provisioner "remote-exec" {
-    inline = [
-      "mkdir -p /etc/kubernetes/ssl",
-      "tar -C /etc/kubernetes/ssl -xf /tmp/kube-proxy.tar",
-    ]
-  }
-}
-
-resource "null_resource" "cert-flanneld" {
-  depends_on = ["null_resource.cert-ca"]
-  count      = "${var.master_count + var.node_count}"
-
-  connection {
-    type                = "ssh"
-    host                = "${element(concat(var.master_private_ips, var.node_private_ips), count.index)}"
-    user                = "${var.ssh_user}"
-    private_key         = "${file(var.ssh_private_key)}"
-    agent               = false
-    bastion_host        = "${var.bastion_host}"
-    bastion_user        = "${var.ssh_user}"
-    bastion_private_key = "${file(var.ssh_private_key)}"
-    timeout             = "1m"
-  }
-
   provisioner "local-exec" {
     interpreter = ["bash", "-c"]
-    command     = "${path.module}/scripts/cfssl.sh ssl flanneld flanneld-${element(concat(var.master_private_ips, var.node_private_ips), count.index)} ${join(",", concat(var.master_private_ips, var.node_private_ips))}"
+    command     = "${path.module}/scripts/cfssl.sh ssl/node-${element(var.node_hostnames, count.index)} flanneld flanneld-${element(var.node_private_ips, count.index)} ${join(",", var.node_private_ips)}"
   }
 
   provisioner "file" {
-    source      = "ssl/flanneld-${element(concat(var.master_private_ips, var.node_private_ips), count.index)}.tar"
+    source      = "ssl/node-${element(var.node_hostnames, count.index)}/flanneld-${element(var.node_private_ips, count.index)}.tar"
     destination = "/tmp/flanneld.tar"
   }
 
   provisioner "remote-exec" {
     inline = [
       "mkdir -p /etc/kubernetes/ssl",
+      "tar -C /etc/kubernetes/ssl -xf /tmp/node.tar",
+      "tar -C /etc/kubernetes/ssl -xf /tmp/kube-proxy.tar",
       "tar -C /etc/kubernetes/ssl -xf /tmp/flanneld.tar",
     ]
   }

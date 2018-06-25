@@ -41,6 +41,9 @@ CERTBASE="$2"
 CN="$3"
 SANS="$4"
 
+
+mkdir -p $OUTDIR
+
 if [ ! -d $OUTDIR ]; then
     echo "ERROR: output directory does not exist:  $OUTDIR"
     exit 1
@@ -103,6 +106,10 @@ EOF
     local CERTIFICATE=$OUTDIR/${CERTBASE}.pem
     echo "local CERTIFICATE: $CERTIFICATE"
     mkdir -p $(dirname $CERTIFICATE)
+    CAFILE="$OUTDIR/ca.pem"
+    CAKEYFILE="$OUTDIR/ca-key.pem"
+    CACONFIG=$OUTDIR/ca-config.json
+
     cfssl gencert -initca $OUTDIR/${CERTBASE}-csr.json | cfssljson -bare $OUTDIR/ca
 }
 
@@ -142,9 +149,13 @@ EOF
     CERTIFICATE=$OUTDIR/${CERTBASE}.pem
     echo "local CERTIFICATE: $CERTIFICATE"
     mkdir -p $(dirname $CERTIFICATE)
-    cfssl gencert -ca=$OUTDIR/ca.pem \
-    -ca-key=$OUTDIR/ca-key.pem \
-    -config=$OUTDIR/ca-config.json \
+    CAFILE="$OUTDIR/../ca.pem"
+    CAKEYFILE="$OUTDIR/../ca-key.pem"
+    CACONFIG=$OUTDIR/../ca-config.json
+    
+    cfssl gencert -ca=$CAFILE \
+    -ca-key=$CAKEYFILE \
+    -config=$CACONFIG \
     -profile=kubernetes $OUTDIR/${CERTBASE}-csr.json | cfssljson -bare $OUTDIR/etcd
 }
 
@@ -175,9 +186,13 @@ EOF
     local CERTIFICATE=$OUTDIR/${CERTBASE}.pem
     echo "local CERTIFICATE: $CERTIFICATE"
     mkdir -p $(dirname $CERTIFICATE)
-    cfssl gencert -ca=$OUTDIR/ca.pem \
-    -ca-key=$OUTDIR/ca-key.pem \
-    -config=$OUTDIR/ca-config.json \
+    CAFILE="$OUTDIR/ca.pem"
+    CAKEYFILE="$OUTDIR/ca-key.pem"
+    CACONFIG=$OUTDIR/ca-config.json
+    
+    cfssl gencert -ca=$CAFILE \
+    -ca-key=$CAKEYFILE \
+    -config=$CACONFIG \
     -profile=kubernetes $OUTDIR/${CERTBASE}-csr.json | cfssljson -bare $OUTDIR/admin
 }
 
@@ -223,9 +238,13 @@ EOF
     local CERTIFICATE=$OUTDIR/${CERTBASE}.pem
     echo "local CERTIFICATE: $CERTIFICATE"
     mkdir -p $(dirname $CERTIFICATE)
-    cfssl gencert -ca=$OUTDIR/ca.pem \
-    -ca-key=$OUTDIR/ca-key.pem \
-    -config=$OUTDIR/ca-config.json \
+    CAFILE="$OUTDIR/../ca.pem"
+    CAKEYFILE="$OUTDIR/../ca-key.pem"
+    CACONFIG=$OUTDIR/../ca-config.json
+    
+    cfssl gencert -ca=$CAFILE \
+    -ca-key=$CAKEYFILE \
+    -config=$CACONFIG \
     -profile=kubernetes $OUTDIR/${CERTBASE}-csr.json | cfssljson -bare $OUTDIR/${CERTBASE}
 }
 
@@ -266,9 +285,13 @@ EOF
     local CERTIFICATE=$OUTDIR/${CERTBASE}.pem
     echo "local CERTIFICATE: $CERTIFICATE"
     mkdir -p $(dirname $CERTIFICATE)
-    cfssl gencert -ca=$OUTDIR/ca.pem \
-    -ca-key=$OUTDIR/ca-key.pem \
-    -config=$OUTDIR/ca-config.json \
+    CAFILE="$OUTDIR/../ca.pem"
+    CAKEYFILE="$OUTDIR/../ca-key.pem"
+    CACONFIG=$OUTDIR/../ca-config.json
+    
+    cfssl gencert -ca=$CAFILE \
+    -ca-key=$CAKEYFILE \
+    -config=$CACONFIG \
     -hostname=${SANS} \
     -profile=kubernetes $OUTDIR/${CERTBASE}-csr.json | cfssljson -bare $OUTDIR/${CERTBASE}
 }
@@ -299,9 +322,13 @@ EOF
     local CERTIFICATE=$OUTDIR/${CERTBASE}.pem
     echo "local CERTIFICATE: $CERTIFICATE"
     mkdir -p $(dirname $CERTIFICATE)
-    cfssl gencert -ca=$OUTDIR/ca.pem \
-    -ca-key=$OUTDIR/ca-key.pem \
-    -config=$OUTDIR/ca-config.json \
+    CAFILE="$OUTDIR/../ca.pem"
+    CAKEYFILE="$OUTDIR/../ca-key.pem"
+    CACONFIG=$OUTDIR/../ca-config.json
+    
+    cfssl gencert -ca=$CAFILE \
+    -ca-key=$CAKEYFILE \
+    -config=$CACONFIG \
     -profile=kubernetes $OUTDIR/${CERTBASE}-csr.json | cfssljson -bare $OUTDIR/${CERTBASE}
 }
 
@@ -344,9 +371,13 @@ EOF
     local CERTIFICATE=$OUTDIR/${CERTBASE}.pem
     echo "local CERTIFICATE: $CERTIFICATE"
     mkdir -p $(dirname $CERTIFICATE)
-    cfssl gencert -ca=$OUTDIR/ca.pem \
-    -ca-key=$OUTDIR/ca-key.pem \
-    -config=$OUTDIR/ca-config.json \
+    CAFILE="$OUTDIR/../ca.pem"
+    CAKEYFILE="$OUTDIR/../ca-key.pem"
+    CACONFIG=$OUTDIR/../ca-config.json
+    
+    cfssl gencert -ca=$CAFILE \
+    -ca-key=$CAKEYFILE \
+    -config=$CACONFIG \
     -profile=kubernetes $OUTDIR/${CERTBASE}-csr.json | cfssljson -bare $OUTDIR/${CERTBASE}
 }
 
@@ -377,9 +408,13 @@ EOF
     local CERTIFICATE=$OUTDIR/${CERTBASE}.pem
     echo "local CERTIFICATE: $CERTIFICATE"
     mkdir -p $(dirname $CERTIFICATE)
-    cfssl gencert -ca=$OUTDIR/ca.pem \
-    -ca-key=$OUTDIR/ca-key.pem \
-    -config=$OUTDIR/ca-config.json \
+    CAFILE="$OUTDIR/ca.pem"
+    CAKEYFILE="$OUTDIR/ca-key.pem"
+    CACONFIG=$OUTDIR/ca-config.json
+    
+    cfssl gencert -ca=$CAFILE \
+    -ca-key=$CAKEYFILE \
+    -config=$CACONFIG \
     -profile=kubernetes $OUTDIR/${CERTBASE}-csr.json | cfssljson -bare $OUTDIR/dashboard
 }
 
@@ -410,9 +445,13 @@ EOF
     local CERTIFICATE=$OUTDIR/${CERTBASE}.pem
     echo "local CERTIFICATE: $CERTIFICATE"
     mkdir -p $(dirname $CERTIFICATE)
-    cfssl gencert -ca=$OUTDIR/ca.pem \
-    -ca-key=$OUTDIR/ca-key.pem \
-    -config=$OUTDIR/ca-config.json \
+    CAFILE="$OUTDIR/../ca.pem"
+    CAKEYFILE="$OUTDIR/../ca-key.pem"
+    CACONFIG=$OUTDIR/../ca-config.json
+    
+    cfssl gencert -ca=$CAFILE \
+    -ca-key=$CAKEYFILE \
+    -config=$CACONFIG \
     -profile=kubernetes $OUTDIR/${CERTBASE}-csr.json | cfssljson -bare $OUTDIR/${CERTBASE}
 }
 
@@ -448,15 +487,15 @@ case "$2" in
       ;;
 esac
 
-CAFILE="$OUTDIR/ca.pem"
-CAKEYFILE="$OUTDIR/ca-key.pem"
+
 KEYFILE="$OUTDIR/$CERTBASE-key.pem"
 CSRFILE="$OUTDIR/$CERTBASE.csr"
 PEMFILE="$OUTDIR/$CERTBASE.pem"
 
-CONTENTS="${CAFILE} ${KEYFILE} ${PEMFILE}"
+CONTENTS="${KEYFILE} ${PEMFILE}"
 
-tar -cf $OUTFILE -C $OUTDIR $(for  f in $CONTENTS;do printf "$(basename $f) ";done)
+tar -cf $OUTFILE -C $(dirname $CAFILE) "$(basename $CAFILE)"
+tar -uf $OUTFILE -C $OUTDIR $(for  f in $CONTENTS;do printf "$(basename $f) ";done)
 
 echo "Bundled SSL artifacts into $OUTFILE"
 echo "$CONTENTS"

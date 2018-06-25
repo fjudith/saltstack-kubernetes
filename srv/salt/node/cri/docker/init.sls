@@ -65,6 +65,22 @@ docker-latest-archive:
     - group: root
     - mode: 644
 
+/etc/systemd/network/90-docker0.netdev:
+    file.managed:
+    - source: salt://node/cri/docker/90-docker0.netdev
+    - user: root
+    - template: jinja
+    - group: root
+    - mode: 644
+
+/etc/systemd/network/91-docker0.network:
+    file.managed:
+    - source: salt://node/cri/docker/91-docker0.network
+    - user: root
+    - template: jinja
+    - group: root
+    - mode: 644
+    
 /etc/systemd/system/sockets.target.wants/docker.socket:
     file.managed:
     - source: salt://node/cri/docker/docker.socket
@@ -98,7 +114,7 @@ docker.socket:
   service.running:
     - enable: True
     - watch:
-      - /etc/systemd/system/docker.service
+      - /etc/systemd/system/sockets.target.wants/docker.socket
     - require:
       - group: docker
 

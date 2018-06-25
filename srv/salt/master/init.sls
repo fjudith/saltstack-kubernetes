@@ -16,13 +16,6 @@ include:
   - node/cni
   - kubernetes
 
-/opt/bin:
-  file.directory:
-    - user: root
-    - group: root
-    - dir_mode: 750
-    - makedirs: True
-
 /usr/sbin/modprobe:
   file.symlink:
     - target: /sbin/modprobe
@@ -257,13 +250,23 @@ flannel-etcd-config:
         curl --cacert /etc/kubernetes/ssl/ca.pem --key /etc/kubernetes/ssl/master-key.pem --cert /etc/kubernetes/ssl/master.pem --silent -X PUT -d "value={\"Network\":\"{{ ipv4Range }}\",\"Backend\":{\"Type\":\"vxlan\"}}" "https://{{ etcd01ip }}:2379/v2/keys/coreos.com/network/config?prevExist=false"
 
 flannel-wait:
-  http.wait_for_successful_query:
-    - name: http://127.0.0.1:8080/version/
-    - request_interval: 5
-    - wait_for: 300
-    - status: 200
+  cmd.run:
     - require:
       - cmd: flannel-etcd-config
+    - runas: root
+    - name: until curl --silent 'http://127.0.0.1:8080/version/'; do printf 'Kubernetes API and extension not ready' && sleep 5; done
+    - use_vt: True
+    - timeout: 300
+
+flannel-install:
+  cmd.run:
+    - require:
+      - cmd: flannel-etcd-config
+      - cmd: flannel-wait
+    - watch:
+      - file: /etc/kubernetes/manifests/flannel.yaml
+    - runas: root
+    - name: kubectl apply -f /etc/kubernetes/manifests/flannel.yaml
 
   
 {% endif %}

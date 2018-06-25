@@ -1,21 +1,21 @@
 base:
   '*':
   {% if "master" in grains.get('role', []) %}
-    - common
+    {# - common #}
     - certs
     - master
   {% endif %}
   {% if "node" in grains.get('role', []) %}
-    - common
+    {# - common #}
     - certs
     - node
   {% endif %}
   {% if "etcd" in grains.get('role', []) %}
-    - common
+    {# - common #}
     - certs
     - etcd
   {% endif %}
   {% if "proxy" in grains.get('role', []) %}
-    - common
+    {# - common #}
     - proxy
   {% endif %}

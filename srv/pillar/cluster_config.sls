@@ -135,8 +135,17 @@ haproxy:
       - server          1m
       - http-keep-alive 10s
       - check 10s
-  stats:
-    - enable
+    stats:
+      - enable
+      - uri: 'admin?stats'
+  listens:
+    stats:
+      bind:
+        - "0.0.0.0:8080"
+      mode: http
+      stats:
+        enable: True
+        uri: "/admin?stats"
   global:
     ssl-default-bind-ciphers: "ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA384"
     ssl-default-bind-options: "no-sslv3 no-tlsv10 no-tlsv11"
@@ -154,7 +163,7 @@ haproxy:
   backends:
     kube-apiserver:
       mode: tcp
-      balance: source
+      balance: leastconn
       sticktable: "type binary len 32 size 30k expire 30m"
       servers:
         master01:

@@ -1,7 +1,7 @@
 kubernetes:
   hyperkube-image-repo: quay.io/coreos/hyperkube 
-  version: v1.10.3_coreos.0
-  binary-version: v1.10.4
+  version: v1.9.8_coreos.0
+  binary-version: v1.9.8
   domain: cluster.local
   etcd:
     count: 3
@@ -163,15 +163,18 @@ haproxy:
   backends:
     kube-apiserver:
       mode: tcp
-      balance: leastconn
+      balance: source
       sticktable: "type binary len 32 size 30k expire 30m"
       servers:
         master01:
           host: 172.17.4.101
           port: 6443
+          check: check
         master02:
           host: 172.17.4.102
           port: 6443
+          check: check
         master03:
           host: 172.17.4.103
           port: 6443
+          check: check

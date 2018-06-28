@@ -1,7 +1,7 @@
 kubernetes:
   hyperkube-image-repo: quay.io/coreos/hyperkube 
-  version: v1.9.8_coreos.0
-  binary-version: v1.9.8
+  version: v1.10.3_coreos.0
+  binary-version: v1.10.3
   domain: cluster.local
   etcd:
     count: 3

@@ -338,13 +338,16 @@ function write-ssl-apiserver {
     # Convert SANs to JSON supported array (e.g 1,2,3 --> "1","2","3",) 
     APISERVER_IP=$(for i in $(printf ${SANS} | tr ',' '\n'); do printf "\"$i\","; done)
 
+    # Extracting the IP address from the CN (i.e kube-apiserver-xxx.xxx.xxx.xxx)
+    IP_ADDRESS=$(printf ${CN} | awk -F '-' '{print $3}')
+
     # Write cfssl JSON template
     local TEMPLATE=$OUTDIR/${CERTBASE}-csr.json
     echo "local TEMPLATE: $TEMPLATE"
     mkdir -p $(dirname $TEMPLATE)
     cat << EOF > $TEMPLATE
 {
-  "CN": "kubernetes",
+  "CN": "${IP_ADDRESS}",
   "hosts": [
     "127.0.0.1",
     ${APISERVER_IP}
@@ -421,14 +424,24 @@ EOF
 # Flanneld certificate
 # ---------------------------------------------
 function write-ssl-flanneld {
+    # Convert SANs to JSON supported array (e.g 1,2,3 --> "1","2","3",) 
+    ALTERNATIVE_NAMES=$(for i in $(printf ${SANS} | tr ',' '\n'); do printf "\"$i\","; done)
+
+    # Extracting the IP address from the CN (i.e flanneld-xxx.xxx.xxx.xxx)
+    HOSTNAME=$(printf ${CN} | awk -F '-' '{print $2}')
+
     # Write cfssl JSON template
     local TEMPLATE=$OUTDIR/${CERTBASE}-csr.json
     echo "local TEMPLATE: $TEMPLATE"
     mkdir -p $(dirname $TEMPLATE)
     cat << EOF > $TEMPLATE
 {
-  "CN": "flanneld",
-  "hosts": [],
+  "CN": "${HOSTNAME}",
+  "hosts": [
+    ${ALTERNATIVE_NAMES}
+    "localhost",
+    "127.0.0.1"
+  ],
   "key": {
     "algo": "ecdsa",
     "size": 256

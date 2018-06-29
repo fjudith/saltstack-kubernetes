@@ -102,11 +102,11 @@ resource "null_resource" "cert-etcd" {
 
   provisioner "local-exec" {
     interpreter = ["bash", "-c"]
-    command     = "${path.module}/scripts/cfssl.sh ssl/etcd-${element(var.etcd_private_ips, count.index)} etcd etcd-${element(var.etcd_private_ips, count.index)} ${join(",", concat(var.etcd_hostnames, var.etcd_private_ips))}"
+    command     = "${path.module}/scripts/cfssl.sh ssl/etcd-${element(var.etcd_hostnames, count.index)} etcd etcd-${element(var.etcd_hostnames, count.index)} ${join(",", list(element(var.etcd_hostnames, count.index), element(var.etcd_private_ips, count.index)))}"
   }
 
   provisioner "file" {
-    source      = "ssl/etcd-${element(var.etcd_private_ips, count.index)}/etcd-${element(var.etcd_private_ips, count.index)}.tar"
+    source      = "ssl/etcd-${element(var.etcd_hostnames, count.index)}/etcd-${element(var.etcd_hostnames, count.index)}.tar"
     destination = "/tmp/etcd.tar"
   }
 
@@ -176,11 +176,11 @@ resource "null_resource" "cert-master" {
 
   provisioner "local-exec" {
     interpreter = ["bash", "-c"]
-    command     = "${path.module}/scripts/cfssl.sh ssl/master-${element(var.master_hostnames, count.index)} flanneld flanneld-${element(var.master_private_ips, count.index)} ${join(",", var.master_private_ips)}"
+    command     = "${path.module}/scripts/cfssl.sh ssl/master-${element(var.master_hostnames, count.index)} flanneld flanneld-${element(var.master_hostnames, count.index)} ${element(var.master_private_ips, count.index)}"
   }
 
   provisioner "file" {
-    source      = "ssl/master-${element(var.master_hostnames, count.index)}/flanneld-${element(var.master_private_ips, count.index)}.tar"
+    source      = "ssl/master-${element(var.master_hostnames, count.index)}/flanneld-${element(var.master_hostnames, count.index)}.tar"
     destination = "/tmp/flanneld.tar"
   }
 
@@ -235,11 +235,11 @@ resource "null_resource" "cert-node" {
 
   provisioner "local-exec" {
     interpreter = ["bash", "-c"]
-    command     = "${path.module}/scripts/cfssl.sh ssl/node-${element(var.node_hostnames, count.index)} flanneld flanneld-${element(var.node_private_ips, count.index)} ${join(",", var.node_private_ips)}"
+    command     = "${path.module}/scripts/cfssl.sh ssl/node-${element(var.node_hostnames, count.index)} flanneld flanneld-${element(var.node_hostnames, count.index)} ${element(var.node_private_ips, count.index)}"
   }
 
   provisioner "file" {
-    source      = "ssl/node-${element(var.node_hostnames, count.index)}/flanneld-${element(var.node_private_ips, count.index)}.tar"
+    source      = "ssl/node-${element(var.node_hostnames, count.index)}/flanneld-${element(var.node_hostnames, count.index)}.tar"
     destination = "/tmp/flanneld.tar"
   }
 

@@ -256,7 +256,7 @@ flannel-wait:
     - runas: root
     - name: until curl --silent 'http://127.0.0.1:8080/version/'; do printf 'Kubernetes API and extension not ready' && sleep 5; done
     - use_vt: True
-    - timeout: 300
+    - timeout: 600
 
 flannel-install:
   cmd.run:

@@ -254,7 +254,7 @@ flannel-wait:
     - require:
       - cmd: flannel-etcd-config
     - runas: root
-    - name: until curl --silent 'http://127.0.0.1:8080/version/'; do printf 'Kubernetes API and extension not ready' && sleep 5; done
+    - name: until curl --silent "http://127.0.0.1:8080/apis/extensions/v1beta1" | grep daemonset; do printf 'Kubernetes API and extension not ready to deploy Flannel' && sleep 5; done
     - use_vt: True
     - timeout: 600
 

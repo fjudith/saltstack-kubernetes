@@ -125,3 +125,4 @@ docker.service:
       - /etc/systemd/system/docker.service
     - require:
       - group: docker
+      - service: docker.socket

@@ -95,7 +95,7 @@ kubernetes-wait:
 kubernetes-addon-install:
   cmd.run:
     - require:
-      - cmd: flannel-wait
+      - cmd: kubernetes-wait
     - watch:
       - file: /srv/kubernetes/manifests/kube-apiserver-crb.yaml
       - file: /srv/kubernetes/manifests/kubelet-crb.yaml

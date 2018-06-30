@@ -1,5 +1,5 @@
-{%- set clusterDNS = pillar['kubernetes']['global']['cluster-dns'] -%}
-{%- set clusterDomain = pillar['kubernetes']['domain'] -%}
+{%- set cluster_dns_server = pillar['kubernetes']['global']['cluster-dns'] -%}
+{%- set cluster_domain = pillar['kubernetes']['domain'] -%}
 
 
 apiVersion: v1
@@ -60,7 +60,7 @@ data:
     .:53 {
         errors
         health
-        kubernetes {{ clusterDomain }} in-addr.arpa ip6.arpa {
+        kubernetes {{ cluster_domain }} in-addr.arpa ip6.arpa {
             pods insecure
             upstream
             fallthrough in-addr.arpa ip6.arpa
@@ -163,6 +163,7 @@ metadata:
   name: kube-dns
   namespace: kube-system
   annotations:
+    prometheus.io/port: "9153"
     prometheus.io/scrape: "true"
   labels:
     k8s-app: kube-dns
@@ -172,7 +173,7 @@ metadata:
 spec:
   selector:
     k8s-app: kube-dns
-  clusterIP: {{ clusterDNS }}
+  clusterIP: {{ cluster_dns_server }}
   ports:
   - name: dns
     port: 53

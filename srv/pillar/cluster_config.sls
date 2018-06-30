@@ -1,3 +1,5 @@
+# https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG-1.10.md#external-dependencies
+# https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG-1.11.md#external-dependencies
 kubernetes:
   hyperkube-image-repo: quay.io/coreos/hyperkube 
   version: v1.10.3_coreos.0
@@ -15,7 +17,7 @@ kubernetes:
       etcd03:
         hostname: etcd03
         ipaddr: 172.17.4.53
-    version: v3.3.3
+    version: v3.1.12
   master:
     count: 3
     cluster:

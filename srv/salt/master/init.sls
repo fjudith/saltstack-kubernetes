@@ -81,6 +81,30 @@ include:
     - group: root
     - mode: 644
 
+/etc/kubernetes/kube-controller-manager.kubeconfig:
+    file.managed:
+    - source: salt://master/kube-controller-manager.kubeconfig
+    - user: root
+    - template: jinja
+    - group: root
+    - mode: 644
+
+/etc/kubernetes/kube-scheduler.kubeconfig:
+    file.managed:
+    - source: salt://master/kube-scheduler.kubeconfig
+    - user: root
+    - template: jinja
+    - group: root
+    - mode: 644
+
+/etc/kubernetes/kube-scheduler-config.yaml:
+    file.managed:
+    - source: salt://master/kube-scheduler-config.yaml
+    - user: root
+    - template: jinja
+    - group: root
+    - mode: 644
+
 kubelet:
   service.running:
     - enable: True
@@ -256,7 +280,7 @@ flannel-wait:
     - runas: root
     - name: until curl --silent "http://127.0.0.1:8080/apis/extensions/v1beta1" | grep daemonset; do printf 'Kubernetes API and extension not ready to deploy Flannel' && sleep 5; done
     - use_vt: True
-    - timeout: 600
+    - timeout: 900
 
 flannel-install:
   cmd.run:

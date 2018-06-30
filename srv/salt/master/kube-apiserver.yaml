@@ -56,16 +56,16 @@ spec:
     - --etcd-keyfile=/etc/kubernetes/ssl/apiserver-key.pem
     - --etcd-servers=https://{{ etcd01ip }}:2379,https://{{ etcd02ip }}:2379,https://{{ etcd03ip }}:2379
     - --event-ttl=1h
-    # - --experimental-encryption-provider-config=/etc/kubernetes/encryption-config.yaml
+    - --experimental-encryption-provider-config=/etc/kubernetes/encryption-config.yaml
     - --insecure-bind-address=127.0.0.1
     # https://kubernetes.io/docs/admin/kubelet-authentication-authorization/#kubelet-authentication
     - --kubelet-certificate-authority=/etc/kubernetes/ssl/ca.pem
-    - --kubelet-client-certificate=/etc/kubernetes/ssl/apiserver.pem
-    - --kubelet-client-key=/etc/kubernetes/ssl/apiserver-key.pem
+    - --kubelet-client-certificate=/etc/kubernetes/ssl/master.pem
+    - --kubelet-client-key=/etc/kubernetes/ssl/master-key.pem
     - --kubelet-https=true
     - --runtime-config=api/all
     # - --runtime-config=extensions/v1beta1/networkpolicies=true
-    - --service-account-key-file=/etc/kubernetes/ssl/apiserver-key.pem
+    - --service-account-key-file=/etc/kubernetes/ssl/service-account.pem
     - --service-cluster-ip-range={{ clusterIpRange }}
     - --service-node-port-range=30000-50000
     - --storage-media-type=application/json

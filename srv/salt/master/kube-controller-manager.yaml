@@ -1,5 +1,7 @@
-{%- set hyperkubeImageRepo =  pillar['kubernetes']['hyperkube-image-repo'] -%}
-{%- set k8sVersion =  pillar['kubernetes']['version'] -%}
+{%- set cluster_cidr             =  pillar['kubernetes']['global']['pod-network'] -%}
+{%- set service_cluster_ip_range =  pillar['kubernetes']['global']['service-ip-range'] -%}
+{%- set hyperkubeImageRepo       =  pillar['kubernetes']['hyperkube-image-repo'] -%}
+{%- set k8sVersion               =  pillar['kubernetes']['version'] -%}
 
 apiVersion: v1
 kind: Pod
@@ -14,17 +16,21 @@ spec:
     - /hyperkube
     - controller-manager
     - --address=0.0.0.0
-    - --master=http://127.0.0.1:8080
-    - --leader-elect=true
-    - --feature-gates=RotateKubeletServerCertificate=true
-    - --service-account-private-key-file=/etc/kubernetes/ssl/apiserver-key.pem
-    - --root-ca-file=/etc/kubernetes/ssl/ca.pem
-    - --flex-volume-plugin-dir=/etc/kubernetes/volumeplugins
+    - --cluster-cidr={{ cluster_cidr }}
+    - --cluster-name=kubernetes
     - --cluster-signing-cert-file=/etc/kubernetes/ssl/ca.pem
     - --cluster-signing-key-file=/etc/kubernetes/ssl/ca-key.pem
+    - --feature-gates=RotateKubeletServerCertificate=true
+    - --flex-volume-plugin-dir=/etc/kubernetes/volumeplugins
+    - --kubeconfig=/etc/kubernetes/kube-controller-manager.kubeconfig
+    - --leader-elect=true
     - --node-monitor-grace-period=40s
     - --node-monitor-period=5s
     - --pod-eviction-timeout=5m0s
+    - --root-ca-file=/etc/kubernetes/ssl/ca.pem
+    - --service-account-private-key-file=/etc/kubernetes/ssl/service-account-key.pem
+    - --service-cluster-ip-range={{ service_cluster_ip_range }}
+    - --use-service-account-credentials=true
     - --v=2
     resources:
       requests:
@@ -46,8 +52,14 @@ spec:
     - mountPath: /etc/kubernetes/volumeplugins
       name: volumeplugins-host
       readonly: false
+    - mountPath: /etc/kubernetes
+      name: config-kubernetes
+      readOnly: true
   hostNetwork: true
   volumes:
+  - hostPath:
+      path: /etc/kubernetes
+    name: config-kubernetes
   - hostPath:
       path: /etc/kubernetes/ssl
     name: ssl-certs-kubernetes

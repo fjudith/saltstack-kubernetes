@@ -347,7 +347,7 @@ function write-ssl-apiserver {
     mkdir -p $(dirname $TEMPLATE)
     cat << EOF > $TEMPLATE
 {
-  "CN": "${IP_ADDRESS}",
+  "CN": "kubernetes",
   "hosts": [
     "127.0.0.1",
     ${APISERVER_IP}
@@ -468,7 +468,115 @@ EOF
     -profile=kubernetes $OUTDIR/${CERTBASE}-csr.json | cfssljson -bare $OUTDIR/${CERTBASE}
 }
 
+# Controller Manager certificate
+# ---------------------------------------------
+function write-ssl-controller-manager {
+    # Write cfssl JSON template
+    local TEMPLATE=$OUTDIR/${CERTBASE}-csr.json
+    echo "local TEMPLATE: $TEMPLATE"
+    mkdir -p $(dirname $TEMPLATE)
+    cat << EOF > $TEMPLATE
+{
+  "CN": "system:kube-controller-manager",
+  "hosts": [],
+  "key": {
+    "algo": "ecdsa",
+    "size": 256
+  },
+  "names": [
+    {
+      "O": "system:kube-controller-manager",
+      "OU": "Kubernetes cluster"
+    }
+  ]
+}
+EOF
 
+    local CERTIFICATE=$OUTDIR/${CERTBASE}.pem
+    echo "local CERTIFICATE: $CERTIFICATE"
+    mkdir -p $(dirname $CERTIFICATE)
+    CAFILE="$OUTDIR/ca.pem"
+    CAKEYFILE="$OUTDIR/ca-key.pem"
+    CACONFIG=$OUTDIR/ca-config.json
+    
+    cfssl gencert -ca=$CAFILE \
+    -ca-key=$CAKEYFILE \
+    -config=$CACONFIG \
+    -profile=kubernetes $OUTDIR/${CERTBASE}-csr.json | cfssljson -bare $OUTDIR/kube-controller-manager
+}
+
+# Scheduler certificate
+# ---------------------------------------------
+function write-ssl-scheduler {
+    # Write cfssl JSON template
+    local TEMPLATE=$OUTDIR/${CERTBASE}-csr.json
+    echo "local TEMPLATE: $TEMPLATE"
+    mkdir -p $(dirname $TEMPLATE)
+    cat << EOF > $TEMPLATE
+{
+  "CN": "system:kube-scheduler",
+  "hosts": [],
+  "key": {
+    "algo": "ecdsa",
+    "size": 256
+  },
+  "names": [
+    {
+      "O": "system:kube-scheduler",
+      "OU": "Kubernetes cluster"
+    }
+  ]
+}
+EOF
+
+    local CERTIFICATE=$OUTDIR/${CERTBASE}.pem
+    echo "local CERTIFICATE: $CERTIFICATE"
+    mkdir -p $(dirname $CERTIFICATE)
+    CAFILE="$OUTDIR/ca.pem"
+    CAKEYFILE="$OUTDIR/ca-key.pem"
+    CACONFIG=$OUTDIR/ca-config.json
+    
+    cfssl gencert -ca=$CAFILE \
+    -ca-key=$CAKEYFILE \
+    -config=$CACONFIG \
+    -profile=kubernetes $OUTDIR/${CERTBASE}-csr.json | cfssljson -bare $OUTDIR/kube-scheduler
+}
+
+
+function write-ssl-service-account {
+    # Write cfssl JSON template
+    local TEMPLATE=$OUTDIR/${CERTBASE}-csr.json
+    echo "local TEMPLATE: $TEMPLATE"
+    mkdir -p $(dirname $TEMPLATE)
+    cat << EOF > $TEMPLATE
+{
+  "CN": "service-accounts",
+  "hosts": [],
+  "key": {
+    "algo": "ecdsa",
+    "size": 256
+  },
+  "names": [
+    {
+      "O": "Kubernetes",
+      "OU": "Kubernetes cluster"
+    }
+  ]
+}
+EOF
+
+    local CERTIFICATE=$OUTDIR/${CERTBASE}.pem
+    echo "local CERTIFICATE: $CERTIFICATE"
+    mkdir -p $(dirname $CERTIFICATE)
+    CAFILE="$OUTDIR/ca.pem"
+    CAKEYFILE="$OUTDIR/ca-key.pem"
+    CACONFIG=$OUTDIR/ca-config.json
+    
+    cfssl gencert -ca=$CAFILE \
+    -ca-key=$CAKEYFILE \
+    -config=$CACONFIG \
+    -profile=kubernetes $OUTDIR/${CERTBASE}-csr.json | cfssljson -bare $OUTDIR/service-account
+}
 
 case "$2" in
     "ca" )
@@ -497,6 +605,15 @@ case "$2" in
       ;;
     "flanneld" )
       write-ssl-flanneld
+      ;;
+    "kube-controller-manager" )
+      write-ssl-controller-manager
+      ;;
+    "kube-scheduler" )
+      write-ssl-scheduler
+      ;;
+    "service-account" )
+      write-ssl-service-account
       ;;
 esac
 

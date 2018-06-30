@@ -84,6 +84,33 @@ resource "null_resource" "cert-dashboard" {
   }
 }
 
+resource "null_resource" "cert-controller-manager" {
+  depends_on = ["null_resource.cert-ca"]
+
+  provisioner "local-exec" {
+    interpreter = ["bash", "-c"]
+    command     = "${path.module}/scripts/cfssl.sh ssl kube-controller-manager kube-controller-manager"
+  }
+}
+
+resource "null_resource" "cert-scheduler" {
+  depends_on = ["null_resource.cert-ca"]
+
+  provisioner "local-exec" {
+    interpreter = ["bash", "-c"]
+    command     = "${path.module}/scripts/cfssl.sh ssl kube-scheduler kube-scheduler"
+  }
+}
+
+resource "null_resource" "cert-service-account" {
+  depends_on = ["null_resource.cert-ca"]
+
+  provisioner "local-exec" {
+    interpreter = ["bash", "-c"]
+    command     = "${path.module}/scripts/cfssl.sh ssl service-account service-account"
+  }
+}
+
 resource "null_resource" "cert-etcd" {
   depends_on = ["null_resource.cert-ca"]
   count      = "${var.etcd_count}"
@@ -160,6 +187,21 @@ resource "null_resource" "cert-master" {
   }
 
   provisioner "file" {
+    source      = "ssl/kube-controller-manager.tar"
+    destination = "/tmp/kube-controller-manager.tar"
+  }
+
+  provisioner "file" {
+    source      = "ssl/kube-scheduler.tar"
+    destination = "/tmp/kube-scheduler.tar"
+  }
+
+  provisioner "file" {
+    source      = "ssl/service-account.tar"
+    destination = "/tmp/service-account.tar"
+  }
+
+  provisioner "file" {
     source      = "ssl/ca-key.pem"
     destination = "/tmp/ca-key.pem"
   }
@@ -192,6 +234,9 @@ resource "null_resource" "cert-master" {
       "tar -C /etc/kubernetes/ssl -xf /tmp/kubernetes-dashboard.tar",
       "tar -C /etc/kubernetes/ssl -xf /tmp/kube-proxy.tar",
       "tar -C /etc/kubernetes/ssl -xf /tmp/flanneld.tar",
+      "tar -C /etc/kubernetes/ssl -xf /tmp/kube-controller-manager.tar",
+      "tar -C /etc/kubernetes/ssl -xf /tmp/kube-scheduler.tar",
+      "tar -C /etc/kubernetes/ssl -xf /tmp/service-account.tar",
       "mv /tmp/ca-key.pem /etc/kubernetes/ssl/",
     ]
   }

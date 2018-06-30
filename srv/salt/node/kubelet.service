@@ -6,9 +6,9 @@
 {%- set clusterDNS =  pillar['kubernetes']['global']['cluster-dns'] -%}
 {%- set cniProvider = pillar['kubernetes']['node']['networking']['provider'] -%}
 {% if cniProvider == "calico" %}
-  {%- set calicoOPTS = "--volume cni-bin,kind=host,source=/opt/cni/bin --mount volume=cni-bin,target=/opt/cni/bin" -%}
+  {%- set calico_opts = "--volume cni-bin,kind=host,source=/opt/cni/bin --mount volume=cni-bin,target=/opt/cni/bin" -%}
 {% elif cniProvider == "flannel" %}
-  {%- set calicoOPTS = "" -%}
+  {%- set calico_opts = "" -%}
 {% endif %}
 
 
@@ -33,7 +33,7 @@ Environment="RKT_RUN_ARGS=--uuid-file-save=/var/run/kubelet-pod.uuid \
   --mount volume=lib-modules,target=/lib/modules \
   --volume etc-cni-netd,kind=host,source=/etc/cni/net.d \
   --mount volume=etc-cni-netd,target=/etc/cni/net.d \
-  {{ calicoOPTS }}"
+  {{ calico_opts }}"
 ExecStartPre=/usr/bin/mkdir -p /etc/kubernetes/manifests
 ExecStartPre=/usr/bin/mkdir -p /opt/cni/bin
 ExecStartPre=/usr/bin/mkdir -p /etc/cni/net.d
@@ -57,7 +57,6 @@ ExecStart=/usr/lib/coreos/kubelet-wrapper \
   --cluster_domain={{ clusterDomain }} \
   --kubeconfig=/etc/kubernetes/kubelet.kubeconfig \
   --bootstrap-kubeconfig=/etc/kubernetes/bootstrap.kubeconfig \
-  --client-ca-file=/etc/kubernetes/ssl/ca.pem \
   --volume-plugin-dir=/etc/kubernetes/volumeplugins \
   --client-ca-file=/etc/kubernetes/ssl/ca.pem \
   --tls-cert-file=/etc/kubernetes/ssl/node.pem \

@@ -12,11 +12,19 @@ sudo ufw --force reset
 sudo sed -i -r 's/^(DEFAULT_INPUT_POLICY=).*/\1"ACCEPT"/g' /etc/default/ufw
 
 # Allow TCP forwarding
-sed -i -r 's|^#(net/ipv4/ip_forward).*|\1=1|g' /etc/ufw/sysctl.conf
-sed -i -r 's|^#(net/ipv6/conf/default/forwarding).*|\1=1|g' /etc/ufw/sysctl.conf
-sed -i -r 's|^#(net/ipv6/conf/all/forwarding).*|\1=1|g' /etc/ufw/sysctl.conf
+sudo sed -i -r 's|^#(net/ipv4/ip_forward).*|\1=1|g' /etc/ufw/sysctl.conf
+sudo sed -i -r 's|^#(net/ipv6/conf/default/forwarding).*|\1=1|g' /etc/ufw/sysctl.conf
+sudo sed -i -r 's|^#(net/ipv6/conf/all/forwarding).*|\1=1|g' /etc/ufw/sysctl.conf
 
 sudo ufw default allow FORWARD
+
+# Enable vpn routing to internet
+sudo cat << EOF >> /etc/ufw/before.rules
+*nat
+:POSTROUTING ACCEPT [0:0]
+-A POSTROUTING -s ${overlay_cidr} ! -d ${overlay_cidr} -j MASQUERADE
+COMMIT
+EOF
 
 # Drop All connection after processing all intermediate rules
 sudo sed -i -r 's|^COMMIT|-A ufw-reject-input -j DROP\nCOMMIT|g' /etc/ufw/after.rules
@@ -26,7 +34,9 @@ sudo ufw allow in on ${private_interface} to any port ${vpn_port} # vpn on priva
 sudo ufw allow in on ${vpn_interface}
 
 # Allow Kubernetes
-# sudo ufw allow in on ${kubernetes_interface} # Kubernetes pod overlay interface
+sudo ufw allow in on ${kubernetes_interface} # Kubernetes pod overlay interface
+
+ufw allow 6443 # Kubernetes API secure remote port
 
 # Disable Logging
 sudo ufw logging off

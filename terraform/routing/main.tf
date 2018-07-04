@@ -64,7 +64,8 @@ data "template_file" "default-route-vpn-service" {
   template = "${file("${path.module}/templates/default-route-vpn.service")}"
 
   vars {
-    gateway = "${var.gateway}"
+    gateway   = "${var.gateway}"
+    interface = "${var.vpn_interface}"
   }
 }
 

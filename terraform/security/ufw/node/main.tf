@@ -1,6 +1,7 @@
 variable "count" {}
 
 variable "bastion_host" {}
+variable "overlay_cidr" {}
 
 variable "ssh_user" {
   default = "root"
@@ -69,5 +70,6 @@ data "template_file" "ufw" {
     vpn_interface        = "${var.vpn_interface}"
     vpn_port             = "${var.vpn_port}"
     docker_interface     = "${var.docker_interface}"
+    overlay_cidr         = "${var.overlay_cidr}"
   }
 }

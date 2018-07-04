@@ -1,6 +1,7 @@
 variable "count" {}
 
 variable "bastion_host" {}
+variable "overlay_cidr" {}
 
 variable "ssh_user" {
   default = "root"

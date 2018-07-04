@@ -23,6 +23,7 @@ sudo cat << EOF >> /etc/ufw/before.rules
 *nat
 :POSTROUTING ACCEPT [0:0]
 -A POSTROUTING -o ${private_interface} -j MASQUERADE
+-A POSTROUTING -s ${overlay_cidr} ! -d ${overlay_cidr} -j MASQUERADE
 COMMIT
 EOF
 

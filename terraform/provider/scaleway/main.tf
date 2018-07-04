@@ -146,6 +146,21 @@ resource "scaleway_server" "proxy01" {
     ]
   }
 
+  provisioner "remote-exec" {
+    inline = [
+      "modprobe br_netfilter",
+      "echo 'net.ipv4.ip_forward=1' >> /etc/sysctl.conf",
+      "echo 'net.ipv6.conf.all.forwarding=1' >> /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-call-arptables=1' >> /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-call-ip6tables=1' >> /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-call-iptables=1' >> /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-filter-pppoe-tagged=0' >> /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-filter-vlan-tagged=0' >> /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-pass-vlan-input-dev=0' >> /etc/sysctl.conf",
+      "sysctl -p",
+    ]
+  }
+
   provisioner "file" {
     content     = "role: proxy"
     destination = "/etc/salt/grains"
@@ -209,6 +224,21 @@ resource "scaleway_server" "proxy02" {
     ]
   }
 
+  provisioner "remote-exec" {
+    inline = [
+      "modprobe br_netfilter",
+      "echo 'net.ipv4.ip_forward=1' >> /etc/sysctl.conf",
+      "echo 'net.ipv6.conf.all.forwarding=1' >> /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-call-arptables=1' >> /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-call-ip6tables=1' >> /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-call-iptables=1' >> /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-filter-pppoe-tagged=0' >> /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-filter-vlan-tagged=0' >> /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-pass-vlan-input-dev=0' >> /etc/sysctl.conf",
+      "sysctl -p",
+    ]
+  }
+
   provisioner "file" {
     content     = "role: proxy"
     destination = "/etc/salt/grains"
@@ -255,6 +285,21 @@ resource "scaleway_server" "etcd" {
     inline = [
       "apt-get update -yqq",
       "apt-get install -yqq apt-transport-https ufw ${join(" ", var.apt_packages)}",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "modprobe br_netfilter",
+      "echo 'net.ipv4.ip_forward=1' >> /etc/sysctl.conf",
+      "echo 'net.ipv6.conf.all.forwarding=1' >> /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-call-arptables=1' >> /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-call-ip6tables=1' >> /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-call-iptables=1' >> /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-filter-pppoe-tagged=0' >> /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-filter-vlan-tagged=0' >> /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-pass-vlan-input-dev=0' >> /etc/sysctl.conf",
+      "sysctl -p",
     ]
   }
 
@@ -307,6 +352,21 @@ resource "scaleway_server" "master" {
     ]
   }
 
+  provisioner "remote-exec" {
+    inline = [
+      "modprobe br_netfilter",
+      "echo 'net.ipv4.ip_forward=1' >> /etc/sysctl.conf",
+      "echo 'net.ipv6.conf.all.forwarding=1' >> /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-call-arptables=1' >> /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-call-ip6tables=1' >> /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-call-iptables=1' >> /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-filter-pppoe-tagged=0' >> /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-filter-vlan-tagged=0' >> /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-pass-vlan-input-dev=0' >> /etc/sysctl.conf",
+      "sysctl -p",
+    ]
+  }
+
   provisioner "file" {
     content     = "role: master"
     destination = "/etc/salt/grains"
@@ -356,6 +416,21 @@ resource "scaleway_server" "node" {
     inline = [
       "apt-get update -yqq",
       "apt-get install -yqq apt-transport-https ufw ${join(" ", var.apt_packages)}",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "modprobe br_netfilter",
+      "echo 'net.ipv4.ip_forward=1' >> /etc/sysctl.conf",
+      "echo 'net.ipv6.conf.all.forwarding=1' >> /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-call-arptables=1' >> /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-call-ip6tables=1' >> /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-call-iptables=1' >> /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-filter-pppoe-tagged=0' >> /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-filter-vlan-tagged=0' >> /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-pass-vlan-input-dev=0' >> /etc/sysctl.conf",
+      "sysctl -p",
     ]
   }
 

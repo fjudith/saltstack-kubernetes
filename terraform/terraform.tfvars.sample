@@ -61,3 +61,5 @@ docker_interface = "docker0"
 overlay_interface = "weave"
 
 overlay_cidr = "10.2.0.0/16"
+
+service_cidr = "10.3.0.0/24"

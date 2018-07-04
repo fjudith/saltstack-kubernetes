@@ -166,3 +166,8 @@ variable "docker_interface" {
   description = "Docker bridge interface"
   default     = "docker0"
 }
+
+variable "service_cidr" {
+  description = "Kubernetes service ip range"
+  default     = "10.3.0.0/24"
+}

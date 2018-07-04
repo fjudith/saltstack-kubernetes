@@ -1,6 +1,11 @@
 variable "count" {}
 
 variable "vpn_iprange" {}
+
+variable "overlay_cidr" {}
+
+variable "service_cidr" {}
+
 variable "bastion_host" {}
 
 variable "ssh_user" {
@@ -32,7 +37,7 @@ resource "null_resource" "proxy-exceptions-quote" {
 
   provisioner "remote-exec" {
     inline = [
-      "echo no_proxy=\\\"localhost, 127.0.0.1, *cluster.local, ${var.vpn_iprange}\\\" >> /etc/environment",
+      "echo no_proxy=\\\"localhost, 127.0.0.1, *cluster.local, ${var.service_cidr}, ${var.overlay_cidr}, ${var.vpn_iprange}\\\" >> /etc/environment",
     ]
   }
 }

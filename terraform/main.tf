@@ -20,6 +20,8 @@ module "proxy-exception" {
   count        = "${var.etcd_count + var.master_count + var.node_count + 2}"
   bastion_host = "${module.provider.bastion_host}"
   vpn_iprange  = "${var.vpn_iprange}"
+  overlay_cidr = "${var.overlay_cidr}"
+  service_cidr = "${var.service_cidr}"
   connections  = "${module.provider.private_ips}"
 }
 
@@ -102,6 +104,7 @@ module "firewall-proxy" {
   vpn_port             = "${module.wireguard.vpn_port}"
   docker_interface     = "${var.docker_interface}"
   kubernetes_interface = "${var.overlay_interface}"
+  overlay_cidr         = "${var.overlay_cidr}"
   connections          = "${module.provider.proxy_private_ips}"
 }
 
@@ -114,6 +117,7 @@ module "firewall-etcd" {
   vpn_interface     = "${module.wireguard.vpn_interface}"
   vpn_port          = "${module.wireguard.vpn_port}"
   docker_interface  = "${var.docker_interface}"
+  overlay_cidr      = "${var.overlay_cidr}"
   connections       = "${module.provider.etcd_private_ips}"
 }
 
@@ -127,6 +131,7 @@ module "firewall-master" {
   vpn_port             = "${module.wireguard.vpn_port}"
   docker_interface     = "${var.docker_interface}"
   kubernetes_interface = "${var.overlay_interface}"
+  overlay_cidr         = "${var.overlay_cidr}"
   connections          = "${module.provider.master_private_ips}"
 }
 
@@ -140,6 +145,7 @@ module "firewall-node" {
   vpn_port             = "${module.wireguard.vpn_port}"
   docker_interface     = "${var.docker_interface}"
   kubernetes_interface = "${var.overlay_interface}"
+  overlay_cidr         = "${var.overlay_cidr}"
   connections          = "${module.provider.node_private_ips}"
 }
 

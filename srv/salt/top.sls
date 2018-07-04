@@ -4,6 +4,7 @@ base:
     {# - common #}
     - certs
     - master
+    - kubernetes
   {% endif %}
   {% if "node" in grains.get('role', []) %}
     {# - common #}

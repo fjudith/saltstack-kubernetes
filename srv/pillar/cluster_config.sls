@@ -2,8 +2,8 @@
 # https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG-1.11.md#external-dependencies
 kubernetes:
   hyperkube-image-repo: quay.io/coreos/hyperkube 
-  version: v1.10.3_coreos.0
-  binary-version: v1.10.3
+  version: v1.10.5_coreos.0
+  binary-version: v1.10.5
   domain: cluster.local
   etcd:
     count: 3
@@ -56,13 +56,13 @@ kubernetes:
         ipv6:
           enable: false
           nat: true
-          interface: wg0
+          interface: enp0s2
           range: fd80:24e2:f998:72d6::/64
       flannel:
         version: v0.10.0-amd64
         ipv4:
           range: 10.2.0.0/16
-          interface: wg0
+          interface: enp0s2
   global:
     proxy:
       ipaddr: 172.16.4.251

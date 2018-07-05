@@ -99,7 +99,6 @@ docker-latest-archive:
 
 docker:
   group.present:
-    - gid: 1000
     - system: True
 
 docker-docker0.service:

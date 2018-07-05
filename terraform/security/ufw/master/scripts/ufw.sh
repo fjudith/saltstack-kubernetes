@@ -52,6 +52,9 @@ sudo ufw allow 4506
 sudo ufw allow 2379
 sudo ufw allow 2380
 
+# Allow Flannel vxlan
+ufw allow in 8472/udp
+
 # Enable UFW
 sudo ufw --force enable
 

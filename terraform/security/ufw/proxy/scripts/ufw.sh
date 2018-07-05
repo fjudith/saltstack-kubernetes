@@ -57,6 +57,9 @@ sudo ufw allow 6443
 # Allow Tinyproxy
 sudo ufw allow 8888
 
+# Allow Flannel vxlan
+ufw allow in 8472/udp
+
 # Enable UFW
 sudo ufw --force enable
 

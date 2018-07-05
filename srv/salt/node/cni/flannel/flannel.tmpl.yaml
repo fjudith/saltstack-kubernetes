@@ -1,6 +1,6 @@
-{%- set flannelInterface =  pillar['kubernetes']['node']['networking']['flannel']['ipv4']['interface'] -%}
-{%- set flannelVersion =  pillar['kubernetes']['node']['networking']['flannel']['version'] -%}
-{%- set podNetwork =  pillar['kubernetes']['global']['pod-network'] -%}
+{%- set flannel_interface =  pillar['kubernetes']['node']['networking']['flannel']['ipv4']['interface'] -%}
+{%- set flannel_version =  pillar['kubernetes']['node']['networking']['flannel']['version'] -%}
+{%- set pod_network =  pillar['kubernetes']['global']['pod-network'] -%}
 {%- set etcd01ip =  pillar['kubernetes']['etcd']['cluster']['etcd01']['ipaddr'] -%} 
 {%- set etcd02ip =  pillar['kubernetes']['etcd']['cluster']['etcd02']['ipaddr'] -%} 
 {%- set etcd03ip =  pillar['kubernetes']['etcd']['cluster']['etcd03']['ipaddr'] -%} 
@@ -79,7 +79,7 @@ data:
     }
   net-conf.json: |
     {
-      "Network": "{{ podNetwork }}",
+      "Network": "{{ pod_network }}",
       "Backend": {
         "Type": "vxlan"
       }
@@ -110,7 +110,7 @@ spec:
       serviceAccountName: flannel
       initContainers:
       - name: install-cni
-        image: quay.io/coreos/flannel:{{ flannelVersion }}
+        image: quay.io/coreos/flannel:{{ flannel_version }}
         command:
         - cp
         args:
@@ -129,9 +129,9 @@ spec:
         - /opt/bin/flanneld
         args:
         - --ip-masq
-        - --iface={{ flannelInterface }}
+        - --iface={{ flannel_interface }}
         #- --kube-subnet-mgr
-        #- -v 10
+        - -v=10
         resources:
           requests:
             cpu: "100m"

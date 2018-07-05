@@ -19,7 +19,7 @@ sudo sed -i -r 's|^#(net/ipv6/conf/all/forwarding).*|\1=1|g' /etc/ufw/sysctl.con
 sudo ufw default allow FORWARD
 
 # Enable vpn routing to internet
-sudo cat << EOF >>  
+sudo cat << EOF >> /etc/ufw/before.rules
 *nat
 :POSTROUTING ACCEPT [0:0]
 -A POSTROUTING -s ${overlay_cidr} ! -d ${overlay_cidr} -j MASQUERADE

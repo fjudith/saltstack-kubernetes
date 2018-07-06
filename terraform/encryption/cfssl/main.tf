@@ -80,7 +80,6 @@ resource "null_resource" "cert-ca" {
 
 resource "null_resource" "cert-admin" {
   depends_on = ["null_resource.cert-ca"]
-  count      = "${var.master_count}"
 
   provisioner "local-exec" {
     interpreter = ["bash", "-c"]

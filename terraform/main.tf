@@ -42,7 +42,7 @@ module "wireguard" {
   count        = "${var.etcd_count + var.master_count + var.node_count + 2}"
   bastion_host = "${module.provider.bastion_host}"
   private_ips  = "${module.provider.private_ips}"
-  proxy_count  = 2
+  proxy_count  = "${var.proxy_count}"
   proxy_bit    = "${var.proxy_bit}"
   etcd_count   = "${var.etcd_count}"
   etcd_bit     = "${var.etcd_bit}"
@@ -84,7 +84,7 @@ module "salt-minion" {
   salt_master_host   = "${module.wireguard.proxy_vpn_ips[0]}"
   http_proxy_host    = "${module.wireguard.proxy_vpn_ips[0]}"
   http_proxy_port    = 8888
-  proxy_count        = 2
+  proxy_count        = "${var.proxy_count}"
   proxy_private_ips  = "${module.wireguard.proxy_vpn_ips}"
   etcd_count         = "${var.etcd_count}"
   etcd_private_ips   = "${module.wireguard.etcd_vpn_ips}"
@@ -97,7 +97,7 @@ module "salt-minion" {
 module "firewall-proxy" {
   source = "./security/ufw/proxy"
 
-  count                = 2
+  count                = "${var.proxy_count}"
   bastion_host         = "${module.provider.bastion_host}"
   private_interface    = "${module.provider.private_network_interface}"
   vpn_interface        = "${module.wireguard.vpn_interface}"

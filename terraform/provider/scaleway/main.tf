@@ -130,8 +130,7 @@ resource "scaleway_server" "proxy01" {
 
   provisioner "remote-exec" {
     inline = [
-      "echo 'http_proxy=http://localhost:8888' >> /etc/environment",
-      "echo 'https_proxy=http://localhost:8888' >> /etc/environment",
+      "rm /var/lib/apt/lists/*",
       "apt-get update -yqq",
       "apt-get install -yqq apt-transport-https ufw tinyproxy ${join(" ", var.apt_packages)}",
       "systemctl enable tinyproxy",
@@ -141,8 +140,11 @@ resource "scaleway_server" "proxy01" {
       "echo 'Allow 10.0.0.0/8' >> /etc/tinyproxy.conf",
       "echo 'MaxSessions 50' >> /etc/ssh/sshd_config",
       "systemctl daemon-reload",
-      "systemctl restart tinyproxy",
+      "systemctl start tinyproxy",
       "systemctl reload sshd",
+      "systemctl status tinyproxy --no-pager",
+      "echo 'http_proxy=http://localhost:8888' >> /etc/environment",
+      "echo 'https_proxy=http://localhost:8888' >> /etc/environment",
     ]
   }
 
@@ -219,6 +221,7 @@ resource "scaleway_server" "proxy02" {
 
   provisioner "remote-exec" {
     inline = [
+      "rm /var/lib/apt/lists/*",
       "apt-get update -yqq",
       "apt-get install -yqq apt-transport-https ufw ${join(" ", var.apt_packages)}",
     ]
@@ -283,6 +286,7 @@ resource "scaleway_server" "etcd" {
 
   provisioner "remote-exec" {
     inline = [
+      "rm /var/lib/apt/lists/*",
       "apt-get update -yqq",
       "apt-get install -yqq apt-transport-https ufw ${join(" ", var.apt_packages)}",
     ]
@@ -347,6 +351,7 @@ resource "scaleway_server" "master" {
 
   provisioner "remote-exec" {
     inline = [
+      "rm /var/lib/apt/lists/*",
       "apt-get update -yqq",
       "apt-get install -yqq apt-transport-https ufw ${join(" ", var.apt_packages)}",
     ]
@@ -414,6 +419,7 @@ resource "scaleway_server" "node" {
 
   provisioner "remote-exec" {
     inline = [
+      "rm /var/lib/apt/lists/*",
       "apt-get update -yqq",
       "apt-get install -yqq apt-transport-https ufw ${join(" ", var.apt_packages)}",
     ]

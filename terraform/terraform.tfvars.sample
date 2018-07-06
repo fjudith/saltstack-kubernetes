@@ -18,8 +18,6 @@ ssh_public_key = "~/.ssh/id_rsa.pub"
 
 ssh_private_key = "~/.ssh/id_rsa.insecure"
 
-ssh_bastion_host = "svc.swiftsure.io"
-
 saltmaster_host = "master.domain.tld"
 
 saltsyndic_host = "syndic.domain.tld"

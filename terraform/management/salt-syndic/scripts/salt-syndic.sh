@@ -20,6 +20,12 @@ apt-get install -yqq \
     salt-api \
     reclass
 
-systemctl enable salt-minion
 systemctl enable salt-master
 systemctl enable salt-syndic
+systemctl enable salt-minion
+
+systemctl daemon-reload
+
+systemctl restart salt-master
+systemctl restart salt-syndic
+systemctl restart salt-minion

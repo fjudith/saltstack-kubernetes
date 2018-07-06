@@ -19,7 +19,7 @@ variable "connections" {
 
 variable "salt_master_host" {}
 
-resource "null_resource" "salt-minion" {
+resource "null_resource" "salt-syndic" {
   count = "${var.count}"
 
   connection {

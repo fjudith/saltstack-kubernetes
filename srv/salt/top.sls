@@ -19,4 +19,6 @@ base:
   {% if "proxy" in grains.get('role', []) %}
     {# - common #}
     - proxy
+    - certs
+    - node
   {% endif %}

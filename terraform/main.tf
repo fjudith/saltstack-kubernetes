@@ -153,6 +153,9 @@ module "encryption" {
   source = "./encryption/cfssl"
 
   bastion_host       = "${module.provider.bastion_host}"
+  proxy_count        = "${var.proxy_count}"
+  proxy_private_ips  = "${module.wireguard.proxy_vpn_ips}"
+  proxy_hostnames    = "${module.provider.proxy_hostnames}"
   etcd_count         = "${var.etcd_count}"
   etcd_private_ips   = "${module.wireguard.etcd_vpn_ips}"
   etcd_hostnames     = "${module.provider.etcd_hostnames}"

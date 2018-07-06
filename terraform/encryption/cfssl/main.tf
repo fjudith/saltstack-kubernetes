@@ -1,6 +1,9 @@
 variable "etcd_count" {}
 variable "master_count" {}
 variable "node_count" {}
+
+variable "proxy_count" {}
+
 variable "bastion_host" {}
 variable "domain" {}
 variable "cluster_public_dns" {}
@@ -16,6 +19,16 @@ variable "ssh_private_key" {
 variable "master_cluster_ip" {
   description = "Kubernetes cluster IP"
   default     = "10.3.0.1"
+}
+
+variable "proxy_private_ips" {
+  description = "List of Proxy private ip adresses"
+  type        = "list"
+}
+
+variable "proxy_hostnames" {
+  description = "List of Kubernetes proxy hostnames"
+  type        = "list"
 }
 
 variable "etcd_private_ips" {
@@ -244,11 +257,11 @@ resource "null_resource" "cert-master" {
 
 resource "null_resource" "cert-node" {
   depends_on = ["null_resource.cert-ca"]
-  count      = "${var.node_count}"
+  count      = "${var.proxy_count + var.node_count}"
 
   connection {
     type                = "ssh"
-    host                = "${element(var.node_private_ips, count.index)}"
+    host                = "${element(concat(var.proxy_private_ips, var.node_private_ips), count.index)}"
     user                = "${var.ssh_user}"
     private_key         = "${file(var.ssh_private_key)}"
     agent               = false
@@ -260,31 +273,31 @@ resource "null_resource" "cert-node" {
 
   provisioner "local-exec" {
     interpreter = ["bash", "-c"]
-    command     = "${path.module}/scripts/cfssl.sh ssl/node-${element(var.node_hostnames, count.index)} node node-${element(var.node_hostnames, count.index)} ${join("," , concat(list(element(var.node_private_ips, count.index), element(var.node_hostnames, count.index))))}"
+    command     = "${path.module}/scripts/cfssl.sh ssl/node-${element(concat(var.proxy_hostnames, var.node_hostnames), count.index)} node node-${element(concat(var.proxy_hostnames, var.node_hostnames), count.index)} ${join("," , concat(list(element(concat(var.proxy_private_ips, var.node_private_ips), count.index), element(concat(var.proxy_hostnames, var.node_hostnames), count.index))))}"
   }
 
   provisioner "file" {
-    source      = "ssl/node-${element(var.node_hostnames, count.index)}/node-${element(var.node_hostnames, count.index)}.tar"
+    source      = "ssl/node-${element(concat(var.proxy_hostnames, var.node_hostnames), count.index)}/node-${element(concat(var.proxy_hostnames, var.node_hostnames), count.index)}.tar"
     destination = "/tmp/node.tar"
   }
 
   provisioner "local-exec" {
     interpreter = ["bash", "-c"]
-    command     = "${path.module}/scripts/cfssl.sh ssl/node-${element(var.node_hostnames, count.index)} kube-proxy kube-proxy-${element(var.node_private_ips, count.index)} ${join(",", var.node_private_ips)}"
+    command     = "${path.module}/scripts/cfssl.sh ssl/node-${element(concat(var.proxy_hostnames, var.node_hostnames), count.index)} kube-proxy kube-proxy-${element(concat(var.proxy_private_ips, var.node_private_ips), count.index)} ${join(",", concat(var.proxy_private_ips, var.node_private_ips))}"
   }
 
   provisioner "file" {
-    source      = "ssl/node-${element(var.node_hostnames, count.index)}/kube-proxy-${element(var.node_private_ips, count.index)}.tar"
+    source      = "ssl/node-${element(concat(var.proxy_hostnames, var.node_hostnames), count.index)}/kube-proxy-${element(concat(var.proxy_private_ips, var.node_private_ips), count.index)}.tar"
     destination = "/tmp/kube-proxy.tar"
   }
 
   provisioner "local-exec" {
     interpreter = ["bash", "-c"]
-    command     = "${path.module}/scripts/cfssl.sh ssl/node-${element(var.node_hostnames, count.index)} flanneld flanneld-${element(var.node_hostnames, count.index)} ${element(var.node_private_ips, count.index)}"
+    command     = "${path.module}/scripts/cfssl.sh ssl/node-${element(concat(var.proxy_hostnames, var.node_hostnames), count.index)} flanneld flanneld-${element(concat(var.proxy_hostnames, var.node_hostnames), count.index)} ${element(concat(var.proxy_private_ips, var.node_private_ips), count.index)}"
   }
 
   provisioner "file" {
-    source      = "ssl/node-${element(var.node_hostnames, count.index)}/flanneld-${element(var.node_hostnames, count.index)}.tar"
+    source      = "ssl/node-${element(concat(var.proxy_hostnames, var.node_hostnames), count.index)}/flanneld-${element(concat(var.proxy_hostnames, var.node_hostnames), count.index)}.tar"
     destination = "/tmp/flanneld.tar"
   }
 

@@ -31,6 +31,10 @@ variable "etcd_type" {
   default = "START1-XS"
 }
 
+variable "proxy_count" {
+  default = 2
+}
+
 variable "etcd_count" {
   default = 3
 }

@@ -130,7 +130,7 @@ resource "scaleway_server" "proxy01" {
 
   provisioner "remote-exec" {
     inline = [
-      "rm /var/lib/apt/lists/*",
+      "rm -rf /var/lib/apt/lists/*",
       "apt-get update -yqq",
       "apt-get install -yqq apt-transport-https ufw tinyproxy ${join(" ", var.apt_packages)}",
       "systemctl enable tinyproxy",
@@ -221,7 +221,7 @@ resource "scaleway_server" "proxy02" {
 
   provisioner "remote-exec" {
     inline = [
-      "rm /var/lib/apt/lists/*",
+      "rm -rf /var/lib/apt/lists/*",
       "apt-get update -yqq",
       "apt-get install -yqq apt-transport-https ufw ${join(" ", var.apt_packages)}",
     ]
@@ -286,7 +286,7 @@ resource "scaleway_server" "etcd" {
 
   provisioner "remote-exec" {
     inline = [
-      "rm /var/lib/apt/lists/*",
+      "rm -rf /var/lib/apt/lists/*",
       "apt-get update -yqq",
       "apt-get install -yqq apt-transport-https ufw ${join(" ", var.apt_packages)}",
     ]
@@ -351,7 +351,7 @@ resource "scaleway_server" "master" {
 
   provisioner "remote-exec" {
     inline = [
-      "rm /var/lib/apt/lists/*",
+      "rm -rf /var/lib/apt/lists/*",
       "apt-get update -yqq",
       "apt-get install -yqq apt-transport-https ufw ${join(" ", var.apt_packages)}",
     ]
@@ -419,7 +419,7 @@ resource "scaleway_server" "node" {
 
   provisioner "remote-exec" {
     inline = [
-      "rm /var/lib/apt/lists/*",
+      "rm -rf /var/lib/apt/lists/*",
       "apt-get update -yqq",
       "apt-get install -yqq apt-transport-https ufw ${join(" ", var.apt_packages)}",
     ]

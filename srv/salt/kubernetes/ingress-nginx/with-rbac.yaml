@@ -1,12 +1,13 @@
 ---
 
 apiVersion: extensions/v1beta1
+# kind: Deployment
 kind: DaemonSet
 metadata:
   name: nginx-ingress-controller
   namespace: ingress-nginx 
 spec:
-  replicas: 1
+  #replicas: 1
   selector:
     matchLabels:
       app: ingress-nginx
@@ -73,4 +74,4 @@ spec:
             successThreshold: 1
             timeoutSeconds: 1
       nodeSelector:
-        custom/ingress-controller-ready: "true"
+        node-role.kubernetes.io/ingress: "true"

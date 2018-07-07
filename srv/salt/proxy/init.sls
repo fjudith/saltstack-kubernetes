@@ -2,8 +2,6 @@
 {%- set k8sVersion = pillar['kubernetes']['binary-version'] -%}
 
 include:
-  - node.cri.docker
-  - node.cri.rkt
   - proxy.keepalived
   - proxy.tinyproxy
   - proxy.haproxy

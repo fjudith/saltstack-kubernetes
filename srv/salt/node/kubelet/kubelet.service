@@ -11,6 +11,12 @@
   {%- set calico_opts = "" -%}
 {% endif %}
 
+{%- set role = salt['grains.get']('role') -%}
+{% if role == "proxy" %}
+  {%- set node_labels = "node-role.kubernetes.io/ingress=true" -%}
+{% else %}
+  {%- set node_labels = "node-role.kubernetes.io/ingress=false" -%}
+{% endif %}
 
 [Service]
 Environment=PATH=/opt/bin/:/usr/bin/:/usr/sbin:${PATH}
@@ -63,6 +69,7 @@ ExecStart=/usr/lib/coreos/kubelet-wrapper \
   --tls-private-key-file=/etc/kubernetes/ssl/node-key.pem \
   --authentication-token-webhook=true \
   --authorization-mode=Webhook \
+  --node-labels={{ node_labels }}
   --v=2
 ExecStop=-/usr/bin/rkt stop --uuid-file=/var/run/kubelet-pod.uuid
 Restart=always

@@ -85,6 +85,16 @@
     - group: root
     - mode: 644
 
+
+/srv/kubernetes/manifests/ingress-nginx:
+    file.recurse:
+    - source: salt://kubernetes/ingress-nginx
+    - include_empty: True
+    - user: root
+    - template: jinja
+    - group: root
+    - file_mode: 644
+
 kubernetes-wait:
   cmd.run:
     - runas: root
@@ -106,6 +116,7 @@ kubernetes-addon-install:
       - file: /srv/kubernetes/manifests/kube-dashboard.yaml
       - file: /srv/kubernetes/manifests/traefik.yaml
       - file: /srv/kubernetes/manifests/npd.yaml
+      - file: /srv/kubernetes/manifests/ingress-nginx
     - runas: root
     - use_vt: True
     - name: |
@@ -119,3 +130,10 @@ kubernetes-addon-install:
         kubectl apply -f /srv/kubernetes/manifests/kube-dashboard.yaml
         kubectl apply -f /srv/kubernetes/manifests/traefik.yaml
         kubectl apply -f /srv/kubernetes/manifests/npd.yaml
+        kubectl apply -f /srv/kubernetes/manifests/ingress-nginx/namespace.yaml
+        kubectl apply -f /srv/kubernetes/manifests/ingress-nginx/configmap.yaml
+        kubectl apply -f /srv/kubernetes/manifests/ingress-nginx/tcp-services-configmap.yaml
+        kubectl apply -f /srv/kubernetes/manifests/ingress-nginx/udp-services-configmap.yaml
+        kubectl apply -f /srv/kubernetes/manifests/ingress-nginx/rbac.yaml
+        kubectl apply -f /srv/kubernetes/manifests/ingress-nginx/default-backend.yaml
+        kubectl apply -f /srv/kubernetes/manifests/ingress-nginx/with-rbac.yaml

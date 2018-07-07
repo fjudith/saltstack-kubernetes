@@ -57,6 +57,10 @@ sudo ufw allow 6443
 # Allow Tinyproxy
 sudo ufw allow 8888
 
+# Allow Traefix ingress controller
+sudo ufw allow 30080/tcp
+sudo ufw allow 38080/tcp
+
 # Allow Flannel vxlan
 ufw allow in 8472/udp
 

@@ -96,7 +96,7 @@ net.bridge.bridge-nf-pass-vlan-input-dev:
 
 /usr/lib/coreos/kubelet-wrapper:
   file.managed:
-    - source: salt://node/kubelet-wrapper
+    - source: salt://node/kubelet/kubelet-wrapper
     - user: root
     - template: jinja
     - group: root
@@ -104,7 +104,7 @@ net.bridge.bridge-nf-pass-vlan-input-dev:
 
 /etc/systemd/system/kubelet.service:
     file.managed:
-    - source: salt://node/kubelet.service
+    - source: salt://node/kubelet/kubelet.service
     - user: root
     - template: jinja
     - group: root
@@ -112,7 +112,7 @@ net.bridge.bridge-nf-pass-vlan-input-dev:
 
 /etc/kubernetes/kubelet.kubeconfig:
     file.managed:
-    - source: salt://node/kubelet.kubeconfig
+    - source: salt://node/kubelet/kubelet.kubeconfig
     - user: root
     - template: jinja
     - group: root
@@ -120,7 +120,7 @@ net.bridge.bridge-nf-pass-vlan-input-dev:
 
 /etc/kubernetes/bootstrap.kubeconfig:
     file.managed:
-    - source: salt://node/bootstrap.kubeconfig
+    - source: salt://node/kubelet/bootstrap.kubeconfig
     - user: root
     - template: jinja
     - group: root
@@ -131,11 +131,11 @@ kubelet:
     - enable: True
     - watch:
       - /etc/systemd/system/kubelet.service
-      - /etc/kubernetes/kubelet.kubeconfig
+      - /etc/kubernetes/kubelet/kubelet.kubeconfig
 
 /etc/kubernetes/kube-proxy.kubeconfig:
     file.managed:
-    - source: salt://node/kube-proxy.kubeconfig
+    - source: salt://node/kube-proxy/kube-proxy.kubeconfig
     - user: root
     - template: jinja
     - group: root
@@ -143,85 +143,17 @@ kubelet:
 
 /etc/kubernetes/manifests/kube-proxy.yaml:
     file.managed:
-    - source: salt://node/kube-proxy.yaml
+    - source: salt://node/kube-proxy/kube-proxy.yaml
     - user: root
     - template: jinja
     - group: root
     - mode: 644
-
-{# /usr/bin/kubelet:
-  file.managed:
-    - source: https://storage.googleapis.com/kubernetes-release/release/{{ k8sVersion }}/bin/linux/amd64/kubelet
-    - skip_verify: true
-    - show_changes: False
-    - group: root
-    - mode: 755
-
-/usr/bin/kube-proxy:
-  file.managed:
-    - source: https://storage.googleapis.com/kubernetes-release/release/{{ k8sVersion }}/bin/linux/amd64/kube-proxy
-    - skip_verify: true
-    - show_changes: False
-    - group: root
-    - mode: 755 #}
 
 /etc/kubernetes/volumeplugins:
   file.directory:
     - user: root
     - group: root
     - dir_mode: 700
-
-{# /var/lib/kubelet:
-  file.directory:
-    - user: root
-    - group: root
-    - dir_mode: 700 #}
-
-{# /etc/kubernetes/kubeconfig:
-    file.managed:
-    - source: salt://node/kubeconfig
-    - user: root
-    - template: jinja
-    - group: root
-    - mode: 644 #}
-
-{# /etc/systemd/system/kubelet.service:
-    file.managed:
-    - source: salt://node/kubelet.service
-    - user: root
-    - template: jinja
-    - group: root
-    - mode: 644 #}
-
-{# /etc/kubernetes/kube-proxy.kubeconfig:
-    file.managed:
-    - source: salt://node/kube-proxy.kubeconfig
-    - user: root
-    - template: jinja
-    - group: root
-    - mode: 644 #}
-
-{# /etc/systemd/system/kube-proxy.service:
-  file.managed:
-    - source: salt://node/kube-proxy.service
-    - user: root
-    - template: jinja
-    - group: root
-    - mode: 644 #}
-
-{# kubelet:
-  service.running:
-    - enable: True
-    - watch:
-      - /etc/systemd/system/kubelet.service
-      - /usr/bin/kubelet #}
-
-{# kube-proxy:
-  service.running:
-    - enable: True
-    - watch:
-      - /etc/systemd/system/kube-proxy.service
-      - /usr/bin/kube-proxy #}
 
 {% if enableIPv6 == true %}
 net.ipv6.conf.all.forwarding:

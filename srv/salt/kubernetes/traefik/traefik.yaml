@@ -67,6 +67,8 @@ spec:
         args:
         - --web
         - --kubernetes
+      nodeSelector:
+        node-role.kubernetes.io/ingress: "true"
 ---
 kind: Service
 apiVersion: v1

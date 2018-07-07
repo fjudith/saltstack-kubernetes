@@ -37,7 +37,7 @@ resource "null_resource" "proxy-exceptions-quote" {
 
   provisioner "remote-exec" {
     inline = [
-      "echo no_proxy=\\\"localhost, 127.0.0.1, *cluster.local, ${var.service_cidr}, ${var.overlay_cidr}, ${var.vpn_iprange}\\\" >> /etc/environment",
+      "echo no_proxy=\\\"localhost, 127.0.0.1, *cluster.local, ${var.service_cidr}, ${var.overlay_cidr}, ${var.vpn_iprange}\\\" | tee -a /etc/environment",
     ]
   }
 }

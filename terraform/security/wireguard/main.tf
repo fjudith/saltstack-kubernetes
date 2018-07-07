@@ -87,8 +87,8 @@ resource "null_resource" "wireguard" {
 
   provisioner "remote-exec" {
     inline = [
-      "echo net.ipv4.ip_forward=1 >> /etc/sysctl.conf",
-      "echo net.ipv6.conf.all.forwarding=1 >> /etc/sysctl.conf",
+      "echo net.ipv4.ip_forward=1 | tee -a /etc/sysctl.conf",
+      "echo net.ipv6.conf.all.forwarding=1 | tee -a /etc/sysctl.conf",
       "sysctl -p",
     ]
   }
@@ -124,7 +124,7 @@ resource "null_resource" "wireguard" {
 
   provisioner "remote-exec" {
     inline = [
-      "${join("\n", formatlist("echo '%s %s' >> /etc/hosts", data.template_file.vpn_ips.*.rendered, var.hostnames))}",
+      "${join("\n", formatlist("echo '%s %s' | tee -a /etc/hosts", data.template_file.vpn_ips.*.rendered, var.hostnames))}",
       "systemctl is-enabled wg-quick@${var.vpn_interface} || systemctl enable wg-quick@${var.vpn_interface}",
       "systemctl restart wg-quick@${var.vpn_interface}",
     ]

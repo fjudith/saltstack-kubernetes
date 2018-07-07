@@ -86,9 +86,17 @@ net.bridge.bridge-nf-pass-vlan-input-dev:
   file.symlink:
     - target: /bin/bash
 
+/usr/bin/kubectl:
+  file.managed:
+    - source: https://storage.googleapis.com/kubernetes-release/release/{{ k8sVersion }}/bin/linux/amd64/kubectl
+    - skip_verify: true
+    - show_changes: False
+    - group: root
+    - mode: 755
+
 /usr/lib/coreos/kubelet-wrapper:
   file.managed:
-    - source: salt://master/kubelet-wrapper
+    - source: salt://master/kubelet/kubelet-wrapper
     - user: root
     - template: jinja
     - group: root
@@ -96,7 +104,7 @@ net.bridge.bridge-nf-pass-vlan-input-dev:
 
 /etc/systemd/system/kubelet.service:
     file.managed:
-    - source: salt://master/kubelet.service
+    - source: salt://master/kubelet/kubelet.service
     - user: root
     - template: jinja
     - group: root
@@ -104,7 +112,7 @@ net.bridge.bridge-nf-pass-vlan-input-dev:
 
 /etc/kubernetes/kubelet.kubeconfig:
     file.managed:
-    - source: salt://master/kubelet.kubeconfig
+    - source: salt://master/kubelet/kubelet.kubeconfig
     - user: root
     - template: jinja
     - group: root
@@ -112,31 +120,7 @@ net.bridge.bridge-nf-pass-vlan-input-dev:
 
 /etc/kubernetes/bootstrap.kubeconfig:
     file.managed:
-    - source: salt://master/bootstrap.kubeconfig
-    - user: root
-    - template: jinja
-    - group: root
-    - mode: 644
-
-/etc/kubernetes/kube-controller-manager.kubeconfig:
-    file.managed:
-    - source: salt://master/kube-controller-manager.kubeconfig
-    - user: root
-    - template: jinja
-    - group: root
-    - mode: 644
-
-/etc/kubernetes/kube-scheduler.kubeconfig:
-    file.managed:
-    - source: salt://master/kube-scheduler.kubeconfig
-    - user: root
-    - template: jinja
-    - group: root
-    - mode: 644
-
-/etc/kubernetes/kube-scheduler-config.yaml:
-    file.managed:
-    - source: salt://master/kube-scheduler-config.yaml
+    - source: salt://master/kubelet/bootstrap.kubeconfig
     - user: root
     - template: jinja
     - group: root
@@ -151,7 +135,7 @@ kubelet:
 
 /etc/kubernetes/kube-proxy.kubeconfig:
     file.managed:
-    - source: salt://master/kube-proxy.kubeconfig
+    - source: salt://master/kube-proxy/kube-proxy.kubeconfig
     - user: root
     - template: jinja
     - group: root
@@ -159,7 +143,7 @@ kubelet:
 
 /etc/kubernetes/manifests/kube-proxy.yaml:
     file.managed:
-    - source: salt://master/kube-proxy.yaml
+    - source: salt://master/kube-proxy/kube-proxy.yaml
     - user: root
     - template: jinja
     - group: root
@@ -167,7 +151,31 @@ kubelet:
 
 /etc/kubernetes/manifests/kube-apiserver.yaml:
     file.managed:
-    - source: salt://master/kube-apiserver.yaml
+    - source: salt://master/kube-apiserver/kube-apiserver.yaml
+    - user: root
+    - template: jinja
+    - group: root
+    - mode: 644
+
+/etc/kubernetes/kube-controller-manager.kubeconfig:
+    file.managed:
+    - source: salt://master/kube-controller-manager/kube-controller-manager.kubeconfig
+    - user: root
+    - template: jinja
+    - group: root
+    - mode: 644
+
+/etc/kubernetes/kube-scheduler.kubeconfig:
+    file.managed:
+    - source: salt://master/kube-scheduler/kube-scheduler.kubeconfig
+    - user: root
+    - template: jinja
+    - group: root
+    - mode: 644
+
+/etc/kubernetes/kube-scheduler-config.yaml:
+    file.managed:
+    - source: salt://master/kube-scheduler/kube-scheduler-config.yaml
     - user: root
     - template: jinja
     - group: root
@@ -175,7 +183,7 @@ kubelet:
 
 /etc/kubernetes/manifests/kube-controller-manager.yaml:
     file.managed:
-    - source: salt://master/kube-controller-manager.yaml
+    - source: salt://master/kube-controller-manager/kube-controller-manager.yaml
     - user: root
     - template: jinja
     - group: root
@@ -183,77 +191,11 @@ kubelet:
 
 /etc/kubernetes/manifests/kube-scheduler.yaml:
     file.managed:
-    - source: salt://master/kube-scheduler.yaml
+    - source: salt://master/kube-scheduler/kube-scheduler.yaml
     - user: root
     - template: jinja
     - group: root
     - mode: 644
-
-{# /usr/bin/kube-apiserver:
-  file.managed:
-    - source: https://storage.googleapis.com/kubernetes-release/release/{{ k8sVersion }}/bin/linux/amd64/kube-apiserver
-    - skip_verify: true
-    - show_changes: False
-    - group: root
-    - mode: 755 #}
-
-{# /usr/bin/kube-controller-manager:
-  file.managed:
-    - source: https://storage.googleapis.com/kubernetes-release/release/{{ k8sVersion }}/bin/linux/amd64/kube-controller-manager
-    - skip_verify: true
-    - show_changes: False
-    - group: root
-    - mode: 755 #}
-
-{# /usr/bin/kube-scheduler:
-  file.managed:
-    - source: https://storage.googleapis.com/kubernetes-release/release/{{ k8sVersion }}/bin/linux/amd64/kube-scheduler
-    - skip_verify: true
-    - show_changes: False
-    - group: root
-    - mode: 755 #}
-
-/usr/bin/kubectl:
-  file.managed:
-    - source: https://storage.googleapis.com/kubernetes-release/release/{{ k8sVersion }}/bin/linux/amd64/kubectl
-    - skip_verify: true
-    - show_changes: False
-    - group: root
-    - mode: 755
-
-{# {% if masterCount == 1 %}
-/etc/systemd/system/kube-apiserver.service:
-    file.managed:
-    - source: salt://master/kube-apiserver.service
-    - user: root
-    - template: jinja
-    - group: root
-    - mode: 644
-{% elif masterCount == 3 %}
-/etc/systemd/system/kube-apiserver.service:
-    file.managed:
-    - source: salt://master/kube-apiserver-ha.service
-    - user: root
-    - template: jinja
-    - group: root
-    - mode: 644
-{% endif %} #}
-
-{# /etc/systemd/system/kube-controller-manager.service:
-  file.managed:
-    - source: salt://master/kube-controller-manager.service
-    - user: root
-    - template: jinja
-    - group: root
-    - mode: 644 #}
-
-{# /etc/systemd/system/kube-scheduler.service:
-  file.managed:
-    - source: salt://master/kube-scheduler.service
-    - user: root
-    - template: jinja
-    - group: root
-    - mode: 644 #}
 
 /etc/kubernetes/audit-policy.yaml:    
     file.managed:
@@ -331,28 +273,3 @@ flannel-install:
 
   
 {% endif %}
-
-
-{# kube-apiserver:
-  service.running:
-    - enable: True
-    - reload: True
-    - watch:
-      - /etc/systemd/system/kube-apiserver.service
-      #- /etc/kubernetes/ssl/apiserver.pem #}
-
-{# kube-controller-manager:
-  service.running:
-    - enable: True
-    - reload: True
-    - watch:
-      - /etc/systemd/system/kube-controller-manager.service
-      #- /etc/kubernetes/ssl/apiserver.pem #}
-
-{# kube-scheduler:
-  service.running:
-   - enable: True
-   - reload: True
-   - watch:
-     - /etc/systemd/system/kube-scheduler.service
-     #- /etc/kubernetes/ssl/apiserver.pem #}

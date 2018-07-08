@@ -374,7 +374,7 @@ resource "scaleway_server" "master" {
     inline = [
       "rm -rf /var/lib/apt/lists/*",
       "apt-get update -yqq",
-      "apt-get install -yqq apt-transport-https ufw ${join(" ", var.apt_packages)}",
+      "apt-get install -yqq apt-transport-https ufw git ${join(" ", var.apt_packages)}",
     ]
   }
 

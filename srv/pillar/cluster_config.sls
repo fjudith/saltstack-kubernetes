@@ -1,5 +1,6 @@
 # https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG-1.10.md#external-dependencies
 # https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG-1.11.md#external-dependencies
+public-domain: example.com
 kubernetes:
   hyperkube-image-repo: quay.io/coreos/hyperkube 
   version: v1.10.5_coreos.0

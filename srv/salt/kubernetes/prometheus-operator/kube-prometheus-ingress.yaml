@@ -7,8 +7,8 @@ metadata:
  namespace: monitoring
  annotations:
    kubernetes.io/ingress.class: traefik
-   ingress.kubernetes.io/auth-type: "basic"
-   ingress.kubernetes.io/auth-secret: "mysecret"
+   # ingress.kubernetes.io/auth-type: "basic"
+   # ingress.kubernetes.io/auth-secret: "mysecret"
 spec:
  rules:
  - host: prometheus.{{ public_domain }}
@@ -28,4 +28,4 @@ spec:
      paths:
      - backend:
          serviceName: grafana
-         servicePort: 3000
+         servicePort: http

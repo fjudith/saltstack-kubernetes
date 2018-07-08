@@ -1,0 +1,19 @@
+{%- set public_domain = pillar['public-domain'] -%}
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+ name: fluentd-elasticsearch-dashboard
+ namespace: kube-system
+ annotations:
+   kubernetes.io/ingress.class: traefik
+   # ingress.kubernetes.io/auth-type: "basic"
+   # ingress.kubernetes.io/auth-secret: "mysecret"
+spec:
+ rules:
+ - host: kibana.{{ public_domain }}
+   http:
+     paths:
+     - backend:
+         serviceName: grafana
+         servicePort: http

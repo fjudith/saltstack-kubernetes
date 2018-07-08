@@ -95,6 +95,15 @@
     - group: root
     - file_mode: 644
 
+/srv/kubernetes/manifests/fluentd-elasticsearch:
+    file.recurse:
+    - source: salt://kubernetes/fluentd-elasticsearch
+    - include_empty: True
+    - user: root
+    - template: jinja
+    - group: root
+    - file_mode: 644
+
 addon-prometheus-operator:
   git.latest:
     - name: https://github.com/coreos/prometheus-operator
@@ -136,6 +145,7 @@ kubernetes-addon-install:
       - file: /srv/kubernetes/manifests/ingress-nginx
       - git:  addon-prometheus-operator
       - file: /srv/kubernetes/manifests/prometheus-operator/contrib/kube-prometheus/manifests/kube-prometheus-ingress.yaml
+      - file: /srv/kubernetes/manifests/fluentd-elasticsearch
     - runas: root
     - use_vt: True
     - name: |
@@ -157,3 +167,4 @@ kubernetes-addon-install:
         kubectl apply -f /srv/kubernetes/manifests/ingress-nginx/default-backend.yaml
         kubectl apply -f /srv/kubernetes/manifests/ingress-nginx/with-rbac.yaml
         kubectl apply -f /srv/kubernetes/manifests/prometheus-operator/contrib/kube-prometheus/manifests/
+        kubectl apply -f /srv/kubernetes/manifests/fluentd-elasticsearch/

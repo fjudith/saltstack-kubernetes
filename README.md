@@ -4,16 +4,32 @@
 
 `saltstack-kubernetes` aims to deploy and maintain a secure production ready **Kubernetes cluster** managed by:
 
-* [Terraform](https://www.terraform.io) for cloud server deployment.
+* [Terraform](https://www.terraform.io) for server provionning.
 * [Saltstack](https://saltstack.io) for Kubernetes installation and configuration management.
 
-This project is a fusion of the [valentin2105/Kubernetes-Saltstack](https://github.com/valentin2105/Kubernetes-Saltstack) and [hobby-kube](https://github.com/hobby-kube/provisionning) customized to address the following requirements:
+This project is a fusion of the [valentin2105/Kubernetes-Saltstack](https://github.com/valentin2105/Kubernetes-Saltstack) and [hobby-kube](https://github.com/hobby-kube/provisionning) to address the following requirements:
 
-* [ ] Single public IP support
-* [ ] Segregated etcd cluster
-* [ ] Proxied internet access from Kubernetes servers
-* [ ] Reverse proxy with ssl offload
-* [ ] Predicatble ip Adressing
+* [x] **Single public IP**
+* [x] **Full TLS** communications between cluster components
+* [x] Segregated proxy nodes for ingress traffic
+* [x] Segregated etcd cluster
+* [x] **Proxied and Routed internet access** from Kubernetes servers
+* [x] Reverse proxy to kube-apiserver cluster
+* [x] **Predictable ip Adressing** using [Wireguard](https://www.wireguard.com) Mesh VPN
+* [x] **Automatic certificate provisionning** using terraform
+* [x] Fully containerized Kubernetes deployment
+  * [x] Use [rkt](https://coreos.com/rkt) for `etcd` and `kubelet` installations.
+  * [x] Use [docker](https://www.docker.com) for other kubernetes components (i.e. kube-apiserver, addons, etc.)
+* [x] Supports Calico (routed), **Flannel (vxlan) and Canal**.
+* [x] API driven DNS registration [Cloudflare](https://cloudflare.com)
+* [x] [Node authorization](https://kubernetes.io/docs/reference/access-authn-authz/node/) support
+* [x] [Tinyproxy](https://tinyproxy.github.io) for forward proxy
+* [x] [HAproxy](https://haproxy.org) for reverse proxy
+* [x] [Traefik](https://traefik.io) for Kubernetes Ingress
+* [ ] [Suricata](https://suricata-ids.org) for intrusion detection
+
+* Tested cloud providers:
+  * [x] [Scaleway](https://www.scaleway.com)
 
 
 ## Features
@@ -23,13 +39,15 @@ This project is a fusion of the [valentin2105/Kubernetes-Saltstack](https://gith
 - Use the power of **`Saltstack`**
 - Made for **`SystemD`** based Linux systems
 - **Routed** networking by default (**`Calico`**)
-- Latest Kubernetes release (**1.10.1**)
+- Latest Kubernetes release (**1.10.5**)
 - Support **IPv6**
 - Integrated **add-ons**
 - **Composable** (CNI, CRI)
-- **RBAC** & **TLS** by default
+- **Node Security**, **RBAC** and **TLS** by default
 
 ## Getting started 
+
+Clone the repository.
 
 Let's clone the git repo on Salt-Master and create CA & Certificates on the `certs/` directory using **`CfSSL`** tools:
 
@@ -67,58 +85,187 @@ cfssl gencert \
 After that, edit the `pillar/cluster_config.sls` to configure your future Kubernetes cluster :
 
 ```yaml
+public_domain: example.com
 kubernetes:
-  version: v1.10.1
+  hyperkube-image-repo: quay.io/coreos/hyperkube 
+  version: v1.10.5_coreos.0
+  binary-version: v1.10.5
   domain: cluster.local
+  etcd:
+    count: 3
+    cluster:
+      etcd01:
+        hostname: etcd01
+        ipaddr: 172.17.4.51
+      etcd02:
+        hostname: etcd02
+        ipaddr: 172.17.4.52
+      etcd03:
+        hostname: etcd03
+        ipaddr: 172.17.4.53
+    version: v3.1.12
   master:
-#    count: 1
-#    hostname: master.domain.tld
-#    ipaddr: 10.240.0.10
     count: 3
     cluster:
       node01:
-        hostname: master01.domain.tld
-        ipaddr: 10.240.0.10
+        hostname: master01
+        ipaddr: 172.17.4.101
       node02:
-        hostname: master02.domain.tld
-        ipaddr: 10.240.0.20
+        hostname: master02
+        ipaddr: 172.17.4.102
       node03:
-        hostname: master03.domain.tld
-        ipaddr: 10.240.0.30
-    encryption-key: 'w3RNESCMG+o3GCHTUcrCHANGEMEq6CFV72q/Zik9LAO8uEc='
-    etcd:
-      version: v3.3.5
+        hostname: master03
+        ipaddr: 172.17.4.103
+    encryption-key: 'w3RNESCMG+o3GCHTUcrQUUdq6CFV72q/Zik9LAO8uEc='
   node:
     runtime:
       provider: docker
       docker:
-        version: 18.03.0-ce
-        data-dir: /dockerFS
+        version: 17.03.2-ce
+        data-dir: /var/lib/docker
+      rkt:
+        version: 1.29.0
     networking:
       cni-version: v0.7.1
-      provider: calico
+      provider: flannel
       calico:
-        version: v3.1.1
-        cni-version: v3.1.1
-        calicoctl-version: v3.1.1
+        version: v3.1.3
+        cni-version: v3.1.3
+        calicoctl-version: v3.1.3
         controller-version: 3.1-release
         as-number: 64512
         token: hu0daeHais3aCHANGEMEhu0daeHais3a
         ipv4:
-          range: 192.168.0.0/16
+          range: 10.2.0.0/16
           nat: true
           ip-in-ip: true
         ipv6:
           enable: false
           nat: true
-          interface: ens18
+          interface: enp0s2
           range: fd80:24e2:f998:72d6::/64
+      flannel:
+        version: v0.10.0-amd64
+        ipv4:
+          range: 10.2.0.0/16
+          interface: enp0s2
   global:
-    pod-network: 10.32.0.0/16
+    proxy:
+      ipaddr: 172.16.4.251
+      port: 8888
+    vpnIP-range: 172.16.4.0/24
+    pod-network: 10.2.0.0/16
+    kubernetes-service-ip: 10.3.0.1
+    service-ip-range: 10.3.0.0/24
+    cluster-dns: 10.3.0.10
     helm-version: v2.8.2
     dashboard-version: v1.8.3
     admin-token: Haim8kay1rarCHANGEMEHaim8kay1rar
     kubelet-token: ahT1eipae1wiCHANGEMEahT1eipae1wi
+    bootstrap-token: c6925295f34652d872042f0d28170ca3
+tinyproxy:
+  MaxClients: 200
+  MinSpareServers: 10
+  MaxSpareServers: 40
+  StartServers: 20
+  Allow:
+    - 127.0.0.1
+    - 192.168.0.0/16
+    - 172.16.0.0/12
+    - 10.0.0.0/8
+  ConnectPort:
+    - 443
+    - 563
+    - 6443
+    - 2379
+    - 2380
+keepalived:
+  global_defs:
+    router_id: LVS_DEVEL
+  vrrp_instance:
+    VI_1:
+      state: MASTER
+      interface: wg0
+      virtual_router_id: 51
+      priority: 100
+      advert_int: 1
+      authentication:
+        auth_type: PASS
+        auth_pass: 1111
+      virtual_ipaddress:
+        - 172.16.4.253
+        - 172.16.4.254
+  virtual_server:
+    0.0.0.0 6443:
+      delay_loop: 6
+      lb_algo: rr
+      lb_kind: NAT
+      nat_mask: 255.255.255.0
+      persistence_timeout: 50
+      protocol: TCP
+      real_server:
+        172.17.4.101 6443:
+          weight: 1
+        172.17.4.102 6443:
+          weight: 2
+        172.17.4.103 6443:
+          weight: 3
+haproxy:
+  enabled: true
+  overwrite: True
+  defaults:
+    timeouts:
+      - tunnel        3600s
+      - http-request    10s
+      - queue           1m
+      - connect         10s
+      - client          1m
+      - server          1m
+      - http-keep-alive 10s
+      - check 10s
+    stats:
+      - enable
+      - uri: 'admin?stats'
+  listens:
+    stats:
+      bind:
+        - "0.0.0.0:8080"
+      mode: http
+      stats:
+        enable: True
+        uri: "/admin?stats"
+  global:
+    ssl-default-bind-ciphers: "ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA384"
+    ssl-default-bind-options: "no-sslv3 no-tlsv10 no-tlsv11"
+  user: haproxy
+  group: haproxy
+  chroot:
+    enable: true
+    path: /var/lib/haproxy
+  daemon: true
+  frontends:
+    kubernetes-master:
+      bind: "*:6443"
+      mode: tcp
+      default_backend: kube-apiserver
+  backends:
+    kube-apiserver:
+      mode: tcp
+      balance: source
+      sticktable: "type binary len 32 size 30k expire 30m"
+      servers:
+        master01:
+          host: 172.17.4.101
+          port: 6443
+          check: check
+        master02:
+          host: 172.17.4.102
+          port: 6443
+          check: check
+        master03:
+          host: 172.17.4.103
+          port: 6443
+          check: check
 ```
 ##### Don't forget to change hostnames & tokens  using command like `pwgen 64` !
 
@@ -133,9 +280,13 @@ The configuration is done to use the Salt-Master as the Kubernetes Master. You c
 
 #### The recommended configuration is :
 
-- one or three Kubernetes-Master (Salt-Master & Minion)
+- One or two proxy servers
 
-- one or more Kubernetes-nodes (Salt-minion)
+- One or three Etcd servers
+
+- One or three Kubernetes Master (Salt-Master & Minion)
+
+- One or more Kubernetes Nodes (Salt-minion)
 
 The Minion's roles are matched with `Salt Grains` (kind of inventory), so you need to define theses grains on your servers :
 

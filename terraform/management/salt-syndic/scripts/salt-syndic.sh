@@ -18,6 +18,8 @@ apt-get install -yqq \
     salt-syndic \
     salt-cloud \
     salt-api \
+    python-boto \
+    python-boto3 \
     reclass
 
 systemctl enable salt-master

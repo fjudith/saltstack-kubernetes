@@ -95,6 +95,23 @@
     - group: root
     - file_mode: 644
 
+addon-prometheus-operator:
+  git.latest:
+    - name: https://github.com/coreos/prometheus-operator
+    - target: /srv/kubernetes/manifests/prometheus-operator
+    - force_reset: True
+    - rev: v0.21.0
+
+/srv/kubernetes/manifests/prometheus-operator/contrib/kube-prometheus/manifests/kube-prometheus-ingress.yaml:
+    file.managed:
+    - source: salt://kubernetes/prometheus-operator/kube-prometheus-ingress.yaml
+    - user: root
+    - template: jinja
+    - group: root
+    - mode: 644
+    - watch:
+      - git: addon-prometheus-operator
+
 kubernetes-wait:
   cmd.run:
     - runas: root
@@ -117,6 +134,8 @@ kubernetes-addon-install:
       - file: /srv/kubernetes/manifests/traefik.yaml
       - file: /srv/kubernetes/manifests/npd.yaml
       - file: /srv/kubernetes/manifests/ingress-nginx
+      - git:  addon-prometheus-operator
+      - file: /srv/kubernetes/manifests/prometheus-operator/contrib/kube-prometheus/manifests/kube-prometheus-ingress.yaml
     - runas: root
     - use_vt: True
     - name: |
@@ -137,3 +156,4 @@ kubernetes-addon-install:
         kubectl apply -f /srv/kubernetes/manifests/ingress-nginx/rbac.yaml
         kubectl apply -f /srv/kubernetes/manifests/ingress-nginx/default-backend.yaml
         kubectl apply -f /srv/kubernetes/manifests/ingress-nginx/with-rbac.yaml
+        kubectl apply -f /srv/kubernetes/manifests/prometheus-operator/contrib/kube-prometheus/manifests/

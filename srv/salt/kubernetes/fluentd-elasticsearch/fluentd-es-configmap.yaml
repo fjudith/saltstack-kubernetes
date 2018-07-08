@@ -1,3 +1,5 @@
+{%- set container_runtime =  pillar['kubernetes']['node']['runtime']['provider'] -%} 
+
 kind: ConfigMap
 apiVersion: v1
 metadata:

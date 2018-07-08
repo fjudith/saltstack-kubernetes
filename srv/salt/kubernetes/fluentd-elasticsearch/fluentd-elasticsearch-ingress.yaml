@@ -15,5 +15,5 @@ spec:
    http:
      paths:
      - backend:
-         serviceName: grafana
-         servicePort: http
+         serviceName: kibana-logging
+         servicePort: 5601

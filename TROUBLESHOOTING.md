@@ -25,3 +25,8 @@ salt-run jobs.list_jobs
 salt '*' saltutil.term_job <job id>
 ```
 
+### Listen salt event bus
+
+```bash
+salt-run state.event pretty=True
+```

@@ -40,4 +40,4 @@ include:
     - user: root
     - group: root
     - mode: 600
-    - replate: False
+    - replace: False

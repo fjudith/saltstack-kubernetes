@@ -131,7 +131,7 @@ kubelet:
     - enable: True
     - watch:
       - /etc/systemd/system/kubelet.service
-      - /etc/kubernetes/kubelet/kubelet.kubeconfig
+      - /etc/kubernetes/kubelet.kubeconfig
 
 /etc/kubernetes/kube-proxy.kubeconfig:
     file.managed:

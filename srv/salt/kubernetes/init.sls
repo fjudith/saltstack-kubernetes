@@ -159,12 +159,12 @@ kubernetes-addon-install:
         kubectl apply -f /srv/kubernetes/manifests/kube-dashboard.yaml
         kubectl apply -f /srv/kubernetes/manifests/traefik.yaml
         kubectl apply -f /srv/kubernetes/manifests/npd.yaml
-        kubectl apply -f /srv/kubernetes/manifests/ingress-nginx/namespace.yaml
-        kubectl apply -f /srv/kubernetes/manifests/ingress-nginx/configmap.yaml
-        kubectl apply -f /srv/kubernetes/manifests/ingress-nginx/tcp-services-configmap.yaml
-        kubectl apply -f /srv/kubernetes/manifests/ingress-nginx/udp-services-configmap.yaml
-        kubectl apply -f /srv/kubernetes/manifests/ingress-nginx/rbac.yaml
-        kubectl apply -f /srv/kubernetes/manifests/ingress-nginx/default-backend.yaml
-        kubectl apply -f /srv/kubernetes/manifests/ingress-nginx/with-rbac.yaml
+        # kubectl apply -f /srv/kubernetes/manifests/ingress-nginx/namespace.yaml
+        # kubectl apply -f /srv/kubernetes/manifests/ingress-nginx/configmap.yaml
+        # kubectl apply -f /srv/kubernetes/manifests/ingress-nginx/tcp-services-configmap.yaml
+        # kubectl apply -f /srv/kubernetes/manifests/ingress-nginx/udp-services-configmap.yaml
+        # kubectl apply -f /srv/kubernetes/manifests/ingress-nginx/rbac.yaml
+        # kubectl apply -f /srv/kubernetes/manifests/ingress-nginx/default-backend.yaml
+        # kubectl apply -f /srv/kubernetes/manifests/ingress-nginx/with-rbac.yaml
         kubectl apply -f /srv/kubernetes/manifests/prometheus-operator/contrib/kube-prometheus/manifests/
         kubectl apply -f /srv/kubernetes/manifests/fluentd-elasticsearch/

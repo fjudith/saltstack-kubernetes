@@ -1,4 +1,5 @@
 {%- set public_domain = pillar['public-domain'] -%}
+{%- set acme_email = pillar['acme-email'] -%}
 
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1beta1
@@ -43,6 +44,38 @@ metadata:
   name: traefik-ingress-controller
   namespace: kube-system
 ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: traefik-conf
+  namespace: kube-system
+data:
+  traefik.toml: |
+    # traefik.toml
+    defaultEntryPoints = ["http","https"]
+    [entryPoints]
+      [entryPoints.http]
+      address = ":80"
+      #[entryPoints.http.redirect]
+      #entryPoint = "https"
+      [entryPoints.https.auth.basic]
+      users = ["klefevre:$apr1$k2qslCn6$0OgA8vhnyC8nJ99YfJMOM/"]
+      [entryPoints.https]
+      address = ":443"
+        [entryPoints.https.tls]
+    [acme]
+    email = "{{ acme_email }}"
+    storageFile = "/acme/acme.json"
+    entryPoint = "https"
+    onDemand = true
+    onHostRule = true
+    caServer = "https://acme-staging.api.letsencrypt.org/directory"
+      [acme.httpChallenge]
+      entryPoint = "http"
+    [[acme.domains]]
+      main = "{{ public_domain }}"
+
+---
 kind: Deployment
 apiVersion: extensions/v1beta1
 metadata:
@@ -67,8 +100,21 @@ spec:
       - image: traefik
         name: traefik-ingress-lb
         args:
+        - --configfile=/config/traefik.toml
         - --web
         - --kubernetes
+        volumeMounts:
+        - mountPath: "/config"
+          name: "config"
+        - mountPath: "/acme/acme.json"
+          name: "acme"
+      volumes:
+      - name: config
+        configMap:
+          name: traefik-conf
+      - name: acme
+        hostPath:
+           path: /srv/kubernetes/acme.json
       nodeSelector:
         node-role.kubernetes.io/ingress: "true"
 ---
@@ -85,12 +131,22 @@ spec:
     port: 80
     protocol: TCP
     targetPort: 80
-    name: web
+    name: http
+  - nodePort: 30443
+    port: 443
+    protocol: TCP
+    targetPort: 443
+    name: https
   - nodePort: 38080
     port: 8080
     protocol: TCP
     targetPort: 8080
     name: admin
+  - nodePort: 38443
+    port: 8443
+    protocol: TCP
+    targetPort: 8443
+    name: https-admin
   type: NodePort
 ---
 apiVersion: v1
@@ -102,7 +158,7 @@ spec:
   selector:
     k8s-app: traefik-ingress-lb
   ports:
-  - name: web
+  - name: http
     port: 80
     targetPort: 8080
 ---
@@ -119,4 +175,4 @@ spec:
       - path: /
         backend:
           serviceName: traefik-web-ui
-          servicePort: web
+          servicePort: http

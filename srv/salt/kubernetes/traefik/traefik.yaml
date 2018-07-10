@@ -72,8 +72,8 @@ data:
     caServer = "https://acme-staging.api.letsencrypt.org/directory"
       [acme.httpChallenge]
       entryPoint = "http"
-    [[acme.domains]]
-      main = "{{ public_domain }}"
+     #[[acme.domains]]
+     #main = "{{ public_domain }}"
 
 ---
 kind: Deployment

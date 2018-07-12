@@ -143,7 +143,7 @@ resource "scaleway_server" "proxy01" {
       "rm -rf /var/lib/apt/lists/*",
       "apt-get update -yqq",
       "apt-get install -yqq apt-transport-https ufw tinyproxy ${join(" ", var.apt_packages)}",
-      "echo 'MaxSessions 50' | tee -a  /etc/ssh/sshd_config",
+      "echo 'MaxSessions 100' | tee -a  /etc/ssh/sshd_config",
       "systemctl reload sshd",
       "systemctl enable tinyproxy",
       "echo 'Allow 127.0.0.1' | tee -a  /etc/tinyproxy.conf",
@@ -240,6 +240,8 @@ resource "scaleway_server" "proxy02" {
       "rm -rf /var/lib/apt/lists/*",
       "apt-get update -yqq",
       "apt-get install -yqq apt-transport-https ufw ${join(" ", var.apt_packages)}",
+      "echo 'MaxSessions 100' | tee -a  /etc/ssh/sshd_config",
+      "systemctl reload sshd",
     ]
   }
 

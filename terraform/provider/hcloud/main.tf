@@ -116,6 +116,8 @@ resource "hcloud_server" "proxy01" {
       "while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 1; done",
       "apt-get update -yqq",
       "apt-get install -yqq apt-transport-https ufw ${join(" ", var.apt_packages)}",
+      "echo 'MaxSessions 100' | tee -a  /etc/ssh/sshd_config",
+      "systemctl reload sshd",
     ]
   }
 
@@ -187,6 +189,8 @@ resource "hcloud_server" "proxy02" {
       "while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 1; done",
       "apt-get update -yqq",
       "apt-get install -yqq apt-transport-https ufw ${join(" ", var.apt_packages)}",
+      "echo 'MaxSessions 100' | tee -a  /etc/ssh/sshd_config",
+      "systemctl reload sshd",
     ]
   }
 

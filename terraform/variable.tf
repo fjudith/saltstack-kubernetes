@@ -1,3 +1,17 @@
+variable "hcloud_location" {
+  description = "Hetzner cloud hosting region: Nuremberg (nbg1), Falkenstein (fsn1), Helsinki (hel1)"
+  default     = "nbg1"
+}
+
+variable "hcloud_token" {
+  description = "Hetzner cloud token"
+  default     = "12345678-1234-1234-1234-123456789abc"
+}
+
+variable "hcloud_ssh_keys" {
+  default = []
+}
+
 variable "scaleway_region" {
   description = "Scaleway hosting region: Paris (par1), Amsterdam (ams1)"
   default     = "par1"
@@ -59,7 +73,7 @@ variable "node_count" {
   default = 3
 }
 
-variable "proxy_instance_type" {
+variable "proxy_type" {
   default = "START1-S"
 }
 

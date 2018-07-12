@@ -1,17 +1,36 @@
 # Scaleway
 ##################################################
-module "provider" {
-  source = "./provider/scaleway"
+# module "provider" {
+#   source = "./provider/scaleway"
 
-  organization = "${var.scaleway_organization}"
-  token        = "${var.scaleway_token}"
+#   organization     = "${var.scaleway_organization}"
+#   token            = "${var.scaleway_token}"
+#   proxy_type       = "${var.proxy_type}"
+#   etcd_count       = "${var.etcd_count}"
+#   etcd_type        = "${var.etcd_type}"
+#   master_count     = "${var.master_count}"
+#   master_type      = "${var.master_type}"
+#   node_count       = "${var.node_count}"
+#   node_type        = "${var.node_type}"
+#   node_volume_size = "${var.node_volume_size}"
+#   region           = "${var.scaleway_region}"
+# }
+
+# Hetzner cloud (hcloud)
+##################################################
+module "provider" {
+  source = "./provider/hcloud"
+
+  token        = "${var.hcloud_token}"
+  proxy_type   = "${var.proxy_type}"
   etcd_count   = "${var.etcd_count}"
   etcd_type    = "${var.etcd_type}"
   master_count = "${var.master_count}"
   master_type  = "${var.master_type}"
   node_count   = "${var.node_count}"
   node_type    = "${var.node_type}"
-  region       = "${var.scaleway_region}"
+  location     = "${var.hcloud_location}"
+  ssh_keys     = "${var.hcloud_ssh_keys}"
 }
 
 module "proxy-exception" {
@@ -169,15 +188,15 @@ module "encryption" {
   domain             = "${var.domain}"
 }
 
-module "default-route-vpn" {
-  source = "./routing"
+# module "default-route-vpn" {
+#   source = "./routing"
 
-  count         = "${var.etcd_count + var.master_count + var.node_count + 1}"
-  bastion_host  = "${module.provider.bastion_host}"
-  vpn_interface = "${module.wireguard.vpn_interface}"
-  gateway       = "${element(module.wireguard.gateway_vpn_ips,0)}"
-  connections   = "${concat(list(module.wireguard.proxy_vpn_ips[1]), module.wireguard.etcd_vpn_ips, module.wireguard.master_vpn_ips, module.wireguard.node_vpn_ips)}"
-}
+#   count         = "${var.etcd_count + var.master_count + var.node_count + 1}"
+#   bastion_host  = "${module.provider.bastion_host}"
+#   vpn_interface = "${module.wireguard.vpn_interface}"
+#   gateway       = "${element(module.wireguard.gateway_vpn_ips,0)}"
+#   connections   = "${concat(list(module.wireguard.proxy_vpn_ips[1]), module.wireguard.etcd_vpn_ips, module.wireguard.master_vpn_ips, module.wireguard.node_vpn_ips)}"
+# }
 
 output "hostnames" {
   value = "${module.provider.hostnames}"

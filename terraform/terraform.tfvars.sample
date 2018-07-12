@@ -1,16 +1,68 @@
-web_proxy_host = "web-proxy.domain.tld"
+cloudflare_email = "user@domain.tld"
 
-organization = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-
-token = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+cloudflare_token = "0123456789abcdefghijklmnopqrstuvwxyz0"
 
 cluster_public_dns = "kubernetes.domain.tld"
 
-scaleway_region = "par1"
+domain = "domain.tld"
 
-architecture = "x86_64"
+/* Hetzner cloud */
+hcloud_token = "0123456789abcdefghijklmnopqrstuv0123456789abcdefghijklmnopqrstuv"
+
+hcloud_location = "nbg1"
+
+hcloud_ssh_keys = ["<ssh public key>"]
 
 image = "Ubuntu Xenial"
+
+proxy_count = "2"
+
+proxy_type = "cx11"
+
+etcd_count = "3"
+
+etcd_type = "cx11"
+
+master_count = "3"
+
+master_type = "cx11"
+
+node_count = "3"
+
+node_type = "cx41"
+
+/* */
+
+/* Scaleway */
+# scaleway_organization = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+
+# scaleway_token = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+
+# scaleway_region = "par1"
+
+# architecture = "x86_64"
+
+# image = "Ubuntu Xenial"
+
+# proxy_count = "2"
+
+# proxy_type = "VC1S"
+
+# etcd_count = "3"
+
+# etcd_type = "VC1S"
+
+# master_count = "3"
+
+# master_type = "VC1S"
+
+# node_count = "3"
+
+# node_type = "VC1M"
+
+# node_volume_size = "50"
+
+/* */
 
 ssh_user = "root"
 
@@ -18,47 +70,25 @@ ssh_public_key = "~/.ssh/id_rsa.pub"
 
 ssh_private_key = "~/.ssh/id_rsa.insecure"
 
-saltmaster_host = "master.domain.tld"
+saltmaster_host = "cfg.domain.tld"
 
-saltsyndic_host = "syndic.domain.tld"
+saltsyndic_host = "10.14.63.177"
 
-proxy_count = "1"
-
-etcd_count = "1"
-
-etcd_type = "START1-S"
-
-master_count = "1"
-
-master_type = "START1-S"
-
-node_count = "1"
-
-node_type = "START1-M"
-
-proxy_instance_type ="START1-S"
-
-zerotier_api_key = "01234567890123456789012345678901"
+zerotier_api_key = "0123456789abcdefghijklmnopqrstuv"
 
 zerotier_cidr = "172.16.4.0/24"
 
-etcd_bit = "50"
+etcdIP = "50"
 
-master_bit = "70"
+masterIP = "70"
 
-node_bit = "100"
+nodeIP = "100"
 
-proxy_bit = "40"
-
-cloudflare_email = "user@domain.tld"
-
-cloudflare_token = "0123456789012345678901234567890134567"
-
-domain = "domain.tld"
+proxyIP = "40"
 
 docker_interface = "docker0"
 
-overlay_interface = "weave"
+overlay_interface = "flannel.1"
 
 overlay_cidr = "10.2.0.0/16"
 

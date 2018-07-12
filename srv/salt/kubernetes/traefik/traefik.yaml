@@ -59,7 +59,7 @@ data:
       #[entryPoints.http.redirect]
       #entryPoint = "https"
       [entryPoints.https.auth.basic]
-      users = ["klefevre:$apr1$k2qslCn6$0OgA8vhnyC8nJ99YfJMOM/"]
+      users = ["admin:$apr1$mHqffeCI$8Bl8/cCsjejRsAYt7qFrj/"]
       [entryPoints.https]
       address = ":443"
         [entryPoints.https.tls]
@@ -72,8 +72,8 @@ data:
     caServer = "https://acme-staging.api.letsencrypt.org/directory"
       [acme.httpChallenge]
       entryPoint = "http"
-     #[[acme.domains]]
-     #main = "{{ public_domain }}"
+     # [[acme.domains]]
+     # main = "{{ public_domain }}"
 
 ---
 kind: Deployment

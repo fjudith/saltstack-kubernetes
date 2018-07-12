@@ -15,7 +15,7 @@
 {% if role == "proxy" %}
   {%- set node_labels = "node-role.kubernetes.io/ingress=true" -%}
 {% else %}
-  {%- set node_labels = "node-role.kubernetes.io/ingress=false" -%}
+  {%- set node_labels = "" -%}
 {% endif %}
 
 [Service]
@@ -49,7 +49,7 @@ ExecStartPre=/usr/bin/mkdir -p /var/lib/kubelet/volumeplugins
 ExecStartPre=/usr/bin/mkdir -p /var/lib/rook
 ExecStart=/usr/lib/coreos/kubelet-wrapper \
   --anonymous-auth=false \
-  --node-labels=kubernetes.io/role=node \
+  --node-labels="kubernetes.io/role=node;labels=beta.kubernetes.io/fluentd-ds-ready=true;{{ node_labels }}" \
   --cni-conf-dir=/etc/cni/net.d \
   --cni-bin-dir=/opt/cni/bin \
   --network-plugin=cni \
@@ -69,8 +69,6 @@ ExecStart=/usr/lib/coreos/kubelet-wrapper \
   --tls-private-key-file=/etc/kubernetes/ssl/node-key.pem \
   --authentication-token-webhook=true \
   --authorization-mode=Webhook \
-  --node-labels={{ node_labels }}
-  --node-labels=beta.kubernetes.io/fluentd-ds-ready=true
   --v=2
 ExecStop=-/usr/bin/rkt stop --uuid-file=/var/run/kubelet-pod.uuid
 Restart=always

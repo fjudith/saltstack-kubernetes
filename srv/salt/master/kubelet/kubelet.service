@@ -51,7 +51,7 @@ ExecStart=/usr/lib/coreos/kubelet-wrapper \
   --allow-privileged=true \
   --pod-manifest-path=/etc/kubernetes/manifests \
   --kubeconfig=/etc/kubernetes/kubelet.kubeconfig \
-  --node-labels=kubernetes.io/role=master \
+  --node-labels="kubernetes.io/role=master" \
   --register-with-taints=node-role.kubernetes.io/master=:NoSchedule \
   --hostname-override={{ hostname }} \
   --cluster_dns={{ clusterDNS }} \

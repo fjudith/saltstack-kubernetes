@@ -8,7 +8,7 @@
 {%- set ipv4Range = pillar['kubernetes']['node']['networking']['flannel']['ipv4']['range'] -%}
 
 {# include:
-  - master/etcd #}
+  - etcd #}
 
 include:
   - node.cri.docker

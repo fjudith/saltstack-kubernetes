@@ -79,11 +79,6 @@ variable "ssh_bastion_host" {
   default     = "ssh-bastion.domain.tld"
 }
 
-variable "web_proxy_host" {
-  description = "Ip address, Hostname or FQDN of Web Proxy"
-  default     = "web-proxy.domain.tld"
-}
-
 provider "scaleway" {
   organization = "${var.organization}"
   token        = "${var.token}"

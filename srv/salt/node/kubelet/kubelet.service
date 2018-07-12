@@ -13,7 +13,7 @@
 
 {%- set role = salt['grains.get']('role') -%}
 {% if role == "proxy" %}
-  {%- set node_labels = "node-role.kubernetes.io/ingress=true" -%}
+  {%- set node_labels = ",node-role.kubernetes.io/ingress=true" -%}
 {% else %}
   {%- set node_labels = "" -%}
 {% endif %}
@@ -49,7 +49,7 @@ ExecStartPre=/usr/bin/mkdir -p /var/lib/kubelet/volumeplugins
 ExecStartPre=/usr/bin/mkdir -p /var/lib/rook
 ExecStart=/usr/lib/coreos/kubelet-wrapper \
   --anonymous-auth=false \
-  --node-labels="kubernetes.io/role=node;labels=beta.kubernetes.io/fluentd-ds-ready=true;{{ node_labels }}" \
+  --node-labels="kubernetes.io/role=node,beta.kubernetes.io/fluentd-ds-ready=true{{ node_labels }}" \
   --cni-conf-dir=/etc/cni/net.d \
   --cni-bin-dir=/opt/cni/bin \
   --network-plugin=cni \

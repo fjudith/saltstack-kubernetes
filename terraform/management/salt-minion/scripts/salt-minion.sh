@@ -16,6 +16,8 @@ apt-get install -yqq \
     salt-ssh \
     python-boto \
     python-boto3 \
+    python-pyinotify \
+    python-psutil \
     reclass
 
 systemctl enable salt-minion

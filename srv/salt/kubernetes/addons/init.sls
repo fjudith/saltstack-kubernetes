@@ -7,7 +7,7 @@
 
 /srv/kubernetes/manifests/flannel.yaml:
     file.managed:
-    - source: salt://node/cni/flannel/flannel.yaml
+    - source: salt://kubernetes/cni/flannel/flannel.yaml
     - user: root
     - template: jinja
     - group: root

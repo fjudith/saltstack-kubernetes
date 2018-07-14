@@ -1,9 +1,7 @@
+{%- from "kubernetes/map.jinja" import etcd with context -%}
 {%- set flannel_interface =  pillar['kubernetes']['node']['networking']['flannel']['ipv4']['interface'] -%}
 {%- set flannel_version =  pillar['kubernetes']['node']['networking']['flannel']['version'] -%}
 {%- set pod_network =  pillar['kubernetes']['global']['pod-network'] -%}
-{%- set etcd01ip =  pillar['kubernetes']['etcd']['cluster']['etcd01']['ipaddr'] -%} 
-{%- set etcd02ip =  pillar['kubernetes']['etcd']['cluster']['etcd02']['ipaddr'] -%} 
-{%- set etcd03ip =  pillar['kubernetes']['etcd']['cluster']['etcd03']['ipaddr'] -%} 
 
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1beta1
@@ -151,7 +149,7 @@ spec:
             fieldRef:
               fieldPath: metadata.namespace
         - name: FLANNELD_ETCD_ENDPOINTS
-          value: https://{{ etcd01ip }}:2379,https://{{ etcd02ip }}:2379,https://{{ etcd03ip }}:2379
+          value: {% for member in etcd.members %}https://{{ member.host }}:2379{% if not loop.last %},{% endif %}{% endfor %}
         - name: FLANNELD_ETCD_KEYFILE
           value: /etc/kubernetes/ssl/flanneld-key.pem
         - name: FLANNELD_ETCD_CERTFILE

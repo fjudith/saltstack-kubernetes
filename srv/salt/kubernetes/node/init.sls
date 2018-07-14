@@ -4,10 +4,10 @@
 {%- set criProvider = pillar['kubernetes']['node']['runtime']['provider'] -%}
 
 include:
-  - node/cri/{{ criProvider }}
-  - node/cni
-  - node/cri/rkt
-  
+  - kubernetes/cri/{{ criProvider }}
+  - kubernetes/cri/rkt
+  - kubernetes/cni
+
 {% if os == "Debian" or os == "Ubuntu" %}
 glusterfs-client:
   pkg.latest

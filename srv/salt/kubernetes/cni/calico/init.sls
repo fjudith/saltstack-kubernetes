@@ -53,7 +53,7 @@
 
 /etc/calico/kube/kubeconfig:
     file.managed:
-    - source: salt://node/cni/calico/kubeconfig
+    - source: salt://kubernetes/cni/calico/kubeconfig
     - user: root
     - template: jinja
     - group: root
@@ -63,7 +63,7 @@
 
 /etc/cni/net.d/10-calico.conf:
     file.managed:
-    - source: salt://node/cni/calico/10-calico.conf
+    - source: salt://kubernetes/cni/calico/10-calico.conf
     - user: root
     - template: jinja
     - group: root

@@ -2,9 +2,9 @@
 {%- set k8sVersion = pillar['kubernetes']['binary-version'] -%}
 
 include:
-  - proxy.keepalived
-  - proxy.tinyproxy
-  - proxy.haproxy
+  - kubernetes.proxy.keepalived
+  - kubernetes.proxy.tinyproxy
+  - kubernetes.proxy.haproxy
 
 /root/.kube:
   file.directory:
@@ -22,7 +22,7 @@ include:
 
 /root/.kube/config:
   file.managed:
-    - source: salt://proxy/kubeconfig
+    - source: salt://kubernetes/proxy/kubeconfig
     - user: root
     - template: jinja
     - group: root
@@ -36,7 +36,7 @@ include:
 
 /srv/kubernetes/acme.json:
   file.managed:
-    - source: salt://proxy/acme.json
+    - source: salt://kubernetes/proxy/acme.json
     - user: root
     - group: root
     - mode: 600

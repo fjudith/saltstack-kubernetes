@@ -36,7 +36,7 @@ include:
 
 /usr/lib/coreos/etcd-wrapper:
   file.managed:
-    - source: salt://etcd/etcd-wrapper
+    - source: salt://kubernetes/etcd/etcd-wrapper
     - user: root
     - template: jinja
     - group: root
@@ -79,7 +79,7 @@ etcd-certificate-archive:
 {% if masterCount == 1 %}
 /etc/systemd/system/etcd.service:
   file.managed:
-    - source: salt://etcd/etcd.service
+    - source: salt://kubernetes/etcd/etcd.service
     - user: root
     - template: jinja
     - group: root
@@ -87,7 +87,7 @@ etcd-certificate-archive:
 {% elif etcdCount == 3 %}
 {# /etc/systemd/system/etcd.service:
   file.managed:
-    - source: salt://etcd/etcd-cluster.service
+    - source: salt://kubernetes/etcd/etcd-cluster.service
     - user: root
     - template: jinja
     - group: root
@@ -95,7 +95,7 @@ etcd-certificate-archive:
 
 /etc/systemd/system/etcd-member.service:
   file.managed:
-    - source: salt://etcd/etcd-member.service
+    - source: salt://kubernetes/etcd/etcd-member.service
     - user: root
     - template: jinja
     - group: root

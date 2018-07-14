@@ -11,9 +11,9 @@
   - etcd #}
 
 include:
-  - node.cri.docker
-  - node.cri.rkt
-  - node/cni
+  - kubernetes.cri.docker
+  - kubernetes.cri.rkt
+  - kubernetes.cni
 
 conntrack:
   pkg.latest
@@ -96,7 +96,7 @@ net.bridge.bridge-nf-pass-vlan-input-dev:
 
 /usr/lib/coreos/kubelet-wrapper:
   file.managed:
-    - source: salt://master/kubelet/kubelet-wrapper
+    - source: salt://kubernetes/master/kubelet/kubelet-wrapper
     - user: root
     - template: jinja
     - group: root
@@ -104,7 +104,7 @@ net.bridge.bridge-nf-pass-vlan-input-dev:
 
 /etc/systemd/system/kubelet.service:
     file.managed:
-    - source: salt://master/kubelet/kubelet.service
+    - source: salt://kubernetes/master/kubelet/kubelet.service
     - user: root
     - template: jinja
     - group: root
@@ -112,7 +112,7 @@ net.bridge.bridge-nf-pass-vlan-input-dev:
 
 /etc/kubernetes/kubelet.kubeconfig:
     file.managed:
-    - source: salt://master/kubelet/kubelet.kubeconfig
+    - source: salt://kubernetes/master/kubelet/kubelet.kubeconfig
     - user: root
     - template: jinja
     - group: root
@@ -120,7 +120,7 @@ net.bridge.bridge-nf-pass-vlan-input-dev:
 
 /etc/kubernetes/bootstrap.kubeconfig:
     file.managed:
-    - source: salt://master/kubelet/bootstrap.kubeconfig
+    - source: salt://kubernetes/master/kubelet/bootstrap.kubeconfig
     - user: root
     - template: jinja
     - group: root
@@ -135,7 +135,7 @@ kubelet:
 
 /etc/kubernetes/kube-proxy.kubeconfig:
     file.managed:
-    - source: salt://master/kube-proxy/kube-proxy.kubeconfig
+    - source: salt://kubernetes/master/kube-proxy/kube-proxy.kubeconfig
     - user: root
     - template: jinja
     - group: root
@@ -143,7 +143,7 @@ kubelet:
 
 /etc/kubernetes/manifests/kube-proxy.yaml:
     file.managed:
-    - source: salt://master/kube-proxy/kube-proxy.yaml
+    - source: salt://kubernetes/master/kube-proxy/kube-proxy.yaml
     - user: root
     - template: jinja
     - group: root
@@ -151,7 +151,7 @@ kubelet:
 
 /etc/kubernetes/manifests/kube-apiserver.yaml:
     file.managed:
-    - source: salt://master/kube-apiserver/kube-apiserver.yaml
+    - source: salt://kubernetes/master/kube-apiserver/kube-apiserver.yaml
     - user: root
     - template: jinja
     - group: root
@@ -159,7 +159,7 @@ kubelet:
 
 /etc/kubernetes/kube-controller-manager.kubeconfig:
     file.managed:
-    - source: salt://master/kube-controller-manager/kube-controller-manager.kubeconfig
+    - source: salt://kubernetes/master/kube-controller-manager/kube-controller-manager.kubeconfig
     - user: root
     - template: jinja
     - group: root
@@ -167,7 +167,7 @@ kubelet:
 
 /etc/kubernetes/kube-scheduler.kubeconfig:
     file.managed:
-    - source: salt://master/kube-scheduler/kube-scheduler.kubeconfig
+    - source: salt://kubernetes/master/kube-scheduler/kube-scheduler.kubeconfig
     - user: root
     - template: jinja
     - group: root
@@ -175,7 +175,7 @@ kubelet:
 
 /etc/kubernetes/kube-scheduler-config.yaml:
     file.managed:
-    - source: salt://master/kube-scheduler/kube-scheduler-config.yaml
+    - source: salt://kubernetes/master/kube-scheduler/kube-scheduler-config.yaml
     - user: root
     - template: jinja
     - group: root
@@ -183,7 +183,7 @@ kubelet:
 
 /etc/kubernetes/manifests/kube-controller-manager.yaml:
     file.managed:
-    - source: salt://master/kube-controller-manager/kube-controller-manager.yaml
+    - source: salt://kubernetes/master/kube-controller-manager/kube-controller-manager.yaml
     - user: root
     - template: jinja
     - group: root
@@ -191,7 +191,7 @@ kubelet:
 
 /etc/kubernetes/manifests/kube-scheduler.yaml:
     file.managed:
-    - source: salt://master/kube-scheduler/kube-scheduler.yaml
+    - source: salt://kubernetes/master/kube-scheduler/kube-scheduler.yaml
     - user: root
     - template: jinja
     - group: root
@@ -199,7 +199,7 @@ kubelet:
 
 /etc/kubernetes/audit-policy.yaml:    
     file.managed:
-    - source: salt://master/audit-policy.yaml
+    - source: salt://kubernetes/master/audit-policy.yaml
     - user: root
     - template: jinja
     - group: root
@@ -207,7 +207,7 @@ kubelet:
 
 /etc/kubernetes/encryption-config.yaml:    
     file.managed:
-    - source: salt://master/encryption-config.yaml
+    - source: salt://kubernetes/master/encryption-config.yaml
     - user: root
     - template: jinja
     - group: root

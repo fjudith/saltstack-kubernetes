@@ -3,22 +3,22 @@ base:
   {% if "master" in grains.get('role', []) %}
     {# - common #}
     - certs
-    - master
-    - kubernetes
+    - kubernetes.master
+    - kubernetes.addons
   {% endif %}
   {% if "node" in grains.get('role', []) %}
     {# - common #}
     - certs
-    - node
+    - kubernetes.node
   {% endif %}
   {% if "etcd" in grains.get('role', []) %}
     {# - common #}
     - certs
-    - etcd
+    - kubernetes.etcd
   {% endif %}
   {% if "proxy" in grains.get('role', []) %}
     {# - common #}
-    - proxy
+    - kubernetes.proxy
     - certs
-    - node
+    - kubernetes.node
   {% endif %}

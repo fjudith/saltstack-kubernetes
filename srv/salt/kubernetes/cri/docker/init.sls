@@ -51,7 +51,7 @@ docker-latest-archive:
 
 /etc/docker/daemon.json:
     file.managed:
-    - source: salt://node/cri/docker/daemon.json
+    - source: salt://kubernetes/cri/docker/daemon.json
     - user: root
     - template: jinja
     - group: root
@@ -59,7 +59,7 @@ docker-latest-archive:
 
 /etc/systemd/system/docker-docker0.service:
     file.managed:
-    - source: salt://node/cri/docker/docker-docker0.service
+    - source: salt://kubernetes/cri/docker/docker-docker0.service
     - user: root
     - template: jinja
     - group: root
@@ -67,7 +67,7 @@ docker-latest-archive:
 
 /etc/systemd/network/90-docker0.netdev:
     file.managed:
-    - source: salt://node/cri/docker/90-docker0.netdev
+    - source: salt://kubernetes/cri/docker/90-docker0.netdev
     - user: root
     - template: jinja
     - group: root
@@ -75,7 +75,7 @@ docker-latest-archive:
 
 /etc/systemd/network/91-docker0.network:
     file.managed:
-    - source: salt://node/cri/docker/91-docker0.network
+    - source: salt://kubernetes/cri/docker/91-docker0.network
     - user: root
     - template: jinja
     - group: root
@@ -83,7 +83,7 @@ docker-latest-archive:
     
 /etc/systemd/system/sockets.target.wants/docker.socket:
     file.managed:
-    - source: salt://node/cri/docker/docker.socket
+    - source: salt://kubernetes/cri/docker/docker.socket
     - user: root
     - template: jinja
     - group: root
@@ -91,7 +91,7 @@ docker-latest-archive:
 
 /etc/systemd/system/docker.service:
     file.managed:
-    - source: salt://node/cri/docker/docker.service
+    - source: salt://kubernetes/cri/docker/docker.service
     - user: root
     - template: jinja
     - group: root

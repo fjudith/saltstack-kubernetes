@@ -1,0 +1,151 @@
+{% set version = salt['cmd.shell']("(hyperkube --version kubelet 2> /dev/null || echo '0.0') | sed -e 's/-.*//g' -e 's/v//g' -e 's/Kubernetes //g' | awk -F'.' '{print $1 \".\" $2}'") %}
+{% set full_version = salt['cmd.shell']("(hyperkube --version kubelet 2> /dev/null || echo '0.0') | sed -e 's/-.*//g' -e 's/v//g' -e 's/Kubernetes //g'") %}
+
+{% set common = salt['grains.filter_by']({
+    'Debian': {
+        'pkgs': ['curl', 'git', 'apt-transport-https', 'python-apt', 'socat', 'openssl', 'conntrack'],
+        'services': [],
+        'version': version|float,
+    },
+    'RedHat': {
+        'pkgs': ['curl', 'git', 'socat', 'python', 'openssl'],
+        'services': [],
+        'version': version|float,
+    },
+}, merge=salt['pillar.get']('kubernetes:common')) %}
+
+{% set master = salt['grains.filter_by']({
+    'Debian': {
+        'pkgs': [],
+        'services': ['kube-apiserver','kube-scheduler','kube-controller-manager'],
+        'auth': {
+            'token': {
+                'enabled': true,
+                'file': '/srv/kubernetes/known_tokens.csv',
+            },
+            'ssl': {
+                'enabled': true,
+            },
+            'basic': {
+                'enabled': true,
+                'file': '/srv/kubernetes/basic_auth.csv',
+            },
+            'http': {
+                'enabled': false,
+                'header': {
+                    'user': 'X-Remote-User',
+                    'group': 'X-Remote-Group',
+                    'extra': 'X-Remote-Extra-',
+                },
+            },
+            'anonymous': {
+                'enabled': false,
+            },
+        },
+    },
+    'RedHat': {
+        'pkgs': [],
+        'services': ['kube-apiserver','kube-scheduler','kube-controller-manager'],
+        'auth': {
+            'token': {
+                'enabled': true,
+                'file': '/srv/kubernetes/known_tokens.csv',
+            },
+            'ssl': {
+                'enabled': true,
+            },
+            'basic': {
+                'enabled': true,
+                'file': '/srv/kubernetes/basic_auth.csv',
+            },
+            'http': {
+                'enabled': false,
+                'header': {
+                    'user': 'X-Remote-User',
+                    'group': 'X-Remote-Group',
+                    'extra': 'X-Remote-Extra-',
+                },
+            },
+            'anonymous': {
+                'enabled': false,
+            },
+        },
+    },
+}, merge=salt['pillar.get']('kubernetes:master')) %}
+
+{% set node = salt['grains.filter_by']({
+    'Debian': {
+        'pkgs': [],
+        'services': ['kube-proxy'],
+    },
+    'RedHat': {
+        'pkgs': [],
+        'services': ['kube-proxy'],
+    },
+}, merge=salt['pillar.get']('kubernetes:node')) %}
+
+{% set control = salt['grains.filter_by']({
+    'Debian': {
+        'service': {},
+        'config_type': 'default',
+    },
+    'RedHat': {
+        'service': {},
+        'config_type': 'default',
+    },
+}, merge=salt['pillar.get']('kubernetes:control')) %}
+
+{%- if master.get('network', {}).get('engine') == 'calico' %}
+{% set calico = salt['grains.filter_by']({
+    'default': master.network.calico
+}, merge=salt['pillar.get']('kubernetes:master:network')) %}
+{% do calico.update({
+    'enabled': true,
+    'calicoctl_image': calico.calicoctl.image,
+    'cni_image': calico.cni.image,
+}) %}
+{% do master.network.calico.update(calico) %}
+{%- elif master.get('network', {}).get('engine') == 'opencontrail' %}
+{% set opencontrail = salt['grains.filter_by']({
+    'default': master.network.opencontrail
+}, merge=salt['pillar.get']('kubernetes:master:network')) %}
+{% do opencontrail.update({
+    'enabled': true,
+    'cni_image': opencontrail.contrail_cni.image,
+}) %}
+{% do master.network.opencontrail.update(opencontrail) %}
+{%- endif %}
+
+{%- if node.get('network', {}).get('engine') == 'calico' %}
+{% set calico = salt['grains.filter_by']({
+    'default': node.network.calico
+}, merge=salt['pillar.get']('kubernetes:node:network')) %}
+{% do calico.update({
+    'enabled': true,
+    'calicoctl_image': calico.calicoctl.image,
+    'cni_image': calico.cni.image,
+}) %}
+{% do node.network.calico.update(calico) %}
+{%- elif node.get('network', {}).get('engine') == 'opencontrail' %}
+{% set opencontrail = salt['grains.filter_by']({
+    'default': node.network.opencontrail
+}, merge=salt['pillar.get']('kubernetes:node:network')) %}
+{% do opencontrail.update({
+    'enabled': true,
+    'cni_image': opencontrail.contrail_cni.image,
+}) %}
+{% do node.network.opencontrail.update(opencontrail) %}
+{%- endif %}
+
+{%- set monitoring = salt['grains.filter_by']({
+  'default': {
+    'instance_minor_threshold_percent': 0.3,
+    'instance_major_threshold_percent': 0.6,
+  },
+}, grain='os_family', merge=salt['pillar.get']('kubernetes:monitoring')) %}
+
+{%- set etcd = salt['grains.filter_by']({
+  'default': {
+    'version': "v3.1.12",
+  },
+}, merge=salt['pillar.get']('kubernetes:etcd')) %}

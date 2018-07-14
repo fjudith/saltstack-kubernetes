@@ -15,7 +15,7 @@
 
 /srv/kubernetes/manifests/kube-apiserver-crb.yaml:
     file.managed:
-    - source: salt://kubernetes/kube-apiserver-crb/kube-apiserver-crb.yaml
+    - source: salt://kubernetes/addons/kube-apiserver-crb/kube-apiserver-crb.yaml
     - user: root
     - template: jinja
     - group: root
@@ -23,7 +23,7 @@
 
 /srv/kubernetes/manifests/kubelet-crb.yaml:
     file.managed:
-    - source: salt://kubernetes/kubelet-crb/kubelet-crb.yaml
+    - source: salt://kubernetes/addons/kubelet-crb/kubelet-crb.yaml
     - user: root
     - template: jinja
     - group: root
@@ -31,7 +31,7 @@
 
 /srv/kubernetes/manifests/influxdb-grafana.yaml:
     file.managed:
-    - source: salt://kubernetes/influxdb-grafana/influxdb-grafana.yaml
+    - source: salt://kubernetes/addons/influxdb-grafana/influxdb-grafana.yaml
     - user: root
     - template: jinja
     - group: root
@@ -39,7 +39,7 @@
 
 /srv/kubernetes/manifests/coredns.yaml:
     file.managed:
-    - source: salt://kubernetes/coredns/coredns.yaml
+    - source: salt://kubernetes/addons/coredns/coredns.yaml
     - user: root
     - template: jinja
     - group: root
@@ -47,7 +47,7 @@
 
 /srv/kubernetes/manifests/dns-horizontal-autoscaler.yaml:
     file.managed:
-    - source: salt://kubernetes/dns-horizontal-autoscaler/dns-horizontal-autoscaler.yaml
+    - source: salt://kubernetes/addons/dns-horizontal-autoscaler/dns-horizontal-autoscaler.yaml
     - user: root
     - template: jinja
     - group: root
@@ -55,7 +55,7 @@
 
 /srv/kubernetes/manifests/heapster.yaml:
     file.managed:
-    - source: salt://kubernetes/heapster/heapster.yaml
+    - source: salt://kubernetes/addons/heapster/heapster.yaml
     - user: root
     - template: jinja
     - group: root
@@ -63,7 +63,7 @@
 
 /srv/kubernetes/manifests/kube-dashboard.yaml:
     file.managed:
-    - source: salt://kubernetes/kube-dashboard/kube-dashboard.yaml
+    - source: salt://kubernetes/addons/kube-dashboard/kube-dashboard.yaml
     - user: root
     - template: jinja
     - group: root
@@ -71,7 +71,7 @@
 
 /srv/kubernetes/manifests/traefik.yaml:
     file.managed:
-    - source: salt://kubernetes/traefik/traefik.yaml
+    - source: salt://kubernetes/addons/traefik/traefik.yaml
     - user: root
     - template: jinja
     - group: root
@@ -79,7 +79,7 @@
 
 /srv/kubernetes/manifests/npd.yaml:
     file.managed:
-    - source: salt://kubernetes/node-problem-detector/npd.yaml
+    - source: salt://kubernetes/addons/node-problem-detector/npd.yaml
     - user: root
     - template: jinja
     - group: root
@@ -88,7 +88,7 @@
 
 /srv/kubernetes/manifests/ingress-nginx:
     file.recurse:
-    - source: salt://kubernetes/ingress-nginx
+    - source: salt://kubernetes/addons/ingress-nginx
     - include_empty: True
     - user: root
     - template: jinja
@@ -97,7 +97,7 @@
 
 /srv/kubernetes/manifests/fluentd-elasticsearch:
     file.recurse:
-    - source: salt://kubernetes/fluentd-elasticsearch
+    - source: salt://kubernetes/addons/fluentd-elasticsearch
     - include_empty: True
     - user: root
     - template: jinja
@@ -113,7 +113,7 @@ addon-prometheus-operator:
 
 /srv/kubernetes/manifests/prometheus-operator/contrib/kube-prometheus/manifests/kube-prometheus-ingress.yaml:
     file.managed:
-    - source: salt://kubernetes/prometheus-operator/kube-prometheus-ingress.yaml
+    - source: salt://kubernetes/addons/prometheus-operator/kube-prometheus-ingress.yaml
     - user: root
     - template: jinja
     - group: root

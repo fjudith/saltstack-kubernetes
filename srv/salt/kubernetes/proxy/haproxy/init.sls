@@ -7,6 +7,6 @@ include:
 {%- for item in haproxy_items %}
   - {{ item }}
 {%- endfor %}
-  - proxy.haproxy.install
-  - proxy.haproxy.service
-  - proxy.haproxy.config
+  - kubernetes.proxy.haproxy.install
+  - kubernetes.proxy.haproxy.service
+  - kubernetes.proxy.haproxy.config

@@ -1,6 +1,9 @@
 {%- set cniVersion = pillar['kubernetes']['node']['networking']['cni-version'] -%}
 {%- set cni_provider = pillar['kubernetes']['node']['networking']['provider'] -%}
 
+include:
+  - kubernetes.cni.{{ cni_provider }}
+  
 /etc/cni:
   file.directory:
     - user: root
@@ -20,6 +23,3 @@ cni-latest-archive:
     - skip_verify: true
     - archive_format: tar
     - if_missing: /opt/cni/bin/loopback
-
-include:
-  - node/cni/{{ cni_provider }}

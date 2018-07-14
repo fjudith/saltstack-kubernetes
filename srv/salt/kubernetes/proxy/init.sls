@@ -1,5 +1,5 @@
-{%- set cniProvider = pillar['kubernetes']['node']['networking']['provider'] -%}
-{%- set k8sVersion = pillar['kubernetes']['binary-version'] -%}
+{%- set cni_provider = pillar['kubernetes']['node']['networking']['provider'] -%}
+{%- set hyperkube_version = pillar['kubernetes']['binary-version'] -%}
 
 include:
   - kubernetes.proxy.keepalived
@@ -14,7 +14,7 @@ include:
 
 /usr/bin/kubectl:
   file.managed:
-    - source: https://storage.googleapis.com/kubernetes-release/release/{{ k8sVersion }}/bin/linux/amd64/kubectl
+    - source: https://storage.googleapis.com/kubernetes-release/release/{{ hyperkube_version }}/bin/linux/amd64/kubectl
     - skip_verify: True
     - show_changes: False
     - group: root

@@ -1,4 +1,4 @@
-{%- set k8sVersion = pillar['kubernetes']['version'] -%}
+{%- set hyperkube_version = pillar['kubernetes']['version'] -%}
 {%- set os = salt['grains.get']('os') -%}
 {%- set enableIPv6 = pillar['kubernetes']['node']['networking']['calico']['ipv6']['enable'] -%}
 {%- set criProvider = pillar['kubernetes']['node']['runtime']['provider'] -%}
@@ -96,7 +96,7 @@ net.bridge.bridge-nf-pass-vlan-input-dev:
 
 /usr/lib/coreos/kubelet-wrapper:
   file.managed:
-    - source: salt://node/kubelet/kubelet-wrapper
+    - source: salt://kubernetes/node/kubelet/kubelet-wrapper
     - user: root
     - template: jinja
     - group: root
@@ -104,7 +104,7 @@ net.bridge.bridge-nf-pass-vlan-input-dev:
 
 /etc/systemd/system/kubelet.service:
     file.managed:
-    - source: salt://node/kubelet/kubelet.service
+    - source: salt://kubernetes/node/kubelet/kubelet.service
     - user: root
     - template: jinja
     - group: root
@@ -112,7 +112,7 @@ net.bridge.bridge-nf-pass-vlan-input-dev:
 
 /etc/kubernetes/kubelet.kubeconfig:
     file.managed:
-    - source: salt://node/kubelet/kubelet.kubeconfig
+    - source: salt://kubernetes/node/kubelet/kubelet.kubeconfig
     - user: root
     - template: jinja
     - group: root
@@ -120,7 +120,7 @@ net.bridge.bridge-nf-pass-vlan-input-dev:
 
 /etc/kubernetes/bootstrap.kubeconfig:
     file.managed:
-    - source: salt://node/kubelet/bootstrap.kubeconfig
+    - source: salt://kubernetes/node/kubelet/bootstrap.kubeconfig
     - user: root
     - template: jinja
     - group: root
@@ -135,7 +135,7 @@ kubelet:
 
 /etc/kubernetes/kube-proxy.kubeconfig:
     file.managed:
-    - source: salt://node/kube-proxy/kube-proxy.kubeconfig
+    - source: salt://kubernetes/node/kube-proxy/kube-proxy.kubeconfig
     - user: root
     - template: jinja
     - group: root
@@ -143,7 +143,7 @@ kubelet:
 
 /etc/kubernetes/manifests/kube-proxy.yaml:
     file.managed:
-    - source: salt://node/kube-proxy/kube-proxy.yaml
+    - source: salt://kubernetes/node/kube-proxy/kube-proxy.yaml
     - user: root
     - template: jinja
     - group: root

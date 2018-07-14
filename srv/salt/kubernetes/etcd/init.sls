@@ -1,6 +1,4 @@
-{%- set etcdVersion = pillar['kubernetes']['etcd']['version'] -%}
-{%- set etcdCount = pillar['kubernetes']['etcd']['count'] -%}
-{%- set masterCount = pillar['kubernetes']['master']['count'] -%}
+{%- set etcd_version = pillar['kubernetes']['etcd']['version'] -%}
 
 include:
   - node.cri.docker
@@ -55,43 +53,17 @@ include:
 etcd-latest-archive:
   archive.extracted:
     - name: /opt/
-    - source: https://github.com/coreos/etcd/releases/download/{{ etcdVersion }}/etcd-{{ etcdVersion }}-linux-amd64.tar.gz
+    - source: https://github.com/coreos/etcd/releases/download/{{ etcd_version }}/etcd-{{ etcd_version }}-linux-amd64.tar.gz
     - skip_verify: true
     - archive_format: tar
-
-{# {% for key, ipaddr in pillar.get(['kubernetes']['etcd']['cluster']['etcd*'], {}).items() %}
-etcd-certificate-archive:
-  archive.extracted:
-    - name: /var/lib/etcd/ssl
-    - source: salt://certs/etcd-{{ ipaddr }}.tar
-    - skip_verify: true
-    - archive_format: tar
-    - enforce_toplevel: false
-{% endfor %} #}
 
 /usr/bin/etcd:
   file.symlink:
-    - target: /opt/etcd-{{ etcdVersion }}-linux-amd64/etcd
+    - target: /opt/etcd-{{ etcd_version }}-linux-amd64/etcd
+
 /usr/bin/etcdctl:
   file.symlink:
-    - target: /opt/etcd-{{ etcdVersion }}-linux-amd64/etcdctl
-
-{% if masterCount == 1 %}
-/etc/systemd/system/etcd.service:
-  file.managed:
-    - source: salt://kubernetes/etcd/etcd.service
-    - user: root
-    - template: jinja
-    - group: root
-    - mode: 644
-{% elif etcdCount == 3 %}
-{# /etc/systemd/system/etcd.service:
-  file.managed:
-    - source: salt://kubernetes/etcd/etcd-cluster.service
-    - user: root
-    - template: jinja
-    - group: root
-    - mode: 644 #}
+    - target: /opt/etcd-{{ etcd_version }}-linux-amd64/etcdctl
 
 /etc/systemd/system/etcd-member.service:
   file.managed:
@@ -100,7 +72,7 @@ etcd-certificate-archive:
     - template: jinja
     - group: root
     - mode: 644
-{% endif %}
+
 
 etcd-member.service:
   service.running:

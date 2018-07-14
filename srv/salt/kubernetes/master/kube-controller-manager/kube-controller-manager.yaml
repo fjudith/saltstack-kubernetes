@@ -1,7 +1,7 @@
 {%- set cluster_cidr             =  pillar['kubernetes']['global']['pod-network'] -%}
 {%- set service_cluster_ip_range =  pillar['kubernetes']['global']['service-ip-range'] -%}
-{%- set hyperkubeImageRepo       =  pillar['kubernetes']['hyperkube-image-repo'] -%}
-{%- set k8sVersion               =  pillar['kubernetes']['version'] -%}
+{%- set hyperkube_image          =  pillar['kubernetes']['hyperkube-image'] -%}
+{%- set hyperkube_version        =  pillar['kubernetes']['version'] -%}
 
 apiVersion: v1
 kind: Pod
@@ -11,7 +11,7 @@ metadata:
 spec:
   containers:
   - name: kube-controller-manager
-    image: {{ hyperkubeImageRepo }}:{{ k8sVersion }}
+    image: {{ hyperkube_image }}:{{ hyperkube_version }}
     command:
     - /hyperkube
     - controller-manager

@@ -1,8 +1,8 @@
 {%- set etcd_version = pillar['kubernetes']['etcd']['version'] -%}
 
 include:
-  - node.cri.docker
-  - node.cri.rkt
+  - kubernetes.cri.docker
+  - kubernetes.cri.rkt
 
 /etc/etcd:
   file.directory:

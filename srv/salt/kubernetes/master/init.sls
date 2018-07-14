@@ -217,7 +217,7 @@ kubelet:
 
 /srv/kubernetes/calico.yaml:
     file.managed:
-    - source: salt://node/cni/calico/calico.tmpl.yaml
+    - source: salt://kubernetes/cni/calico/calico.tmpl.yaml
     - user: root
     - template: jinja
     - group: root
@@ -235,7 +235,7 @@ kubelet:
 
 /etc/kubernetes/manifests/flannel.yaml:
     file.managed:
-    - source: salt://node/cni/flannel/flannel.yaml
+    - source: salt://kubernetes/cni/flannel/flannel.yaml
     - user: root
     - template: jinja
     - group: root

@@ -6,8 +6,8 @@
 # Any changes will be overwritten.
 {{ '\n' }}
 
-{%- import 'proxy/keepalived/templates/config.jinja' as config -%}
-{%- import_yaml 'proxy/keepalived/defaults.yaml' as keepalived_defaults -%}
+{%- import 'keepalived/templates/config.jinja' as config -%}
+{%- import_yaml 'keepalived/defaults.yaml' as keepalived_defaults -%}
 {%- set keepalived_final_values = salt.pillar.get(
     'keepalived',
     default=keepalived_defaults,

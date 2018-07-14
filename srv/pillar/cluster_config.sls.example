@@ -3,35 +3,28 @@
 public-domain: example.com
 acme-email: user@example.com
 kubernetes:
-  hyperkube-image-repo: quay.io/coreos/hyperkube 
+  hyperkube-image: quay.io/coreos/hyperkube 
   version: v1.10.5_coreos.0
   binary-version: v1.10.5
   domain: cluster.local
   etcd:
-    count: 3
-    cluster:
-      etcd01:
-        hostname: etcd01
-        ipaddr: 172.17.4.51
-      etcd02:
-        hostname: etcd02
-        ipaddr: 172.17.4.52
-      etcd03:
-        hostname: etcd03
-        ipaddr: 172.17.4.53
+    host: 127.0.0.1
+    members:
+      - host: 172.17.4.51
+        name: etcd01
+      - host: 172.17.4.52
+        name: etcd02
+      - host: 172.17.4.53
+        name: etcd03
     version: v3.1.12
   master:
-    count: 3
-    cluster:
-      node01:
-        hostname: master01
-        ipaddr: 172.17.4.101
-      node02:
-        hostname: master02
-        ipaddr: 172.17.4.102
-      node03:
-        hostname: master03
-        ipaddr: 172.17.4.103
+    members:
+      - host: 172.17.4.101
+        name: master01
+      - host: 172.17.4.102
+        name: master02
+      - host: 172.17.4.103
+        name: master03
     encryption-key: 'w3RNESCMG+o3GCHTUcrQUUdq6CFV72q/Zik9LAO8uEc='
   node:
     runtime:
@@ -145,7 +138,7 @@ haproxy:
   listens:
     stats:
       bind:
-        - "0.0.0.0:8080"
+        - "0.0.0.0:18080"
       mode: http
       stats:
         enable: True
@@ -164,6 +157,14 @@ haproxy:
       bind: "*:6443"
       mode: tcp
       default_backend: kube-apiserver
+    kubernetes-ingress:
+      bind: "*:80"
+      mode: tcp
+      default_backend: kubernetes-ingress
+    kubernetes-ingress-ssl:
+      bind: "*:443"
+      mode: tcp
+      default_backend: kubernetes-ingress-ssl
   backends:
     kube-apiserver:
       mode: tcp
@@ -182,3 +183,31 @@ haproxy:
           host: 172.17.4.103
           port: 6443
           check: check
+    kubernetes-ingress:
+      mode: tcp
+      balance: source
+      sticktable: "type binary len 32 size 30k expire 30m"
+      servers:
+        proxy01:
+          host: 172.17.4.251
+          port: 30080
+          check: check
+        proxy02:
+          host: 172.17.4.252
+          port: 30080
+          check: check
+          extra: backup
+    kubernetes-ingress-ssl:
+      mode: tcp
+      balance: source
+      sticktable: "type binary len 32 size 30k expire 30m"
+      servers:
+        proxy01:
+          host: 172.17.4.251
+          port: 30443
+          check: check
+        proxy02:
+          host: 172.17.4.252
+          port: 30443
+          check: check
+          extra: backup

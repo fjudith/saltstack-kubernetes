@@ -87,35 +87,28 @@ After that, edit the `pillar/cluster_config.sls` to configure your future Kubern
 ```yaml
 public_domain: example.com
 kubernetes:
-  hyperkube-image-repo: quay.io/coreos/hyperkube 
+  hyperkube-image: quay.io/coreos/hyperkube 
   version: v1.10.5_coreos.0
   binary-version: v1.10.5
   domain: cluster.local
   etcd:
-    count: 3
-    cluster:
-      etcd01:
-        hostname: etcd01
-        ipaddr: 172.17.4.51
-      etcd02:
-        hostname: etcd02
-        ipaddr: 172.17.4.52
-      etcd03:
-        hostname: etcd03
-        ipaddr: 172.17.4.53
+    host: 127.0.0.1
+    members:
+      - host: 172.17.4.51
+        name: etcd01
+      - host: 172.17.4.52
+        name: etcd02
+      - host: 172.17.4.53
+        name: etcd03
     version: v3.1.12
   master:
-    count: 3
-    cluster:
-      node01:
-        hostname: master01
-        ipaddr: 172.17.4.101
-      node02:
-        hostname: master02
-        ipaddr: 172.17.4.102
-      node03:
-        hostname: master03
-        ipaddr: 172.17.4.103
+    members:
+      - host: 172.17.4.101
+        name: master01
+      - host: 172.17.4.102
+        name: master02
+      - host: 172.17.4.103
+        name: master03
     encryption-key: 'w3RNESCMG+o3GCHTUcrQUUdq6CFV72q/Zik9LAO8uEc='
   node:
     runtime:

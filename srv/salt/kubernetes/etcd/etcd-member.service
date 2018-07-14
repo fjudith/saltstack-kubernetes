@@ -1,13 +1,13 @@
 ### THIS FILE IS MANAGED BY SALTSTACK
-{%- from "kubernetes/map.jinja" import etcd with context %}
+{%- from "kubernetes/map.jinja" import etcd with context -%}
 {%- set hostname = salt['grains.get']('fqdn') -%}
-{%- set vars = {'current_ip': "127.0.0.1"} -%}
+{%- set vars     = {'current_ip': "127.0.0.1"} -%}
 
-{% for member in etcd.members %}
-  {% if member.name == hostname %}
-	{% if vars.update({'current_ip': member.host}) %}{% endif %}
-  {% endif %}
-{% endfor %}
+{%- for member in etcd.members -%}
+  {%- if member.name == hostname -%}
+	{%- if vars.update({'current_ip': member.host}) -%}{%- endif -%}
+  {%- endif -%}
+{%- endfor -%}
 
 [Unit]
 Description=etcd (System Application Container)

@@ -1,10 +1,9 @@
-{%- set k8sVersion = pillar['kubernetes']['binary-version'] -%}
-{%- set hyperkubeImageRepo = pillar['kubernetes']['hyperkube-image-repo'] -%}
-{%- set hyperkubeVersion = pillar['kubernetes']['version'] -%}
-{%- set masterCount = pillar['kubernetes']['master']['count'] -%}
-{%- set etcd01ip =  pillar['kubernetes']['etcd']['cluster']['etcd01']['ipaddr'] -%} 
-{%- set etcd02ip =  pillar['kubernetes']['etcd']['cluster']['etcd02']['ipaddr'] -%} 
-{%- set etcd03ip =  pillar['kubernetes']['etcd']['cluster']['etcd03']['ipaddr'] -%}
+{%- from "kubernetes/map.jinja" import etcd with context -%}
+
+{%- set binary_version = pillar['kubernetes']['binary-version'] -%}
+{%- set hyperkube_image = pillar['kubernetes']['hyperkube-image'] -%}
+{%- set hyperkube_version = pillar['kubernetes']['version'] -%}
+
 {%- set ipv4Range = pillar['kubernetes']['node']['networking']['flannel']['ipv4']['range'] -%}
 
 {# include:
@@ -88,7 +87,7 @@ net.bridge.bridge-nf-pass-vlan-input-dev:
 
 /usr/bin/kubectl:
   file.managed:
-    - source: https://storage.googleapis.com/kubernetes-release/release/{{ k8sVersion }}/bin/linux/amd64/kubectl
+    - source: https://storage.googleapis.com/kubernetes-release/release/{{ binary_version }}/bin/linux/amd64/kubectl
     - skip_verify: true
     - show_changes: False
     - group: root
@@ -213,8 +212,8 @@ kubelet:
     - group: root
     - mode: 644
 
-{%- set cniProvider = pillar['kubernetes']['node']['networking']['provider'] -%}
-{% if cniProvider == "calico" %}
+{%- set cni_provider = pillar['kubernetes']['node']['networking']['provider'] -%}
+{% if cni_provider == "calico" %}
 
 /srv/kubernetes/calico.yaml:
     file.managed:
@@ -224,7 +223,7 @@ kubelet:
     - group: root
     - mode: 644
 
-{% elif cniProvider == "flannel" %}
+{% elif cni_provider == "flannel" %}
 
 /etc/kubernetes/ssl/node.pem:
   file.symlink:
@@ -236,7 +235,7 @@ kubelet:
 
 /etc/kubernetes/manifests/flannel.yaml:
     file.managed:
-    - source: salt://node/cni/flannel/flannel.tmpl.yaml
+    - source: salt://node/cni/flannel/flannel.yaml
     - user: root
     - template: jinja
     - group: root
@@ -248,9 +247,9 @@ flannel-etcd-config:
       - file: /etc/kubernetes/manifests/flannel.yaml
     - runas: root
     - env:
-      - ACTIVE_ETCD: https://{{ etcd01ip }}:2379
+      - ACTIVE_ETCD: https://{{ etcd.members[0].host }}:2379
     - name: |
-        curl --cacert /etc/kubernetes/ssl/ca.pem --key /etc/kubernetes/ssl/master-key.pem --cert /etc/kubernetes/ssl/master.pem --silent -X PUT -d "value={\"Network\":\"{{ ipv4Range }}\",\"Backend\":{\"Type\":\"vxlan\"}}" "https://{{ etcd01ip }}:2379/v2/keys/coreos.com/network/config?prevExist=false"
+        curl --cacert /etc/kubernetes/ssl/ca.pem --key /etc/kubernetes/ssl/master-key.pem --cert /etc/kubernetes/ssl/master.pem --silent -X PUT -d "value={\"Network\":\"{{ ipv4Range }}\",\"Backend\":{\"Type\":\"vxlan\"}}" "https://{{ etcd.members[0].host }}:2379/v2/keys/coreos.com/network/config?prevExist=false"
 
 flannel-wait:
   cmd.run:

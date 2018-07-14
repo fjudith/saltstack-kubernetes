@@ -2,9 +2,9 @@
 {%- set hyperkube_version = pillar['kubernetes']['binary-version'] -%}
 
 include:
-  - kubernetes.proxy.keepalived
-  - kubernetes.proxy.tinyproxy
-  - kubernetes.proxy.haproxy
+  - tinyproxy
+  - keepalived
+  - haproxy
 
 /root/.kube:
   file.directory:

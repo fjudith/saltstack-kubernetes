@@ -61,6 +61,22 @@
     - group: root
     - mode: 644
 
+/srv/kubernetes/manifests/heapster-rbac.yaml:
+    file.managed:
+    - source: salt://kubernetes/addons/heapster/heapster-rbac.yaml
+    - user: root
+    - template: jinja
+    - group: root
+    - mode: 644
+
+/srv/kubernetes/manifests/heapster-service.yaml:
+    file.managed:
+    - source: salt://kubernetes/addons/heapster/heapster-service.yaml
+    - user: root
+    - template: jinja
+    - group: root
+    - mode: 644
+
 /srv/kubernetes/manifests/kube-dashboard.yaml:
     file.managed:
     - source: salt://kubernetes/addons/kube-dashboard/kube-dashboard.yaml
@@ -138,6 +154,8 @@ kubernetes-addon-install:
       - file: /srv/kubernetes/manifests/coredns.yaml
       - file: /srv/kubernetes/manifests/dns-horizontal-autoscaler.yaml
       - file: /srv/kubernetes/manifests/heapster.yaml
+      - file: /srv/kubernetes/manifests/heapster-rbac.yaml
+      - file: /srv/kubernetes/manifests/heapster-service.yaml
       - file: /srv/kubernetes/manifests/influxdb-grafana.yaml
       - file: /srv/kubernetes/manifests/kube-dashboard.yaml
       - file: /srv/kubernetes/manifests/traefik.yaml
@@ -153,7 +171,9 @@ kubernetes-addon-install:
         kubectl apply -f /srv/kubernetes/manifests/kubelet-crb.yaml
         kubectl apply -f /srv/kubernetes/manifests/coredns.yaml
         kubectl apply -f /srv/kubernetes/manifests/dns-horizontal-autoscaler.yaml
+        kubectl apply -f /srv/kubernetes/manifests/heapster-rbac.yaml
         kubectl apply -f /srv/kubernetes/manifests/heapster.yaml
+        kubectl apply -f /srv/kubernetes/manifests/heapster-service.yaml
         kubectl apply -f /srv/kubernetes/manifests/influxdb-grafana.yaml
         if ! curl --silent http://127.0.0.1:8080/api/v1/namespaces/kube-system/secrets | grep kubernetes-dashboard-certs ; then kubectl --namespace kube-system create secret generic kubernetes-dashboard-certs --from-file=/etc/kubernetes/ssl/dashboard-key.pem --from-file=/etc/kubernetes/ssl/dashboard.pem; fi
         kubectl apply -f /srv/kubernetes/manifests/kube-dashboard.yaml

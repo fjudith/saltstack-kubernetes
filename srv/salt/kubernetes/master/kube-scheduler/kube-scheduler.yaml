@@ -1,5 +1,5 @@
-{%- set hyperkube_image =  pillar['kubernetes']['hyperkube-image'] -%}
-{%- set hyperkube_version =  pillar['kubernetes']['version'] -%}
+{%- from "kubernetes/map.jinja" import common with context -%}
+{%- from "kubernetes/map.jinja" import master with context -%}
 
 apiVersion: v1
 kind: Pod
@@ -10,7 +10,7 @@ spec:
   hostNetwork: true
   containers:
   - name: kube-scheduler
-    image: {{ hyperkube_image }}:{{ hyperkube_version }}
+    image: {{ common.image }}
     command:
     - /hyperkube
     - scheduler

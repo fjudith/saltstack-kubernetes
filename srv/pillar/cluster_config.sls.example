@@ -3,8 +3,10 @@
 public-domain: example.com
 acme-email: user@example.com
 kubernetes:
-  hyperkube-image: quay.io/coreos/hyperkube 
-  version: v1.10.5_coreos.0
+  common:
+    image: quay.io/coreos/hyperkube:v1.10.5_coreos.0
+    version: v1.10.5
+    addons:
   binary-version: v1.10.5
   domain: cluster.local
   etcd:
@@ -18,6 +20,7 @@ kubernetes:
         name: etcd03
     version: v3.1.12
   master:
+    service_addresses: 10.3.0.0/24
     members:
       - host: 172.17.4.101
         name: master01
@@ -26,6 +29,26 @@ kubernetes:
       - host: 172.17.4.103
         name: master03
     encryption-key: 'w3RNESCMG+o3GCHTUcrQUUdq6CFV72q/Zik9LAO8uEc='
+    token:
+      admin: 5ce8e923aca23e4d08da268516007611
+      kubelet: 898a8b10ff480c8b03c75bcb46721ba1
+      calico: d16601479e50593449efd3dcf86fecba
+      kube_scheduler: 8210d5686fa6641198a2288d6c4ce6c2
+      kube_controller_manager: 97b8af155b65b4a56e6486e433b7f22b
+      kube_proxy: 9a06bc9d7c55ff96bda6468b5fc58614
+      bootstrap: a931f97743b3cdf8b066d1ba3c9c6c21
+      monitoring: db69e5ab1d5d1107880c7e3bc5a678de
+      logging: b6160d80868cdbb90030a5b1248468d2
+      dns: d01f24a98873a7dcd2d9a0843bae34a3
+    storage:
+      engine: rook
+      members:
+      - host: 172.17.4.201
+        name: node01
+      - host: 172.17.4.202
+        name: node02
+      - host: 172.17.4.203
+        name: node03
   node:
     runtime:
       provider: docker
@@ -69,9 +92,6 @@ kubernetes:
     cluster-dns: 10.3.0.10
     helm-version: v2.8.2
     dashboard-version: v1.8.3
-    admin-token: Haim8kay1rarCHANGEMEHaim8kay1rar
-    kubelet-token: ahT1eipae1wiCHANGEMEahT1eipae1wi
-    bootstrap-token: c6925295f34652d872042f0d28170ca3
 tinyproxy:
   MaxClients: 200
   MinSpareServers: 10

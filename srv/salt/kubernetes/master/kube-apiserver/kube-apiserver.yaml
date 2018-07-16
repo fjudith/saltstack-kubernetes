@@ -1,10 +1,9 @@
+{%- from "kubernetes/map.jinja" import common with context -%}
 {%- from "kubernetes/map.jinja" import etcd with context -%}
 {%- from "kubernetes/map.jinja" import master with context -%}
-{%- set hyperkube_image          = pillar['kubernetes']['hyperkube-image'] -%}
-{%- set hyperkube_version        = pillar['kubernetes']['version'] -%}
-{%- set service_cluster_ip_range = pillar['kubernetes']['global']['service-ip-range'] -%}
-{%- set hostname                 = salt['grains.get']('fqdn') -%}
-{%- set vars                     = {'current_ip': "127.0.0.1"} -%}
+
+{%- set hostname = salt['grains.get']('fqdn') -%}
+{%- set vars     = {'current_ip': "127.0.0.1"} -%}
 
 {%- for member in master.members -%}
   {%- if member.name == hostname -%}
@@ -21,7 +20,7 @@ spec:
   hostNetwork: true
   containers:
   - name: kube-apiserver
-    image: {{ hyperkube_image }}:{{ hyperkube_version }}
+    image: {{ common.image }}
     command:
     - /hyperkube
     - apiserver
@@ -56,7 +55,7 @@ spec:
     - --runtime-config=api/all
     # - --runtime-config=extensions/v1beta1/networkpolicies=true
     - --service-account-key-file=/etc/kubernetes/ssl/service-account.pem
-    - --service-cluster-ip-range={{ service_cluster_ip_range }}
+    - --service-cluster-ip-range={{ master.service_addresses }}
     - --service-node-port-range=30000-50000
     - --storage-media-type=application/json
     - --tls-cert-file=/etc/kubernetes/ssl/apiserver.pem

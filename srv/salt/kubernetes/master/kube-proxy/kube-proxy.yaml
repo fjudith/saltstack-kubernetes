@@ -1,6 +1,7 @@
+{%- from "kubernetes/map.jinja" import common with context -%}
+{%- from "kubernetes/map.jinja" import master with context -%}
+
 {%- set cluster_cidr =  pillar['kubernetes']['global']['pod-network'] -%}
-{%- set hyperkube_image =  pillar['kubernetes']['hyperkube-image'] -%}
-{%- set hyperkube_version =  pillar['kubernetes']['version'] -%}
 
 apiVersion: v1
 kind: Pod
@@ -13,7 +14,7 @@ spec:
   hostNetwork: true
   containers:
   - name: kube-proxy
-    image: {{ hyperkube_image }}:{{ hyperkube_version }}
+    image: {{ common.image }}
     command:
     - /hyperkube
     - proxy

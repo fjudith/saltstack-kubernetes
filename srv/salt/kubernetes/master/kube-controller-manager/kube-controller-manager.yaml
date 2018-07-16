@@ -1,7 +1,7 @@
+{%- from "kubernetes/map.jinja" import common with context -%}
+{%- from "kubernetes/map.jinja" import master with context -%}
+
 {%- set cluster_cidr             =  pillar['kubernetes']['global']['pod-network'] -%}
-{%- set service_cluster_ip_range =  pillar['kubernetes']['global']['service-ip-range'] -%}
-{%- set hyperkube_image          =  pillar['kubernetes']['hyperkube-image'] -%}
-{%- set hyperkube_version        =  pillar['kubernetes']['version'] -%}
 
 apiVersion: v1
 kind: Pod
@@ -11,7 +11,7 @@ metadata:
 spec:
   containers:
   - name: kube-controller-manager
-    image: {{ hyperkube_image }}:{{ hyperkube_version }}
+    image: {{ common.image }}
     command:
     - /hyperkube
     - controller-manager
@@ -29,7 +29,7 @@ spec:
     - --pod-eviction-timeout=5m0s
     - --root-ca-file=/etc/kubernetes/ssl/ca.pem
     - --service-account-private-key-file=/etc/kubernetes/ssl/service-account-key.pem
-    - --service-cluster-ip-range={{ service_cluster_ip_range }}
+    - --service-cluster-ip-range={{ master.service_addresses }}
     - --use-service-account-credentials=true
     - --v=2
     resources:

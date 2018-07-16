@@ -104,7 +104,7 @@ variable "saltmaster_host" {
 
 variable "saltsyndic_host" {
   description = "Ip address, Hostname or FQDN of the Salt Syndic host"
-  default     = "salt-syndic.domain.tld"
+  default     = "salt-master.domain.tld"
 }
 
 variable "web_proxy_host" {

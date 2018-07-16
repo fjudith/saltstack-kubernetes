@@ -87,8 +87,8 @@ module "wireguard" {
 #   connections = "${module.provider.private_ips}"
 # }
 
-module "salt-syndic" {
-  source = "./management/salt-syndic"
+module "salt-master" {
+  source = "./management/salt-master"
 
   count            = 1
   bastion_host     = "${module.provider.bastion_host}"

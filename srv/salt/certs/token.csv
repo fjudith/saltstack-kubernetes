@@ -1,9 +1,19 @@
-{%- set adminToken =  pillar['kubernetes']['global']['admin-token'] -%} 
-{%- set kubeletToken =  pillar['kubernetes']['global']['kubelet-token'] -%} 
-{%- set calicoToken =  pillar['kubernetes']['node']['networking']['calico']['token'] -%} 
-{%- set bootstrapToken =  pillar['kubernetes']['global']['bootstrap-token'] -%}
-
-{{ adminToken }},admin,admin,"cluster-admin,system:masters"
-{{ calicoToken }},calico,calico,"cluster-admin,system:masters"
-{{ kubeletToken }},kubelet,kubelet,"cluster-admin,system:masters"
-{{ bootstrapToken }},kubelet-bootstrap,10001,"system:bootstrappers"
+{%- from "kubernetes/map.jinja" import master with context -%}
+{%- from "kubernetes/map.jinja" import common with context -%}
+{{ master.token.admin }},admin,admin,"cluster-admin,system:masters"
+{{ master.token.kubelet }},kubelet,kubelet,"cluster-admin,system:masters"
+{{ master.token.calico }},calico,calico,"cluster-admin,system:masters"
+{{ master.token.kube_proxy }},system:kube-proxy,system:node-proxier,"cluster-admin,system:masters"
+{{ master.token.kube_scheduler }},system:kube-scheduler,system:kube-scheduler
+{{ master.token.kube_controller_manager }},system:kube-controller-manager,system:kube-controller-manager
+{{ master.token.bootstrap }},kubelet-bootstrap,10001,"system:bootstrappers"
+{%- if common.addons.logging is defined %}
+{{ master.token.logging }},system:logging,system:logging
+{%- endif %}
+{%- if common.addons.monitoring is defined %}
+{{ master.token.monitoring }},system:monitoring,system:monitoring
+{%- endif %}
+{{ master.token.dns }},system:dns,system:dns
+{%- for name, user in master.auth.token.get('user', {}).items() %}
+{{ user.token }},{{ user.name|default(name) }},{{ user.get('uid', user.get('name', name)) }}{% if user.groups is defined %},"{{ user.groups|join(',') }}"{% endif %}
+{%- endfor %}

@@ -1,10 +1,8 @@
 {%- from "kubernetes/map.jinja" import etcd with context -%}
-
-{%- set binary_version = pillar['kubernetes']['binary-version'] -%}
-{%- set hyperkube_image = pillar['kubernetes']['hyperkube-image'] -%}
-{%- set hyperkube_version = pillar['kubernetes']['version'] -%}
+{%- from "kubernetes/map.jinja" import common with context -%}
 
 {%- set ipv4Range = pillar['kubernetes']['node']['networking']['flannel']['ipv4']['range'] -%}
+{%- set cni_provider = pillar['kubernetes']['node']['networking']['provider'] -%}
 
 {# include:
   - etcd #}
@@ -87,7 +85,7 @@ net.bridge.bridge-nf-pass-vlan-input-dev:
 
 /usr/bin/kubectl:
   file.managed:
-    - source: https://storage.googleapis.com/kubernetes-release/release/{{ binary_version }}/bin/linux/amd64/kubectl
+    - source: https://storage.googleapis.com/kubernetes-release/release/{{ common.version }}/bin/linux/amd64/kubectl
     - skip_verify: true
     - show_changes: False
     - group: root
@@ -212,7 +210,6 @@ kubelet:
     - group: root
     - mode: 644
 
-{%- set cni_provider = pillar['kubernetes']['node']['networking']['provider'] -%}
 {% if cni_provider == "calico" %}
 
 /srv/kubernetes/calico.yaml:

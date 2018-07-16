@@ -117,7 +117,7 @@ spec:
             - name: IP6
               value: "autodetect"
             - name: IP_AUTODETECTION_METHOD
-              value: "can-reach={{ master.members[0].host }}"
+              value: "can-reach={{ master.members[0].name }}"
             - name: IP6_AUTODETECTION_METHOD
               value: "interface={{ ipv6Interface }}"
             - name: FELIX_HEALTHENABLED

@@ -1,5 +1,4 @@
-{%- set cni_provider = pillar['kubernetes']['node']['networking']['provider'] -%}
-{%- set hyperkube_version = pillar['kubernetes']['binary-version'] -%}
+{%- from "kubernetes/map.jinja" import common with context -%}
 
 include:
   - tinyproxy
@@ -14,7 +13,7 @@ include:
 
 /usr/bin/kubectl:
   file.managed:
-    - source: https://storage.googleapis.com/kubernetes-release/release/{{ hyperkube_version }}/bin/linux/amd64/kubectl
+    - source: https://storage.googleapis.com/kubernetes-release/release/{{ common.version }}/bin/linux/amd64/kubectl
     - skip_verify: True
     - show_changes: False
     - group: root

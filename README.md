@@ -84,6 +84,14 @@ cfssl gencert \
 ```
 After that, edit the `pillar/cluster_config.sls` to configure your future Kubernetes cluster :
 
+```bash
+# Generate encryption key 
+echo $(head -c 32 /dev/urandom | base64)
+
+# Generate tokens
+echo $(head -c 16 /dev/urandom | od -An -t x | tr -d ' ')
+```
+
 ```yaml
 public_domain: example.com
 kubernetes:

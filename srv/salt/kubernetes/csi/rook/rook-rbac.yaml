@@ -1,0 +1,97 @@
+apiVersion: extensions/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: privileged
+spec:
+  fsGroup:
+    rule: RunAsAny
+  privileged: true
+  runAsUser:
+    rule: RunAsAny
+  seLinux:
+    rule: RunAsAny
+  supplementalGroups:
+    rule: RunAsAny
+  volumes:
+    - '*'
+  allowedCapabilities:
+    - '*'
+  hostPID: true
+  hostIPC: true
+  hostNetwork: false
+  hostPorts:
+    # CEPH ports
+    - min: 6789
+      max: 7300
+    # rook-api port
+    - min: 8124
+      max: 8124
+---
+# privilegedPSP grants access to use the privileged PSP.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: privileged-psp-user
+rules:
+- apiGroups:
+  - extensions
+  resources:
+  - podsecuritypolicies
+  resourceNames:
+  - privileged
+  verbs:
+  - use
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: rook-system
+---
+# Allow the rook-agent serviceAccount to use the privileged PSP
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: rook-agent-psp
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: privileged-psp-user
+subjects:
+- kind: ServiceAccount
+  name: rook-agent
+  namespace: rook-system
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: rook
+---
+# Allow the default serviceAccount to use the priviliged PSP
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: rook-default-psp
+  namespace: rook
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: privileged-psp-user
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: rook
+---
+# Allow the rook-ceph-osd serviceAccount to use the privileged PSP
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: rook-ceph-osd-psp
+  namespace: rook
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: privileged-psp-user
+subjects:
+- kind: ServiceAccount
+  name: rook-ceph-osd
+  namespace: rook

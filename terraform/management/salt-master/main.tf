@@ -19,7 +19,7 @@ variable "connections" {
 
 variable "salt_master_host" {}
 
-resource "null_resource" "salt-syndic" {
+resource "null_resource" "salt-master" {
   count = "${var.count}"
 
   connection {
@@ -35,7 +35,7 @@ resource "null_resource" "salt-syndic" {
   }
 
   provisioner "remote-exec" {
-    script = "${path.module}/scripts/salt-syndic.sh"
+    script = "${path.module}/scripts/salt-master.sh"
   }
 
   provisioner "file" {
@@ -72,7 +72,7 @@ EOF
       "systemctl daemon-reload",
       "systemctl restart salt-minion",
       "systemctl restart salt-master",
-      "systemctl restart salt-syndic",
+      "systemctl restart salt-master",
     ]
   }
 }

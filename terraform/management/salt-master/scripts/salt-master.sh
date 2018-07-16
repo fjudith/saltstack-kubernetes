@@ -15,7 +15,7 @@ apt-get install -yqq \
     salt-master \
     salt-minion \
     salt-ssh \
-    salt-syndic \
+    salt-master \
     salt-cloud \
     salt-api \
     python-boto \
@@ -23,11 +23,11 @@ apt-get install -yqq \
     reclass
 
 systemctl enable salt-master
-systemctl enable salt-syndic
+# systemctl enable salt-syndic
 systemctl enable salt-minion
 
 systemctl daemon-reload
 
 systemctl restart salt-master
-systemctl restart salt-syndic
+# systemctl restart salt-syndic
 systemctl restart salt-minion

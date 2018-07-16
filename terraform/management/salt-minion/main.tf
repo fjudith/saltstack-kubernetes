@@ -75,15 +75,6 @@ resource "null_resource" "salt-minion-proxy" {
     destination = "/etc/salt/grains"
   }
 
-  provisioner "file" {
-    content = <<EOF
-proxy_host: ${var.http_proxy_host}
-proxy_port: ${var.http_proxy_port}
-EOF
-
-    destination = "/etc/salt/minion.d/proxy.conf"
-  }
-
   provisioner "remote-exec" {
     inline = [
       "systemctl daemon-reload",
@@ -165,15 +156,6 @@ resource "null_resource" "salt-minion-master" {
     destination = "/etc/salt/grains"
   }
 
-  provisioner "file" {
-    content = <<EOF
-proxy_host: ${var.http_proxy_host}
-proxy_port: ${var.http_proxy_port}
-EOF
-
-    destination = "/etc/salt/minion.d/proxy.conf"
-  }
-
   provisioner "remote-exec" {
     inline = [
       "systemctl daemon-reload",
@@ -209,15 +191,6 @@ resource "null_resource" "salt-minion-node" {
   provisioner "file" {
     content     = "role: node"
     destination = "/etc/salt/grains"
-  }
-
-  provisioner "file" {
-    content = <<EOF
-proxy_host: ${var.http_proxy_host}
-proxy_port: ${var.http_proxy_port}
-EOF
-
-    destination = "/etc/salt/minion.d/proxy.conf"
   }
 
   provisioner "remote-exec" {

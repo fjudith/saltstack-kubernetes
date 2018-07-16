@@ -42,7 +42,7 @@ Environment="ETCD_LISTEN_CLIENT_URLS=https://{{ vars.current_ip }}:2379,http://1
 Environment="ETCD_ADVERTISE_CLIENT_URLS=https://{{ vars.current_ip }}:2379"
 Environment="ETCD_LISTEN_PEER_URLS=https://{{ vars.current_ip }}:2380"
 Environment="ETCD_INITIAL_ADVERTISE_PEER_URLS=https://{{ vars.current_ip }}:2380"
-Environment="ETCD_INITIAL_CLUSTER={% for member in etcd.members %}{{ member.name }}=https://{{ member.host }}:2380{% if not loop.last %},{% endif %}{% endfor %}
+Environment="ETCD_INITIAL_CLUSTER={% for member in etcd.members %}{{ member.name }}=https://{{ member.host }}:2380{% if not loop.last %},{% endif %}{% endfor %}"
 Environment="ETCD_STRICT_RECONFIG_CHECK=true"
 
 ExecStartPre=/usr/bin/mkdir --parents /var/lib/coreos

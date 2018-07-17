@@ -4,9 +4,9 @@ After=network-online.target
 PartOf=docker.service
 
 [Service]
-Type=simple
+Type=oneshot
 User=root
-
+ExecStartPre=/sbin/ip addr flush docker0
 ExecStartPre=/sbin/ip link add name docker0 type bridge
 ExecStart=/sbin/ip addr add dev docker0 172.18.0.1/16
 

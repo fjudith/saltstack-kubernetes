@@ -1,6 +1,8 @@
 
 
-{%- set cluster_domain = pillar['kubernetes']['domain'] -%}
+{%- from "kubernetes/map.jinja" import common with context -%}
+{%- from "kubernetes/map.jinja" import master with context -%}
+
 {%- set vpn_subnet = pillar['kubernetes']['global']['vpnIP-range'] -%}
 {%- set proxy_server = pillar['kubernetes']['global']['proxy']['ipaddr'] -%}
 {%- set proxy_port = pillar['kubernetes']['global']['proxy']['port'] -%}
@@ -13,7 +15,7 @@ proxy_server:
      - value:
          http_proxy: http://{{ proxy_server }}:{{ proxy_port }}
          https_proxy: http://{{ proxy_server }}:{{ proxy_port }}
-         no_proxy: "localhost, 127.0.0.1, *.{{ cluster_domain }} {{ vpn_subnet }}"
+         no_proxy: "localhost, 127.0.0.1, *.{{ common.addons.dns.domain }} {{ vpn_subnet }}"
 
 query_cloudflare:
   http.query:

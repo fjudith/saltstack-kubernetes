@@ -3,8 +3,6 @@
 
 {%- set hostname = salt['grains.get']('fqdn') -%}
 {%- set container_runtime =  pillar['kubernetes']['node']['runtime']['provider'] -%} 
-{%- set cluster_domain =  pillar['kubernetes']['domain'] -%}
-{%- set cluster_dns =  pillar['kubernetes']['global']['cluster-dns'] -%}
 {%- set cni_provider = pillar['kubernetes']['node']['networking']['provider'] -%}
 {% if cni_provider == "calico" %}
   {%- set calico_opts = "--volume cni-bin,kind=host,source=/opt/cni/bin --mount volume=cni-bin,target=/opt/cni/bin" -%}
@@ -60,8 +58,8 @@ ExecStart=/usr/lib/coreos/kubelet-wrapper \
   --allow-privileged=true \
   --pod-manifest-path=/etc/kubernetes/manifests \
   --hostname-override={{ hostname }} \
-  --cluster_dns={{ cluster_dns }} \
-  --cluster_domain={{ cluster_domain }} \
+  --cluster-dns={{ common.addons.dns.server }} \
+  --cluster-domain={{ common.addons.dns.domain }} \
   --kubeconfig=/etc/kubernetes/kubelet.kubeconfig \
   --bootstrap-kubeconfig=/etc/kubernetes/bootstrap.kubeconfig \
   --volume-plugin-dir=/etc/kubernetes/volumeplugins \

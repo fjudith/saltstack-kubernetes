@@ -1,7 +1,4 @@
-{%- set cluster_dns_server = pillar['kubernetes']['global']['cluster-dns'] -%}
-{%- set cluster_domain = pillar['kubernetes']['domain'] -%}
-
-
+{%- from "kubernetes/map.jinja" import common with context -%}
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -60,7 +57,7 @@ data:
     .:53 {
         errors
         health
-        kubernetes {{ cluster_domain }} in-addr.arpa ip6.arpa {
+        kubernetes {{ common.addons.dns.domain }} in-addr.arpa ip6.arpa {
             pods insecure
             upstream
             fallthrough in-addr.arpa ip6.arpa
@@ -173,7 +170,7 @@ metadata:
 spec:
   selector:
     k8s-app: kube-dns
-  clusterIP: {{ cluster_dns_server }}
+  clusterIP: {{ common.dns.server }}
   ports:
   - name: dns
     port: 53

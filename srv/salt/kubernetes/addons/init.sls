@@ -1,4 +1,5 @@
 {%- from "kubernetes/map.jinja" import common with context -%}
+{%- from "kubernetes/map.jinja" import master with context -%}
 
 kubernetes-wait:
   cmd.run:
@@ -253,7 +254,7 @@ kubernetes-fluentd-elasticsearch-install:
       - cmd: kubernetes-wait
     - watch:
       - file: /srv/kubernetes/manifests/fluentd-elasticsearch
-    - name:
+    - name: |
         kubectl apply -f /srv/kubernetes/manifests/fluentd-elasticsearch/
 {% endif %}
 
@@ -332,4 +333,67 @@ kubernetes-helm-install:
         kubectl apply -f /srv/kubernetes/manifests/helm/helm-rbac.yaml
         kubectl apply -f /srv/kubernetes/manifests/helm/helm-tiller.yaml
         kubectl apply -f /srv/kubernetes/manifests/helm/helm-serviceaccount.yaml
+{% endif %}
+
+{%- if master.storage.get('rook', {'enabled': False}).enabled %}
+/srv/kubernetes/manifests/rook:
+    file.recurse:
+    - source: salt://kubernetes/csi/rook
+    - include_empty: True
+    - user: root
+    - group: root
+    - file_mode: 644
+
+kubernetes-rook-operator-install:
+  cmd.run:
+    - require:
+      - cmd: kubernetes-wait
+    - watch:
+      - file: /srv/kubernetes/manifests/rook
+    - name: |
+        kubectl apply -f /srv/kubernetes/manifests/rook/rook-operator.yaml
+
+rook-operator-wait:
+  cmd.run:
+    - require:
+      - cmd: kubernetes-rook-operator-install
+    - runas: root
+    - name: until kubectl -n rook-system get pods --field-selector=status.phase=Running | grep rook-operator; do printf 'rook-operator not ready' && sleep 5; done
+    - use_vt: True
+    - timeout: 300
+
+kubernetes-rook-cluster-install:
+  cmd.run:
+    - require:
+      - cmd: rook-operator-wait
+      - cmd: kubernetes-rook-operator-install
+    - watch:
+      - file: /srv/kubernetes/manifests/rook
+    - name: |
+        kubectl apply -f /srv/kubernetes/manifests/rook/rook-rbac.yaml
+        kubectl apply -f /srv/kubernetes/manifests/rook/rook-cluster.yaml
+        kubectl apply -f /srv/kubernetes/manifests/rook/rook-filesystem.yaml
+        kubectl apply -f /srv/kubernetes/manifests/rook/rook-storageclass.yaml
+        kubectl apply -f /srv/kubernetes/manifests/rook/rook-tools.yaml
+
+rook-cluster-wait:
+  cmd.run:
+    - require:
+      - cmd: kubernetes-rook-cluster-install
+    - runas: root
+    - name: until kubectl -n rook get pods --field-selector=status.phase=Running | grep ceph-mgr; do printf 'rook-operator not ready' && sleep 5; done
+    - use_vt: True
+    - timeout: 300
+
+kubernetes-rook-monitoring-install:
+  cmd.run:
+    - require:
+      - cmd: rook-cluster-wait
+      - cmd: kubernetes-rook-cluster-install
+    - watch:
+      - file: /srv/kubernetes/manifests/rook
+    - name: |
+        kubectl apply -f /srv/kubernetes/manifests/rook/monitoring/prometheus.yaml
+        kubectl apply -f /srv/kubernetes/manifests/rook/monitoring/prometheus-service.yaml
+        kubectl apply -f /srv/kubernetes/manifests/rook/monitoring/service-monitor.yaml
 {% endif %}

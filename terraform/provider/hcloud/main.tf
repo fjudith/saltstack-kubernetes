@@ -115,9 +115,18 @@ resource "hcloud_server" "proxy01" {
       "while fuser /var/lib/apt/lists/lock >/dev/null 2>&1; do sleep 1; done",
       "while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 1; done",
       "apt-get update -yqq",
-      "apt-get install -yqq apt-transport-https ufw ${join(" ", var.apt_packages)}",
+      "apt-get install -yqq apt-transport-https ufw tinyproxy ${join(" ", var.apt_packages)}",
       "echo 'MaxSessions 100' | tee -a  /etc/ssh/sshd_config",
       "systemctl reload sshd",
+      "systemctl enable tinyproxy",
+      "echo 'Allow 127.0.0.1' | tee -a  /etc/tinyproxy.conf",
+      "echo 'Allow 192.168.0.0/16' | tee -a  /etc/tinyproxy.conf",
+      "echo 'Allow 172.16.0.0/12' | tee -a  /etc/tinyproxy.conf",
+      "echo 'Allow 10.0.0.0/8' | tee -a  /etc/tinyproxy.conf",
+      "systemctl daemon-reload",
+      "systemctl start tinyproxy",
+      "echo 'http_proxy=http://localhost:8888' | tee -a  /etc/environment",
+      "echo 'https_proxy=http://localhost:8888' | tee -a  /etc/environment",
     ]
   }
 

@@ -1,11 +1,8 @@
-# https://rook.io/docs/rook/v0.7/object.html
----
-apiVersion: rook.io/v1alpha1
-# For earlier versions than K8s 1.7, the kind must be Objectstore
+apiVersion: ceph.rook.io/v1beta1
 kind: ObjectStore
 metadata:
   name: my-store
-  namespace: rook
+  namespace: rook-ceph
 spec:
   # The pool spec used to create the metadata pools
   metadataPool:
@@ -31,7 +28,7 @@ spec:
     # The port that RGW pods will listen on (http)
     port: 80
     # The port that RGW pods will listen on (https). An ssl certificate is required.
-    securePort: 443
+    securePort: 
     # The number of pods in the rgw deployment (ignored if allNodes=true)
     instances: 1
     # Whether the rgw pods should be deployed on all nodes as a daemonset

@@ -351,14 +351,14 @@ kubernetes-rook-operator-install:
     - watch:
       - file: /srv/kubernetes/manifests/rook
     - name: |
-        kubectl apply -f /srv/kubernetes/manifests/rook/rook-operator.yaml
+        kubectl apply -f /srv/kubernetes/manifests/rook/ceph/operator.yaml
 
 rook-operator-wait:
   cmd.run:
     - require:
       - cmd: kubernetes-rook-operator-install
     - runas: root
-    - name: until kubectl -n rook-system get pods --field-selector=status.phase=Running | grep rook-operator; do printf 'rook-operator not ready' && sleep 5; done
+    - name: until kubectl -n rook-ceph-system get pods --field-selector=status.phase=Running | grep rook-ceph-operator; do printf 'rook-ceph-operator not ready' && sleep 5; done
     - use_vt: True
     - timeout: 300
 
@@ -370,18 +370,20 @@ kubernetes-rook-cluster-install:
     - watch:
       - file: /srv/kubernetes/manifests/rook
     - name: |
-        kubectl apply -f /srv/kubernetes/manifests/rook/rook-rbac.yaml
-        kubectl apply -f /srv/kubernetes/manifests/rook/rook-cluster.yaml
-        kubectl apply -f /srv/kubernetes/manifests/rook/rook-filesystem.yaml
-        kubectl apply -f /srv/kubernetes/manifests/rook/rook-storageclass.yaml
-        kubectl apply -f /srv/kubernetes/manifests/rook/rook-tools.yaml
+        kubectl apply -f /srv/kubernetes/manifests/rook/rbac.yaml
+        kubectl apply -f /srv/kubernetes/manifests/rook/ceph/cluster.yaml
+        kubectl apply -f /srv/kubernetes/manifests/rook/ceph/pool.yaml
+        kubectl apply -f /srv/kubernetes/manifests/rook/ceph/object.yaml
+        kubectl apply -f /srv/kubernetes/manifests/rook/ceph/filesystem.yaml
+        kubectl apply -f /srv/kubernetes/manifests/rook/ceph/storageclass.yaml
+        kubectl apply -f /srv/kubernetes/manifests/rook/ceph/dashboard-external.yaml
 
 rook-cluster-wait:
   cmd.run:
     - require:
       - cmd: kubernetes-rook-cluster-install
     - runas: root
-    - name: until kubectl -n rook get pods --field-selector=status.phase=Running | grep ceph-mgr; do printf 'rook-operator not ready' && sleep 5; done
+    - name: until kubectl -n rook-ceph get pods --field-selector=status.phase=Running | grep ceph-mgr; do printf 'rook-operator not ready' && sleep 5; done
     - use_vt: True
     - timeout: 300
 
@@ -393,6 +395,7 @@ kubernetes-rook-monitoring-install:
     - watch:
       - file: /srv/kubernetes/manifests/rook
     - name: |
+        kubectl apply -f /srv/kubernetes/manifests/rook/ceph/toolbox.yaml
         kubectl apply -f /srv/kubernetes/manifests/rook/monitoring/prometheus.yaml
         kubectl apply -f /srv/kubernetes/manifests/rook/monitoring/prometheus-service.yaml
         kubectl apply -f /srv/kubernetes/manifests/rook/monitoring/service-monitor.yaml

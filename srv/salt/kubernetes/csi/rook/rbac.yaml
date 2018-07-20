@@ -13,9 +13,9 @@ spec:
   supplementalGroups:
     rule: RunAsAny
   volumes:
-    - '*'
+  - '*'
   allowedCapabilities:
-    - '*'
+  - '*'
   hostPID: true
   hostIPC: true
   hostNetwork: false
@@ -45,21 +45,21 @@ rules:
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: rook-system
+  name: rook-ceph-system
 ---
-# Allow the rook-agent serviceAccount to use the privileged PSP
+# Allow the rook-ceph-system serviceAccount to use the privileged PSP
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: rook-agent-psp
+  name: rook-ceph-system-psp
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: privileged-psp-user
 subjects:
 - kind: ServiceAccount
-  name: rook-agent
-  namespace: rook-system
+  name: rook-ceph-system
+  namespace: rook-ceph-system
 ---
 apiVersion: v1
 kind: Namespace
@@ -71,7 +71,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: rook-default-psp
-  namespace: rook
+  namespace: rook-ceph
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -79,19 +79,19 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: default
-  namespace: rook
+  namespace: rook-ceph
 ---
 # Allow the rook-ceph-osd serviceAccount to use the privileged PSP
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: rook-ceph-osd-psp
-  namespace: rook
+  namespace: rook-ceph
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: privileged-psp-user
 subjects:
 - kind: ServiceAccount
-  name: rook-ceph-osd
-  namespace: rook
+  name: rook-ceph-cluster
+  namespace: rook-ceph

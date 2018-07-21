@@ -61,11 +61,6 @@ subjects:
   name: rook-ceph-system
   namespace: rook-ceph-system
 ---
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: rook
----
 # Allow the default serviceAccount to use the priviliged PSP
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding

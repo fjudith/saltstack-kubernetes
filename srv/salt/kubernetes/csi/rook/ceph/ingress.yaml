@@ -4,7 +4,7 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: rook-ceph-mgr-dashboard
-  namespace: kube-system
+  namespace: rook-ceph
 spec:
   rules:
   - host: ceph.{{ public_domain }}

@@ -53,12 +53,14 @@ metadata:
 data:
   traefik.toml: |
     # traefik.toml
+    debug = true
+    logLevel = "DEBUG"
     defaultEntryPoints = ["http","https"]
     [entryPoints]
       [entryPoints.http]
       address = ":80"
-      #[entryPoints.http.redirect]
-      #entryPoint = "https"
+      [entryPoints.http.redirect]
+      entryPoint = "https"
       [entryPoints.https.auth.basic]
       users = ["admin:{{ common.addons.ingress_traefik.password }}"]
       [entryPoints.https]

@@ -70,7 +70,7 @@ data:
     entryPoint = "https"
     onDemand = true
     onHostRule = true
-    caServer = "https://acme-staging.api.letsencrypt.org/directory"
+    # caServer = "https://acme-staging.api.letsencrypt.org/directory"
       [acme.httpChallenge]
       entryPoint = "http"
      # [[acme.domains]]

@@ -165,7 +165,7 @@ kubernetes-dashboard-install:
 {% endif %}
 
 {# Kubernetes addon: traefik #}
-{%- if common.addons.get('traefik', {'enabled': False}).enabled %}
+{%- if common.addons.get('ingress_traefik', {'enabled': False}).enabled %}
 /srv/kubernetes/manifests/traefik.yaml:
     file.managed:
     - source: salt://kubernetes/addons/traefik/traefik.yaml

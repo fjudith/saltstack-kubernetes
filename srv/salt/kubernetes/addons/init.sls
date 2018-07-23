@@ -292,32 +292,42 @@ kubernetes-kube-prometheus-install:
 
 {# Kubernetes addon: Helm #}
 {%- if common.addons.get('helm', {'enabled': False}).enabled %}
+/srv/kubernetes/manifests/helm:
+  file.directory:
+    - user: root
+    - group: root
+    - dir_mode: 750
+    - makedirs: True
+
 /srv/kubernetes/manifests/helm/helm-rbac.yaml:
     file.recurse:
+    - require:
+      - file: /srv/kubernetes/manifests/helm
     - source: salt://kubernetes/addons/helm/helm-rbac.yaml
-    - include_empty: True
     - user: root
     - template: jinja
     - group: root
-    - file_mode: 644
+    - mode: 644
 
 /srv/kubernetes/manifests/helm/helm-tiller.yaml:
-    file.recurse:
+    file.managed:
+    - require:
+      - file: /srv/kubernetes/manifests/helm
     - source: salt://kubernetes/addons/helm/helm-tiller.yaml
-    - include_empty: True
     - user: root
     - template: jinja
     - group: root
-    - file_mode: 644
+    - mode: 644
 
 /srv/kubernetes/manifests/helm/helm-serviceaccount.yaml:
-    file.recurse:
+    file.managed:
+    - require:
+      - file: /srv/kubernetes/manifests/helm
     - source: salt://kubernetes/addons/helm/helm-serviceaccount.yaml
-    - include_empty: True
     - user: root
     - template: jinja
     - group: root
-    - file_mode: 644
+    - mode: 644
 
 kubernetes-helm-install:
   cmd.run:
@@ -344,7 +354,17 @@ kubernetes-helm-install:
     - group: root
     - file_mode: 644
 
-kubernetes-rook-operator-install:
+/srv/kubernetes/manifests/rook/ceph/ingress.yaml:
+    file.managed:
+    - require:
+      - file: /srv/kubernetes/manifests/rook
+    - source: salt://kubernetes/csi/rook/ceph/ingress.yaml
+    - user: root
+    - group: root
+    - file_mode: 644
+    - template: jinja
+
+rook-operator-install:
   cmd.run:
     - require:
       - cmd: kubernetes-wait
@@ -356,17 +376,17 @@ kubernetes-rook-operator-install:
 rook-operator-wait:
   cmd.run:
     - require:
-      - cmd: kubernetes-rook-operator-install
+      - cmd: rook-operator-install
     - runas: root
     - name: until kubectl -n rook-ceph-system get pods --field-selector=status.phase=Running | grep rook-ceph-operator; do printf 'rook-ceph-operator not ready' && sleep 5; done
     - use_vt: True
     - timeout: 300
 
-kubernetes-rook-cluster-install:
+rook-cluster-install:
   cmd.run:
     - require:
       - cmd: rook-operator-wait
-      - cmd: kubernetes-rook-operator-install
+      - cmd: rook-operator-install
     - watch:
       - file: /srv/kubernetes/manifests/rook
     - name: |
@@ -382,17 +402,17 @@ kubernetes-rook-cluster-install:
 rook-cluster-wait:
   cmd.run:
     - require:
-      - cmd: kubernetes-rook-cluster-install
+      - cmd: rook-cluster-install
     - runas: root
-    - name: until kubectl -n rook-ceph get pods --field-selector=status.phase=Running | grep ceph-mgr; do printf 'rook-operator not ready' && sleep 5; done
+    - name: until kubectl -n rook-ceph get pods --field-selector=status.phase=Running | grep rook-ceph-mgr; do printf 'rook-ceph-mgr not ready' && sleep 5; done
     - use_vt: True
     - timeout: 300
 
-kubernetes-rook-monitoring-install:
+rook-monitoring-install:
   cmd.run:
     - require:
       - cmd: rook-cluster-wait
-      - cmd: kubernetes-rook-cluster-install
+      - cmd: rook-cluster-install
     - watch:
       - file: /srv/kubernetes/manifests/rook
     - name: |

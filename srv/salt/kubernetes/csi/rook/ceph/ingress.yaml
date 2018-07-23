@@ -1,0 +1,16 @@
+{%- set public_domain = pillar['public-domain'] -%}
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: rook-ceph-mgr-dashboard
+  namespace: kube-system
+spec:
+  rules:
+  - host: ceph.{{ public_domain }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: rook-ceph-mgr-dashboard-external
+          servicePort: dashboard

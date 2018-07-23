@@ -377,6 +377,7 @@ kubernetes-rook-cluster-install:
         kubectl apply -f /srv/kubernetes/manifests/rook/ceph/filesystem.yaml
         kubectl apply -f /srv/kubernetes/manifests/rook/ceph/storageclass.yaml
         kubectl apply -f /srv/kubernetes/manifests/rook/ceph/dashboard-external.yaml
+        kubectl apply -f /srv/kubernetes/manifests/rook/ceph/ingress.yaml
 
 rook-cluster-wait:
   cmd.run:

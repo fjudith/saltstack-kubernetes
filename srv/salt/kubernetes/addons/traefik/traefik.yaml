@@ -59,12 +59,12 @@ data:
     [entryPoints]
       [entryPoints.http]
       address = ":80"
-      [entryPoints.http.redirect]
-      entryPoint = "https"
-      [entryPoints.https.auth.basic]
-      users = ["admin:{{ common.addons.ingress_traefik.password }}"]
+      #[entryPoints.http.redirect]
+      #entryPoint = "https"
       [entryPoints.https]
       address = ":443"
+      [entryPoints.https.auth.basic]
+      users = ["admin:{{ common.addons.ingress_traefik.password }}"]
         [entryPoints.https.tls]
     [acme]
     email = "{{ common.addons.ingress_traefik.acme_email }}"
@@ -96,6 +96,7 @@ spec:
         k8s-app: traefik-ingress-lb
         name: traefik-ingress-lb
     spec:
+      hostNetwork: true
       serviceAccountName: traefik-ingress-controller
       terminationGracePeriodSeconds: 60
       containers:

@@ -81,7 +81,7 @@ docker-latest-archive:
     - group: root
     - mode: 644
     
-/run/systemd/system/docker.socket:
+/etc/systemd/system/sockets.target.wants/docker.socket:
     file.managed:
     - source: salt://kubernetes/cri/docker/docker.socket
     - user: root
@@ -89,7 +89,7 @@ docker-latest-archive:
     - group: root
     - mode: 644
 
-/run/systemd/system/docker.service:
+/etc/systemd/system/docker.service:
     file.managed:
     - source: salt://kubernetes/cri/docker/docker.service
     - user: root
@@ -113,13 +113,13 @@ docker.socket:
   service.running:
     - enable: True
     - watch:
-      - /run/systemd/system/docker.socket
+      - /etc/systemd/system/sockets.target.wants/docker.socket
     - require:
       - group: docker
 
 docker.service:
   service.enabled:
     - watch:
-      - /run/systemd/system/docker.service
+      - /etc/systemd/system/docker.service
     - require:
       - group: docker

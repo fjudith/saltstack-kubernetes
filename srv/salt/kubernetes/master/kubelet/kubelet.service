@@ -46,7 +46,6 @@ ExecStart=/usr/lib/coreos/kubelet-wrapper \
   --cni-bin-dir=/opt/cni/bin \
   --network-plugin=cni \
   --container-runtime={{ container_runtime }} \
-  --rkt-path=/usr/bin/rkt \
   --allow-privileged=true \
   --pod-manifest-path=/etc/kubernetes/manifests \
   --kubeconfig=/etc/kubernetes/kubelet.kubeconfig \

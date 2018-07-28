@@ -40,3 +40,8 @@ rm -f saltstack-kubernetes.ppm
 ```bash
 salt-run state.event pretty=True
 ```
+
+
+### Unable to add a new service to be monitored with kube-prometheus
+
+https://github.com/coreos/prometheus-operator/issues/731

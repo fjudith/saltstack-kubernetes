@@ -164,7 +164,8 @@ metadata:
     prometheus.io/port: "9153"
     prometheus.io/scrape: "true"
   labels:
-    k8s-app: kube-dns
+    component: metrics
+    k8s-app: coredns
     kubernetes.io/cluster-service: "true"
     addonmanager.kubernetes.io/mode: Reconcile
     kubernetes.io/name: "CoreDNS"
@@ -178,4 +179,7 @@ spec:
     protocol: UDP
   - name: dns-tcp
     port: 53
+    protocol: TCP
+  - name: http-metrics
+    port: 9153
     protocol: TCP

@@ -77,7 +77,10 @@ data:
       entryPoint = "http"
      # [[acme.domains]]
      # main = "{{ public_domain }}"
-
+    [web]
+      address = ":8080"
+      [web.metrics.prometheus]
+        Buckets=[0.1,0.3,1.2,5.0]
 ---
 kind: DaemonSet
 apiVersion: extensions/v1beta1
@@ -120,7 +123,10 @@ spec:
         args:
         - --configfile=/config/traefik.toml
         - --web
+        - --web.metrics.prometheus
+        - --web.metrics.prometheus.buckets=0.1,0.3,1.2,5.0
         - --kubernetes
+        - --logLevel=DEBUG
         volumeMounts:
         - mountPath: "/config"
           name: "config"

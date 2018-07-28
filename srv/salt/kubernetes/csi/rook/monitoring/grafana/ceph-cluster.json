@@ -17,7 +17,7 @@
         {
           "type": "datasource",
           "id": "prometheus",
-          "name": "rook-prometheus",
+          "name": "prometheus",
           "version": "1.0.0"
         },
         {

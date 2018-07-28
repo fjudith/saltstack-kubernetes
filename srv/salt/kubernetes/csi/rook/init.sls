@@ -32,6 +32,13 @@
     - group: root
     - file_mode: 644
 
+/srv/kubernetes/manifests/rook/monitoring/kube-prometheus:
+  file.directory:
+    - user: root
+    - group: root
+    - dir_mode: 750
+    - makedirs: True
+
 /srv/kubernetes/manifests/rook/rbac.yaml:
     file.managed:
     - require:
@@ -152,21 +159,31 @@
     - file_mode: 644
     - template: jinja
 
-/srv/kubernetes/manifests/rook/monitoring/rolebinding.yaml:
-    file.managed:
-    - require:
-      - file: /srv/kubernetes/manifests/rook/monitoring
-    - source: salt://kubernetes/csi/rook/monitoring/rolebinding.yaml
-    - user: root
-    - group: root
-    - file_mode: 644
-    - template: jinja
-
 /srv/kubernetes/manifests/rook/monitoring/service-monitor.yaml:
     file.managed:
     - require:
       - file: /srv/kubernetes/manifests/rook/monitoring
     - source: salt://kubernetes/csi/rook/monitoring/service-monitor.yaml
+    - user: root
+    - group: root
+    - file_mode: 644
+    - template: jinja
+
+/srv/kubernetes/manifests/rook/monitoring/kube-prometheus/prometheus.yaml:
+    file.managed:
+    - require:
+      - file: /srv/kubernetes/manifests/rook/monitoring/kube-prometheus
+    - source: salt://kubernetes/csi/rook/monitoring/kube-prometheus/prometheus.yaml
+    - user: root
+    - group: root
+    - file_mode: 644
+    - template: jinja
+
+/srv/kubernetes/manifests/rook/monitoring/kube-prometheus/service-monitor.yaml:
+    file.managed:
+    - require:
+      - file: /srv/kubernetes/manifests/rook/monitoring/kube-prometheus
+    - source: salt://kubernetes/csi/rook/monitoring/kube-prometheus/service-monitor.yaml
     - user: root
     - group: root
     - file_mode: 644
@@ -232,12 +249,18 @@ rook-monitoring-install:
       - file: /srv/kubernetes/manifests/rook/ceph/toolbox.yaml
       - file: /srv/kubernetes/manifests/rook/monitoring/prometheus.yaml
       - file: /srv/kubernetes/manifests/rook/monitoring/prometheus-service.yaml
-      - file: /srv/kubernetes/manifests/rook/monitoring/rolebinding.yaml
       - file: /srv/kubernetes/manifests/rook/monitoring/service-monitor.yaml
+      - file: /srv/kubernetes/manifests/rook/monitoring/kube-prometheus/prometheus.yaml
+      - file: /srv/kubernetes/manifests/rook/monitoring/kube-prometheus/service-monitor.yaml
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/rook/ceph/toolbox.yaml
+        {%- if common.addons.get('kube-prometheus', {'enabled': False}).enabled %}
+        kubectl apply -f /srv/kubernetes/manifests/rook/monitoring/kube-prometheus/prometheus.yaml
+        kubectl apply -f /srv/kubernetes/manifests/rook/monitoring/kube-prometheus/service-monitor.yaml
+        {%- else %}
         kubectl apply -f /srv/kubernetes/manifests/rook/monitoring/prometheus.yaml
         kubectl apply -f /srv/kubernetes/manifests/rook/monitoring/prometheus-service.yaml
-        kubectl apply -f /srv/kubernetes/manifests/rook/monitoring/rolebinding.yaml
         kubectl apply -f /srv/kubernetes/manifests/rook/monitoring/service-monitor.yaml
+        {%- endif %}
+        
 {% endif %}

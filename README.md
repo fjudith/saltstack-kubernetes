@@ -93,12 +93,40 @@ echo $(head -c 16 /dev/urandom | od -An -t x | tr -d ' ')
 ```
 
 ```yaml
-public_domain: example.com
+public-domain: example.com
 kubernetes:
-  hyperkube-image: quay.io/coreos/hyperkube 
-  version: v1.10.5_coreos.0
-  binary-version: v1.10.5
-  domain: cluster.local
+  common:
+    image: quay.io/fjudith/hyperkube:v1.10.5
+    version: v1.10.5
+    addons:
+      dns:
+        enabled: True
+        domain: cluster.local
+        server: 10.3.0.10
+        autoscaler:
+          enabled: True
+        coredns:
+          enabled: True
+      helm:
+        enabled: False
+        tiller_image: gcr.io/kubernetes-helm/tiller:v2.4.2
+      kube-prometheus:
+        enabled: True
+        version: v0.22.0
+      heapster-influxdb:
+        enabled: True
+      dashboard:
+        enabled: True
+      ingress_traefik:
+        enabled: True
+        password: '$apr1$mHqffeCI$8Bl8/cCsjejRsAYt7qFrj/'
+        acme_email: user.name@example.com
+      npd:
+        enabled: True
+      ingress-nginx:
+        enabled: False
+      fluentd-elasticsearch:
+        enabled: True
   etcd:
     host: 127.0.0.1
     members:
@@ -110,6 +138,7 @@ kubernetes:
         name: etcd03
     version: v3.1.12
   master:
+    service_addresses: 10.3.0.0/24
     members:
       - host: 172.17.4.101
         name: master01
@@ -117,7 +146,21 @@ kubernetes:
         name: master02
       - host: 172.17.4.103
         name: master03
-    encryption-key: 'w3RNESCMG+o3GCHTUcrQUUdq6CFV72q/Zik9LAO8uEc='
+    encryption-key: 'ScKZBwy8IYi8vpUnJNXkQF/ODsGWJX22+nc8WGFzZgw=' 
+    token:
+      admin: 227c24c3e683a4ea584f95580023387e
+      kubelet: 3e749c1636005866f497ec5877d103df
+      calico: 07519ca856c5a8742e23d5f7c4bed7f2
+      kube_scheduler: bbfd644a90a5fb95827f5b3091c80efc
+      kube_controller_manager: f1ab133b52ea3501e6d744656d22a1ae
+      kube_proxy: 5f5b9898b76a8cebbc7114a0fdc31883
+      bootstrap: 92a007b80db4b2b85cd60270f822a3b9
+      monitoring: 617b5a516e217054391940f158f7221d
+      logging: c377a4832fc3cc914a18cd7324c2549f
+      dns: cb49512c71db4e60d5c7373c21e07504
+    storage:
+      rook:
+        enabled: True
   node:
     runtime:
       provider: docker
@@ -135,7 +178,7 @@ kubernetes:
         calicoctl-version: v3.1.3
         controller-version: 3.1-release
         as-number: 64512
-        token: hu0daeHais3aCHANGEMEhu0daeHais3a
+        token: 7d8d28fe2500143b09cfceea3b48f00e
         ipv4:
           range: 10.2.0.0/16
           nat: true
@@ -143,13 +186,13 @@ kubernetes:
         ipv6:
           enable: false
           nat: true
-          interface: enp0s2
+          interface: eth0
           range: fd80:24e2:f998:72d6::/64
       flannel:
         version: v0.10.0-amd64
         ipv4:
           range: 10.2.0.0/16
-          interface: enp0s2
+          interface: eth0
   global:
     proxy:
       ipaddr: 172.16.4.251
@@ -161,9 +204,6 @@ kubernetes:
     cluster-dns: 10.3.0.10
     helm-version: v2.8.2
     dashboard-version: v1.8.3
-    admin-token: Haim8kay1rarCHANGEMEHaim8kay1rar
-    kubelet-token: ahT1eipae1wiCHANGEMEahT1eipae1wi
-    bootstrap-token: c6925295f34652d872042f0d28170ca3
 tinyproxy:
   MaxClients: 200
   MinSpareServers: 10
@@ -230,7 +270,7 @@ haproxy:
   listens:
     stats:
       bind:
-        - "0.0.0.0:8080"
+        - "0.0.0.0:18080"
       mode: http
       stats:
         enable: True

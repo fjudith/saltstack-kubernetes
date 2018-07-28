@@ -8,6 +8,8 @@ kind: Pod
 metadata:
   name: kube-controller-manager
   namespace: kube-system
+  labels:
+    k8s-app: kube-controller-manager
 spec:
   containers:
   - name: kube-controller-manager
@@ -69,3 +71,22 @@ spec:
   - hostPath:
       path: /etc/kubernetes/volumeplugins
     name: volumeplugins-host
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kube-controller-manager
+  namespace: kube-system
+  annotations:
+    prometheus.io/port: "10252"
+    prometheus.io/scrape: "true"
+  labels:
+    k8s-app: kube-controller-manager
+spec:
+  selector:
+    k8s-app: kube-controller-manager
+  clusterIP: None
+  ports:
+  - name: http-metrics
+    port: 10252
+    protocol: TCP

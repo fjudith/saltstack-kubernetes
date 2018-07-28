@@ -6,6 +6,8 @@ kind: Pod
 metadata:
   name: kube-scheduler
   namespace: kube-system
+  labels:
+    k8s-app: kube-scheduler
 spec:
   hostNetwork: true
   containers:
@@ -46,3 +48,22 @@ spec:
   - hostPath:
       path: /usr/share/ca-certificates
     name: ssl-certs-host
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kube-scheduler
+  namespace: kube-system
+  annotations:
+    prometheus.io/port: "10252"
+    prometheus.io/scrape: "true"
+  labels:
+    k8s-app: kube-scheduler
+spec:
+  selector:
+    k8s-app: kube-scheduler
+  clusterIP: None
+  ports:
+  - name: http-metrics
+    port: 10251
+    protocol: TCP

@@ -14,7 +14,7 @@ variable "ssh_keys" {
 
 variable "image" {
   type    = "string"
-  default = "ubuntu-16.04"
+  default = "ubuntu-18.04"
 }
 
 variable "apt_packages" {

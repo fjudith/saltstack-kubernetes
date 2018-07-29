@@ -19,7 +19,7 @@ variable "architecture" {
 }
 
 variable "image" {
-  default = "Ubuntu Xenial"
+  default = "Ubuntu Bionic"
 }
 
 variable "apt_packages" {

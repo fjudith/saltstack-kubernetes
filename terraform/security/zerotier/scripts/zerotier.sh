@@ -6,7 +6,7 @@ ZT_NET="$2"
 ZT_IP="$3"
 
 sudo cat << EOF > /etc/apt/sources.list.d/zerotier.list
-deb http://download.zerotier.com/debian/xenial xenial main
+deb http://download.zerotier.com/debian/bionic bionic main
 EOF
 
 sudo curl -fsSL https://www.zerotier.com/misc/contact@zerotier.com.gpg | sudo apt-key add -

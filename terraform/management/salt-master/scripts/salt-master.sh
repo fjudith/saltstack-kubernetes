@@ -4,10 +4,10 @@ set -e
 apt-get update -yqq
 apt-get install -yqq curl wget
 cat << EOF > /etc/apt/sources.list.d/salt.list
-deb http://repo.saltstack.com/apt/ubuntu/16.04/amd64/2018.3 xenial main
+deb http://repo.saltstack.com/apt/ubuntu/18.04/amd64/2018.3 bionic main
 EOF
 
-curl -fsSL https://repo.saltstack.com/apt/ubuntu/16.04/amd64/2018.3/SALTSTACK-GPG-KEY.pub | sudo apt-key add -
+curl -fsSL https://repo.saltstack.com/apt/ubuntu/18.04/amd64/2018.3/SALTSTACK-GPG-KEY.pub | sudo apt-key add -
 
 apt-get clean -yqq
 apt-get update -yqq

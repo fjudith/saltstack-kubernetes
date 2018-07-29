@@ -106,7 +106,7 @@ spec:
           operator: "Exists"
       containers:
       - name: coredns
-        image: coredns/coredns:1.2.0
+        image: coredns/coredns:1.1.4
         imagePullPolicy: IfNotPresent
         resources:
           limits:
@@ -164,8 +164,7 @@ metadata:
     prometheus.io/port: "9153"
     prometheus.io/scrape: "true"
   labels:
-    component: metrics
-    k8s-app: coredns
+    k8s-app: kube-dns
     kubernetes.io/cluster-service: "true"
     addonmanager.kubernetes.io/mode: Reconcile
     kubernetes.io/name: "CoreDNS"
@@ -180,6 +179,23 @@ spec:
   - name: dns-tcp
     port: 53
     protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: coredns-metrics
+  namespace: kube-system
+  annotations:
+    prometheus.io/port: "9153"
+    prometheus.io/scrape: "true"
+  labels:
+    component: metrics
+    k8s-app: coredns
+spec:
+  selector:
+    k8s-app: kube-dns
+  clusterIP: None
+  ports:
   - name: http-metrics
     port: 9153
     protocol: TCP

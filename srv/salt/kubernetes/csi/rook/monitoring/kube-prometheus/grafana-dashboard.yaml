@@ -170,7 +170,7 @@ data:
                 "tableColumn": "",
                 "targets": [
                   {
-                    "expr": "ceph_monitor_quorum_count",
+                    "expr": "count(ceph_mon_quorum_status)",
                     "interval": "$interval",
                     "intervalFactor": 1,
                     "legendFormat": "",
@@ -330,7 +330,7 @@ data:
                 "tableColumn": "",
                 "targets": [
                   {
-                    "expr": "ceph_cluster_capacity_bytes",
+                    "expr": "ceph_cluster_total_bytes",
                     "interval": "$interval",
                     "intervalFactor": 1,
                     "legendFormat": "",
@@ -410,7 +410,7 @@ data:
                 "tableColumn": "",
                 "targets": [
                   {
-                    "expr": "ceph_cluster_used_bytes",
+                    "expr": "ceph_cluster_total_used_bytes",
                     "interval": "$interval",
                     "intervalFactor": 1,
                     "legendFormat": "",
@@ -490,7 +490,7 @@ data:
                 "tableColumn": "",
                 "targets": [
                   {
-                    "expr": "ceph_cluster_available_bytes/ceph_cluster_capacity_bytes",
+                    "expr": "ceph_cluster_total_used_bytes/ceph_cluster_total_bytes",
                     "interval": "$interval",
                     "intervalFactor": 1,
                     "legendFormat": "",
@@ -582,7 +582,7 @@ data:
                 "tableColumn": "",
                 "targets": [
                   {
-                    "expr": "ceph_osds_in",
+                    "expr": "sum(ceph_osd_in)",
                     "interval": "$interval",
                     "intervalFactor": 1,
                     "legendFormat": "",
@@ -661,7 +661,7 @@ data:
                 "tableColumn": "",
                 "targets": [
                   {
-                    "expr": "ceph_osds - ceph_osds_in",
+                    "expr": "sum(ceph_osd_up) - sum(ceph_osd_in)",
                     "interval": "$interval",
                     "intervalFactor": 1,
                     "legendFormat": "",
@@ -819,7 +819,7 @@ data:
                 "tableColumn": "",
                 "targets": [
                   {
-                    "expr": "ceph_osds_down",
+                    "expr": "sum(ceph_osd_in) - sum(ceph_osd_up)",
                     "interval": "$interval",
                     "intervalFactor": 1,
                     "legendFormat": "",
@@ -898,7 +898,7 @@ data:
                 "tableColumn": "",
                 "targets": [
                   {
-                    "expr": "avg(ceph_osd_pgs)",
+                    "expr": "avg(ceph_osd_numpg)",
                     "interval": "$interval",
                     "intervalFactor": 1,
                     "legendFormat": "",
@@ -907,7 +907,7 @@ data:
                   }
                 ],
                 "thresholds": "250,300",
-                "title": "Agerage PGs per OSD",
+                "title": "Average PGs per OSD",
                 "type": "singlestat",
                 "valueFontSize": "80%",
                 "valueMaps": [
@@ -977,7 +977,7 @@ data:
                 "tableColumn": "",
                 "targets": [
                   {
-                    "expr": "avg(ceph_osd_perf_apply_latency_seconds)",
+                    "expr": "avg(ceph_osd_apply_latency_ms)",
                     "interval": "$interval",
                     "intervalFactor": 1,
                     "legendFormat": "",
@@ -1010,7 +1010,7 @@ data:
                 "datasource": "$datasource",
                 "editable": true,
                 "error": false,
-                "format": "s",
+                "format": "ms",
                 "gauge": {
                   "maxValue": 100,
                   "minValue": 0,
@@ -1056,7 +1056,7 @@ data:
                 "tableColumn": "",
                 "targets": [
                   {
-                    "expr": "avg(ceph_osd_perf_commit_latency_seconds)",
+                    "expr": "avg(ceph_osd_commit_latency_ms)",
                     "interval": "$interval",
                     "intervalFactor": 1,
                     "legendFormat": "",
@@ -1089,7 +1089,7 @@ data:
                 "datasource": "$datasource",
                 "editable": true,
                 "error": false,
-                "format": "s",
+                "format": "ms",
                 "gauge": {
                   "maxValue": 100,
                   "minValue": 0,
@@ -1223,7 +1223,7 @@ data:
                 "steppedLine": false,
                 "targets": [
                   {
-                    "expr": "ceph_cluster_available_bytes",
+                    "expr": "ceph_cluster_total_bytes - ceph_cluster_total_used_bytes",
                     "interval": "$interval",
                     "intervalFactor": 1,
                     "legendFormat": "Available",
@@ -1231,7 +1231,7 @@ data:
                     "step": 60
                   },
                   {
-                    "expr": "ceph_cluster_used_bytes",
+                    "expr": "ceph_cluster_total_used_bytes",
                     "interval": "$interval",
                     "intervalFactor": 1,
                     "legendFormat": "Used",
@@ -1239,7 +1239,7 @@ data:
                     "step": 60
                   },
                   {
-                    "expr": "ceph_cluster_capacity_bytes",
+                    "expr": "ceph_cluster_total_bytes",
                     "interval": "$interval",
                     "intervalFactor": 1,
                     "legendFormat": "Total Capacity",
@@ -1528,7 +1528,7 @@ data:
                 "steppedLine": false,
                 "targets": [
                   {
-                    "expr": "ceph_cluster_objects",
+                    "expr": "ceph_cluster_total_objects",
                     "interval": "$interval",
                     "intervalFactor": 1,
                     "legendFormat": "Total",
@@ -1536,7 +1536,7 @@ data:
                     "step": 60
                   },
                   {
-                    "expr": "ceph_degraded_objects",
+                    "expr": "ceph_num_objects_degraded",
                     "interval": "$interval",
                     "intervalFactor": 1,
                     "legendFormat": "Degraded",
@@ -1544,7 +1544,7 @@ data:
                     "step": 60
                   },
                   {
-                    "expr": "ceph_misplaced_objects",
+                    "expr": "ceph_num_objects_misplaced",
                     "interval": "$interval",
                     "intervalFactor": 1,
                     "legendFormat": "Misplaced",
@@ -1631,7 +1631,7 @@ data:
                 "steppedLine": false,
                 "targets": [
                   {
-                    "expr": "sum(ceph_osd_pgs)",
+                    "expr": "sum(ceph_osd_numpg)",
                     "interval": "$interval",
                     "intervalFactor": 1,
                     "legendFormat": "Total",
@@ -1639,7 +1639,7 @@ data:
                     "step": 60
                   },
                   {
-                    "expr": "ceph_degraded_pgs",
+                    "expr": "ceph_pg_degraded",
                     "interval": "$interval",
                     "intervalFactor": 1,
                     "legendFormat": "Degraded",
@@ -1647,7 +1647,7 @@ data:
                     "step": 60
                   },
                   {
-                    "expr": "ceph_stale_pgs",
+                    "expr": "ceph_pg_stale",
                     "interval": "$interval",
                     "intervalFactor": 1,
                     "legendFormat": "Stale",

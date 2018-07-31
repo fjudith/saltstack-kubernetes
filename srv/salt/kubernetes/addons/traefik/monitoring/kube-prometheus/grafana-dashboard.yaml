@@ -79,7 +79,7 @@ data:
                 "tableColumn": "",
                 "targets": [
                   {
-                    "expr": "time() - process_start_time_seconds{job=\"load-balancer\"}",
+                    "expr": "time() - avg(process_start_time_seconds{service=\"traefik-web-ui\"})",
                     "intervalFactor": 2,
                     "refId": "A",
                     "step": 1800
@@ -130,7 +130,7 @@ data:
                 "steppedLine": false,
                 "targets": [
                   {
-                    "expr": "sum(traefik_requests_total{service=\"http\"})",
+                    "expr": "sum(traefik_entrypoint_requests_total{entrypoint=\"http\"})",
                     "interval": "",
                     "intervalFactor": 2,
                     "legendFormat": "{{http}}",
@@ -139,7 +139,7 @@ data:
                     "step": 240
                   },
                   {
-                    "expr": "sum(traefik_requests_total{service=\"https\"})",
+                    "expr": "sum(traefik_entrypoint_requests_total{entrypoint=\"https\"})",
                     "interval": "",
                     "intervalFactor": 2,
                     "legendFormat": "{{https}}",
@@ -215,7 +215,7 @@ data:
                 "steppedLine": false,
                 "targets": [
                   {
-                    "expr": "sum(traefik_request_duration_seconds_sum) / sum(traefik_requests_total) * 1000",
+                    "expr": "sum(traefik_entrypoint_request_duration_seconds_sum) / sum(traefik_entrypoint_requests_total) * 1000",
                     "intervalFactor": 2,
                     "legendFormat": "Average response time (ms)",
                     "refId": "A",
@@ -290,7 +290,7 @@ data:
                 "steppedLine": false,
                 "targets": [
                   {
-                    "expr": "sum(rate(traefik_requests_total[5m]))",
+                    "expr": "sum(rate(traefik_entrypoint_requests_total[5m]))",
                     "interval": "",
                     "intervalFactor": 2,
                     "legendFormat": "{{requests}}",
@@ -379,7 +379,7 @@ data:
                 "steppedLine": false,
                 "targets": [
                   {
-                    "expr": "rate(traefik_requests_total{service=~\"http|https\",code=\"200\"}[5m])",
+                    "expr": "rate(traefik_entrypoint_requests_total{entrypoint=~\"http|https\",code=\"200\"}[5m])",
                     "intervalFactor": 2,
                     "legendFormat": "{{service}} {{method}} {{code}}",
                     "refId": "A",
@@ -455,7 +455,7 @@ data:
                 "steppedLine": false,
                 "targets": [
                   {
-                    "expr": "rate(traefik_requests_total{service=~\"http|https\",code!=\"200\"}[5m])",
+                    "expr": "rate(traefik_entrypoint_requests_total{entrypoint=~\"http|https\",code!=\"200\"}[5m])",
                     "intervalFactor": 2,
                     "legendFormat": "{{service}} {{method}} {{code}}",
                     "refId": "A",

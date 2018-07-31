@@ -1655,7 +1655,7 @@ data:
                     "step": 60
                   },
                   {
-                    "expr": "ceph_unclean_pgs",
+                    "expr": "ceph_pg_unknown",
                     "interval": "$interval",
                     "intervalFactor": 1,
                     "legendFormat": "Unclean",
@@ -1663,7 +1663,7 @@ data:
                     "step": 60
                   },
                   {
-                    "expr": "ceph_undersized_pgs",
+                    "expr": "ceph_pg_undersized",
                     "interval": "$interval",
                     "intervalFactor": 1,
                     "legendFormat": "Undersized",

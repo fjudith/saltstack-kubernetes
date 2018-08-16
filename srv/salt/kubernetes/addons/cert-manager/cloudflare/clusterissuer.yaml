@@ -1,0 +1,22 @@
+{%- from "kubernetes/map.jinja" import common with context -%}
+
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Issuer
+metadata:
+  name: letsencrypt
+  namespace: default
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: {{ common.addons.cert_manager.acme_email }}
+    privateKeySecretRef:
+      name: letsencrypt
+    dns01:
+      providers:
+        - name: {{ common.addons.cert_manager.dns.provider }}
+          cloudflare:
+            email: {{ common.addons.cert_manager.dns.email }}
+            # A secretKeyRef to a cloudflare api key
+            apiKeySecretRef:
+              name: public-dns-secret
+              key: apikey

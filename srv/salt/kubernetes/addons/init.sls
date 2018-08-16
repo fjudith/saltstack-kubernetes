@@ -35,13 +35,16 @@ include:
 {%- if common.addons.get('fluentd-elasticsearch', {'enabled': False}).enabled %}
   - kubernetes.addons.fluentd-elasticsearch
 {%- endif -%}
-{%- if common.addons.get('ingress-nginx', {'enabled': False}).enabled %}
+{%- if common.addons.get('cert_manager', {'enabled': False}).enabled %}
+  - kubernetes.addons.cert-manager
+{%- endif -%}
+{%- if common.addons.get('ingress_nginx', {'enabled': False}).enabled %}
   - kubernetes.addons.ingress-nginx
 {%- endif -%}
-{%- if common.addons.get('ingress-traefik', {'enabled': False}).enabled %}
+{%- if common.addons.get('ingress_traefik', {'enabled': False}).enabled %}
   - kubernetes.addons.traefik
 {%- endif -%}
-{%- if common.addons.get('ingress-istio', {'enabled': False}).enabled %}
+{%- if common.addons.get('ingress_istio', {'enabled': False}).enabled %}
   - kubernetes.addons.istio
 {%- endif -%}
 {%- if common.addons.get('kube-prometheus', {'enabled': False}).enabled %}

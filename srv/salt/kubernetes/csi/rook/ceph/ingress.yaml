@@ -1,5 +1,7 @@
 {%- set public_domain = pillar['public-domain'] -%}
+{%- from "kubernetes/map.jinja" import common with context -%}
 
+{%- if common.addons.get('ingress_traefik', {'enabled': False}).enabled %}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
@@ -14,3 +16,28 @@ spec:
         backend:
           serviceName: rook-ceph-mgr-dashboard-external
           servicePort: dashboard
+---
+{% endif %}
+
+{%- if common.addons.get('ingress_istio', {'enabled': False}).enabled -%}
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: rook-ceph-mgr-dashboard
+  namespace: default
+spec:
+  gateways:
+  - istio-gateway
+  hosts:
+  - ceph.{{ public_domain }}
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: rook-ceph-mgr-dashboard-external.rook-ceph.svc.cluster.local
+        port:
+          number: 7000
+---
+{% endif %}

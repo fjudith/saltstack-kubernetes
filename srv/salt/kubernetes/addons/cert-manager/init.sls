@@ -5,7 +5,7 @@ addon-cert-manager:
     - name: https://github.com/jetstack/cert-manager
     - target: /srv/kubernetes/manifests/cert-manager
     - force_reset: True
-    - rev: v0.4.0
+    - rev: v0.4.1
 
 /srv/kubernetes/manifests/cert-manager/clusterissuer.yaml:
   file.managed:

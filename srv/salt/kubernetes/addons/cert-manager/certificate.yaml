@@ -12,8 +12,9 @@ spec:
     - dns01:
         provider: {{ common.addons.cert_manager.dns.provider }}
       domains:
+      - '*.{{ public_domain }}'
       - {{ public_domain }}
-  commonName: my.domain.com
+  commonName: '*.{{ public_domain }}'
   dnsNames:
   - {{ public_domain }}
   issuerRef:

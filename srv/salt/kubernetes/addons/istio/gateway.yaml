@@ -4,15 +4,18 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: web-gateway
-  namespace: test
+  name: istio-gateway
+  namespace: default
 spec:
   selector:
     istio: ingressgateway
   servers:
   - hosts:
-    - kubernetes.{{ public_domain }}
-    - kubernetes.{{ public_domain }}:443
+    - '*'
+    # - istio-tracing.{{ public_domain }}
+    # - prometheus.{{ public_domain }}
+    # - grafana.{{ public_domain }}
+    # - alertmanager.{{ public_domain }}
     port:
       name: https
       number: 443
@@ -21,3 +24,4 @@ spec:
       mode: SIMPLE
       privateKey: /etc/istio/ingressgateway-certs/tls.key
       serverCertificate: /etc/istio/ingressgateway-certs/tls.crt
+---

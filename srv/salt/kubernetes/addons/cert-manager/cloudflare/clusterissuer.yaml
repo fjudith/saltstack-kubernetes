@@ -1,10 +1,10 @@
 {%- from "kubernetes/map.jinja" import common with context -%}
 
 apiVersion: certmanager.k8s.io/v1alpha1
-kind: Issuer
+kind: ClusterIssuer
 metadata:
   name: letsencrypt
-  namespace: default
+  namespace: cert-manager
 spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory
@@ -19,4 +19,4 @@ spec:
             # A secretKeyRef to a cloudflare api key
             apiKeySecretRef:
               name: public-dns-secret
-              key: apikey
+              key: secret-access-key

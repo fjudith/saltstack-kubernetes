@@ -43,6 +43,8 @@ kubernetes:
           secret: my_cloudflare_api_key
       fluentd-elasticsearch:
         enabled: True
+      weave-scope:
+        enabled: True
   etcd:
     host: 127.0.0.1
     members:

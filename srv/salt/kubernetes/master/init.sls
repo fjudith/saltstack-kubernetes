@@ -267,5 +267,32 @@ flannel-install:
     - runas: root
     - name: kubectl apply -f /etc/kubernetes/manifests/flannel.yaml
 
-  
+{% elif cni_provider == "weave" %}
+
+/etc/kubernetes/manifests/weave.yaml:
+    file.managed:
+    - source: salt://kubernetes/cni/weave/weave.yaml
+    - user: root
+    - template: jinja
+    - group: root
+    - mode: 644
+
+weave-wait:
+  cmd.run:
+    - require:
+      - file: /etc/kubernetes/manifests/weave.yaml
+    - runas: root
+    - name: until curl --silent "http://127.0.0.1:8080/apis/extensions/v1beta1" | grep daemonset; do printf 'Kubernetes API and extension not ready to deploy WeaveNet' && sleep 5; done
+    - use_vt: True
+    - timeout: 900
+
+weave-install:
+  cmd.run:
+    - require:
+      - cmd: weave-wait
+    - watch:
+      - file: /etc/kubernetes/manifests/weave.yaml
+    - runas: root
+    - name: kubectl apply -f /etc/kubernetes/manifests/weave.yaml
+
 {% endif %}

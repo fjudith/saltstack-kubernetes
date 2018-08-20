@@ -53,3 +53,6 @@ include:
 {%- if common.addons.get('helm', {'enabled': False}).enabled %}
   - kubernetes.addons.helm
 {%- endif -%}
+{%- if common.addons.get('weave-scope', {'enabled': False}).enabled %}
+  - kubernetes.addons.weave-scope
+{%- endif -%}

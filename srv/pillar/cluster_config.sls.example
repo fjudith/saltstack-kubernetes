@@ -25,13 +25,22 @@ kubernetes:
       dashboard:
         enabled: True
       ingress_traefik:
-        enabled: True
+        enabled: False
         password: '$apr1$mHqffeCI$8Bl8/cCsjejRsAYt7qFrj/'
-        acme_email: user.name@example.com
+        acme_email:  user.name@example.com
       npd:
         enabled: True
-      ingress-nginx:
+      ingress_nginx:
         enabled: False
+      ingress_istio:
+        enabled: True
+      cert_manager:
+        enabled: True
+        acme_email: florian.judith.b@gmail.com
+        dns:
+          provider: cloudflare
+          email: user.name@example.com
+          secret: my_cloudflare_api_key
       fluentd-elasticsearch:
         enabled: True
   etcd:

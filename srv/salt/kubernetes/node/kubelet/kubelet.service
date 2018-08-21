@@ -14,7 +14,7 @@
 {% if role == "proxy" %}
   {%- set node_labels = ",node-role.kubernetes.io/ingress=true" -%}
 {% else %}
-  {%- set node_labels = "" -%}
+  {%- set node_labels = ",node-role.kubernetes.io/storage-node=true" -%}
 {% endif %}
 
 [Service]

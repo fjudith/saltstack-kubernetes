@@ -60,7 +60,6 @@ spec:
     - --storage-media-type=application/json
     - --tls-cert-file=/etc/kubernetes/ssl/apiserver.pem
     - --tls-private-key-file=/etc/kubernetes/ssl/apiserver-key.pem
-    - --tls-ca-file=/etc/kubernetes/ssl/ca.pem
     - --token-auth-file=/etc/kubernetes/token.csv
     - --v=2
     livenessProbe:

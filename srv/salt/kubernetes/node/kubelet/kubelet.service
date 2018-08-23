@@ -14,7 +14,7 @@
 {% if role == "proxy" %}
   {%- set node_labels = ",node-role.kubernetes.io/ingress=true" -%}
 {% else %}
-  {%- set node_labels = ",node-role.kubernetes.io/storage-node=true" -%}
+  {%- set node_labels = ",role=storage-node" -%}
 {% endif %}
 
 [Service]
@@ -70,6 +70,9 @@ ExecStart=/usr/lib/coreos/kubelet-wrapper \
   --fail-swap-on=false \
   {%- if "18.04" in salt['grains.get']('osrelease') %}
   --resolv-conf=/run/systemd/resolve/resolv.conf \
+  {%- endif %}
+  {%- if "node" in grains.get('role', []) %}
+  --register-with-taints=storage-node=:NoSchedule \
   {%- endif %}
   --v=2
 ExecStop=-/usr/bin/rkt stop --uuid-file=/var/run/kubelet-pod.uuid

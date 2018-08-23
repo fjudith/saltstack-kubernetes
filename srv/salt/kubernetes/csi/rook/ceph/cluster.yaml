@@ -90,9 +90,15 @@ spec:
       - key: storage-node
         operator: Exists
 # The above placement information can also be specified for mon, osd, and mgr components
-#    mon:
-#    osd:
-#    mgr:
+    mgr:
+      nodeAffinity:
+      tolerations:
+    mon:
+      nodeAffinity:
+      tolerations:
+    osd:
+      nodeAffinity:
+      tolerations:
   resources:
 # The requests and limits set here, allow the mgr pod to use half of one CPU core and 1 gigabyte of memory
 #    mgr:

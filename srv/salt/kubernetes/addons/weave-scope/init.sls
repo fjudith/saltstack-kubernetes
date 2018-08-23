@@ -25,3 +25,24 @@ kubernetes-weave-scope-install:
       - /srv/kubernetes/manifests/weave-scope/scope.yaml
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/weave-scope/scope.yaml
+
+{% if common.addons.get('ingress_istio', {'enabled': False}).enabled -%}
+/srv/kubernetes/manifests/weave-scope/virtualservice.yaml:
+    require:
+    - file: /srv/kubernetes/manifests/weave-scope
+    file.managed:
+    - source: salt://kubernetes/addons/weave-scope/virtualservice.yaml
+    - user: root
+    - template: jinja
+    - group: root
+    - mode: 644
+
+kubernetes-weave-scope-ingress-install:
+  cmd.run:
+    - require:
+      - cmd: kubernetes-wait
+    - watch:
+      - /srv/kubernetes/manifests/weave-scope/virtualservice.yaml
+    - name: |
+        kubectl apply -f /srv/kubernetes/manifests/weave-scope/virtualservice.yaml
+{% endif %}

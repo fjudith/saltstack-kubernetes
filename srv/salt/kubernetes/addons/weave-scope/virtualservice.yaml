@@ -1,0 +1,23 @@
+{%- set public_domain = pillar['public-domain'] -%}
+{%- from "kubernetes/map.jinja" import common with context -%}
+
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: weave-scope
+  namespace: default
+spec:
+  gateways:
+  - istio-gateway
+  hosts:
+  - scope.{{ public_domain }}
+  http:
+  - match:
+    - uri:
+        prefix: "/"
+    route:
+    - destination:
+        host: weave-scope.weave.svc.cluster.local
+        port:
+          number: 440
+---

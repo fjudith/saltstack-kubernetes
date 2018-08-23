@@ -24,14 +24,6 @@
     - dir_mode: 750
     - makedirs: True
 
-/srv/kubernetes/manifests/rook/monitoring/grafana:
-    file.recurse:
-    - source: salt://kubernetes/csi/rook/monitoring/grafana
-    - include_empty: True
-    - user: root
-    - group: root
-    - file_mode: 644
-
 /srv/kubernetes/manifests/rook/monitoring/kube-prometheus:
   file.directory:
     - user: root

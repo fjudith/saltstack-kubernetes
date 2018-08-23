@@ -1,20 +1,6 @@
 {%- from "kubernetes/map.jinja" import common with context -%}
 {%- from "kubernetes/map.jinja" import master with context -%}
 
-kubernetes-wait:
-  cmd.run:
-    - runas: root
-    - name: until curl --silent 'http://127.0.0.1:8080/version/'; do printf 'Kubernetes API and extension not ready' && sleep 5; done
-    - use_vt: True
-    - timeout: 300
-
-/srv/kubernetes/manifests:
-  file.directory:
-    - user: root
-    - group: root
-    - dir_mode: 750
-    - makedirs: True
-
 include:
   - kubernetes.addons.default-cluster-role-binding
 {%- if common.addons.dns.get('coredns', {'enabled': False}).enabled %}

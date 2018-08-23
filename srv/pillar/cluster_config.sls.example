@@ -123,6 +123,9 @@ kubernetes:
     helm-version: v2.8.2
     dashboard-version: v1.8.3
 tinyproxy:
+  User: tinyproxy
+  Group: tinyproxy
+  config: /etc/tinyproxy/tinyproxy.conf
   MaxClients: 200
   MinSpareServers: 10
   MaxSpareServers: 40

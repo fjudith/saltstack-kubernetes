@@ -17,7 +17,7 @@ spec:
         prefix: "/"
     route:
     - destination:
-        host: weave-scope.weave.svc.cluster.local
+        host: weave-scope-app.weave.svc.cluster.local
         port:
-          number: 440
+          number: 80
 ---

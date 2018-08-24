@@ -5,7 +5,7 @@ addon-prometheus-operator:
     - name: https://github.com/coreos/prometheus-operator
     - target: /srv/kubernetes/manifests/prometheus-operator
     - force_reset: True
-    - rev: v0.23.1
+    - rev: v0.23.2
 
 /srv/kubernetes/manifests/prometheus-operator/contrib/kube-prometheus/manifests/kube-prometheus-ingress.yaml:
     file.managed:
@@ -29,8 +29,6 @@ addon-prometheus-operator:
 
 kubernetes-kube-prometheus-install:
   cmd.run:
-    - require:
-      - cmd: kubernetes-wait
     - watch:
         - git:  addon-prometheus-operator
         - file: /srv/kubernetes/manifests/prometheus-operator/contrib/kube-prometheus/manifests/kube-prometheus-ingress.yaml
@@ -39,3 +37,4 @@ kubernetes-kube-prometheus-install:
     - use_vt: True
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/prometheus-operator/contrib/kube-prometheus/manifests/
+    - unless: curl --silent 'http://127.0.0.1:8080/version/'

@@ -11,8 +11,6 @@
 
 kubernetes-nginx-install:
   cmd.run:
-    - require:
-      - cmd: kubernetes-wait
     - watch:
       - /srv/kubernetes/manifests/ingress-nginx/namespace.yaml
       - /srv/kubernetes/manifests/ingress-nginx/configmap.yaml
@@ -29,3 +27,4 @@ kubernetes-nginx-install:
         kubectl apply -f /srv/kubernetes/manifests/ingress-nginx/rbac.yaml
         kubectl apply -f /srv/kubernetes/manifests/ingress-nginx/default-backend.yaml
         kubectl apply -f /srv/kubernetes/manifests/ingress-nginx/with-rbac.yaml
+    - unless: curl --silent 'http://127.0.0.1:8080/version/'

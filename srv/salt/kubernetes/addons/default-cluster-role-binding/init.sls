@@ -1,12 +1,5 @@
 {%- from "kubernetes/map.jinja" import common with context -%}
 
-kubernetes-wait:
-  cmd.run:
-    - runas: root
-    - name: until curl --silent 'http://127.0.0.1:8080/version/'; do printf 'Kubernetes API and extension not ready' && sleep 5; done
-    - use_vt: True
-    - timeout: 300
-
 /srv/kubernetes/manifests:
   file.directory:
     - user: root
@@ -32,8 +25,6 @@ kubernetes-wait:
 
 kubernetes-role-install:
   cmd.run:
-    - require:
-      - cmd: kubernetes-wait
     - watch:
       - file: /srv/kubernetes/manifests/kube-apiserver-crb.yaml
       - file: /srv/kubernetes/manifests/kubelet-crb.yaml
@@ -42,3 +33,4 @@ kubernetes-role-install:
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/kube-apiserver-crb.yaml
         kubectl apply -f /srv/kubernetes/manifests/kubelet-crb.yaml
+    - unless: curl --silent 'http://127.0.0.1:8080/version/'

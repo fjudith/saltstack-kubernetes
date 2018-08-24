@@ -19,12 +19,12 @@
 
 kubernetes-weave-scope-install:
   cmd.run:
-    - require:
-      - cmd: kubernetes-wait
     - watch:
       - /srv/kubernetes/manifests/weave-scope/scope.yaml
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/weave-scope/scope.yaml
+    - unless: curl --silent 'http://127.0.0.1:8080/version/'
+
 
 {% if common.addons.get('ingress_istio', {'enabled': False}).enabled -%}
 /srv/kubernetes/manifests/weave-scope/virtualservice.yaml:
@@ -39,10 +39,9 @@ kubernetes-weave-scope-install:
 
 kubernetes-weave-scope-ingress-install:
   cmd.run:
-    - require:
-      - cmd: kubernetes-wait
     - watch:
       - /srv/kubernetes/manifests/weave-scope/virtualservice.yaml
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/weave-scope/virtualservice.yaml
+    - unless: curl --silent 'http://127.0.0.1:8080/version/'
 {% endif %}

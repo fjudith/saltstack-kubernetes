@@ -10,10 +10,9 @@
 
 kubernetes-dashboard-install:
   cmd.run:
-    - require:
-      - cmd: kubernetes-wait
     - watch:
       - /srv/kubernetes/manifests/kube-dashboard.yaml
     - name: |
         if ! curl --silent http://127.0.0.1:8080/api/v1/namespaces/kube-system/secrets | grep kubernetes-dashboard-certs ; then kubectl --namespace kube-system create secret generic kubernetes-dashboard-certs --from-file=/etc/kubernetes/ssl/dashboard-key.pem --from-file=/etc/kubernetes/ssl/dashboard.pem; fi
         kubectl apply -f /srv/kubernetes/manifests/kube-dashboard.yaml
+    - unless: curl --silent 'http://127.0.0.1:8080/version/'

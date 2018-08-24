@@ -31,8 +31,6 @@ addon-cert-manager:
 
 kubernetes-cert-manager-install:
   cmd.run:
-    - require:
-      - cmd: kubernetes-wait
     - watch:
         - git:  addon-cert-manager
         - file: /srv/kubernetes/manifests/cert-manager/clusterissuer.yaml
@@ -44,3 +42,4 @@ kubernetes-cert-manager-install:
         kubectl -n cert-manager create secret generic public-dns-secret --from-literal=secret-access-key="{{ common.addons.cert_manager.dns.secret }}"
         kubectl apply -f /srv/kubernetes/manifests/cert-manager/clusterissuer.yaml
         kubectl apply -f /srv/kubernetes/manifests/cert-manager/certificate.yaml
+    - unless: curl --silent 'http://127.0.0.1:8080/version/'

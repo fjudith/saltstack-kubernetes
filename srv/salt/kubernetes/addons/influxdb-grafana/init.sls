@@ -34,13 +34,12 @@
 
 kubernetes-heapster-influxdb-install:
   cmd.run:
-    - require:
-      - cmd: kubernetes-wait
     - watch:
       - /srv/kubernetes/manifests/heapster.yaml
       - /srv/kubernetes/manifests/heapster-rbac.yaml
       - /srv/kubernetes/manifests/heapster-service.yaml
       - /srv/kubernetes/manifests/influxdb-grafana.yaml
+    - unless: curl --silent 'http://127.0.0.1:8080/version/'
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/heapster.yaml
         kubectl apply -f /srv/kubernetes/manifests/heapster-rbac.yaml

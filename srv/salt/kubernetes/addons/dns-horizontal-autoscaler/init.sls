@@ -10,9 +10,8 @@
 
 kubernetes-dns-horizontal-autoscaler-install:
   cmd.run:
-    - require:
-      - cmd: kubernetes-wait
     - watch:
       - /srv/kubernetes/manifests/dns-horizontal-autoscaler.yaml
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/dns-horizontal-autoscaler.yaml
+    - unless: curl --silent 'http://127.0.0.1:8080/version/'

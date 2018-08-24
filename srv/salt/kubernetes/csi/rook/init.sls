@@ -192,26 +192,15 @@
 
 rook-operator-install:
   cmd.run:
-    - require:
-      - cmd: kubernetes-wait
     - watch:
       - file: /srv/kubernetes/manifests/rook/ceph/operator.yaml
+    - unless: curl --silent 'http://127.0.0.1:8080/version/'
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/rook/ceph/operator.yaml
-
-rook-operator-wait:
-  cmd.run:
-    - require:
-      - cmd: rook-operator-install
-    - runas: root
-    - name: until kubectl -n rook-ceph-system get pods --field-selector=status.phase=Running | grep rook-ceph-operator; do printf 'rook-ceph-operator not ready' && sleep 5; done
-    - use_vt: True
-    - timeout: 300
 
 rook-cluster-install:
   cmd.run:
     - require:
-      - cmd: rook-operator-wait
       - cmd: rook-operator-install
     - watch:
       - file: /srv/kubernetes/manifests/rook/rbac.yaml
@@ -222,6 +211,7 @@ rook-cluster-install:
       - file: /srv/kubernetes/manifests/rook/ceph/storageclass.yaml
       - file: /srv/kubernetes/manifests/rook/ceph/dashboard-external.yaml
       - file: /srv/kubernetes/manifests/rook/ceph/ingress.yaml
+    - unless: kubectl -n rook-ceph-system get pods --field-selector=status.phase=Running | grep rook-ceph-operator
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/rook/rbac.yaml
         kubectl apply -f /srv/kubernetes/manifests/rook/ceph/cluster.yaml
@@ -232,19 +222,9 @@ rook-cluster-install:
         kubectl apply -f /srv/kubernetes/manifests/rook/ceph/dashboard-external.yaml
         kubectl apply -f /srv/kubernetes/manifests/rook/ceph/ingress.yaml
 
-rook-cluster-wait:
-  cmd.run:
-    - require:
-      - cmd: rook-cluster-install
-    - runas: root
-    - name: until kubectl -n rook-ceph get pods --field-selector=status.phase=Running | grep rook-ceph-mgr; do printf 'rook-ceph-mgr not ready' && sleep 5; done
-    - use_vt: True
-    - timeout: 300
-
 rook-monitoring-install:
   cmd.run:
     - require:
-      - cmd: rook-cluster-wait
       - cmd: rook-cluster-install
     - watch:
       - file: /srv/kubernetes/manifests/rook/ceph/toolbox.yaml
@@ -265,5 +245,5 @@ rook-monitoring-install:
         kubectl apply -f /srv/kubernetes/manifests/rook/monitoring/prometheus-service.yaml
         kubectl apply -f /srv/kubernetes/manifests/rook/monitoring/service-monitor.yaml
         {%- endif %}
-        
+    - unless: kubectl -n rook-ceph get pods --field-selector=status.phase=Running | grep rook-ceph-mgr
 {% endif %}

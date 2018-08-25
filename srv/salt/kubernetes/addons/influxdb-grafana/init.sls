@@ -39,7 +39,7 @@ kubernetes-heapster-influxdb-install:
       - /srv/kubernetes/manifests/heapster-rbac.yaml
       - /srv/kubernetes/manifests/heapster-service.yaml
       - /srv/kubernetes/manifests/influxdb-grafana.yaml
-    - unless: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/heapster.yaml
         kubectl apply -f /srv/kubernetes/manifests/heapster-rbac.yaml

@@ -49,4 +49,4 @@ kubernetes-helm-install:
         kubectl apply -f /srv/kubernetes/manifests/helm/helm-rbac.yaml
         kubectl apply -f /srv/kubernetes/manifests/helm/helm-tiller.yaml
         kubectl apply -f /srv/kubernetes/manifests/helm/helm-serviceaccount.yaml
-    - unless: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'

@@ -15,4 +15,4 @@ kubernetes-fluentd-elasticsearch-install:
       - file: /srv/kubernetes/manifests/fluentd-elasticsearch
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/fluentd-elasticsearch/
-    - unless: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'

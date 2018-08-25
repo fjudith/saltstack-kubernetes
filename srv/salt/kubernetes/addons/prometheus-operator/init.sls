@@ -36,5 +36,6 @@ kubernetes-kube-prometheus-install:
     - runas: root
     - use_vt: True
     - name: |
-        kubectl apply -f /srv/kubernetes/manifests/prometheus-operator/contrib/kube-prometheus/manifests/
-    - unless: curl --silent 'http://127.0.0.1:8080/version/'
+        kubectl apply -f /srv/kubernetes/manifests/prometheus-operator/contrib/kube-prometheus/manifests/ || true
+        kubectl apply -f /srv/kubernetes/manifests/prometheus-operator/contrib/kube-prometheus/manifests/ 2>/dev/null || true
+    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'

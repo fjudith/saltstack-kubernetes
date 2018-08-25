@@ -248,15 +248,22 @@ flannel-etcd-config:
     - name: |
         curl --cacert /etc/kubernetes/ssl/ca.pem --key /etc/kubernetes/ssl/master-key.pem --cert /etc/kubernetes/ssl/master.pem --silent -X PUT -d "value={\"Network\":\"{{ ipv4Range }}\",\"Backend\":{\"Type\":\"vxlan\"}}" "https://{{ etcd.members[0].host }}:2379/v2/keys/coreos.com/network/config?prevExist=false"
 
+query-fannel-required-api:
+  http.wait_for_successful_query:
+    - name: 'http://127.0.0.1:8080/apis/extensions/v1beta1/daemonsets'
+    - wait_for: 900
+    - request_interval: 5
+    - status: 200
+
 flannel-install:
   cmd.run:
     - require:
       - cmd: flannel-etcd-config
+      - http: query-fannel-required-api
     - watch:
       - file: /etc/kubernetes/manifests/flannel.yaml
     - runas: root
     - name: kubectl apply -f /etc/kubernetes/manifests/flannel.yaml
-    - unless: curl --silent "http://127.0.0.1:8080/apis/extensions/v1beta1" | grep daemonset
 
 {% elif cni_provider == "weave" %}
 
@@ -268,12 +275,20 @@ flannel-install:
     - group: root
     - mode: 644
 
+query-weave-required-api:
+  http.wait_for_successful_query:
+    - name: 'http://127.0.0.1:8080/apis/extensions/v1beta1/daemonsets'
+    - wait_for: 900
+    - request_interval: 5
+    - status: 200
+
 weave-install:
   cmd.run:
+    - require:
+      - http: query-weave-required-api
     - watch:
       - file: /etc/kubernetes/manifests/weave.yaml
     - runas: root
     - name: kubectl apply -f /etc/kubernetes/manifests/weave.yaml
-    - unless: unless: curl --silent "http://127.0.0.1:8080/apis/extensions/v1beta1" | grep daemonset
 
 {% endif %}

@@ -14,4 +14,4 @@ kubernetes-coredns-install:
       - /srv/kubernetes/manifests/coredns.yaml
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/coredns.yaml
-    - unless: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'

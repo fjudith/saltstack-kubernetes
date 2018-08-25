@@ -53,4 +53,4 @@ kubernetes-traefik-install:
         kubectl apply -f /srv/kubernetes/manifests/traefik/monitoring/kube-prometheus/service-monitor.yaml
         kubectl apply -f /srv/kubernetes/manifests/traefik/monitoring/kube-prometheus/grafana-dashboard.yaml
         {%- endif %}
-    - unless: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'

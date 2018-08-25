@@ -63,4 +63,4 @@ kubernetes-istio-install:
         kubectl apply -f /srv/kubernetes/manifests/istio/istio.yaml
         kubectl apply -f /srv/kubernetes/manifests/istio/gateway.yaml
         kubectl apply -f /srv/kubernetes/manifests/istio/monitoring/istio-dashboard.yaml
-    - unless: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'

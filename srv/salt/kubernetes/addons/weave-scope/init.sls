@@ -23,7 +23,7 @@ kubernetes-weave-scope-install:
       - /srv/kubernetes/manifests/weave-scope/scope.yaml
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/weave-scope/scope.yaml
-    - unless: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
 
 
 {% if common.addons.get('ingress_istio', {'enabled': False}).enabled -%}
@@ -43,5 +43,5 @@ kubernetes-weave-scope-ingress-install:
       - /srv/kubernetes/manifests/weave-scope/virtualservice.yaml
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/weave-scope/virtualservice.yaml
-    - unless: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
 {% endif %}

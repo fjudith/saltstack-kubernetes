@@ -36,10 +36,10 @@ kubernetes-cert-manager-install:
         - file: /srv/kubernetes/manifests/cert-manager/clusterissuer.yaml
     - runas: root
     - use_vt: True
+    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/cert-manager/contrib/manifests/cert-manager/with-rbac.yaml
         kubectl -n cert-manager delete secret public-dns-secret
         kubectl -n cert-manager create secret generic public-dns-secret --from-literal=secret-access-key="{{ common.addons.cert_manager.dns.secret }}"
         kubectl apply -f /srv/kubernetes/manifests/cert-manager/clusterissuer.yaml
         kubectl apply -f /srv/kubernetes/manifests/cert-manager/certificate.yaml
-    - unless: curl --silent 'http://127.0.0.1:8080/version/'

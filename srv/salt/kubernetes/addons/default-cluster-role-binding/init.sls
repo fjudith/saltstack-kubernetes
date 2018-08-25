@@ -33,4 +33,4 @@ kubernetes-role-install:
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/kube-apiserver-crb.yaml
         kubectl apply -f /srv/kubernetes/manifests/kubelet-crb.yaml
-    - unless: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'

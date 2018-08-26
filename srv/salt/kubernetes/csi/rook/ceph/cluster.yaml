@@ -84,11 +84,11 @@ spec:
               operator: In
               values:
               - storage-node
-      podAffinity:
-      podAntiAffinity:
-      tolerations:
-      - key: storage-node
-        operator: Exists
+      # podAffinity:
+      # podAntiAffinity:
+      # tolerations:
+      # - key: storage-node
+      #   operator: Exists
 # The above placement information can also be specified for mon, osd, and mgr components
     mgr:
       nodeAffinity:

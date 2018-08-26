@@ -1,0 +1,32 @@
+{%- set public_domain = pillar['public-domain'] -%}
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+ name: prometheus-dashboard
+ namespace: monitoring
+ annotations:
+   kubernetes.io/ingress.class: traefik
+   # ingress.kubernetes.io/auth-type: "basic"
+   # ingress.kubernetes.io/auth-secret: "mysecret"
+spec:
+ rules:
+ - host: prometheus.{{ public_domain }}
+   http:
+     paths:
+     - backend:
+         serviceName: prometheus-k8s
+         servicePort: 9090
+ - host: alert.{{ public_domain }}
+   http:
+     paths:
+     - backend:
+         serviceName: alertmanager-main
+         servicePort: 9093
+ - host: grafana.{{ public_domain }}
+   http:
+     paths:
+     - backend:
+         serviceName: grafana
+         servicePort: 3000
+---

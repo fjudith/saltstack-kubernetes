@@ -250,7 +250,8 @@ flannel-etcd-config:
 
 query-fannel-required-api:
   http.wait_for_successful_query:
-    - name: 'http://127.0.0.1:8080/apis/extensions/v1beta1/daemonsets'
+    - name: 'http://127.0.0.1:8080/apis/extensions/v1beta1'
+    - match: DaemonSet
     - wait_for: 900
     - request_interval: 5
     - status: 200
@@ -277,7 +278,8 @@ flannel-install:
 
 query-weave-required-api:
   http.wait_for_successful_query:
-    - name: 'http://127.0.0.1:8080/apis/extensions/v1beta1/daemonsets'
+    - name: 'http://127.0.0.1:8080/apis/extensions/v1beta1'
+    - match: DaemonSet
     - wait_for: 900
     - request_interval: 5
     - status: 200

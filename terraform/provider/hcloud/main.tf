@@ -112,6 +112,8 @@ resource "hcloud_server" "proxy01" {
 
   provisioner "remote-exec" {
     inline = [
+      "while [ ! -f /var/lib/apt/lists/lock ]; do sleep 1; done",
+      "while [ ! -f /var/lib/dpkg/lock ]; do sleep 1; done",
       "while fuser /var/lib/apt/lists/lock >/dev/null 2>&1; do sleep 1; done",
       "while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 1; done",
       "apt-get update -yqq",
@@ -194,6 +196,8 @@ resource "hcloud_server" "proxy02" {
 
   provisioner "remote-exec" {
     inline = [
+      "while [ ! -f /var/lib/apt/lists/lock ]; do sleep 1; done",
+      "while [ ! -f /var/lib/dpkg/lock ]; do sleep 1; done",
       "while fuser /var/lib/apt/lists/lock >/dev/null 2>&1; do sleep 1; done",
       "while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 1; done",
       "apt-get update -yqq",
@@ -251,6 +255,8 @@ resource "hcloud_server" "etcd" {
 
   provisioner "remote-exec" {
     inline = [
+      "while [ ! -f /var/lib/apt/lists/lock ]; do sleep 1; done",
+      "while [ ! -f /var/lib/dpkg/lock ]; do sleep 1; done",
       "while fuser /var/lib/apt/lists/lock >/dev/null 2>&1; do sleep 1; done",
       "while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 1; done",
       "apt-get update -yqq",
@@ -306,6 +312,8 @@ resource "hcloud_server" "master" {
 
   provisioner "remote-exec" {
     inline = [
+      "while [ ! -f /var/lib/apt/lists/lock ]; do sleep 1; done",
+      "while [ ! -f /var/lib/dpkg/lock ]; do sleep 1; done",
       "while fuser /var/lib/apt/lists/lock >/dev/null 2>&1; do sleep 1; done",
       "while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 1; done",
       "apt-get update -yqq",
@@ -361,6 +369,8 @@ resource "hcloud_server" "node" {
 
   provisioner "remote-exec" {
     inline = [
+      "while [ ! -f /var/lib/apt/lists/lock ]; do sleep 1; done",
+      "while [ ! -f /var/lib/dpkg/lock ]; do sleep 1; done",
       "while fuser /var/lib/apt/lists/lock >/dev/null 2>&1; do sleep 1; done",
       "while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 1; done",
       "apt-get update -yqq",

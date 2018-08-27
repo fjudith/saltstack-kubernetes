@@ -71,9 +71,6 @@ ExecStart=/usr/lib/coreos/kubelet-wrapper \
   {%- if "18.04" in salt['grains.get']('osrelease') %}
   --resolv-conf=/run/systemd/resolve/resolv.conf \
   {%- endif %}
-  {%- if "node" in grains.get('role', []) %}
-  --register-with-taints=storage-node=:NoSchedule \
-  {%- endif %}
   --v=2
 ExecStop=-/usr/bin/rkt stop --uuid-file=/var/run/kubelet-pod.uuid
 Restart=always

@@ -219,7 +219,7 @@ rook-cluster-install:
       - file: /srv/kubernetes/manifests/rook/ceph/storageclass.yaml
       - file: /srv/kubernetes/manifests/rook/ceph/dashboard-external.yaml
       - file: /srv/kubernetes/manifests/rook/ceph/ingress.yaml
-    - onlyif: kubectl -n rook-ceph-system get pods --field-selector=status.phase=Running | grep rook-ceph-operator
+    - onlyif: until kubectl -n rook-ceph-system get pods --field-selector=status.phase=Running | grep rook-ceph-operator; do sleep 1; done
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/rook/rbac.yaml
         kubectl apply -f /srv/kubernetes/manifests/rook/ceph/cluster.yaml
@@ -250,7 +250,7 @@ rook-monitoring-install:
       - file: /srv/kubernetes/manifests/rook/monitoring/kube-prometheus/prometheus.yaml
       - file: /srv/kubernetes/manifests/rook/monitoring/kube-prometheus/service-monitor.yaml
       - file: /srv/kubernetes/manifests/rook/monitoring/kube-prometheus/grafana-dashboard.yaml
-    - onlyif: kubectl -n rook-ceph get pods --field-selector=status.phase=Running | grep rook-ceph-mgr
+    - onlyif: until kubectl -n rook-ceph get pods --field-selector=status.phase=Running | grep rook-ceph-mgr; do sleep 1; done
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/rook/ceph/toolbox.yaml
         {%- if common.addons.get('kube_prometheus', {'enabled': False}).enabled %}

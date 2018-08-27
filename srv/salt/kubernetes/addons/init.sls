@@ -33,7 +33,7 @@ include:
 {%- if common.addons.get('ingress_istio', {'enabled': False}).enabled %}
   - kubernetes.addons.istio
 {%- endif -%}
-{%- if common.addons.get('kube-prometheus', {'enabled': False}).enabled %}
+{%- if common.addons.get('kube_prometheus', {'enabled': False}).enabled %}
   - kubernetes.addons.prometheus-operator
 {%- endif -%}
 {%- if common.addons.get('helm', {'enabled': False}).enabled %}

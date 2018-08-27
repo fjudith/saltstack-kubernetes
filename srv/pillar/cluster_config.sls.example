@@ -17,9 +17,9 @@ kubernetes:
       helm:
         enabled: False
         tiller_image: gcr.io/kubernetes-helm/tiller:v2.4.2
-      kube-prometheus:
+      kube_prometheus:
         enabled: True
-        version: v0.22.0
+        version: v0.23.2
       heapster-influxdb:
         enabled: True
       dashboard:

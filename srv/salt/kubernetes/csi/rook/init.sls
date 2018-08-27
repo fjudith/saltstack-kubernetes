@@ -250,9 +250,10 @@ rook-monitoring-install:
       - file: /srv/kubernetes/manifests/rook/monitoring/kube-prometheus/prometheus.yaml
       - file: /srv/kubernetes/manifests/rook/monitoring/kube-prometheus/service-monitor.yaml
       - file: /srv/kubernetes/manifests/rook/monitoring/kube-prometheus/grafana-dashboard.yaml
+    - onlyif: kubectl -n rook-ceph get pods --field-selector=status.phase=Running | grep rook-ceph-mgr
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/rook/ceph/toolbox.yaml
-        {%- if common.addons.get('kube-prometheus', {'enabled': False}).enabled %}
+        {%- if common.addons.get('kube_prometheus', {'enabled': False}).enabled %}
         kubectl apply -f /srv/kubernetes/manifests/rook/monitoring/kube-prometheus/grafana-dashboard.yaml
         kubectl apply -f /srv/kubernetes/manifests/rook/monitoring/kube-prometheus/prometheus.yaml
         kubectl apply -f /srv/kubernetes/manifests/rook/monitoring/kube-prometheus/service-monitor.yaml
@@ -261,5 +262,4 @@ rook-monitoring-install:
         kubectl apply -f /srv/kubernetes/manifests/rook/monitoring/prometheus-service.yaml
         kubectl apply -f /srv/kubernetes/manifests/rook/monitoring/service-monitor.yaml
         {%- endif %}
-    - onlyif: kubectl -n rook-ceph get pods --field-selector=status.phase=Running | grep rook-ceph-mgr
 {% endif %}

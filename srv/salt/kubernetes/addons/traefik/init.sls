@@ -49,7 +49,7 @@ kubernetes-traefik-install:
       - /srv/kubernetes/manifests/traefik/traefik.yaml
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/traefik/traefik.yaml
-        {%- if common.addons.get('kube-prometheus', {'enabled': False}).enabled %}
+        {%- if common.addons.get('kube_prometheus', {'enabled': False}).enabled %}
         kubectl apply -f /srv/kubernetes/manifests/traefik/monitoring/kube-prometheus/service-monitor.yaml
         kubectl apply -f /srv/kubernetes/manifests/traefik/monitoring/kube-prometheus/grafana-dashboard.yaml
         {%- endif %}

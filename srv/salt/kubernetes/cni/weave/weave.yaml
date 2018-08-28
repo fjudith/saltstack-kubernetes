@@ -1,7 +1,4 @@
-{%- from "kubernetes/map.jinja" import etcd with context -%}
-{%- set weave_interface =  pillar['kubernetes']['node']['networking']['weave']['ipv4']['interface'] -%}
-{%- set weave_version =  pillar['kubernetes']['node']['networking']['weave']['version'] -%}
-{%- set pod_network =  pillar['kubernetes']['global']['pod-network'] -%}
+{%- from "kubernetes/map.jinja" import common with context -%}
 
 apiVersion: v1
 kind: List
@@ -130,7 +127,7 @@ items:
                     fieldRef:
                       apiVersion: v1
                       fieldPath: spec.nodeName
-              image: 'weaveworks/weave-kube:{{ weave_version }}'
+              image: 'weaveworks/weave-kube:{{ common.cni.weave.version }}'
               livenessProbe:
                 httpGet:
                   host: 127.0.0.1
@@ -165,7 +162,7 @@ items:
                     fieldRef:
                       apiVersion: v1
                       fieldPath: spec.nodeName
-              image: 'weaveworks/weave-npc:{{ weave_version }}'
+              image: 'weaveworks/weave-npc:{{ common.cni.weave.version }}'
 #npc-args
               resources:
                 requests:

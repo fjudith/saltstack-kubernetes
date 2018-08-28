@@ -1,8 +1,6 @@
 {%- from "kubernetes/map.jinja" import common with context -%}
 {%- from "kubernetes/map.jinja" import master with context -%}
 
-{%- set cluster_cidr             =  pillar['kubernetes']['global']['pod-network'] -%}
-
 apiVersion: v1
 kind: Pod
 metadata:
@@ -18,7 +16,7 @@ spec:
     - /hyperkube
     - controller-manager
     - --address=0.0.0.0
-    - --cluster-cidr={{ cluster_cidr }}
+    - --cluster-cidr={{ common.cni.network }}
     - --cluster-name=kubernetes
     - --cluster-signing-cert-file=/etc/kubernetes/ssl/ca.pem
     - --cluster-signing-key-file=/etc/kubernetes/ssl/ca-key.pem

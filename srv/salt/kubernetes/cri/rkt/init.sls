@@ -1,9 +1,9 @@
-{%- set rktVersion = pillar['kubernetes']['node']['runtime']['rkt']['version'] -%}
+{%- from "kubernetes/map.jinja" import common with context -%}
 
 rkt.install:
   pkg.installed:
     - sources:
-      - rkt: https://github.com/rkt/rkt/releases/download/v{{ rktVersion }}/rkt_{{ rktVersion }}-1_amd64.deb
+      - rkt: https://github.com/rkt/rkt/releases/download/v{{ common.cri.rkt.version }}/rkt_{{ common.cri.rkt.version }}-1_amd64.deb
 
 /opt/bin:
   file.directory:

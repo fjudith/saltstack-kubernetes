@@ -1,4 +1,4 @@
-{%- set container_runtime =  pillar['kubernetes']['node']['runtime']['provider'] -%} 
+{%- from "kubernetes/map.jinja" import common with context -%}
 
 kind: ConfigMap
 apiVersion: v1
@@ -319,7 +319,7 @@ data:
     <source>
       @id journald-container-runtime
       @type systemd
-      filters [{ "_SYSTEMD_UNIT": "{{ container_runtime }}.service" }]
+      filters [{ "_SYSTEMD_UNIT": "{{ common.cni.provider }}.service" }]
       <storage>
         @type local
         persistent true

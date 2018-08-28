@@ -1,7 +1,6 @@
-{%- set dockerVersion = pillar['kubernetes']['node']['runtime']['docker']['version'] -%}
-{%- set dockerdata = pillar['kubernetes']['node']['runtime']['docker']['data-dir'] -%}
+{%- from "kubernetes/map.jinja" import common with context -%}
 
-{{ dockerdata }}:
+{{ common.cri.docker.data_dir }}:
   file.directory:
     - user:  root
     - group:  root
@@ -16,7 +15,7 @@
 docker-latest-archive:
   archive.extracted:
     - name: /opt/
-    - source: https://download.docker.com/linux/static/stable/x86_64/docker-{{ dockerVersion }}.tgz
+    - source: https://download.docker.com/linux/static/stable/x86_64/docker-{{ common.cri.docker.version }}.tgz
     - skip_verify: true
     - archive_format: tar
     - if_missing: /opt/docker/

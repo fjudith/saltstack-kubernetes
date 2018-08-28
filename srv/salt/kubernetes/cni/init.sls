@@ -1,8 +1,7 @@
-{%- set cniVersion = pillar['kubernetes']['node']['networking']['cni-version'] -%}
-{%- set cni_provider = pillar['kubernetes']['node']['networking']['provider'] -%}
+{%- from "kubernetes/map.jinja" import common with context -%}
 
 include:
-  - kubernetes.cni.{{ cni_provider }}
+  - kubernetes.cni.{{ common.cni.provider }}
   
 /etc/cni:
   file.directory:
@@ -19,7 +18,16 @@ include:
 cni-latest-archive:
   archive.extracted:
     - name: /opt/cni/bin
-    - source: https://github.com/containernetworking/plugins/releases/download/{{ cniVersion }}/cni-plugins-amd64-{{ cniVersion }}.tgz
+    - source: https://github.com/containernetworking/plugins/releases/download/{{ common.cni.version }}/cni-plugins-amd64-{{ common.cni.version }}.tgz
     - skip_verify: true
     - archive_format: tar
     - if_missing: /opt/cni/bin/loopback
+
+/etc/cni/net.d/99-loopback.conf:
+  require:
+    - file: /etc/cni/net.d
+  file.managed:
+    - source: salt://kubernetes/cni/99-loopback.conf
+    - user: root
+    - group: root
+    - mode: 644

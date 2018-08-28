@@ -205,9 +205,19 @@ query-rook-api:
     - request_interval: 5
     - status: 200
 
+rook-operator-wait:
+  cmd.run:
+    - require:
+      - cmd: rook-operator-install
+    - runas: root
+    - name: until kubectl -n rook-ceph-system get pods --field-selector=status.phase=Running | grep rook-ceph-operator; do printf 'rook-ceph-operator not ready' && sleep 5; done
+    - use_vt: True
+    - timeout: 300
+
 rook-cluster-install:
   cmd.run:
     - require:
+      - cmd: rook-operator-wait
       - cmd: rook-operator-install
       - http: query-rook-api
     - watch:
@@ -219,7 +229,6 @@ rook-cluster-install:
       - file: /srv/kubernetes/manifests/rook/ceph/storageclass.yaml
       - file: /srv/kubernetes/manifests/rook/ceph/dashboard-external.yaml
       - file: /srv/kubernetes/manifests/rook/ceph/ingress.yaml
-    - onlyif: until kubectl -n rook-ceph-system get pods --field-selector=status.phase=Running | grep rook-ceph-operator; do sleep 1; done
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/rook/rbac.yaml
         kubectl apply -f /srv/kubernetes/manifests/rook/ceph/cluster.yaml
@@ -237,9 +246,19 @@ query-rook-ceph-api:
     - request_interval: 5
     - status: 200
 
+rook-cluster-wait:
+  cmd.run:
+    - require:
+      - cmd: rook-cluster-install
+    - runas: root
+    - name: until kubectl -n rook-ceph get pods --field-selector=status.phase=Running | grep rook-ceph-mgr; do printf 'rook-ceph-mgr not ready' && sleep 5; done
+    - use_vt: True
+    - timeout: 300
+
 rook-monitoring-install:
   cmd.run:
     - require:
+      - cmd: rook-cluster-wait
       - cmd: rook-cluster-install
       - http: query-rook-ceph-api
     - watch:
@@ -250,7 +269,6 @@ rook-monitoring-install:
       - file: /srv/kubernetes/manifests/rook/monitoring/kube-prometheus/prometheus.yaml
       - file: /srv/kubernetes/manifests/rook/monitoring/kube-prometheus/service-monitor.yaml
       - file: /srv/kubernetes/manifests/rook/monitoring/kube-prometheus/grafana-dashboard.yaml
-    - onlyif: until kubectl -n rook-ceph get pods --field-selector=status.phase=Running | grep rook-ceph-mgr; do sleep 1; done
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/rook/ceph/toolbox.yaml
         {%- if common.addons.get('kube_prometheus', {'enabled': False}).enabled %}

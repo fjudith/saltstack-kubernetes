@@ -16,7 +16,7 @@ spec:
     command:
     - /hyperkube
     - scheduler
-    - --config=/etc/kubernetes/kube-scheduler-config.yaml
+    - --config=/var/lib/kube-scheduler/kube-scheduler-config.yaml
     - --v=2
     resources:
       requests:
@@ -38,6 +38,9 @@ spec:
     - mountPath: /etc/kubernetes
       name: config-kubernetes
       readOnly: true
+    - mountPath: /var/lib/kube-scheduler
+      name: config-kube-scheduler
+      readOnly: true
   volumes:
   - hostPath:
       path: /etc/kubernetes
@@ -48,6 +51,9 @@ spec:
   - hostPath:
       path: /usr/share/ca-certificates
     name: ssl-certs-host
+  - hostPath:
+      path: /var/lib/kube-scheduler
+    name: config-kube-scheduler
 ---
 apiVersion: v1
 kind: Service

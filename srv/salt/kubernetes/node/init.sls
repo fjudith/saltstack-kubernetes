@@ -1,12 +1,12 @@
-{%- set hyperkube_version = pillar['kubernetes']['version'] -%}
+{%- from "kubernetes/map.jinja" import common with context -%}
 {%- set os = salt['grains.get']('os') -%}
-{%- set enableIPv6 = pillar['kubernetes']['node']['networking']['calico']['ipv6']['enable'] -%}
-{%- set criProvider = pillar['kubernetes']['node']['runtime']['provider'] -%}
 
 include:
-  - kubernetes/cri/{{ criProvider }}
-  - kubernetes/cri/rkt
   - kubernetes/cni
+  - kubernetes/cri/{{ common.cri.provider }}
+  - kubernetes/cri/rkt
+  - kubernetes/node/kubelet
+  - kubernetes/node/kube-proxy
 
 {% if os == "Debian" or os == "Ubuntu" %}
 glusterfs-client:
@@ -18,6 +18,15 @@ conntrack:
 nfs-common:
   pkg.latest
 {% endif %} 
+
+open-iscsi:
+  pkg.latest
+
+xfsprogs:
+  pkg.latest
+
+azure-cli:
+  pkg.latest
 
 socat:
   pkg.latest
@@ -94,68 +103,13 @@ net.bridge.bridge-nf-pass-vlan-input-dev:
   file.symlink:
     - target: /bin/bash
 
-/usr/lib/coreos/kubelet-wrapper:
-  file.managed:
-    - source: salt://kubernetes/node/kubelet/kubelet-wrapper
-    - user: root
-    - template: jinja
-    - group: root
-    - mode: 755
-
-/etc/systemd/system/kubelet.service:
-    file.managed:
-    - source: salt://kubernetes/node/kubelet/kubelet.service
-    - user: root
-    - template: jinja
-    - group: root
-    - mode: 644
-
-/etc/kubernetes/kubelet.kubeconfig:
-    file.managed:
-    - source: salt://kubernetes/node/kubelet/kubelet.kubeconfig
-    - user: root
-    - template: jinja
-    - group: root
-    - mode: 644
-
-/etc/kubernetes/bootstrap.kubeconfig:
-    file.managed:
-    - source: salt://kubernetes/node/kubelet/bootstrap.kubeconfig
-    - user: root
-    - template: jinja
-    - group: root
-    - mode: 644
-
-kubelet:
-  service.running:
-    - enable: True
-    - watch:
-      - /etc/systemd/system/kubelet.service
-      - /etc/kubernetes/kubelet.kubeconfig
-
-/etc/kubernetes/kube-proxy.kubeconfig:
-    file.managed:
-    - source: salt://kubernetes/node/kube-proxy/kube-proxy.kubeconfig
-    - user: root
-    - template: jinja
-    - group: root
-    - mode: 644
-
-/etc/kubernetes/manifests/kube-proxy.yaml:
-    file.managed:
-    - source: salt://kubernetes/node/kube-proxy/kube-proxy.yaml
-    - user: root
-    - template: jinja
-    - group: root
-    - mode: 644
-
 /etc/kubernetes/volumeplugins:
   file.directory:
     - user: root
     - group: root
     - dir_mode: 700
 
-{% if enableIPv6 == true %}
+{% if common.cni.calico.ipv6.enable == true %}
 net.ipv6.conf.all.forwarding:
   sysctl.present:
     - value: 1

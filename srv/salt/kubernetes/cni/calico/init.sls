@@ -71,3 +71,10 @@
     - require:
       - sls: node/cni
 
+/srv/kubernetes/calico.yaml:
+    file.managed:
+    - source: salt://kubernetes/cni/calico/calico.tmpl.yaml
+    - user: root
+    - template: jinja
+    - group: root
+    - mode: 644

@@ -1,4 +1,4 @@
-{%- set version = pillar['kubernetes']['common']['cri']['containerd']['version'] -%}
+{%- from "kubernetes/map.jinja" import master with context -%}
 
 libseccomp2.install:
   pkg.installed:
@@ -11,7 +11,7 @@ btrfs.install:
 containerd-archive:
   archive.extracted:
     - name: /
-    - source: https://storage.googleapis.com/cri-containerd-release/cri-containerd-{{ version }}.linux-amd64.tar.gz
+    - source: https://storage.googleapis.com/cri-containerd-release/cri-containerd-{{ common.cri.containerd.version }}.linux-amd64.tar.gz
     - skip_verify: true
     - archive_format: tar
     - if_missing: /opt/containerd/

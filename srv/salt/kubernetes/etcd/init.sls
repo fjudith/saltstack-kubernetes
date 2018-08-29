@@ -1,4 +1,4 @@
-{%- set etcd_version = pillar['kubernetes']['etcd']['version'] -%}
+{%- from "kubernetes/map.jinja" import etcd with context -%}
 
 include:
   - kubernetes.cri.docker
@@ -53,17 +53,17 @@ include:
 etcd-latest-archive:
   archive.extracted:
     - name: /opt/
-    - source: https://github.com/coreos/etcd/releases/download/{{ etcd_version }}/etcd-{{ etcd_version }}-linux-amd64.tar.gz
+    - source: https://github.com/coreos/etcd/releases/download/{{ etcd.version }}/etcd-{{ etcd.version }}-linux-amd64.tar.gz
     - skip_verify: true
     - archive_format: tar
 
 /usr/bin/etcd:
   file.symlink:
-    - target: /opt/etcd-{{ etcd_version }}-linux-amd64/etcd
+    - target: /opt/etcd-{{ etcd.version }}-linux-amd64/etcd
 
 /usr/bin/etcdctl:
   file.symlink:
-    - target: /opt/etcd-{{ etcd_version }}-linux-amd64/etcdctl
+    - target: /opt/etcd-{{ etcd.version }}-linux-amd64/etcdctl
 
 /etc/systemd/system/etcd-member.service:
   file.managed:
@@ -73,9 +73,8 @@ etcd-latest-archive:
     - group: root
     - mode: 644
 
-
 etcd-member.service:
   service.running:
-    - enable: True
     - watch:
       - /etc/systemd/system/etcd-member.service
+    - enable: True

@@ -1,4 +1,5 @@
-{%- set dockerFS = pillar['kubernetes']['node']['runtime']['docker']['data-dir'] -%}
+{%- from "kubernetes/map.jinja" import common with context -%}
+
 {
     "storage-driver": "overlay2"
 }

@@ -1,23 +1,23 @@
 {%- from "kubernetes/map.jinja" import common with context -%}
 
-/usr/bin/kube-scheduler:
+/usr/local/bin/kube-scheduler:
   file.managed:
     - source: https://storage.googleapis.com/kubernetes-release/release/{{ common.version }}/bin/linux/amd64/kube-scheduler
     - skip_verify: true
     - group: root
     - mode: 755
 
-/etc/kubernetes/kube-scheduler.kubeconfig:
-  file.managed:
-    - source: salt://kubernetes/master/kube-scheduler/kube-scheduler.kubeconfig
+/etc/systemd/system/kube-scheduler.service:    
+    file.managed:
+    - source: salt://kubernetes/master/kube-scheduler/kube-scheduler.service
     - user: root
     - template: jinja
     - group: root
     - mode: 644
 
-/etc/kubernetes/manifests/kube-scheduler.yaml:
+/etc/kubernetes/kube-scheduler.kubeconfig:
   file.managed:
-    - source: salt://kubernetes/master/kube-scheduler/kube-scheduler.yaml
+    - source: salt://kubernetes/master/kube-scheduler/kube-scheduler.kubeconfig
     - user: root
     - template: jinja
     - group: root
@@ -39,3 +39,11 @@
     - template: jinja
     - group: root
     - mode: 644
+
+kube-scheduler.service:
+  service.running:
+    - watch:
+      - file: /etc/systemd/system/kube-scheduler.service
+      - file: /etc/kubernetes/kube-scheduler.kubeconfig
+      - file: /var/lib/kube-scheduler/kube-scheduler-config.yaml
+    - enable: True

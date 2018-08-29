@@ -16,17 +16,25 @@
     - group: root
     - mode: 644
 
-/usr/bin/kube-apiserver:
+/usr/local/bin/kube-apiserver:
   file.managed:
     - source: https://storage.googleapis.com/kubernetes-release/release/{{ common.version }}/bin/linux/amd64/kube-apiserver
     - skip_verify: true
     - group: root
     - mode: 755
 
-/etc/kubernetes/manifests/kube-apiserver.yaml:
+/etc/systemd/system/kube-apiserver.service:    
     file.managed:
-    - source: salt://kubernetes/master/kube-apiserver/kube-apiserver.yaml
+    - source: salt://kubernetes/master/kube-apiserver/kube-apiserver.service
     - user: root
     - template: jinja
     - group: root
     - mode: 644
+
+kube-apiserver.service:
+  service.running:
+    - watch:
+      - file: /etc/systemd/system/kube-apiserver.service
+      - file: /etc/kubernetes/encryption-config.yaml
+      - file: /etc/kubernetes/audit-policy.yaml
+    - enable: True

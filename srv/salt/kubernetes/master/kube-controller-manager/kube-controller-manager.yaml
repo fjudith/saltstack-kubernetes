@@ -17,6 +17,7 @@ spec:
     - controller-manager
     - --address=0.0.0.0
     - --cluster-cidr={{ common.cni.network }}
+    - --allocate-node-cidrs=true
     - --cluster-name=kubernetes
     - --cluster-signing-cert-file=/etc/kubernetes/ssl/ca.pem
     - --cluster-signing-key-file=/etc/kubernetes/ssl/ca-key.pem

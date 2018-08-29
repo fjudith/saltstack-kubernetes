@@ -106,7 +106,7 @@ spec:
           operator: "Exists"
       containers:
       - name: coredns
-        image: coredns/coredns:1.2.0
+        image: coredns/coredns:{{ common.addons.dns.coredns.version }}
         imagePullPolicy: IfNotPresent
         resources:
           limits:

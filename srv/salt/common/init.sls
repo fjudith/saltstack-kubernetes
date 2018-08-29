@@ -3,31 +3,21 @@
 {%- from "kubernetes/map.jinja" import common with context -%}
 {%- from "kubernetes/map.jinja" import master with context -%}
 
-{%- set vpn_subnet = pillar['kubernetes']['global']['vpnIP-range'] -%}
-{%- set proxy_server = pillar['kubernetes']['global']['proxy']['ipaddr'] -%}
-{%- set proxy_port = pillar['kubernetes']['global']['proxy']['port'] -%}
+/usr/bin/kubectl:
+  file.managed:
+    - source: https://storage.googleapis.com/kubernetes-release/release/{{ common.version }}/bin/linux/amd64/kubectl
+    - skip_verify: true
+    - show_changes: False
+    - group: root
+    - mode: 755
 
-
-proxy_server:
-   environ.setenv:
-     - name: tinyproxy
-     - update_minion: true
-     - value:
-         http_proxy: http://{{ proxy_server }}:{{ proxy_port }}
-         https_proxy: http://{{ proxy_server }}:{{ proxy_port }}
-         no_proxy: "localhost, 127.0.0.1, *.{{ common.addons.dns.domain }} {{ vpn_subnet }}"
-
-query_cloudflare:
-  http.query:
-    - name: 'http://www.cloudflare.com/'
-    - status: 200
-
-query_github:
-  http.query:
-    - name: 'http://github.com/'
-    - status: 200
-
-query_cncf:
-  http.query:
-    - name: 'http://cncf.io/'
-    - status: 200
+azure-cli:
+  pkgrepo.managed:
+    - name: deb https://packages.microsoft.com/repos/azure-cli/ bionic main
+    - dist: bionic
+    - file: /etc/apt/sources.list.d/azure-cli.list
+    - gpgcheck: 1
+    - key_url: https://packages.microsoft.com/keys/microsoft.asc
+  pkg.latest:
+    - name: azure-cli
+    - refresh: true

@@ -1,0 +1,1 @@
+* <https://www.weave.works/docs/net/latest/kubernetes/kube-addon/>

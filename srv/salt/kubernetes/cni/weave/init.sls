@@ -1,5 +1,14 @@
-/etc/kubernetes/manifests/weave.yaml:
+/srv/kubernetes/manifests/weave:
+  file.directory:
+    - user: root
+    - group: root
+    - dir_mode: 750
+    - makedirs: True
+
+/srv/kubernetes/manifests/weave/weave.yaml:
     file.managed:
+    - require:
+      - file: /srv/kubernetes/manifests/weave
     - source: salt://kubernetes/cni/weave/weave.yaml
     - user: root
     - template: jinja
@@ -19,6 +28,6 @@ weave-install:
     - require:
       - http: query-weave-required-api
     - watch:
-      - file: /etc/kubernetes/manifests/weave.yaml
+      - file: /srv/kubernetes/manifests/weave/weave.yaml
     - runas: root
-    - name: kubectl apply -f /etc/kubernetes/manifests/weave.yaml
+    - name: kubectl apply -f /srv/kubernetes/manifests/weave/weave.yaml

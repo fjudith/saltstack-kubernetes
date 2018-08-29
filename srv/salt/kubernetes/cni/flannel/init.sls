@@ -1,5 +1,14 @@
-/etc/kubernetes/manifests/flannel.yaml:
+/srv/kubernetes/manifests/flannel:
+  file.directory:
+    - user: root
+    - group: root
+    - dir_mode: 750
+    - makedirs: True
+
+/srv/kubernetes/manifests/flannel/flannel.yaml:
     file.managed:
+    - require:
+      - file: /srv/kubernetes/manifests/flannel
     - source: salt://kubernetes/cni/flannel/flannel.yaml
     - user: root
     - template: jinja
@@ -19,6 +28,6 @@ flannel-install:
     - require:
       - http: query-fannel-required-api
     - watch:
-      - file: /etc/kubernetes/manifests/flannel.yaml
+      - file: /srv/kubernetes/manifests/flannel/flannel.yaml
     - runas: root
-    - name: kubectl apply -f /etc/kubernetes/manifests/flannel.yaml
+    - name: kubectl apply -f /srv/kubernetes/manifests/flannel/flannel.yaml

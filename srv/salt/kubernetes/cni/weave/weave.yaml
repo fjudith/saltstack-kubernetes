@@ -127,6 +127,8 @@ items:
                     fieldRef:
                       apiVersion: v1
                       fieldPath: spec.nodeName
+                - name: IPALLOC_RANGE
+                  value: {{ common.cni.network }}
               image: 'weaveworks/weave-kube:{{ common.cni.weave.version }}'
               livenessProbe:
                 httpGet:

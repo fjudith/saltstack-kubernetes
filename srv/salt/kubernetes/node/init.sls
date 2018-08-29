@@ -3,6 +3,7 @@
 
 include:
   - kubernetes/cni
+  - kubernetes/cri
   - kubernetes/cri/{{ common.cri.provider }}
   - kubernetes/cri/rkt
   - kubernetes/node/kubelet
@@ -23,9 +24,6 @@ open-iscsi:
   pkg.latest
 
 xfsprogs:
-  pkg.latest
-
-azure-cli:
   pkg.latest
 
 socat:

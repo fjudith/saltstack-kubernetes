@@ -198,28 +198,20 @@ rook-operator-install:
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/rook/ceph/operator.yaml
 
-query-rook-api:
-  http.wait_for_successful_query:
-    - name: 'http://localhost:8080/apis/rook.io'
-    - wait_for: 900
-    - request_interval: 5
-    - status: 200
-
 rook-operator-wait:
   cmd.run:
     - require:
       - cmd: rook-operator-install
     - runas: root
-    - name: until kubectl -n rook-ceph-system get pods --field-selector=status.phase=Running | grep rook-ceph-operator; do printf 'rook-ceph-operator not ready' && sleep 5; done
+    - name: until kubectl -n rook-ceph-system get pods --field-selector=status.phase=Running | grep rook-ceph-operator; do printf 'rook-ceph-operator is not Running' && sleep 5; done
     - use_vt: True
-    - timeout: 300
+    - timeout: 180
 
 rook-cluster-install:
   cmd.run:
     - require:
       - cmd: rook-operator-wait
       - cmd: rook-operator-install
-      - http: query-rook-api
     - watch:
       - file: /srv/kubernetes/manifests/rook/rbac.yaml
       - file: /srv/kubernetes/manifests/rook/ceph/cluster.yaml
@@ -239,28 +231,20 @@ rook-cluster-install:
         kubectl apply -f /srv/kubernetes/manifests/rook/ceph/dashboard-external.yaml
         kubectl apply -f /srv/kubernetes/manifests/rook/ceph/ingress.yaml
 
-query-rook-ceph-api:
-  http.wait_for_successful_query:
-    - name: 'http://localhost:8080/apis/ceph.rook.io'
-    - wait_for: 900
-    - request_interval: 5
-    - status: 200
-
 rook-cluster-wait:
   cmd.run:
     - require:
       - cmd: rook-cluster-install
     - runas: root
-    - name: until kubectl -n rook-ceph get pods --field-selector=status.phase=Running | grep rook-ceph-mgr; do printf 'rook-ceph-mgr not ready' && sleep 5; done
+    - name: until kubectl -n rook-ceph get pods --field-selector=status.phase=Running | grep rook-ceph-mgr; do printf 'rook-ceph-mgr is not Running' && sleep 5; done
     - use_vt: True
-    - timeout: 300
+    - timeout: 180
 
 rook-monitoring-install:
   cmd.run:
     - require:
       - cmd: rook-cluster-wait
       - cmd: rook-cluster-install
-      - http: query-rook-ceph-api
     - watch:
       - file: /srv/kubernetes/manifests/rook/ceph/toolbox.yaml
       - file: /srv/kubernetes/manifests/rook/monitoring/prometheus.yaml

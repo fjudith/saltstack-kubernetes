@@ -1,4 +1,4 @@
-{%- from "kubernetes/map.jinja" import master with context -%}
+{%- from "kubernetes/map.jinja" import common with context -%}
 
 libseccomp2.install:
   pkg.installed:

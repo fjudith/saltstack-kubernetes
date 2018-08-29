@@ -1,9 +1,6 @@
 {%- from "kubernetes/map.jinja" import common with context -%}
 
-include:
-  - kubernetes.cni.{{ common.cni.provider }}
-  
-/etc/cni:
+ /etc/cni:
   file.directory:
     - user: root
     - group: root

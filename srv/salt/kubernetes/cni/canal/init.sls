@@ -1,13 +1,24 @@
-/etc/kubernetes/manifests/canal-rbac.yaml:
+/srv/kubernetes/manifests/canal:
+  file.directory:
+    - user: root
+    - group: root
+    - dir_mode: 750
+    - makedirs: True
+
+/srv/kubernetes/manifests/canal-rbac.yaml:
     file.managed:
+    - require:
+      - file: /srv/kubernetes/manifests/canal
     - source: salt://kubernetes/cni/canal/canal-rbac.yaml
     - user: root
     #- template: jinja
     - group: root
     - mode: 644
 
-/etc/kubernetes/manifests/canal.yaml:
+/srv/kubernetes/manifests/canal/canal.yaml:
     file.managed:
+    - require:
+      - file: /srv/kubernetes/manifests/canal
     - source: salt://kubernetes/cni/canal/canal.yaml
     - user: root
     - template: jinja
@@ -27,9 +38,9 @@ canal-install:
     - require:
       - http: query-canal-required-api
     - watch:
-      - file: /etc/kubernetes/manifests/canal-rbac.yaml
-      - file: /etc/kubernetes/manifests/canal.yaml
+      - file: /srv/kubernetes/manifests/canal/canal-rbac.yaml
+      - file: /srv/kubernetes/manifests/canal/canal.yaml
     - runas: root
     - name: |
-        kubectl apply -f /etc/kubernetes/manifests/canal-rbac.yaml
-        kubectl apply -f /etc/kubernetes/manifests/canal.yaml
+        kubectl apply -f /srv/kubernetes/manifests/canal/canal-rbac.yaml
+        kubectl apply -f /srv/kubernetes/manifests/canal/canal.yaml

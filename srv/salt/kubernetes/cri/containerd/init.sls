@@ -10,11 +10,18 @@ btrfs.install:
 
 containerd-archive:
   archive.extracted:
-    - name: /
-    - source: https://storage.googleapis.com/cri-containerd-release/cri-containerd-{{ common.cri.containerd.version }}.linux-amd64.tar.gz
+    - name: /usr/local
+    - source: https://github.com/containerd/containerd/releases/download/v{{ common.cri.containerd.version }}/containerd-{{ common.cri.containerd.version }}.linux-amd64.tar.gz
     - skip_verify: true
     - archive_format: tar
-    - if_missing: /opt/containerd/
+    
+/etc/systemd/system/containerd.service:
+  file.managed:
+    - source: salt://kubernetes/cri/containerd/containerd.service
+    - user: root
+    - template: jinja
+    - group: root
+    - mode: 644
 
 /etc/systemd/system/kubelet.service.d:
   file.directory:
@@ -33,6 +40,27 @@ containerd-archive:
     - group: root
     - mode: 644
 
+/etc/containerd:
+  file.directory:
+    - user: root
+    - group: root
+    - dir_mode: 750
+    - makedirs: True
+
+/etc/containerd/config.toml:
+  file.managed:
+    - require:
+      - file: /etc/containerd
+    - source: salt://kubernetes/cri/containerd/config.toml
+    - user: root
+    - template: jinja
+    - group: root
+    - mode: 644
+
 containerd.service:
   service.running:
+    - watch:
+      - archive: containerd-archive
+      - file: /etc/systemd/system/containerd.service
+      - file: /etc/containerd/config.toml
     - enable: True

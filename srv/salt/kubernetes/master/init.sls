@@ -5,8 +5,8 @@
 
 include:
   - kubernetes.cni
+  - kubernetes.cri
   - kubernetes.cri.{{ common.cri.provider }}
-  - kubernetes.cri.rkt
   - kubernetes.master.kubelet
   - kubernetes.master.kube-proxy
   - kubernetes.master.kube-apiserver
@@ -85,11 +85,3 @@ net.bridge.bridge-nf-pass-vlan-input-dev:
 /etc/kubernetes/ssl/node-key.pem:
   file.symlink:
     - target: /etc/kubernetes/ssl/master-key.pem
-
-/usr/bin/kubectl:
-  file.managed:
-    - source: https://storage.googleapis.com/kubernetes-release/release/{{ common.version }}/bin/linux/amd64/kubectl
-    - skip_verify: true
-    - show_changes: False
-    - group: root
-    - mode: 755

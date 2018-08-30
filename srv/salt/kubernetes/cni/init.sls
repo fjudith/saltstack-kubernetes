@@ -20,6 +20,18 @@ cni-latest-archive:
     - archive_format: tar
     - if_missing: /opt/cni/bin/loopback
 
+{% if common.cni.provider == "weave" %}
+/etc/cni/net.d/00-weave.conflist:
+    file.managed:
+    - require:
+      - file: /etc/cni/net.d
+    - source: salt://kubernetes/cni/weave/00-weave.conflist
+    - user: root
+    - template: jinja
+    - group: root
+    - mode: 644
+{% endif %}
+
 /etc/cni/net.d/99-loopback.conf:
   require:
     - file: /etc/cni/net.d

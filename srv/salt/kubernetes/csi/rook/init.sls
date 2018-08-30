@@ -171,6 +171,16 @@
     - file_mode: 644
     - template: jinja
 
+/srv/kubernetes/manifests/rook/monitoring/kube-prometheus/ceph-exporter.yaml:
+    file.managed:
+    - require:
+      - file: /srv/kubernetes/manifests/rook/monitoring/kube-prometheus
+    - source: salt://kubernetes/csi/rook/monitoring/kube-prometheus/ceph-exporter.yaml
+    - user: root
+    - group: root
+    - file_mode: 644
+    - template: jinja
+
 /srv/kubernetes/manifests/rook/monitoring/kube-prometheus/service-monitor.yaml:
     file.managed:
     - require:
@@ -250,12 +260,14 @@ rook-monitoring-install:
       - file: /srv/kubernetes/manifests/rook/monitoring/prometheus.yaml
       - file: /srv/kubernetes/manifests/rook/monitoring/prometheus-service.yaml
       - file: /srv/kubernetes/manifests/rook/monitoring/service-monitor.yaml
+      - file: /srv/kubernetes/manifests/rook/monitoring/kube-prometheus/ceph-exporter.yaml
       - file: /srv/kubernetes/manifests/rook/monitoring/kube-prometheus/prometheus.yaml
       - file: /srv/kubernetes/manifests/rook/monitoring/kube-prometheus/service-monitor.yaml
       - file: /srv/kubernetes/manifests/rook/monitoring/kube-prometheus/grafana-dashboard.yaml
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/rook/ceph/toolbox.yaml
         {%- if common.addons.get('kube_prometheus', {'enabled': False}).enabled %}
+        kubectl apply -f /srv/kubernetes/manifests/rook/monitoring/kube-prometheus/ceph-exporter.yaml
         kubectl apply -f /srv/kubernetes/manifests/rook/monitoring/kube-prometheus/grafana-dashboard.yaml
         kubectl apply -f /srv/kubernetes/manifests/rook/monitoring/kube-prometheus/prometheus.yaml
         kubectl apply -f /srv/kubernetes/manifests/rook/monitoring/kube-prometheus/service-monitor.yaml

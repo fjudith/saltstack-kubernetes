@@ -38,3 +38,11 @@ kube-apiserver.service:
       - file: /etc/kubernetes/encryption-config.yaml
       - file: /etc/kubernetes/audit-policy.yaml
     - enable: True
+
+query-kube-apiserver:
+  http.wait_for_successful_query:
+    - name: 'http://127.0.0.1:8080/version'
+    - match: {{ common.version }}
+    - wait_for: 180
+    - request_interval: 5
+    - status: 200

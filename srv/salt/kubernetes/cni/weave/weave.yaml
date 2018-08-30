@@ -122,6 +122,8 @@ items:
               command:
                 - /home/weave/launch.sh
               env:
+                - name: IPALLOC_RANGE
+                  value: {{ common.cni.network }}
                 - name: HOSTNAME
                   valueFrom:
                     fieldRef:

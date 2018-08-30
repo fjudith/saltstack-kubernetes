@@ -13,7 +13,7 @@ Requires={{ common.cri.provider }}.service
 
 [Service]
 ExecStart=/usr/local/bin/kubelet \
-  --authentication-token-webhook=true \
+  --allow-privileged=true \
   --config=/var/lib/kubelet/kubelet-config.yaml \
   {%- if common.cri.provider == "docker" %}
   --container-runtime=docker \
@@ -23,9 +23,7 @@ ExecStart=/usr/local/bin/kubelet \
   --container-runtime=remote \
   --container-runtime-endpoint=unix:///run/containerd/containerd.sock \
   {%- endif %}
-  --fail-swap-on=false \
   --hostname-override={{ hostname }} \
-  --pod-manifest-path=/etc/kubernetes/manifests \
   --kubeconfig=/etc/kubernetes/kubelet.kubeconfig \
   --network-plugin=cni \
   --node-labels="kubernetes.io/role=master,beta.kubernetes.io/fluentd-ds-ready=true" \

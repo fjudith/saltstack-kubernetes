@@ -19,3 +19,5 @@ podCIDR: "{{ common.cni.network }}"
 runtimeRequestTimeout: "15m"
 tlsCertFile: "/etc/kubernetes/ssl/master.pem"
 tlsPrivateKeyFile: "/etc/kubernetes/ssl/master-key.pem"
+staticPodPath: "/etc/kubernetes/manifests"
+failSwapOn: false

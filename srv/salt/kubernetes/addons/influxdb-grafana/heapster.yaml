@@ -36,31 +36,31 @@ data:
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: heapster-v1.5.3
+  name: heapster-v1.6.0-beta.1
   namespace: kube-system
   labels:
     k8s-app: heapster
     kubernetes.io/cluster-service: "true"
     addonmanager.kubernetes.io/mode: Reconcile
-    version: v1.5.3
+    version: v1.6.0-beta.1
 spec:
   replicas: 1
   selector:
     matchLabels:
       k8s-app: heapster
-      version: v1.5.3
+      version: v1.6.0-beta.1
   template:
     metadata:
       labels:
         k8s-app: heapster
-        version: v1.5.3
+        version: v1.6.0-beta.1
       annotations:
         scheduler.alpha.kubernetes.io/critical-pod: ''
         seccomp.security.alpha.kubernetes.io/pod: 'docker/default'
     spec:
       priorityClassName: system-cluster-critical
       containers:
-        - image: k8s.gcr.io/heapster-amd64:v1.5.3
+        - image: k8s.gcr.io/heapster-amd64:v1.6.0-beta.1
           name: heapster
           livenessProbe:
             httpGet:
@@ -71,15 +71,15 @@ spec:
             timeoutSeconds: 5
           command:
             - /heapster
-            - --source=kubernetes.summary_api:''
+            - --source=kubernetes.summary_api:''?useServiceAccount=true&kubeletHttps=true&kubeletPort=10250&insecure=true
             - --sink=influxdb:http://monitoring-influxdb:8086
-        - image: k8s.gcr.io/heapster-amd64:v1.5.3
+        - image: k8s.gcr.io/heapster-amd64:v1.6.0-beta.1
           name: eventer
           command:
             - /eventer
             - --source=kubernetes:''
             - --sink=influxdb:http://monitoring-influxdb:8086
-        - image: k8s.gcr.io/addon-resizer:1.8.1
+        - image: k8s.gcr.io/addon-resizer:1.8.2
           name: heapster-nanny
           resources:
             limits:
@@ -108,11 +108,11 @@ spec:
             - --memory=200Mi
             - --extra-memory=4Mi
             - --threshold=5
-            - --deployment=heapster-v1.5.3
+            - --deployment=heapster-v1.6.0-beta.1
             - --container=heapster
             - --poll-period=300000
             - --estimator=exponential
-        - image: k8s.gcr.io/addon-resizer:1.8.1
+        - image: k8s.gcr.io/addon-resizer:1.8.2
           name: eventer-nanny
           resources:
             limits:
@@ -141,7 +141,7 @@ spec:
             - --memory=190Mi
             - --extra-memory=50Mi
             - --threshold=5
-            - --deployment=heapster-v1.5.3
+            - --deployment=heapster-v1.6.0-beta.1
             - --container=eventer
             - --poll-period=300000
             - --estimator=exponential

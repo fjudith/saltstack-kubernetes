@@ -5,7 +5,7 @@
     - dir_mode: 750
     - makedirs: True
 
-/srv/kubernetes/manifests/canal-rbac.yaml:
+/srv/kubernetes/manifests/canal/canal-rbac.yaml:
     file.managed:
     - require:
       - file: /srv/kubernetes/manifests/canal

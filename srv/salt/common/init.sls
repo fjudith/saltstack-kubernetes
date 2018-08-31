@@ -21,3 +21,7 @@ azure-cli:
   pkg.latest:
     - name: azure-cli
     - refresh: true
+
+ceph-common:
+  pkg.latest:
+    - refresh: true

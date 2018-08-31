@@ -101,11 +101,11 @@ net.bridge.bridge-nf-pass-vlan-input-dev:
   file.symlink:
     - target: /bin/bash
 
-/etc/kubernetes/volumeplugins:
+/usr/libexec/kubernetes/kubelet-plugins/volume/exec:
   file.directory:
     - user: root
     - group: root
-    - dir_mode: 700
+    - dir_mode: 755
 
 {% if common.cni.calico.ipv6.enable == true %}
 net.ipv6.conf.all.forwarding:

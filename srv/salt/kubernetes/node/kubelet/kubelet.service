@@ -36,7 +36,7 @@ ExecStart=/usr/local/bin/kubelet \
   {%- if "18.04" in salt['grains.get']('osrelease') %}
   --resolv-conf=/run/systemd/resolve/resolv.conf \
   {%- endif %}
-  --volume-plugin-dir=/var/lib/kubelet/volumeplugins \
+  --volume-plugin-dir=/usr/libexec/kubernetes/kubelet-plugins/volume/exec \
   --v=2
 
 Restart=always

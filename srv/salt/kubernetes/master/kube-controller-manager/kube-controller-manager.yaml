@@ -22,7 +22,7 @@ spec:
     - --cluster-signing-cert-file=/etc/kubernetes/ssl/ca.pem
     - --cluster-signing-key-file=/etc/kubernetes/ssl/ca-key.pem
     - --feature-gates=RotateKubeletServerCertificate=true
-    - --flex-volume-plugin-dir=/etc/kubernetes/volumeplugins
+    - --flex-volume-plugin-dir=/usr/libexec/kubernetes/kubelet-plugins/volume/exec
     - --kubeconfig=/etc/kubernetes/kube-controller-manager.kubeconfig
     - --leader-elect=true
     - --node-monitor-grace-period=40s

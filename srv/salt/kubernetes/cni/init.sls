@@ -20,7 +20,7 @@ cni-latest-archive:
     - archive_format: tar
     - if_missing: /opt/cni/bin/loopback
 
-{% if common.cni.provider == "weave" %}
+{# {% if common.cni.provider == "weave" %}
 /etc/cni/net.d/00-weave.conflist:
     file.managed:
     - require:
@@ -30,7 +30,7 @@ cni-latest-archive:
     - template: jinja
     - group: root
     - mode: 644
-{% endif %}
+{% endif %} #}
 
 /etc/cni/net.d/99-loopback.conf:
   require:

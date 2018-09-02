@@ -21,3 +21,6 @@ tlsCertFile: "/etc/kubernetes/ssl/master.pem"
 tlsPrivateKeyFile: "/etc/kubernetes/ssl/master-key.pem"
 staticPodPath: "/etc/kubernetes/manifests"
 failSwapOn: false
+{%- if common.cri.provider == "crio" %}
+cGroupDriver: "cgroupfs"
+{%- endif %}

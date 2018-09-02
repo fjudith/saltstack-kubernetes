@@ -129,7 +129,7 @@ items:
                     fieldRef:
                       apiVersion: v1
                       fieldPath: spec.nodeName
-              image: 'muralireddy/weave-kube:portmap'
+              image: 'weaveworks/weave-kube:{{ common.cni.weave.version }}'
               livenessProbe:
                 httpGet:
                   host: 127.0.0.1

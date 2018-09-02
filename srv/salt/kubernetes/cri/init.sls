@@ -22,4 +22,8 @@ cri-tools-archive:
     - source_hash: eaa9c9518cc4b041eea83d8ef83aad0a347af913c65337abe5b94b636183a251
     - user: root
     - group: root
-    - mode: 755 
+    - mode: 755
+
+/usr/bin/runc:
+  file.symlink:
+    - target: /usr/local/bin/runc

@@ -8,8 +8,6 @@
   {%- set node_labels = ",role=storage-node" -%}
 {% endif %}
 
-
-[Unit]
 [Unit]
 Description=Kubernetes Kubelet
 Documentation=https://github.com/kubernetes/kubernetes
@@ -35,10 +33,7 @@ ExecStart=/usr/local/bin/kubelet \
   --hostname-override={{ hostname }} \
   --kubeconfig=/etc/kubernetes/kubelet.kubeconfig \
   --network-plugin=cni \
-  --node-labels="kubernetes.io/role=node,beta.kubernetes.io/fluentd-ds-ready=true{{ node_labels }}"
-  {%- if "18.04" in salt['grains.get']('osrelease') %}
-  --resolv-conf=/run/systemd/resolve/resolv.conf \
-  {%- endif %}
+  --node-labels="kubernetes.io/role=node,beta.kubernetes.io/fluentd-ds-ready=true{{ node_labels }}" \
   --volume-plugin-dir=/usr/libexec/kubernetes/kubelet-plugins/volume/exec \
   --v=2
 

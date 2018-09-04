@@ -21,6 +21,6 @@ tlsCertFile: "/etc/kubernetes/ssl/node.pem"
 tlsPrivateKeyFile: "/etc/kubernetes/ssl/node-key.pem"
 staticPodPath: "/etc/kubernetes/manifests"
 failSwapOn: false
-{%- if common.cri.provider == "crio" %}
-cGroupDriver: "cgroupfs"
+{%- if "18.04" in salt['grains.get']('osrelease') %}
+resolvConf: /run/systemd/resolve/resolv.conf
 {%- endif %}

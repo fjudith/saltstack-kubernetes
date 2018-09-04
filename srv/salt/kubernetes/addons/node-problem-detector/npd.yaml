@@ -1,3 +1,5 @@
+{%- from "kubernetes/map.jinja" import common with context -%}
+
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -43,7 +45,7 @@ spec:
     spec:
       containers:
       - name: node-problem-detector
-        image: k8s.gcr.io/node-problem-detector:v0.5.0
+        image: {{ common.addons.npd.image }}
         command:
         - "/bin/sh"
         - "-c"

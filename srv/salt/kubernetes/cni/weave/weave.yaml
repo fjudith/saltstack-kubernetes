@@ -129,7 +129,7 @@ items:
                     fieldRef:
                       apiVersion: v1
                       fieldPath: spec.nodeName
-              image: 'muralireddy/weave-kube:portmap'
+              image: '{{ common.cni.weave.weave_image }}'
               livenessProbe:
                 httpGet:
                   host: 127.0.0.1
@@ -164,8 +164,7 @@ items:
                     fieldRef:
                       apiVersion: v1
                       fieldPath: spec.nodeName
-              image: 'weaveworks/weave-npc:{{ common.cni.weave.version }}'
-#npc-args
+              image: '{{ common.cni.weave.npc_image }}'
               resources:
                 requests:
                   cpu: 10m

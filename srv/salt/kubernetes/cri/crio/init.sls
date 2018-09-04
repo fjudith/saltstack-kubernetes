@@ -27,24 +27,38 @@ cri-o-runc:
     - require:
       - pkgrepo: projectatomic-repo  
     - refresh: true
+    - install_recommends: False
 
 skopeo:
   pkg.latest:
     - require:
       - pkgrepo: projectatomic-repo  
     - refresh: true
+    - install_recommends: False
 
 skopeo-containers:
   pkg.latest:
     - require:
       - pkgrepo: projectatomic-repo  
     - refresh: true
+    - install_recommends: False
 
 cri-o-{{ common.cri.crio.version }}:
   pkg.latest:
     - require:
       - pkgrepo: projectatomic-repo
     - refresh: true
+    - install_recommends: False
+
+/etc/cni/net.d/100-crio-bridge.conf:
+  file.absent:
+    - watch:
+      - pkg: cri-o-{{ common.cri.crio.version }}
+
+/etc/cni/net.d/200-loopback.conf:
+  file.absent:
+    - watch:
+      - pkg: cri-o-{{ common.cri.crio.version }}
 
 ostree-install:
   pkgrepo.managed:
@@ -134,11 +148,11 @@ ostree-install:
 crio.service:
   service.running:
     - watch:
-      - pkg: skopeo
       - pkg: cri-o-{{ common.cri.crio.version }}
-    - watch:
       - file: /lib/systemd/system/crio.service
       - file: /etc/crio/crio.conf
       - file: /etc/crio/seccomp.json
       - file: /etc/containers/policy.json
+      - file: /etc/cni/net.d/100-crio-bridge.conf
+      - file: /etc/cni/net.d/200-loopback.conf
     - enable: True

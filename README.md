@@ -2,14 +2,16 @@
 
 # Work-in-Progress
 
-`saltstack-kubernetes` aims to deploy and maintain a secure production ready **Kubernetes cluster** managed by:
+The `saltstack-kubernetes` aims to deploy and manage a secure production ready **Kubernetes cluster** using [Terraform](https://www.terraform.io) for server provisionning and [Saltstack](https://saltstack.io) for Kubernetes installation and configuration management.
 
-* [Terraform](https://www.terraform.io) for server provionning.
-* [Saltstack](https://saltstack.io) for Kubernetes installation and configuration management.
+Cloud provider | DNS provider | Kubernetes version | Container runtime | Container Network
+-------------- | ------------ | ------------------ | ----------------- | -----------------
+<ul><li>**hetzner**</li><li>scaleway</li></ul> | <ul><li>**cloudflare**</li></ul> | <ul><li>1.10.6</li><li>**1.11.2**</li></ul> | <ul><li>docker 17.0.3-ce</li><li>containerd 1.2.0-beta</li><li>cri-o 1.11</li><li>rkt 1.30.0</li></ul> | <ul><li>**cni 0.7.1**</li><li>canal 3.2.1 (flannel 0.9.1)</li><li>flannel 0.1.0</li><li>weave 2.5.0-dev</li></ul>
 
+## Credits
 This project is a fusion of the [valentin2105/Kubernetes-Saltstack](https://github.com/valentin2105/Kubernetes-Saltstack) and [hobby-kube](https://github.com/hobby-kube/provisionning) to address the following requirements:
 
-* [x] **Single public IP**
+* [x] **Single public IP** required
 * [x] **Full TLS** communications between cluster components
 * [x] Segregated proxy nodes for ingress traffic
 * [x] Segregated etcd cluster
@@ -45,7 +47,7 @@ This project is a fusion of the [valentin2105/Kubernetes-Saltstack](https://gith
 - **Composable** (CNI, CRI)
 - **Node Security**, **RBAC** and **TLS** by default
 
-## Getting started 
+## Getting started
 
 Clone the repository.
 
@@ -270,7 +272,7 @@ haproxy:
   listens:
     stats:
       bind:
-        - "0.0.0.0:18080"
+        - "0.0.0.0:28080"
       mode: http
       stats:
         enable: True

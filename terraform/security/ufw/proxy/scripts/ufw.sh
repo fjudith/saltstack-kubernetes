@@ -58,7 +58,7 @@ sudo ufw allow 6443
 sudo ufw allow 8888
 
 # Allow HAproxy Stats
-sudo ufw allow 18080
+sudo ufw allow 28080
 
 # Allow Flannel vxlan
 ufw allow in 8472/udp

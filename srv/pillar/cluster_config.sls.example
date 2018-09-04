@@ -191,7 +191,7 @@ haproxy:
   listens:
     stats:
       bind:
-        - "0.0.0.0:18080"
+        - "0.0.0.0:28080"
       mode: http
       stats:
         enable: True

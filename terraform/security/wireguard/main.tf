@@ -130,17 +130,17 @@ resource "null_resource" "wireguard" {
     ]
   }
 
-  provisioner "file" {
-    content     = "${element(data.template_file.overlay-route-service.*.rendered, count.index)}"
-    destination = "/etc/systemd/system/overlay-route.service"
-  }
+  # provisioner "file" {
+  #   content     = "${element(data.template_file.overlay-route-service.*.rendered, count.index)}"
+  #   destination = "/etc/systemd/system/overlay-route.service"
+  # }
 
-  provisioner "remote-exec" {
-    inline = [
-      "systemctl start overlay-route.service",
-      "systemctl is-enabled overlay-route.service || systemctl enable overlay-route.service",
-    ]
-  }
+  # provisioner "remote-exec" {
+  #   inline = [
+  #     "systemctl start overlay-route.service",
+  #     "systemctl is-enabled overlay-route.service || systemctl enable overlay-route.service",
+  #   ]
+  # }
 }
 
 data "template_file" "interface-conf" {

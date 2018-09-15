@@ -15,8 +15,8 @@
 cni-latest-archive:
   archive.extracted:
     - name: /opt/cni/bin
-    - source: https://github.com/containernetworking/plugins/releases/download/v{{ common.cni.version }}/cni-plugins-amd64-v{{ common.cni.version }}.tgz
-    - skip_verify: true
+    - source: {{ common.addons.cni.source }}
+    - source_hash: {{ common.addons.cni.source_hash }}
     - archive_format: tar
     - if_missing: /opt/cni/bin/loopback
 

@@ -26,9 +26,7 @@ spec:
         cni: {{ common.addons.helm.cni }}
 {%- endif %}
     spec:
-      {%- if 'RBAC' in master.auth.get('mode', "") %}
       serviceAccountName: tiller
-      {%- endif %}
       tolerations:
         - key: node-role.kubernetes.io/master
           effect: NoSchedule

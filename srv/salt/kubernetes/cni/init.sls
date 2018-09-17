@@ -15,8 +15,8 @@
 cni-latest-archive:
   archive.extracted:
     - name: /opt/cni/bin
-    - source: {{ common.addons.cni.source }}
-    - source_hash: {{ common.addons.cni.source_hash }}
+    - source: {{ common.cni.source }}
+    - source_hash: {{ common.cni.source_hash }}
     - archive_format: tar
     - if_missing: /opt/cni/bin/loopback
 

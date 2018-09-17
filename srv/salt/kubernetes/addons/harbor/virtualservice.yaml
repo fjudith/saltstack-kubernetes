@@ -1,0 +1,129 @@
+{%- set public_domain = pillar['public-domain'] -%}
+
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: harbor
+  namespace: default
+spec:
+  gateways:
+  - istio-gateway
+  hosts:
+  - registry.{{ public_domain }}
+  http:
+  - match:
+    - uri:
+        prefix: /api
+    route:
+    - destination:
+        host: registry-harbor-ui.harbor.svc.cluster.local
+        port:
+          number: 80
+  - match:
+    - uri:
+        prefix: /service
+    route:
+    - destination:
+        host: registry-harbor-ui.harbor.svc.cluster.local
+        port:
+          number: 80
+  - match:
+    - uri:
+        prefix: /v2
+    route:
+    - destination:
+        host: registry-harbor-ui.harbor.svc.cluster.local
+        port:
+          number: 80
+  - match:
+    - uri:
+        prefix: /chartrepo
+    route:
+    - destination:
+        host: registry-harbor-ui.harbor.svc.cluster.local
+        port:
+          number: 80
+  - match:
+    - uri:
+        prefix: /login
+    route:
+    - destination:
+        host: registry-harbor-ui.harbor.svc.cluster.local
+        port:
+          number: 80
+  - match:
+    - uri:
+        prefix: /log_out
+    route:
+    - destination:
+        host: registry-harbor-ui.harbor.svc.cluster.local
+        port:
+          number: 80
+  - match:
+    - uri:
+        prefix: /sendEmail
+    route:
+    - destination:
+        host: registry-harbor-ui.harbor.svc.cluster.local
+        port:
+          number: 80
+  - match:
+    - uri:
+        prefix: /language
+    route:
+    - destination:
+        host: registry-harbor-ui.harbor.svc.cluster.local
+        port:
+          number: 80
+  - match:
+    - uri:
+        prefix: /reset
+    route:
+    - destination:
+        host: registry-harbor-ui.harbor.svc.cluster.local
+        port:
+          number: 80
+  - match:
+    - uri:
+        prefix: /userExists
+    route:
+    - destination:
+        host: registry-harbor-ui.harbor.svc.cluster.local
+        port:
+          number: 80
+  - match:
+    - uri:
+        prefix: /reset_password
+    route:
+    - destination:
+        host: registry-harbor-ui.harbor.svc.cluster.local
+        port:
+          number: 80
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: registry-harbor-portal.harbor.svc.cluster.local
+        port:
+          number: 80
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: notary
+  namespace: harbor
+spec:
+  gateways:
+  - istio-gateway
+  hosts:
+  - notary.{{ public_domain }}
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: registry-harbor-notary-server.harbor.svc.cluster.local
+        port:
+          number: 4443

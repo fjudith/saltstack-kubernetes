@@ -20,6 +20,9 @@ conntrack:
 bridge-utils:
   pkg.latest
 
+socat:
+  pkg.latest
+
 net.ipv4.ip_forward:
   sysctl.present:
     - value: 1

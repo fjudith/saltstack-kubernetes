@@ -50,3 +50,30 @@ kubernetes-helm-install:
         kubectl apply -f /srv/kubernetes/manifests/helm/helm-tiller.yaml
         kubectl apply -f /srv/kubernetes/manifests/helm/helm-serviceaccount.yaml
     - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+
+/tmp/helm-v{{ common.addons.helm.version }}:
+  archive.extracted:
+    - source: https://storage.googleapis.com/kubernetes-helm/helm-v{{ common.addons.helm.version }}-linux-amd64.tar.gz
+    - source_hash: {{ common.addons.helm.source_hash }}
+    - user: root
+    - group: root
+    - archive_format: tar
+    - enforce_toplevel: false
+
+/usr/local/bin/helm:
+  file.copy:
+    - source: /tmp/helm-v{{ common.addons.helm.version }}/linux-amd64/helm
+    - mode: 555
+    - user: root
+    - group: root
+    - force: true
+    - require:
+      - archive: /tmp/helm-v{{ common.addons.helm.version }}
+    - unless: cmp -s /usr/local/bin/helm /tmp/helm-v{{ common.addons.helm.version }}/linux-amd64/helm
+
+helm-init:
+  cmd.run:
+    - name: /usr/local/bin/helm init --client-only --home /srv/helm/home
+    - unless: test -d /srv/helm/home
+    - require:
+      - file: /usr/local/bin/helm

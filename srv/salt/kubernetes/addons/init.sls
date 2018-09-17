@@ -12,6 +12,9 @@ include:
 {%- if common.addons.get('dashboard', {'enabled': False}).enabled %}
   - kubernetes.addons.kube-dashboard
 {%- endif -%}
+{%- if common.addons.get('helm', {'enabled': False}).enabled %}
+  - kubernetes.addons.helm
+{%- endif -%}
 {%- if common.addons.get('npd', {'enabled': False}).enabled %}
   - kubernetes.addons.node-problem-detector
 {%- endif -%}
@@ -36,9 +39,9 @@ include:
 {%- if common.addons.get('kube_prometheus', {'enabled': False}).enabled %}
   - kubernetes.addons.prometheus-operator
 {%- endif -%}
-{%- if common.addons.get('helm', {'enabled': False}).enabled %}
-  - kubernetes.addons.helm
-{%- endif -%}
 {%- if common.addons.get('weave-scope', {'enabled': False}).enabled %}
   - kubernetes.addons.weave-scope
+{%- endif -%}
+{%- if common.addons.get('harbor', {'enabled': False}).enabled %}
+  - kubernetes.addons.harbor
 {%- endif -%}

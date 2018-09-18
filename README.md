@@ -19,10 +19,12 @@ The `saltstack-kubernetes` aims to deploy and manage a secure production ready *
   </tr>
 </table>
 
-
 ## Credits
-This project is a fusion of the [valentin2105/Kubernetes-Saltstack](https://github.com/valentin2105/Kubernetes-Saltstack) and [hobby-kube](https://github.com/hobby-kube/provisionning) to address the following requirements:
+This project is a combination of [Kubernetes-Saltstack](https://github.com/valentin2105/Kubernetes-Saltstack) from [@valentin2105](https://github.com/valentin2105) and [hobby-kube](https://github.com/hobby-kube/provisionning)  from [@pstadler](https://github.com/pstadler) to address the following requirements:
 
+* [x] Cloud-provider **agnostic** (Saltstack requires Ubuntu Bionic 18.04)
+* [x] **TLS for cluster toolchain**
+* [x] **Node Security**, **RBAC** enabled by default
 * [x] **Single public IP** required
 * [x] **Full TLS** communications between cluster components
 * [x] Segregated proxy nodes for ingress traffic
@@ -30,10 +32,7 @@ This project is a fusion of the [valentin2105/Kubernetes-Saltstack](https://gith
 * [x] **Proxied and Routed internet access** from Kubernetes servers
 * [x] Reverse proxy to kube-apiserver cluster
 * [x] **Predictable ip Adressing** using [Wireguard](https://www.wireguard.com) Mesh VPN
-* [x] **Automatic certificate provisionning** using terraform
-* [x] Fully containerized Kubernetes deployment
-  * [x] Use [rkt](https://coreos.com/rkt) for `etcd` and `kubelet` installations.
-  * [x] Use [docker](https://www.docker.com) for other kubernetes components (i.e. kube-apiserver, addons, etc.)
+* [x] **Automatic cluster certificate provisionning** using terraform
 * [x] Supports Calico (routed), **Flannel (vxlan) and Canal**.
 * [x] API driven DNS registration [Cloudflare](https://cloudflare.com)
 * [x] [Node authorization](https://kubernetes.io/docs/reference/access-authn-authz/node/) support
@@ -41,70 +40,13 @@ This project is a fusion of the [valentin2105/Kubernetes-Saltstack](https://gith
 * [x] [HAproxy](https://haproxy.org) for reverse proxy
 * [x] [Traefik](https://traefik.io) for Kubernetes Ingress
 * [ ] [Suricata](https://suricata-ids.org) for intrusion detection
-
 * Tested cloud providers:
   * [x] [Scaleway](https://www.scaleway.com)
-
-
-## Features
-
-- Cloud-provider **agnostic**
-- Support **high-available** clusters
-- Use the power of **`Saltstack`**
-- Made for **`SystemD`** based Linux systems
-- **Routed** networking by default (**`Calico`**)
-- Latest Kubernetes release (**1.10.5**)
-- Support **IPv6**
-- Integrated **add-ons**
-- **Composable** (CNI, CRI)
-- **Node Security**, **RBAC** and **TLS** by default
+  * [x] [Hetzner Cloud](https://hetzner.com/cloud)
 
 ## Getting started
 
-Clone the repository.
-
-Let's clone the git repo on Salt-Master and create CA & Certificates on the `certs/` directory using **`CfSSL`** tools:
-
-```bash
-git clone https://github.com/fjudith/saltstack-kubernetes
-ln -s saltstack-kubernetes/salt /srv/salt
-ln -s saltstack-kubernetes/pillar /srv/pillar
-
-sudo curl -fsSL -o /usr/local/bin/cfssl https://pkg.cfssl.org/R1.2/cfssl_linux-amd64
-sudo curl -fsSL -o /usr/local/bin/cfssl-certinfo https://pkg.cfssl.org/R1.2/cfssl-certinfo_linux-amd64
-sudo curl -fsSL -o /usr/local/bin/cfssljson https://pkg.cfssl.org/R1.2/cfssljson_linux-amd64
-
-sudo chmod +x /usr/local/bin/cfssl /usr/local/bin/cfssljson /usr/local/bin/cfssl-certinfo
-```
-
-### IMPORTANT Point
-
-Because we need to generate our own CA and Certificates for the cluster, You MUST put **every hostnames of the Kubernetes cluster** (Master & nodes) in the `certs/kubernetes-csr.json` (`hosts` field). You can also modify the `certs/*json` files to match your cluster-name / country. (optional)  
-
-You can use either public or private names, but they must be registered somewhere (DNS provider, internal DNS server, `/etc/hosts` file).
-
-```bash
-cd /srv/salt/certs
-cfssl gencert -initca ca-csr.json | cfssljson -bare ca
-
-# Don't forget to edit kubernetes-csr.json before this point !
-
-cfssl gencert \
-  -ca=ca.pem \
-  -ca-key=ca-key.pem \
-  -config=ca-config.json \
-  -profile=kubernetes \
-  kubernetes-csr.json | cfssljson -bare kubernetes
-```
-After that, edit the `pillar/cluster_config.sls` to configure your future Kubernetes cluster :
-
-```bash
-# Generate encryption key 
-echo $(head -c 32 /dev/urandom | base64)
-
-# Generate tokens
-echo $(head -c 16 /dev/urandom | od -An -t x | tr -d ' ')
-```
+The following software needs to be installed prior s
 
 ```yaml
 public-domain: example.com

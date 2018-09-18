@@ -46,6 +46,8 @@ Solutions for monitoring, logging and tracing
 
 ## Inbound internet access
 
+Solutions to access hosted applications and cluster services.
+
 <table>
   <tr align='center'>
     <th align='center' colspan='3'>Application endpoint</th>
@@ -72,6 +74,8 @@ Solutions for monitoring, logging and tracing
 </table>
 
 ## Persistent storage
+
+Solutions to provide storage persistence to stateful applications.
 
 <table>
   <tr align='center'>
@@ -100,6 +104,8 @@ Solutions for monitoring, logging and tracing
 
 ## Service Mesh and Discovery
 
+Solution to manage micro-services interconnexions and service discovery at scale.
+
 <table>
   <tr align='center'>
     <th align='center' colspan='2'>Service Mesh</th>
@@ -123,6 +129,8 @@ Solutions for monitoring, logging and tracing
 </table>
 
 ## Container Network
+
+Solutions to manage container networking and traffic policies.
 
 <table>
   <tr align='center'>
@@ -157,6 +165,8 @@ Solutions for monitoring, logging and tracing
 
 ## Container Runtime
 
+Solutions to run containerized applications.
+
 <table>
   <tr align='center'>
   <th align='center' colspan='1'>Build and run</th>
@@ -183,6 +193,8 @@ Solutions for monitoring, logging and tracing
 </table>
 
 ## Perimeter security
+
+Solutions to control and protect the cluster exchange on the Web.
 
 <table>
   <tr align='center'>
@@ -211,6 +223,8 @@ Solutions for monitoring, logging and tracing
 
 ## Cloud provider
 
+Cloud infrastructure providers.
+
 <table>
   <tr align='center'>
     <th align='center' colspan='3'>IaaS</th>
@@ -234,6 +248,8 @@ Solutions for monitoring, logging and tracing
 
 ## DNS provider
 
+Managed DNS services.
+
 <table>
   <tr align='center'>
     <th align='center' colspan='1'>Name resolution</th>
@@ -250,6 +266,8 @@ Solutions for monitoring, logging and tracing
 </table>
 
 ## Configuration management & orchestration
+
+Tools to instanciate the various cluster components
 
 <table>
   <tr align='center'>

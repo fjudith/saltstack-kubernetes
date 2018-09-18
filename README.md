@@ -19,6 +19,7 @@ The `saltstack-kubernetes` aims to deploy and manage a secure production ready *
   </tr>
 </table>
 
+
 ## Credits
 This project is a fusion of the [valentin2105/Kubernetes-Saltstack](https://github.com/valentin2105/Kubernetes-Saltstack) and [hobby-kube](https://github.com/hobby-kube/provisionning) to address the following requirements:
 

@@ -1,6 +1,25 @@
 
 # Features
 
+## CI/CD
+
+Solutions for software factory
+
+<table>
+  <tr align='center'>
+    <th align='center'>Container image registry</th>
+  </tr>
+  <tr align='center'>
+    <td align='center'><a ref='https://github.com/goharbor/harbor'>Harbor<a></td>
+  </tr>
+  <tr align='center'>
+    <td align='center'><img src='media/harbor.png' width="50px"></td>
+  </tr>
+  <tr>
+    <td align='center'>Secure image and Charts repository</td>
+  </tr>
+</table>
+
 ## Observability & Analysis
 
 Solutions for monitoring, logging and tracing

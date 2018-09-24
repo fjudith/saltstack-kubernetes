@@ -37,7 +37,7 @@
     - group: root
     - mode: 644
 
-kubernetes-helm-install:
+tiller:
   cmd.run:
     - watch:
       - file: /srv/kubernetes/manifests/helm/helm-rbac.yaml
@@ -71,7 +71,7 @@ kubernetes-helm-install:
       - archive: /tmp/helm-v{{ common.addons.helm.version }}
     - unless: cmp -s /usr/local/bin/helm /tmp/helm-v{{ common.addons.helm.version }}/linux-amd64/helm
 
-helm-init:
+helm:
   cmd.run:
     - name: /usr/local/bin/helm init --client-only --home /srv/helm/home
     - unless: test -d /srv/helm/home

@@ -1,0 +1,24 @@
+{{- if .Values.postgresql.persistence.enabled }}
+{{- if not .Values.postgresql.persistence.existingClaim }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: keycloak-postgresql
+  labels:
+{{ include "keycloak.labels" . | indent 4 }}
+    component: database
+spec:
+  accessModes: 
+    - {{ .Values.postgresql.persistence.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.postgresql.persistence.size }}
+  {{- if .Values.postgresql.persistence.storageClass }}
+    {{- if eq "-" .Values.postgresql.persistence.storageClass }}
+  storageClassName: ""
+    {{- else }}
+  storageClassName: {{ .Values.postgresql.persistence.storageClass }}
+    {{- end }}
+  {{- end }}
+{{- end }}
+{{- end }}

@@ -2,3 +2,5 @@ host.map
 certs/*.csr
 certs/*.crt
 certs/*.pem
+*.ppm
+*.mp4

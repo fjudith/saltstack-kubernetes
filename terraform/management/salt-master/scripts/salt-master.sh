@@ -23,11 +23,9 @@ apt-get install -yqq \
     reclass
 
 systemctl enable salt-master
-# systemctl enable salt-syndic
 systemctl enable salt-minion
 
 systemctl daemon-reload
 
 systemctl restart salt-master
-# systemctl restart salt-syndic
 systemctl restart salt-minion

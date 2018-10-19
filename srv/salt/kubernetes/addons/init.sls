@@ -45,3 +45,6 @@ include:
 {%- if common.addons.get('harbor', {'enabled': False}).enabled %}
   - kubernetes.addons.harbor
 {%- endif -%}
+{%- if common.addons.get('kubeless', {'enabled': False}).enabled %}
+  - kubernetes.addons.kubeless
+{%- endif -%}

@@ -1,6 +1,9 @@
 
 # Features
 
+Project is designed to allow you compose the Kubernetes infrastructure that fits your needs.
+Refer to the [pillar example](../srv/pillar/cluster_config.sls.example) to learn how to enable/disable and customize features.
+
 ## Serverless
 
 Solutions for Function as a Service

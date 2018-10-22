@@ -48,3 +48,6 @@ include:
 {%- if common.addons.get('kubeless', {'enabled': False}).enabled %}
   - kubernetes.addons.kubeless
 {%- endif -%}
+{%- if common.addons.get('knative', {'enabled': False}).enabled %}
+  - kubernetes.addons.knative
+{%- endif -%}

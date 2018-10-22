@@ -14,11 +14,11 @@ Root user
 The project were developped using Terraform v0.11.7, but later version should work well.
 
 ```bash
-curl -OL https://releases.hashicorp.com/terraform/0.11.8/terraform_0.11.8_linux_amd64.zip
-unzip terraform_0.11.8_linux_amd64.zip
+curl -OL https://releases.hashicorp.com/terraform/0.11.8/terraform_0.11.9_linux_amd64.zip
+unzip terraform_0.11.9_linux_amd64.zip
 cp terraform /usr/local/bin/
 chmod +x /usr/local/bin/terraform
-rm -f terraform terraform_0.11.8_linux_amd64.zip
+rm -f terraform terraform_0.11.9_linux_amd64.zip
 ```
 
 ## Install Kubectl

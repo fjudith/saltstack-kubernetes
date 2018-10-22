@@ -5,5 +5,15 @@
 ### Customization
 
 The Kubernetes cluster architecture deployed involves dedicated nodes for the ingress traffic.
-Therefore [default Istio installation manifest](https://github.com/istio/istio/tree/master/install/kubernetes) si modified to get the `istio-ingressgateway` deployed as a [DaemonSet](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/) on Nodes with labeled with the Ingress Role (e.g. proxy01, proxy02).
+Therefore [default Istio installation manifest](https://github.com/istio/istio/tree/master/install/kubernetes) is modified to get two `istio-ingressgateway` and `istio-egressgateway` on Nodes with label an toleration `node-role.kubernetes.io/ingress` (e.g. proxy01, proxy02).
 
+```yaml
+spec:
+  replicas: 2
+    spec:
+      tolerations:
+        - key: node-role.kubernetes.io/ingress
+          effect: NoSchedule
+      nodeSelector:
+        node-role.kubernetes.io/ingress: "true"
+```

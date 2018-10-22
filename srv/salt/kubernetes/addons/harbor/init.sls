@@ -22,12 +22,12 @@ kubernetes-harbor-install:
         helm dependency update
         helm install --name registry --namespace harbor \
         {%- if master.storage.get('rook', {'enabled': False}).enabled %}
-        --set registry.volumes.data.storageClass=rook-ceph-block \
-        --set registry.volumes.data.storageClass=rook-ceph-block \
-        --set database.internal.volumes.data.storageClass=rook-ceph-block \
-        --set chartmuseum.volumes.data.storageClass=rook-ceph-block \
+        --set persistence.enabled=true \
         --set jobservice.volumes.data.storageClass=rook-ceph-block \
-        --set redis.master.persistence.storageClass=rook-ceph-block \
+        --set database.internal.volumes.data.storageClass=rook-ceph-block \
+        --set registry.volumes.data.storageClass=rook-ceph-block \
+        --set chartmuseum.volumes.data.storageClass=rook-ceph-block \
+        --set redis.internal.volumes.data.storageClass=rook-ceph-block \
         {%- else -%}
         --set persistence.enabled=false \
         {%- endif %}

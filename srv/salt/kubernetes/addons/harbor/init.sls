@@ -26,6 +26,7 @@ kubernetes-harbor-install:
         --set registry.volumes.data.storageClass=rook-ceph-block \
         --set database.internal.volumes.data.storageClass=rook-ceph-block \
         --set chartmuseum.volumes.data.storageClass=rook-ceph-block \
+        --set jobservice.volumes.data.storageClass=rook-ceph-block \
         --set redis.master.persistence.storageClass=rook-ceph-block \
         {%- else -%}
         --set persistence.enabled=false \

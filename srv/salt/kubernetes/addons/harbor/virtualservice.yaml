@@ -104,7 +104,7 @@ spec:
         prefix: /
     route:
     - destination:
-        host: registry-harbor-portal.harbor.svc.cluster.local
+        host: registry-harbor-ui.harbor.svc.cluster.local
         port:
           number: 80
 ---

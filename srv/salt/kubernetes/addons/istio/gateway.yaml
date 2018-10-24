@@ -19,8 +19,8 @@ spec:
     tls:
       httpsRedirect: true # sends 301 redirect for http requests
   - port:
-      name: https
       number: 443
+      name: https
       protocol: HTTPS
     hosts:
     - '*'
@@ -29,9 +29,18 @@ spec:
       privateKey: /etc/istio/ingressgateway-certs/tls.key
       serverCertificate: /etc/istio/ingressgateway-certs/tls.crt
   - port:
-      name: smtp
       number: 25
-      protocol: TCP
+      name: smtp
     hosts:
-    - "mail.{{ public_domain }}"
+    - "mailer.{{ public_domain }}"
+  - port:
+      number: 465
+      name: smtps
+      protocol: TLS
+    hosts:
+    - "mailer.{{ public_domain }}"
+    tls:
+      mode: SIMPLE
+      privateKey: /etc/istio/ingressgateway-certs/tls.key
+      serverCertificate: /etc/istio/ingressgateway-certs/tls.crt
 ---

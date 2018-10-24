@@ -10,18 +10,28 @@ spec:
   selector:
     istio: ingressgateway
   servers:
-  - hosts:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
     - '*'
-    # - istio-tracing.{{ public_domain }}
-    # - prometheus.{{ public_domain }}
-    # - grafana.{{ public_domain }}
-    # - alertmanager.{{ public_domain }}
-    port:
+    tls:
+      httpsRedirect: true # sends 301 redirect for http requests
+  - port:
       name: https
       number: 443
       protocol: HTTPS
+    hosts:
+    - '*'
     tls:
       mode: SIMPLE
       privateKey: /etc/istio/ingressgateway-certs/tls.key
       serverCertificate: /etc/istio/ingressgateway-certs/tls.crt
+  - port:
+      name: smtp
+      number: 25
+      protocol: TCP
+    hosts:
+    - "mail.{{ public_domain }}"
 ---

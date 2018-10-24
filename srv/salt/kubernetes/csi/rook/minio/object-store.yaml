@@ -1,0 +1,58 @@
+{%- from "kubernetes/map.jinja" import common with context -%}
+{%- from "kubernetes/map.jinja" import master with context -%}
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: rook-minio
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: access-keys
+  namespace: rook-minio
+type: Opaque
+data:
+  # Base64 encoded string: "TEMP_DEMO_ACCESS_KEY"
+  username: {{ master.storage.rook_minio.username }}
+  # Base64 encoded string: "TEMP_DEMO_SECRET_KEY"
+  password: {{ master.storage.rook_minio.password }}
+---
+apiVersion: minio.rook.io/v1alpha1
+kind: ObjectStore
+metadata:
+  name: my-store
+  namespace: rook-minio
+spec:
+  scope:
+    nodeCount: 4
+  placement:
+    tolerations:
+    nodeAffinity:
+      all:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: role
+              operator: In
+              values:
+              - storage-node
+    podAffinity:
+    podAnyAffinity:
+  port: 9000
+  credentials:
+    name: access-keys
+    namespace: rook-minio
+  storageAmount: "10G"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: minio-service
+  namespace: rook-minio
+spec:
+  type: NodePort
+  ports:
+    - port: 9000
+  selector:
+    app: minio

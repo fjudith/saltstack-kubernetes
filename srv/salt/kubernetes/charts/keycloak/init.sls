@@ -8,10 +8,9 @@ keycloak:
     - unless: helm list | grep keycloak
     - env:
       - HELM_HOME: /srv/helm/home
-    - cwd: /srv/kubernetes/manifests/keycloak
     - name: |
         helm install --name keycloak --namespace keycloak \
-            {%- if master.storage.get('rook', {'enabled': False}).enabled %}
+            {%- if master.storage.get('rook_ceph', {'enabled': False}).enabled %}
             --set postgresql.persistence.enabled=true \
             {%- endif %}
             --set keycloak.persistence.deployPostgres=true \

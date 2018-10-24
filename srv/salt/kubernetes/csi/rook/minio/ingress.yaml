@@ -1,0 +1,43 @@
+{%- set public_domain = pillar['public-domain'] -%}
+{%- from "kubernetes/map.jinja" import common with context -%}
+
+{%- if common.addons.get('ingress_traefik', {'enabled': False}).enabled %}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: minio-dashboard
+  namespace: rook-minio
+spec:
+  rules:
+  - host: minio.{{ public_domain }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: minio-service
+          servicePort: 9000
+---
+{% endif %}
+
+{%- if common.addons.get('ingress_istio', {'enabled': False}).enabled -%}
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: minio-dashboard
+  namespace: default
+spec:
+  gateways:
+  - istio-gateway
+  hosts:
+  - minio.{{ public_domain }}
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: minio-service.rook-minio.svc.cluster.local
+        port:
+          number: 9000
+---
+{% endif %}

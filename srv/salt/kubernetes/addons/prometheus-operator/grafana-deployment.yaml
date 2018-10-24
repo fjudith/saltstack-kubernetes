@@ -65,7 +65,7 @@ spec:
         - mountPath: /grafana-dashboard-definitions/0/statefulset
           name: grafana-dashboard-statefulset
           readOnly: false
-        {%- if master.storage.get('rook', {'enabled': False}).enabled %}
+        {%- if master.storage.get('rook_ceph', {'enabled': False}).enabled %}
         - mountPath: /grafana-dashboard-definitions/0/rook
           name: grafana-dashboard-rook
           readOnly: false
@@ -112,7 +112,7 @@ spec:
       - configMap:
           name: grafana-dashboard-statefulset
         name: grafana-dashboard-statefulset
-      {%- if master.storage.get('rook', {'enabled': False}).enabled %}
+      {%- if master.storage.get('rook_ceph', {'enabled': False}).enabled %}
       - configMap:
           name: grafana-dashboard-rook
         name: grafana-dashboard-rook

@@ -22,7 +22,7 @@ kubernetes-harbor-install:
         helm dependency update
         helm install --name registry --namespace harbor \
         --set database.internal.password={{ common.addons.harbor.database_password }} \
-        {%- if master.storage.get('rook', {'enabled': False}).enabled %}
+        {%- if master.storage.get('rook_ceph', {'enabled': False}).enabled %}
         --set persistence.enabled=true \
         --set database.internal.volumes.data.storageClass=rook-ceph-block \
         --set registry.volumes.data.storageClass=rook-ceph-block \

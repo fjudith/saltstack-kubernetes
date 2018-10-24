@@ -12,7 +12,7 @@ containerd-archive:
   archive.extracted:
     - name: /usr/local
     - source: https://github.com/containerd/containerd/releases/download/v{{ common.cri.containerd.version }}/containerd-{{ common.cri.containerd.version }}.linux-amd64.tar.gz
-    - skip_verify: true
+    - source_hash: {{ common.cri.containerd.source_hash }}
     - archive_format: tar
     
 /etc/systemd/system/containerd.service:

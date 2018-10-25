@@ -1,5 +1,84 @@
 {%- set public_domain = pillar['public-domain'] -%}
+{%- from "kubernetes/map.jinja" import common with context -%}
 
+{%- if common.addons.get('ingress_traefik', {'enabled': False}).enabled %}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: harbor
+  namespace: harbor
+spec:
+  rules:
+  - host: registry.{{ public_domain }}
+    http:
+      paths:
+      - path: /api
+        backend:
+          serviceName: registry-harbor-ui
+          servicePort: 80
+      - path: /service
+        backend:
+          serviceName: registry-harbor-ui
+          servicePort: 80
+      - path: /v2
+        backend:
+          serviceName: registry-harbor-ui
+          servicePort: 80
+      - path: /chartrepo
+        backend:
+          serviceName: registry-harbor-ui
+          servicePort: 80
+      - path: /login
+        backend:
+          serviceName: registry-harbor-ui
+          servicePort: 80
+      - path: /log_out
+        backend:
+          serviceName: registry-harbor-ui
+          servicePort: 80
+      - path: /sendEmail
+        backend:
+          serviceName: registry-harbor-ui
+          servicePort: 80
+      - path: /language
+        backend:
+          serviceName: registry-harbor-ui
+          servicePort: 80
+      - path: /reset
+        backend:
+          serviceName: registry-harbor-ui
+          servicePort: 80
+      - path: /userExists
+        backend:
+          serviceName: registry-harbor-ui
+          servicePort: 80
+      - path: /reset_password
+        backend:
+          serviceName: registry-harbor-ui
+          servicePort: 80
+      - path: /
+        backend:
+          serviceName: registry-harbor-ui
+          servicePort: 80
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: notary
+  namespace: harbor
+spec:
+  rules:
+  - host: notary.{{ public_domain }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: registry-harbor-notary-server
+          servicePort: 4443
+---
+{% endif %}
+
+{%- if common.addons.get('ingress_istio', {'enabled': False}).enabled -%}
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
@@ -127,3 +206,4 @@ spec:
         host: registry-harbor-notary-server.harbor.svc.cluster.local
         port:
           number: 4443
+{% endif %}

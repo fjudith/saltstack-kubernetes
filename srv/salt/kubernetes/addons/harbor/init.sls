@@ -36,10 +36,9 @@ kubernetes-harbor-install:
         --set externalURL=https://registry.{{ public_domain }} \
         "./"
 
-{% if common.addons.get('ingress_istio', {'enabled': False}).enabled -%}
-/srv/kubernetes/manifests/harbor-virtualservice.yaml:
+/srv/kubernetes/manifests/harbor-ingress.yaml:
     file.managed:
-    - source: salt://kubernetes/addons/harbor/virtualservice.yaml
+    - source: salt://kubernetes/addons/harbor/ingress.yaml
     - user: root
     - template: jinja
     - group: root
@@ -48,9 +47,8 @@ kubernetes-harbor-install:
 harbor-virtualservice:
   cmd.run:
     - watch:
-        - file:  /srv/kubernetes/manifests/harbor-virtualservice.yaml
+        - file:  /srv/kubernetes/manifests/harbor-ingress.yaml
     - runas: root
     - use_vt: True
     - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
-    - name: kubectl apply -f /srv/kubernetes/manifests/harbor-virtualservice.yaml
-{% endif %}
+    - name: kubectl apply -f /srv/kubernetes/manifests/harbor-ingress.yaml

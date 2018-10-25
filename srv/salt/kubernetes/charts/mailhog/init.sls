@@ -14,21 +14,19 @@ mailhog:
             --set env.MH_HOSTNAME=mail.{{ public_domain }} \
             "stable/mailhog"
 
-{% if common.addons.get('ingress_istio', {'enabled': False}).enabled -%}
-/srv/kubernetes/manifests/mailhog-virtualservice.yaml:
+/srv/kubernetes/manifests/mailhog-ingress.yaml:
   file.managed:
-    - source: salt://kubernetes/charts/mailhog/istio/virtualservice.yaml
+    - source: salt://kubernetes/charts/mailhog/ingress.yaml
     - user: root
     - template: jinja
     - group: root
     - mode: 644
 
-mailhog-virtualservice:
+mailhog-ingress:
   cmd.run:
     - watch:
-        - file:  /srv/kubernetes/manifests/mailhog-virtualservice.yaml
+        - file:  /srv/kubernetes/manifests/mailhog-ingress.yaml
     - runas: root
     - use_vt: True
     - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
-    - name: kubectl apply -f /srv/kubernetes/manifests/mailhog-virtualservice.yaml
-{% endif %}
+    - name: kubectl apply -f /srv/kubernetes/manifests/mailhog-ingress.yaml

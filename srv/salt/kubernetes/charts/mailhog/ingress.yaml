@@ -1,0 +1,78 @@
+{%- set public_domain = pillar['public-domain'] -%}
+{%- from "kubernetes/map.jinja" import common with context -%}
+
+{%- if common.addons.get('ingress_traefik', {'enabled': False}).enabled %}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: mailhog-dashboard
+  namespace: mailhog
+spec:
+  rules:
+  - host: mailhog.{{ public_domain }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: mailhog
+          servicePort: 8025
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: mailhog-mail
+  namespace: mailhog
+spec:
+  rules:
+  - host: mailer.{{ public_domain }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: mailhog
+          servicePort: 1025
+---
+{% endif %}
+
+{%- if common.addons.get('ingress_istio', {'enabled': False}).enabled -%}
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: mailhog-dashboard
+  namespace: default
+spec:
+  gateways:
+  - istio-gateway
+  hosts:
+  - mailhog.{{ public_domain }}
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: mailhog.mailhog.svc.cluster.local
+        port:
+          number: 8025
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: mailhog-mail
+  namespace: default
+spec:
+  gateways:
+  - istio-gateway
+  hosts:
+  - mailer.{{ public_domain }}
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: mailhog.mailhog.svc.cluster.local
+        port:
+          number: 1025
+---
+{% endif %}

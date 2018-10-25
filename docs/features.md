@@ -4,9 +4,32 @@
 Project is designed to allow you compose the Kubernetes infrastructure that fits your needs.
 Refer to the [pillar example](../srv/pillar/cluster_config.sls.example) to learn how to enable/disable and customize features.
 
+## Website
+
+Kubernetes applications demonstration and troubleshooting.
+
+<table>
+  <tr align='center'>
+    <th align='center'>HTTP Troubleshooting</th>
+    <th align='center'>microservices demo</th>
+  </tr>
+  <tr align='center'>
+    <td align='center'><a ref='https://github.com/istio/istio/tree/master/samples/httpbin'>httpbin<a></td>
+    <td align='center'><a ref='https://microservices-demo.github.io'>microservices-demo<a></td>
+  </tr>
+  <tr align='center'>
+    <td align='center'><img src='media/httpbin.png' width="50px"></td>
+    <td align='center'><img src='media/weaveworks.png' width="50px"></td>
+  </tr>
+  <tr>
+    <td align='center'>Server side HTTP requests troubleshooting tool</td>
+    <td align='center'>Sock shop microservices architecture demo</td>
+  </tr>
+</table>
+
 ## Serverless
 
-Solutions for Function as a Service
+Solutions for Function as a Service.
 
 <table>
   <tr align='center'>
@@ -28,7 +51,7 @@ Solutions for Function as a Service
 
 ## CI/CD
 
-Solutions for software factory
+Solutions for software factory.
 
 <table>
   <tr align='center'>
@@ -51,7 +74,7 @@ Solutions for software factory
 
 ## Observability & Analysis
 
-Solutions for monitoring, logging and tracing
+Solutions for monitoring, logging and tracing.
 
 <table>
   <tr align='center'>

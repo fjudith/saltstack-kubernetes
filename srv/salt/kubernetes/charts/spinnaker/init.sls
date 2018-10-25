@@ -23,21 +23,19 @@ spinnaker:
             --set redis.cluster.enabled=true \
             "stable/spinnaker"
 
-{% if common.addons.get('ingress_istio', {'enabled': False}).enabled -%}
-/srv/kubernetes/manifests/spinnaker-virtualservice.yaml:
+/srv/kubernetes/manifests/spinnaker-ingress.yaml:
   file.managed:
-    - source: salt://kubernetes/charts/spinnaker/istio/virtualservice.yaml
+    - source: salt://kubernetes/charts/spinnaker/ingress.yaml
     - user: root
     - template: jinja
     - group: root
     - mode: 644
 
-spinnaker-virtualservice:
+spinnaker-ingress:
   cmd.run:
     - watch:
-        - file:  /srv/kubernetes/manifests/spinnaker-virtualservice.yaml
+        - file:  /srv/kubernetes/manifests/spinnaker-ingress.yaml
     - runas: root
     - use_vt: True
     - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
-    - name: kubectl apply -f /srv/kubernetes/manifests/spinnaker-virtualservice.yaml
-{% endif %}
+    - name: kubectl apply -f /srv/kubernetes/manifests/spinnaker-ingress.yaml

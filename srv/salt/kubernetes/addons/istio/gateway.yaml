@@ -31,6 +31,7 @@ spec:
   - port:
       number: 25
       name: smtp
+      protocol: TCP
     hosts:
     - "mailer.{{ public_domain }}"
   - port:

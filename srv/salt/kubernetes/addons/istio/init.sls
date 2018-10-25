@@ -1,5 +1,25 @@
 {%- from "kubernetes/map.jinja" import common with context -%}
 
+
+/tmp/istio:
+  archive.extracted:
+    - source: https://github.com/istio/istio/releases/download/{{ common.addons.ingress_istio.version }}/istio-{{ common.addons.ingress_istio.version }}-linux.tar.gz
+    - skip_verify: true
+    - user: root
+    - group: root
+    - archive_format: tar
+
+/usr/local/bin/istioctl:
+  file.copy:
+    - source: /tmp/istio/istio-{{ common.addons.ingress_istio.version }}/bin/istioctl
+    - mode: 555
+    - user: root
+    - group: root
+    - force: true
+    - require:
+      - archive: /tmp/istio
+    - unless: cmp -s /usr/local/bin/istioctl /tmp/istio/istio-{{ common.addons.ingress_istio.version }}/bin/istioctl
+
 /srv/kubernetes/manifests/istio:
   file.directory:
     - user: root

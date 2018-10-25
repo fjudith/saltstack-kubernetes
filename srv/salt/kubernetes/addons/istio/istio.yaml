@@ -3121,7 +3121,6 @@ spec:
           resources:
             requests:
               cpu: 10m
-            
           env:
           - name: POD_NAME
             valueFrom:
@@ -3142,6 +3141,8 @@ spec:
             valueFrom:
               fieldRef:
                 fieldPath: metadata.name
+          - name: ISTIO_META_EDGE_PROXY
+            value: 'true'
           volumeMounts:
           - name: istio-certs
             mountPath: /etc/certs

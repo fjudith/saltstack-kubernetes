@@ -18,21 +18,19 @@ keycloak:
             --set keycloak.persistence.dbVendor=postgres \
             "stable/keycloak"
 
-{% if common.addons.get('ingress_istio', {'enabled': False}).enabled -%}
-/srv/kubernetes/manifests/keycloak-virtualservice.yaml:
+/srv/kubernetes/manifests/keycloak-ingress.yaml:
   file.managed:
-    - source: salt://kubernetes/charts/keycloak/istio/virtualservice.yaml
+    - source: salt://kubernetes/charts/keycloak/ingress.yaml
     - user: root
     - template: jinja
     - group: root
     - mode: 644
 
-keycloak-virtualservice:
+keycloak-ingress:
   cmd.run:
     - watch:
-        - file:  /srv/kubernetes/manifests/keycloak-virtualservice.yaml
+        - file:  /srv/kubernetes/manifests/keycloak-ingress.yaml
     - runas: root
     - use_vt: True
     - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
-    - name: kubectl apply -f /srv/kubernetes/manifests/keycloak-virtualservice.yaml
-{% endif %}
+    - name: kubectl apply -f /srv/kubernetes/manifests/keycloak-ingress.yaml

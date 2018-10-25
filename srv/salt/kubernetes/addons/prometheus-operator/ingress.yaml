@@ -1,5 +1,40 @@
 {%- set public_domain = pillar['public-domain'] -%}
+{%- from "kubernetes/map.jinja" import common with context -%}
 
+{%- if common.addons.get('ingress_traefik', {'enabled': False}).enabled %}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+ name: prometheus-dashboard
+ namespace: monitoring
+ annotations:
+   kubernetes.io/ingress.class: traefik
+   # ingress.kubernetes.io/auth-type: "basic"
+   # ingress.kubernetes.io/auth-secret: "mysecret"
+spec:
+ rules:
+ - host: prometheus.{{ public_domain }}
+   http:
+     paths:
+     - backend:
+         serviceName: prometheus-k8s
+         servicePort: 9090
+ - host: alert.{{ public_domain }}
+   http:
+     paths:
+     - backend:
+         serviceName: alertmanager-main
+         servicePort: 9093
+ - host: grafana.{{ public_domain }}
+   http:
+     paths:
+     - backend:
+         serviceName: grafana
+         servicePort: 3000
+---
+{% endif %}
+
+{%- if common.addons.get('ingress_istio', {'enabled': False}).enabled -%}
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
@@ -60,3 +95,4 @@ spec:
         port:
           number: 3000
 ---
+{% endif %}

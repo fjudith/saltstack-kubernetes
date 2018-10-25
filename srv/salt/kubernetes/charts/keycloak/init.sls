@@ -13,6 +13,7 @@ keycloak:
             {%- if master.storage.get('rook_ceph', {'enabled': False}).enabled %}
             --set postgresql.persistence.enabled=true \
             {%- endif %}
+            --set keycloak.replicas=2 \
             --set keycloak.persistence.deployPostgres=true \
             --set keycloak.persistence.dbVendor=postgres \
             "stable/keycloak"

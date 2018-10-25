@@ -74,12 +74,11 @@ kubernetes-kubeless-install:
         kubectl apply -f /srv/kubernetes/manifests/kubeless/kubeless-ui.yaml
     - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
 
-{% if common.addons.get('ingress_istio', {'enabled': False}).enabled -%}
-/srv/kubernetes/manifests/kubeless/virtualservice.yaml:
+/srv/kubernetes/manifests/kubeless/ingress.yaml:
     require:
     - file: /srv/kubernetes/manifests/kubeless
     file.managed:
-    - source: salt://kubernetes/addons/kubeless/virtualservice.yaml
+    - source: salt://kubernetes/addons/kubeless/ingress.yaml
     - user: root
     - template: jinja
     - group: root
@@ -88,8 +87,7 @@ kubernetes-kubeless-install:
 kubernetes-kubeless-ingress-install:
   cmd.run:
     - watch:
-      - /srv/kubernetes/manifests/kubeless/virtualservice.yaml
+      - /srv/kubernetes/manifests/kubeless/ingress.yaml
     - name: |
-        kubectl apply -f /srv/kubernetes/manifests/kubeless/virtualservice.yaml
+        kubectl apply -f /srv/kubernetes/manifests/kubeless/ingress.yaml
     - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
-{% endif %}

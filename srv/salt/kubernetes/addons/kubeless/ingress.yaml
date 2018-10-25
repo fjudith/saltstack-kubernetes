@@ -1,0 +1,43 @@
+{%- set public_domain = pillar['public-domain'] -%}
+{%- from "kubernetes/map.jinja" import common with context -%}
+
+{%- if common.addons.get('ingress_traefik', {'enabled': False}).enabled %}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: kubeless-ui
+  namespace: kubeless
+spec:
+  rules:
+  - host: kubeless.{{ public_domain }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: ui
+          servicePort: 3000
+---
+{% endif %}
+
+{%- if common.addons.get('ingress_istio', {'enabled': False}).enabled -%}
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: kubeless-ui
+  namespace: default
+spec:
+  gateways:
+  - istio-gateway
+  hosts:
+  - kubeless.{{ public_domain }}
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: ui.kubeless.svc.cluster.local
+        port:
+          number: 3000
+---
+{% endif %}

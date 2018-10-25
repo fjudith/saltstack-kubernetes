@@ -25,13 +25,11 @@ kubernetes-weave-scope-install:
         kubectl apply -f /srv/kubernetes/manifests/weave-scope/scope.yaml
     - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
 
-
-{% if common.addons.get('ingress_istio', {'enabled': False}).enabled -%}
-/srv/kubernetes/manifests/weave-scope/virtualservice.yaml:
+/srv/kubernetes/manifests/weave-scope/ingress.yaml:
     require:
     - file: /srv/kubernetes/manifests/weave-scope
     file.managed:
-    - source: salt://kubernetes/addons/weave-scope/virtualservice.yaml
+    - source: salt://kubernetes/addons/weave-scope/ingress.yaml
     - user: root
     - template: jinja
     - group: root
@@ -40,8 +38,7 @@ kubernetes-weave-scope-install:
 kubernetes-weave-scope-ingress-install:
   cmd.run:
     - watch:
-      - /srv/kubernetes/manifests/weave-scope/virtualservice.yaml
+      - /srv/kubernetes/manifests/weave-scope/ingress.yaml
     - name: |
-        kubectl apply -f /srv/kubernetes/manifests/weave-scope/virtualservice.yaml
+        kubectl apply -f /srv/kubernetes/manifests/weave-scope/ingress.yaml
     - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
-{% endif %}

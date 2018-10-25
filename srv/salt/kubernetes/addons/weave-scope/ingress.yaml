@@ -1,6 +1,26 @@
 {%- set public_domain = pillar['public-domain'] -%}
 {%- from "kubernetes/map.jinja" import common with context -%}
 
+{%- if common.addons.get('ingress_traefik', {'enabled': False}).enabled %}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: weave-scope
+  namespace: weave
+spec:
+  rules:
+  - host: scope.{{ public_domain }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: weave-scope-app
+          servicePort: 80
+---
+{% endif %}
+
+
+{%- if common.addons.get('ingress_istio', {'enabled': False}).enabled -%}
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
@@ -21,3 +41,4 @@ spec:
         port:
           number: 80
 ---
+{% endif %}

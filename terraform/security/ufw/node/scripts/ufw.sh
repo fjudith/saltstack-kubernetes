@@ -26,9 +26,6 @@ sudo cat << EOF | tee -a /etc/ufw/before.rules
 COMMIT
 EOF
 
-# Drop All connection after processing all intermediate rules
-sudo sed -i -r 's|^COMMIT|-A ufw-reject-input -j DROP\nCOMMIT|g' /etc/ufw/after.rules
-
 # Allow VPN
 sudo ufw allow in on ${private_interface} to any port ${vpn_port} # vpn on private interface
 sudo ufw allow in on ${vpn_interface}
@@ -52,6 +49,9 @@ sudo ufw allow 2380
 
 # Allow Flannel vxlan
 ufw allow in 8472/udp
+
+# Deny Incoming connection by default
+sudo ufw default deny Incoming
 
 # Enable UFW
 sudo ufw --force enable

@@ -8,9 +8,6 @@ sudo apt-get install -yqq \
 
 sudo ufw --force reset
 
-# Allow Incoming connection by default
-sudo sed -i -r 's/^(DEFAULT_INPUT_POLICY=).*/\1"ACCEPT"/g' /etc/default/ufw
-
 # Allow TCP forwarding
 sudo sed -i -r 's|^#(net/ipv4/ip_forward).*|\1=1|g' /etc/ufw/sysctl.conf
 sudo sed -i -r 's|^#(net/ipv6/conf/default/forwarding).*|\1=1|g' /etc/ufw/sysctl.conf
@@ -54,6 +51,9 @@ sudo ufw allow 2380
 
 # Allow Flannel vxlan
 ufw allow in 8472/udp
+
+# Deny Incoming connection by default
+sudo ufw default deny incoming
 
 # Enable UFW
 sudo ufw --force enable

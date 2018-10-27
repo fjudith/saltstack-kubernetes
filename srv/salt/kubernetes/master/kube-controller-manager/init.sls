@@ -35,4 +35,5 @@ kube-controller-manager.service:
     - watch:
       - file: /etc/systemd/system/kube-controller-manager.service
       - file: /etc/kubernetes/kube-controller-manager.kubeconfig
+      - file: /usr/local/bin/kube-controller-manager
     - enable: True

@@ -44,4 +44,5 @@ kube-proxy.service:
       - file: /etc/systemd/system/kube-proxy.service
       - file: /etc/kubernetes/kube-proxy.kubeconfig
       - file: /var/lib/kube-proxy/kube-proxy-config.yaml
+      - file: /usr/local/bin/kube-proxy
     - enable: True

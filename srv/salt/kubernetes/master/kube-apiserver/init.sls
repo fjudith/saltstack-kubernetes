@@ -37,6 +37,7 @@ kube-apiserver.service:
       - file: /etc/systemd/system/kube-apiserver.service
       - file: /etc/kubernetes/encryption-config.yaml
       - file: /etc/kubernetes/audit-policy.yaml
+      - file: /usr/local/bin/kube-apiserver
     - enable: True
 
 query-kube-apiserver:

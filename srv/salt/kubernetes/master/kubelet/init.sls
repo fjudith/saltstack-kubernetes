@@ -63,4 +63,5 @@ kubelet.service:
       - file: /etc/systemd/system/kubelet.service
       - file: /etc/kubernetes/kubelet.kubeconfig
       - file: /var/lib/kubelet/kubelet-config.yaml
+      - file: /usr/local/bin/kubelet
     - enable: True

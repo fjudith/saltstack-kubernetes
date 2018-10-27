@@ -46,4 +46,5 @@ kube-scheduler.service:
       - file: /etc/systemd/system/kube-scheduler.service
       - file: /etc/kubernetes/kube-scheduler.kubeconfig
       - file: /var/lib/kube-scheduler/kube-scheduler-config.yaml
+      - file: /usr/local/bin/kube-scheduler
     - enable: True

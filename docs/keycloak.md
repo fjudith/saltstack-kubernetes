@@ -2,7 +2,7 @@
 
 Keycloak deployment is enabled by the following pillar data.
 
-> Helm [stable](https://github.com/helm/charts/tree/master/stable/keycloak) chart is leveraged to ensure long-term support.
+> _Helm [stable](https://github.com/helm/charts/tree/master/stable/keycloak) chart is leveraged to ensure long-term support._
 
 ```yaml
 public-domain: domain.tld
@@ -54,7 +54,7 @@ kubectl -n keycloak get pods,svc,pvc -o wide
 ```
 
 ```text
-AME                                       READY   STATUS    RESTARTS   AGE   IP            NODE     NOMINATED NODE
+NAME                                       READY   STATUS    RESTARTS   AGE   IP            NODE     NOMINATED NODE
 pod/keycloak-0                             1/1     Running   0          25m   10.2.192.15   node04   <none>
 pod/keycloak-1                             1/1     Running   0          25m   10.2.96.15    node03   <none>
 pod/keycloak-postgresql-5747fd5677-mwkvp   1/1     Running   0          25m   10.2.80.15    node05   <none>

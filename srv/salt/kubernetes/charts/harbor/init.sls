@@ -1,13 +1,14 @@
 {%- set public_domain = pillar['public-domain'] -%}
 {%- from "kubernetes/map.jinja" import common with context -%}
 {%- from "kubernetes/map.jinja" import master with context -%}
+{%- from "kubernetes/map.jinja" import charts with context -%}
 
 addon-harbor:
   git.latest:
     - name: https://github.com/goharbor/harbor-helm
     - target: /srv/kubernetes/manifests/harbor
     - force_reset: True
-    - rev: {{ common.addons.harbor.version }}
+    - rev: {{ charts.harbor.version }}
 
 kubernetes-harbor-install:
   cmd.run:
@@ -21,7 +22,7 @@ kubernetes-harbor-install:
     - name: |
         helm dependency update
         helm install --name registry --namespace harbor \
-        --set database.internal.password={{ common.addons.harbor.database_password }} \
+        --set database.internal.password={{ charts.harbor.database_password }} \
         {%- if master.storage.get('rook_ceph', {'enabled': False}).enabled %}
         --set persistence.enabled=true \
         --set database.internal.volumes.data.storageClass=rook-ceph-block \
@@ -31,20 +32,20 @@ kubernetes-harbor-install:
         {%- else -%}
         --set persistence.enabled=false \
         {%- endif %}
-        --set harborAdminPassword={{ common.addons.harbor.admin_password }} \
-        --set secretkey={{ common.addons.harbor.secretkey }} \
+        --set harborAdminPassword={{ charts.harbor.admin_password }} \
+        --set secretkey={{ charts.harbor.secretkey }} \
         --set externalURL=https://registry.{{ public_domain }} \
         "./"
 
 /srv/kubernetes/manifests/harbor-ingress.yaml:
     file.managed:
-    - source: salt://kubernetes/addons/harbor/ingress.yaml
+    - source: salt://kubernetes/charts/harbor/ingress.yaml
     - user: root
     - template: jinja
     - group: root
     - mode: 644
 
-harbor-virtualservice:
+harbor-ingress:
   cmd.run:
     - watch:
         - file:  /srv/kubernetes/manifests/harbor-ingress.yaml

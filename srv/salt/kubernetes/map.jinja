@@ -149,3 +149,9 @@
     'version': "v3.1.12",
   },
 }, merge=salt['pillar.get']('kubernetes:etcd')) %}
+
+{% set charts = salt['grains.filter_by']({
+  'default': {
+    'version': "v3.1.12",
+  },
+}, merge=salt['pillar.get']('kubernetes:charts')) %}

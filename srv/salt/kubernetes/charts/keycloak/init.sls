@@ -2,7 +2,7 @@
 {%- from "kubernetes/map.jinja" import common with context -%}
 {%- from "kubernetes/map.jinja" import master with context -%}
 
-/srv/kubernetes/manifests/keycloack:
+/srv/kubernetes/manifests/keycloak:
   file.directory:
     - user: root
     - group: root
@@ -12,7 +12,7 @@
 /srv/kubernetes/manifests/keycloak/values.yaml:
   file.managed:
     - require:
-      - file:  /srv/kubernetes/manifests/keycloack
+      - file:  /srv/kubernetes/manifests/keycloak
     - source: salt://kubernetes/charts/keycloak/values.yaml
     - user: root
     {# - template: jinja #}
@@ -22,7 +22,7 @@
 /srv/kubernetes/manifests/keycloak/ingress.yaml:
   file.managed:
     - require:
-      - file:  /srv/kubernetes/manifests/keycloack
+      - file:  /srv/kubernetes/manifests/keycloak
     - source: salt://kubernetes/charts/keycloak/ingress.yaml
     - user: root
     - template: jinja

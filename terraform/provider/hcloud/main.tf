@@ -97,6 +97,16 @@ resource "hcloud_server" "proxy01" {
 
   provisioner "remote-exec" {
     inline = [
+      "while [ ! -f /var/lib/cloud/instance/boot-finished ]; do echo 'waiting for boot-finished'; sleep 5; done;",
+      "while [ ! -f /var/lib/apt/lists/lock ]; do sleep 1; done",
+      "while [ ! -f /var/lib/dpkg/lock ]; do sleep 1; done",
+      "while fuser /var/lib/apt/lists/lock >/dev/null 2>&1; do sleep 1; done",
+      "while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 1; done",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
       "modprobe br_netfilter",
       "echo 'net.ipv4.ip_forward=1' | tee -a  /etc/sysctl.conf",
       "echo 'net.ipv6.conf.all.forwarding=1' | tee -a  /etc/sysctl.conf",
@@ -112,10 +122,6 @@ resource "hcloud_server" "proxy01" {
 
   provisioner "remote-exec" {
     inline = [
-      "while [ ! -f /var/lib/apt/lists/lock ]; do sleep 1; done",
-      "while [ ! -f /var/lib/dpkg/lock ]; do sleep 1; done",
-      "while fuser /var/lib/apt/lists/lock >/dev/null 2>&1; do sleep 1; done",
-      "while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 1; done",
       "apt-get update -yqq",
       "apt-get install -yqq apt-transport-https ufw tinyproxy ${join(" ", var.apt_packages)}",
       "echo 'MaxSessions 100' | tee -a  /etc/ssh/sshd_config",
@@ -181,6 +187,16 @@ resource "hcloud_server" "proxy02" {
 
   provisioner "remote-exec" {
     inline = [
+      "while [ ! -f /var/lib/cloud/instance/boot-finished ]; do echo 'waiting for boot-finished'; sleep 5; done;",
+      "while [ ! -f /var/lib/apt/lists/lock ]; do sleep 1; done",
+      "while [ ! -f /var/lib/dpkg/lock ]; do sleep 1; done",
+      "while fuser /var/lib/apt/lists/lock >/dev/null 2>&1; do sleep 1; done",
+      "while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 1; done",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
       "modprobe br_netfilter",
       "echo 'net.ipv4.ip_forward=1' | tee -a  /etc/sysctl.conf",
       "echo 'net.ipv6.conf.all.forwarding=1' | tee -a  /etc/sysctl.conf",
@@ -196,10 +212,6 @@ resource "hcloud_server" "proxy02" {
 
   provisioner "remote-exec" {
     inline = [
-      "while [ ! -f /var/lib/apt/lists/lock ]; do sleep 1; done",
-      "while [ ! -f /var/lib/dpkg/lock ]; do sleep 1; done",
-      "while fuser /var/lib/apt/lists/lock >/dev/null 2>&1; do sleep 1; done",
-      "while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 1; done",
       "apt-get update -yqq",
       "apt-get install -yqq apt-transport-https ufw ${join(" ", var.apt_packages)}",
       "echo 'MaxSessions 100' | tee -a  /etc/ssh/sshd_config",
@@ -240,6 +252,16 @@ resource "hcloud_server" "etcd" {
 
   provisioner "remote-exec" {
     inline = [
+      "while [ ! -f /var/lib/cloud/instance/boot-finished ]; do echo 'waiting for boot-finished'; sleep 5; done;",
+      "while [ ! -f /var/lib/apt/lists/lock ]; do sleep 1; done",
+      "while [ ! -f /var/lib/dpkg/lock ]; do sleep 1; done",
+      "while fuser /var/lib/apt/lists/lock >/dev/null 2>&1; do sleep 1; done",
+      "while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 1; done",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
       "modprobe br_netfilter",
       "echo 'net.ipv4.ip_forward=1' | tee -a  /etc/sysctl.conf",
       "echo 'net.ipv6.conf.all.forwarding=1' | tee -a  /etc/sysctl.conf",
@@ -255,10 +277,6 @@ resource "hcloud_server" "etcd" {
 
   provisioner "remote-exec" {
     inline = [
-      "while [ ! -f /var/lib/apt/lists/lock ]; do sleep 1; done",
-      "while [ ! -f /var/lib/dpkg/lock ]; do sleep 1; done",
-      "while fuser /var/lib/apt/lists/lock >/dev/null 2>&1; do sleep 1; done",
-      "while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 1; done",
       "apt-get update -yqq",
       "apt-get install -yqq apt-transport-https ufw ${join(" ", var.apt_packages)}",
     ]
@@ -297,6 +315,16 @@ resource "hcloud_server" "master" {
 
   provisioner "remote-exec" {
     inline = [
+      "while [ ! -f /var/lib/cloud/instance/boot-finished ]; do echo 'waiting for boot-finished'; sleep 5; done;",
+      "while [ ! -f /var/lib/apt/lists/lock ]; do sleep 1; done",
+      "while [ ! -f /var/lib/dpkg/lock ]; do sleep 1; done",
+      "while fuser /var/lib/apt/lists/lock >/dev/null 2>&1; do sleep 1; done",
+      "while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 1; done",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
       "modprobe br_netfilter",
       "echo 'net.ipv4.ip_forward=1' | tee -a  /etc/sysctl.conf",
       "echo 'net.ipv6.conf.all.forwarding=1' | tee -a  /etc/sysctl.conf",
@@ -312,10 +340,6 @@ resource "hcloud_server" "master" {
 
   provisioner "remote-exec" {
     inline = [
-      "while [ ! -f /var/lib/apt/lists/lock ]; do sleep 1; done",
-      "while [ ! -f /var/lib/dpkg/lock ]; do sleep 1; done",
-      "while fuser /var/lib/apt/lists/lock >/dev/null 2>&1; do sleep 1; done",
-      "while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 1; done",
       "apt-get update -yqq",
       "apt-get install -yqq apt-transport-https ufw git ${join(" ", var.apt_packages)}",
     ]
@@ -354,6 +378,15 @@ resource "hcloud_server" "node" {
 
   provisioner "remote-exec" {
     inline = [
+      "while [ ! -f /var/lib/cloud/instance/boot-finished ]; do echo 'waiting for boot-finished'; sleep 5; done;",
+      "while [ ! -f /var/lib/apt/lists/lock ]; do sleep 1; done",
+      "while [ ! -f /var/lib/dpkg/lock ]; do sleep 1; done",
+      "while fuser /var/lib/apt/lists/lock >/dev/null 2>&1; do sleep 1; done",
+      "while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 1; done",
+    ]
+  }
+  provisioner "remote-exec" {
+    inline = [
       "modprobe br_netfilter",
       "echo 'net.ipv4.ip_forward=1' | tee -a  /etc/sysctl.conf",
       "echo 'net.ipv6.conf.all.forwarding=1' | tee -a  /etc/sysctl.conf",
@@ -369,10 +402,6 @@ resource "hcloud_server" "node" {
 
   provisioner "remote-exec" {
     inline = [
-      "while [ ! -f /var/lib/apt/lists/lock ]; do sleep 1; done",
-      "while [ ! -f /var/lib/dpkg/lock ]; do sleep 1; done",
-      "while fuser /var/lib/apt/lists/lock >/dev/null 2>&1; do sleep 1; done",
-      "while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 1; done",
       "apt-get update -yqq",
       "apt-get install -yqq apt-transport-https ufw ${join(" ", var.apt_packages)}",
     ]

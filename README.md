@@ -14,7 +14,7 @@ The `saltstack-kubernetes` aims to deploy and manage a secure production ready *
     <td><ul><li><b>hetzner</b></li><li>scaleway</li></ul></td>
     <td><ul><li><b>cloudflare</b></li></ul></td>
     <td><ul><li>1.10.6</li><li><b>1.11.2</b></li><li><b>1.12.1</b></li></ul></td>
-    <td><ul><li><b>docker 17.0.3-ce</b></li><li>containerd 1.2.0-beta</li><li>cri-o 1.11</li><li>rkt 1.30.0</li></ul></td>
+    <td><ul><li><b>docker 17.0.3-ce</b></li><li>containerd 1.2.0</li><li>cri-o 1.10,1.11,1.12</li><li>rkt 1.30.0</li></ul></td>
     <td><ul><li><b>cni 0.7.1</b></li><li><b>canal 3.2.1 (flannel 0.9.1)</b></li><li>flannel 0.1.0</li><li>weave 2.5.0-dev</li><li>Cillium 1.21</li></ul></td>
   </tr>
 </table>

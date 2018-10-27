@@ -5,6 +5,6 @@ include:
 {%- if charts.get('mailhog', {'enabled': False}).enabled %}
   - kubernetes.charts.mailhog
 {%- endif -%}
-{%- if charts.('spinnaker', {'enabled': False}).enabled %}
+{%- if charts.get('spinnaker', {'enabled': False}).enabled %}
   - kubernetes.charts.spinnaker
 {%- endif -%}

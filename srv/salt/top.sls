@@ -13,6 +13,7 @@ base:
     - kubernetes.csi.rook
     {%- endif %}
     - kubernetes.addons
+    - kubernetes.charts
   {% endif %}
   {% if "node" in grains.get('role', []) %}
     - common

@@ -6,7 +6,7 @@ The `kubernetes.cri.containerd` does not support update function.
 The following procedure allows to udpate containerd on the appropriate salt minions.
 
 ```bash
-VERSION=1.2.0-rc.2
+VERSION=1.2.0
 
 salt -G role:proxy cmd.run "curl -L https://github.com/containerd/containerd/releases/download/v${VERSION}/containerd-${VERSION}.linux-amd64.tar.gz | tar -xvzf - -C /usr/local"
 salt -G role:proxy cmd.run "systemctl restart containerd && systemctl restart kubelet"

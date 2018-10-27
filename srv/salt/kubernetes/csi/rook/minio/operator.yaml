@@ -1,3 +1,5 @@
+{%- from "kubernetes/map.jinja" import master with context -%}
+
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -88,7 +90,7 @@ spec:
       serviceAccountName: rook-minio-operator
       containers:
       - name: rook-minio-operator
-        image: rook/minio:master
+        image: {{ master.storage.rook_minio.image }}
         args: ["minio", "operator"]
         env:
         - name: POD_NAME

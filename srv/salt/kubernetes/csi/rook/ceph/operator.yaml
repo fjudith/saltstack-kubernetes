@@ -1,3 +1,5 @@
+{%- from "kubernetes/map.jinja" import master with context -%}
+
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -289,7 +291,7 @@ spec:
       serviceAccountName: rook-ceph-system
       containers:
       - name: rook-ceph-operator
-        image: rook/ceph:master
+        image: {{ master.storage.rook_ceph.image }}
         args: ["ceph", "operator"]
         volumeMounts:
         - mountPath: /var/lib/rook

@@ -34,6 +34,8 @@ sudo apt-get install -y kubectl
 
 ## Install jq
 
+JQ is required by the Wireguard configuration template processing
+
 ```bash
 apt-get install jq
 ```
@@ -46,4 +48,12 @@ Wireguard Tools is required to generate the VPN encryption keys
 add-apt-repository -y ppa:wireguard/wireguard
 apt-get update
 apt-get install wireguard-tools
+```
+
+## Install HTTPie (aitch-tee-tee-pie)
+
+HTTPie is an advanced command line HTTP client that works where cURL doesn't (e.g JQuery websites)
+
+```bash
+apt-get install httpie
 ```

@@ -1,7 +1,38 @@
+[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/2188/badge)](https://bestpractices.coreinfrastructure.org/projects/2188)
+
 <img src="https://i.imgur.com/SJAtDZk.png" width="460" height="125" >
 
-The `saltstack-kubernetes` aims to deploy and manage a secure production ready **Kubernetes cluster** using [Terraform](https://www.terraform.io) for server provisionning and [Saltstack](https://saltstack.io) for Kubernetes installation and configuration management.
+## What is Saltstack-Kubernetes ?
 
+Saltstack-Kubernetes is an open source Kubernetes cluster deployment platform which aims to evaluate and run Cloud Native Applications like those registered in the [CNCF landscape](https://landscape.cncf.io).
+Server provisionning is managed using [Terraform](https://www.terraform.io) with a primarly target on low-cost Cloud providers like [Scaleway](https://scaleway.com) and [Hetzner](https://hetzner.com/cloud).
+Kubernetes cluster deployment is managed using [Saltstack](https://saltstack.com) to deploy the various software binaries, configuration files and cloud native applications required to operate.
+
+## Credits
+
+This project is vastly inspired by the following projects:
+
+* [Kubernetes-Saltstack](https://github.com/valentin2105/Kubernetes-Saltstack) from [@valentin2105](https://github.com/valentin2105)
+* [hobby-kube](https://github.com/hobby-kube/provisionning)  from [@pstadler](https://github.com/pstadler)
+* [Kubernetes The Hard Way](https://github.com/kelseyhightower/kubernetes-the-hard-way) from [@kelseyhightower](https://github.com/kelseyhightower)
+* [Saltformula-Kubernetes](https://github.com/salt-formulas/salt-formula-kubernetes)
+
+## Design principles
+
+The solution design carries the following requirements:
+
+1. **Cloud provider agnostic**: Works similarly on any clouds
+2. **Networking privacy**: All intra-cluster communications are TLS encrypted, pod network is encrypted, Firewall is enabled by default.
+2. **Cluster security**: Node security and RBAC are enabled by default
+4. **Public endpoint**: Leverage two servers stanting as edge gateway and allow the use of a single redudant Public IP address
+5. **Secure admin network**: Establish a private Mesh VPN between all servers
+6. **Composable CRI**: Support various Container Runtime Interface plugins (see: [Features](./docs/features.md))
+7. **Composable CNI**: Support various Container Network Interface plugins (see: [Features](./docs/features.md))
+8. **Converged Storage**: Persistent storage provided by cluster nodes
+9. **API driven DNS**: DNS records are managed just-in-time during the deployment
+10. **Stable**: Only leverage stable versions of software components
+
+## Major components versions
 <table>
   <tr>
     <th>Cloud provider</th>
@@ -13,377 +44,100 @@ The `saltstack-kubernetes` aims to deploy and manage a secure production ready *
   <tr>
     <td><ul><li><b>hetzner</b></li><li>scaleway</li></ul></td>
     <td><ul><li><b>cloudflare</b></li></ul></td>
-    <td><ul><li>1.10.6</li><li><b>1.11.2</b></li><li><b>1.12.1</b></li></ul></td>
+    <td><ul><li>1.10.6</li><li>1.11.2</li><li><b>1.12.1</b></li></ul></td>
     <td><ul><li><b>docker 17.0.3-ce</b></li><li>containerd 1.2.0</li><li>cri-o 1.10,1.11,1.12</li><li>rkt 1.30.0</li></ul></td>
-    <td><ul><li><b>cni 0.7.1</b></li><li><b>canal 3.2.1 (flannel 0.9.1)</b></li><li>flannel 0.1.0</li><li>weave 2.4.1</li><li>Cillium 1.21</li></ul></td>
+    <td><ul><li><b>cni 0.7.1</b></li><li>canal 3.2.1 (flannel 0.9.1)</li><li>flannel 0.1.0</li><li><b>weave 2.4.1</b></li><li>Cillium 1.21</li></ul></td>
   </tr>
 </table>
 
-## Credits
-This project is a combination of [Kubernetes-Saltstack](https://github.com/valentin2105/Kubernetes-Saltstack) from [@valentin2105](https://github.com/valentin2105) and [hobby-kube](https://github.com/hobby-kube/provisionning)  from [@pstadler](https://github.com/pstadler) to address the following requirements:
+**Default**
 
-* [x] Cloud-provider **agnostic** (Saltstack requires Ubuntu Bionic 18.04)
-* [x] **TLS for cluster toolchain**
-* [x] **Node Security**, **RBAC** enabled by default
-* [x] **Single public IP** required
-* [x] **Full TLS** communications between cluster components
-* [x] Segregated proxy nodes for ingress traffic
-* [x] Segregated etcd cluster
-* [x] **Proxied and Routed internet access** from Kubernetes servers
-* [x] Reverse proxy to kube-apiserver cluster
-* [x] **Predictable ip Adressing** using [Wireguard](https://www.wireguard.com) Mesh VPN
-* [x] **Automatic cluster certificate provisionning** using terraform
-* [x] Supports Calico (routed), **Flannel (vxlan) and Canal**.
-* [x] API driven DNS registration [Cloudflare](https://cloudflare.com)
-* [x] [Node authorization](https://kubernetes.io/docs/reference/access-authn-authz/node/) support
-* [x] [Tinyproxy](https://tinyproxy.github.io) for forward proxy
-* [x] [HAproxy](https://haproxy.org) for reverse proxy
-* [x] [Traefik](https://traefik.io) for Kubernetes Ingress
-* [ ] [Suricata](https://suricata-ids.org) for intrusion detection
-* Tested cloud providers:
-  * [x] [Scaleway](https://www.scaleway.com)
-  * [x] [Hetzner Cloud](https://hetzner.com/cloud)
+## Quick start
 
-## Getting started
+### Pre-requisits
 
-The following software needs to be installed prior s
+Before starting check that following requirements are met:
 
-```yaml
-public-domain: example.com
-kubernetes:
-  common:
-    image: quay.io/fjudith/hyperkube:v1.10.5
-    version: v1.10.5
-    addons:
-      dns:
-        enabled: True
-        domain: cluster.local
-        server: 10.3.0.10
-        autoscaler:
-          enabled: True
-        coredns:
-          enabled: True
-      helm:
-        enabled: False
-        tiller_image: gcr.io/kubernetes-helm/tiller:v2.4.2
-      kube-prometheus:
-        enabled: True
-        version: v0.22.0
-      heapster-influxdb:
-        enabled: True
-      dashboard:
-        enabled: True
-      ingress_traefik:
-        enabled: True
-        password: '$apr1$mHqffeCI$8Bl8/cCsjejRsAYt7qFrj/'
-        acme_email: user.name@example.com
-      npd:
-        enabled: True
-      ingress-nginx:
-        enabled: False
-      fluentd-elasticsearch:
-        enabled: True
-  etcd:
-    host: 127.0.0.1
-    members:
-      - host: 172.17.4.51
-        name: etcd01
-      - host: 172.17.4.52
-        name: etcd02
-      - host: 172.17.4.53
-        name: etcd03
-    version: v3.1.12
-  master:
-    service_addresses: 10.3.0.0/24
-    members:
-      - host: 172.17.4.101
-        name: master01
-      - host: 172.17.4.102
-        name: master02
-      - host: 172.17.4.103
-        name: master03
-    encryption-key: 'ScKZBwy8IYi8vpUnJNXkQF/ODsGWJX22+nc8WGFzZgw=' 
-    token:
-      admin: 227c24c3e683a4ea584f95580023387e
-      kubelet: 3e749c1636005866f497ec5877d103df
-      calico: 07519ca856c5a8742e23d5f7c4bed7f2
-      kube_scheduler: bbfd644a90a5fb95827f5b3091c80efc
-      kube_controller_manager: f1ab133b52ea3501e6d744656d22a1ae
-      kube_proxy: 5f5b9898b76a8cebbc7114a0fdc31883
-      bootstrap: 92a007b80db4b2b85cd60270f822a3b9
-      monitoring: 617b5a516e217054391940f158f7221d
-      logging: c377a4832fc3cc914a18cd7324c2549f
-      dns: cb49512c71db4e60d5c7373c21e07504
-    storage:
-      rook:
-        enabled: True
-  node:
-    runtime:
-      provider: docker
-      docker:
-        version: 17.03.2-ce
-        data-dir: /var/lib/docker
-      rkt:
-        version: 1.29.0
-    networking:
-      cni-version: v0.7.1
-      provider: flannel
-      calico:
-        version: v3.1.3
-        cni-version: v3.1.3
-        calicoctl-version: v3.1.3
-        controller-version: 3.1-release
-        as-number: 64512
-        token: 7d8d28fe2500143b09cfceea3b48f00e
-        ipv4:
-          range: 10.2.0.0/16
-          nat: true
-          ip-in-ip: true
-        ipv6:
-          enable: false
-          nat: true
-          interface: eth0
-          range: fd80:24e2:f998:72d6::/64
-      flannel:
-        version: v0.10.0-amd64
-        ipv4:
-          range: 10.2.0.0/16
-          interface: eth0
-  global:
-    proxy:
-      ipaddr: 172.16.4.251
-      port: 8888
-    vpnIP-range: 172.16.4.0/24
-    pod-network: 10.2.0.0/16
-    kubernetes-service-ip: 10.3.0.1
-    service-ip-range: 10.3.0.0/24
-    cluster-dns: 10.3.0.10
-    helm-version: v2.8.2
-    dashboard-version: v1.8.3
-tinyproxy:
-  MaxClients: 200
-  MinSpareServers: 10
-  MaxSpareServers: 40
-  StartServers: 20
-  Allow:
-    - 127.0.0.1
-    - 192.168.0.0/16
-    - 172.16.0.0/12
-    - 10.0.0.0/8
-  ConnectPort:
-    - 443
-    - 563
-    - 6443
-    - 2379
-    - 2380
-keepalived:
-  global_defs:
-    router_id: LVS_DEVEL
-  vrrp_instance:
-    VI_1:
-      state: MASTER
-      interface: wg0
-      virtual_router_id: 51
-      priority: 100
-      advert_int: 1
-      authentication:
-        auth_type: PASS
-        auth_pass: 1111
-      virtual_ipaddress:
-        - 172.16.4.253
-        - 172.16.4.254
-  virtual_server:
-    0.0.0.0 6443:
-      delay_loop: 6
-      lb_algo: rr
-      lb_kind: NAT
-      nat_mask: 255.255.255.0
-      persistence_timeout: 50
-      protocol: TCP
-      real_server:
-        172.17.4.101 6443:
-          weight: 1
-        172.17.4.102 6443:
-          weight: 2
-        172.17.4.103 6443:
-          weight: 3
-haproxy:
-  enabled: true
-  overwrite: True
-  defaults:
-    timeouts:
-      - tunnel        3600s
-      - http-request    10s
-      - queue           1m
-      - connect         10s
-      - client          1m
-      - server          1m
-      - http-keep-alive 10s
-      - check 10s
-    stats:
-      - enable
-      - uri: 'admin?stats'
-  listens:
-    stats:
-      bind:
-        - "0.0.0.0:28080"
-      mode: http
-      stats:
-        enable: True
-        uri: "/admin?stats"
-  global:
-    ssl-default-bind-ciphers: "ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA384"
-    ssl-default-bind-options: "no-sslv3 no-tlsv10 no-tlsv11"
-  user: haproxy
-  group: haproxy
-  chroot:
-    enable: true
-    path: /var/lib/haproxy
-  daemon: true
-  frontends:
-    kubernetes-master:
-      bind: "*:6443"
-      mode: tcp
-      default_backend: kube-apiserver
-  backends:
-    kube-apiserver:
-      mode: tcp
-      balance: source
-      sticktable: "type binary len 32 size 30k expire 30m"
-      servers:
-        master01:
-          host: 172.17.4.101
-          port: 6443
-          check: check
-        master02:
-          host: 172.17.4.102
-          port: 6443
-          check: check
-        master03:
-          host: 172.17.4.103
-          port: 6443
-          check: check
-```
-##### Don't forget to change hostnames & tokens  using command like `pwgen 64` !
+* [ ] Register a public domain name
+* [ ] Associate the domain name with [Cloudflare (Free)](https://www.cloudflare.com)
+* [ ] Register with the cloud provider of your choice. Expect 100$ for a full month (i.e [Scaleway](https://scaleway.com), [Hetzner](https://hetzner.com/cloud))
+* [ ] Setup the `terraform/terraform.tfvars` with your appropriate credentials and configuration using this [Example](./terraform/terraform.tfvars.example)
+* [ ] Setup the `srv/pillar/cluster_config.sls` with your appropriate credentials and configuration using this [Example](./srv/pillar/cluster_config.sls.example)
+* [ ] Install the [required tools](./docs/prerequisits.md) (i.e. terraform, jq, wireguard-tools, etc.)
+* [ ] Create the SSH key required to send commands to the servers.
 
-If you want to enable IPv6 on pod's side, you need to change `kubernetes.node.networking.calico.ipv6.enable` to `true`.
 
-## Deployment
+> **Notice**: The configuration files are recorded in the `.gitignore` file to avoid the accidental uploads on the Web.
 
-To deploy your Kubernetes cluster using this formula, you first need to setup your Saltstack Master/Minion.  
-You can use [Salt-Bootstrap](https://docs.saltstack.com/en/stage/topics/tutorials/salt_bootstrap.html) or [Salt-Cloud](https://docs.saltstack.com/en/latest/topics/cloud/) to enhance the process. 
+### Server creation 
 
-The configuration is done to use the Salt-Master as the Kubernetes Master. You can have them as different nodes if needed but the `post_install/script.sh` require `kubectl` and access to the `pillar` files.
-
-#### The recommended configuration is :
-
-- One or two proxy servers
-
-- One or three Etcd servers
-
-- One or three Kubernetes Master (Salt-Master & Minion)
-
-- One or more Kubernetes Nodes (Salt-minion)
-
-The Minion's roles are matched with `Salt Grains` (kind of inventory), so you need to define theses grains on your servers :
-
-If you want a small cluster, a Master can be a node too. 
+Once the requirements are met, use the following command lines instanciate the server and the appropriate dns records.
 
 ```bash
-# Kubernetes Masters
-cat << EOF > /etc/salt/grains
-role: master
-EOF
-
-# Kubernetes nodes
-cat << EOF > /etc/salt/grains
-role: node
-EOF
-
-# Kubernetes Master & nodes
-cat << EOF > /etc/salt/grains
-role: 
-  - master
-  - node
-EOF
-
-service salt-minion restart 
+cd terrafrom/
+terraform init
+terraform plan
+terraform apply --parallelism 3
 ```
 
-After that, you can apply your configuration (`highstate`) :
+14 servers are instanciated by default. Terraform task parallelism is constrained in order to contraint the load on the cloud provider API. 
+
+At the end of the process a similar output should be displayed, listing all the generated servers and associated IP adresses.
+
+```text
+Outputs:
+
+hostnames = [
+    proxy01,
+    proxy02,
+    etcd01,
+    etcd02,
+    etcd03,
+    master01,
+    master02,
+    master03,
+    node01,
+    node02,
+    node03,
+    node04,
+    node05,
+    node06
+]
+
+...
+
+vpn_ips = [
+    172.17.4.251,
+    172.17.4.252,
+    172.17.4.51,
+    172.17.4.52,
+    172.17.4.53,
+    172.17.4.101,
+    172.17.4.102,
+    172.17.4.103,
+    172.17.4.201,
+    172.17.4.202,
+    172.17.4.203,
+    172.17.4.204,
+    172.17.4.205,
+    172.17.4.206
+]
+```
+
+### Kubernetes cluster deployment
+
+The Kubernetes cluster deployment is acheived by connecting to the **salt-master** server (i.e proxy01) to execute the salt states.
+
+This can be acheived using the following one-liner...
 
 ```bash
-# Apply Kubernetes Master configurations
-salt -G 'role:master' state.highstate 
-
-~# kubectl get componentstatuses
-NAME                 STATUS    MESSAGE              ERROR
-scheduler            Healthy   ok
-controller-manager   Healthy   ok
-etcd-0               Healthy   {"health": "true"}
-etcd-1               Healthy   {"health": "true"}
-etcd-2               Healthy   {"health": "true"}
-
-# Apply Kubernetes node configurations
-salt -G 'role:node' state.highstate
-
-~# kubectl get nodes
-NAME                STATUS    ROLES     AGE       VERSION   EXTERNAL-IP   OS-IMAGE 
-k8s-salt-node01   Ready     <none>     5m       v1.10.1    <none>        Ubuntu 18.04.1 LTS 
-k8s-salt-node02   Ready     <none>     5m       v1.10.1    <none>        Ubuntu 18.04.1 LTS 
-k8s-salt-node03   Ready     <none>     5m       v1.10.1    <none>        Ubuntu 18.04.1 LTS 
-k8s-salt-node04   Ready     <none>     5m       v1.10.1    <none>        Ubuntu 18.04.1 LTS 
+ssh root@proxy01.example.com -C "salt '*' state.apply"
 ```
 
-To enable add-ons on the Kubernetes cluster, you can launch the `post_install/setup.sh` script :
+... Or by opening first a SSH session to get benefit of the salt state output coloring.
 
 ```bash
-/srv/salt/post_install/setup.sh
+ssh root@proxy01.example.com
 
-~# kubectl get pod --all-namespaces
-NAMESPACE     NAME                                    READY     STATUS    RESTARTS   AGE
-kube-system   calico-policy-fcc5cb8ff-tfm7v           1/1       Running   0          1m
-kube-system   calico-node-bntsh                       1/1       Running   0          1m
-kube-system   calico-node-fbicr                       1/1       Running   0          1m
-kube-system   calico-node-badop                       1/1       Running   0          1m
-kube-system   calico-node-rcrze                       1/1       Running   0          1m
-kube-system   kube-dns-d44664bbd-596tr                3/3       Running   0          1m
-kube-system   kube-dns-d44664bbd-h8h6m                3/3       Running   0          1m
-kube-system   kubernetes-dashboard-7c5d596d8c-4zmt4   1/1       Running   0          1m
-kube-system   tiller-deploy-546cf9696c-hjdbm          1/1       Running   0          1m
-kube-system   heapster-55c5d9c56b-7drzs               1/1       Running   0          1m
-kube-system   monitoring-grafana-5bccc9f786-f4lf2     1/1       Running   0          1m
-kube-system   monitoring-influxdb-85cb4985d4-rd776    1/1       Running   0          1m
+root@proxy01 ~ # salt '*' state.apply
 ```
-
-## Good to know
-
-If you want to add a node on your Kubernetes cluster, just add the new **Hostname** on `kubernetes-csr.json` and run theses commands :
-
-```bash
-cd /srv/salt/certs
-
-cfssl gencert \
-  -ca=ca.pem \
-  -ca-key=ca-key.pem \
-  -config=ca-config.json \
-  -profile=kubernetes \
-  kubernetes-csr.json | cfssljson -bare kubernetes
-
-salt -G 'role:master' state.highstate
-salt -G 'role:node' state.highstate
-```
-
-Last `highstate` reload your Kubernetes Master and configure automaticly new nodes.
-
-- Tested on Debian, Ubuntu and Fedora.
-- You can easily upgrade software version on your cluster by changing values in `pillar/cluster_config.sls` and apply a `state.highstate`.
-- This configuration use ECDSA certificates (you can switch to `rsa` if needed in `certs/*.json`).
-- You can tweak Pod's IPv4 Pool, enable IPv6, change IPv6 Pool, enable IPv6 NAT (for no-public networks), change BGP AS number, Enable IPinIP (to allow routes sharing of different cloud providers).
-- If you use `salt-ssh` or `salt-cloud` you can quickly scale new nodes.
-
-
-## Support on Beerpay
-Hey dude! Help me out for a couple of :beers:!
-
-[![Beerpay](https://beerpay.io/valentin2105/Kubernetes-Saltstack/badge.svg?style=beer-square)](https://beerpay.io/valentin2105/Kubernetes-Saltstack)  [![Beerpay](https://beerpay.io/valentin2105/Kubernetes-Saltstack/make-wish.svg?style=flat-square)](https://beerpay.io/valentin2105/Kubernetes-Saltstack?focus=wish)

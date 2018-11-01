@@ -2,22 +2,19 @@
 
 <img src="https://i.imgur.com/SJAtDZk.png" width="460" height="125" >
 
-## What is Saltstack-Kubernetes ?
+
+
+---
 
 Saltstack-Kubernetes is an open source Kubernetes cluster deployment platform which aims to evaluate and run Cloud Native Applications like those registered in the [CNCF landscape](https://landscape.cncf.io).
 Server provisionning is managed using [Terraform](https://www.terraform.io) with a primarly target on low-cost Cloud providers like [Scaleway](https://scaleway.com) and [Hetzner](https://hetzner.com/cloud).
 Kubernetes cluster deployment is managed using [Saltstack](https://saltstack.com) to deploy the various software binaries, configuration files and cloud native applications required to operate.
 
-## Credits
-
-This project is vastly inspired by the following projects:
-
-* [Kubernetes-Saltstack](https://github.com/valentin2105/Kubernetes-Saltstack) from [@valentin2105](https://github.com/valentin2105)
-* [hobby-kube](https://github.com/hobby-kube/provisionning)  from [@pstadler](https://github.com/pstadler)
-* [Kubernetes The Hard Way](https://github.com/kelseyhightower/kubernetes-the-hard-way) from [@kelseyhightower](https://github.com/kelseyhightower)
-* [Saltformula-Kubernetes](https://github.com/salt-formulas/salt-formula-kubernetes)
+---
 
 ## Design principles
+
+<img src="./docs/diagram/high_level_architecture.png" >
 
 The solution design carries the following requirements:
 
@@ -31,6 +28,8 @@ The solution design carries the following requirements:
 8. **Converged Storage**: Persistent storage provided by cluster nodes
 9. **API driven DNS**: DNS records are managed just-in-time during the deployment
 10. **Stable**: Only leverage stable versions of software components
+
+---
 
 ## Major components versions
 <table>
@@ -50,7 +49,9 @@ The solution design carries the following requirements:
   </tr>
 </table>
 
-**Default**
+* **Default**
+
+---
 
 ## Quick start
 
@@ -141,3 +142,15 @@ ssh root@proxy01.example.com
 
 root@proxy01 ~ # salt '*' state.apply
 ```
+
+---
+
+## Credits
+
+This project is vastly inspired by the following projects:
+
+* [Kubernetes-Saltstack](https://github.com/valentin2105/Kubernetes-Saltstack) from [@valentin2105](https://github.com/valentin2105)
+* [hobby-kube](https://github.com/hobby-kube/provisionning)  from [@pstadler](https://github.com/pstadler)
+* [Kubernetes The Hard Way](https://github.com/kelseyhightower/kubernetes-the-hard-way) from [@kelseyhightower](https://github.com/kelseyhightower)
+* [Saltformula-Kubernetes](https://github.com/salt-formulas/salt-formula-kubernetes)
+* [Kubernetes Icons](https://github.com/octo-technology/kubernetes-icons)

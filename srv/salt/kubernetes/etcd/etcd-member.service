@@ -9,6 +9,7 @@
   {%- endif -%}
 {%- endfor -%}
 
+
 [Unit]
 Description=etcd (System Application Container)
 Documentation=https://github.com/coreos/etcd
@@ -35,7 +36,7 @@ Environment="ETCD_CERT_FILE=/etc/etcd/ssl/etcd.pem"
 Environment="ETCD_KEY_FILE=/etc/etcd/ssl/etcd-key.pem"
 Environment="ETCD_PEER_CERT_FILE=/etc/etcd/ssl/etcd.pem"
 Environment="ETCD_PEER_KEY_FILE=/etc/etcd/ssl/etcd-key.pem"
-Environment="ETCD_TRUSTED_CA_FILE="/etc/etcd/ssl/ca.pem"
+Environment="ETCD_TRUSTED_CA_FILE=/etc/etcd/ssl/ca.pem"
 Environment="ETCD_PEER_TRUSTED_CA_FILE=/etc/etcd/ssl/ca.pem"
 
 Environment="ETCD_LISTEN_CLIENT_URLS=https://{{ vars.current_ip }}:2379,http://127.0.0.1:2379"

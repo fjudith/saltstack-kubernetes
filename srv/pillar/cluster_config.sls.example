@@ -65,9 +65,9 @@ kubernetes:
           version: 1.2.2
       helm:
         enabled: true
-        tiller_image: gcr.io/kubernetes-helm/tiller:v2.10.0
-        version: 2.10.0
-        source_hash: 0fa2ed4983b1e4a3f90f776d08b88b0c73fd83f305b5b634175cb15e61342ffe
+        tiller_image: gcr.io/kubernetes-helm/tiller:v2.11.0
+        version: 2.11.0
+        source_hash: 02a4751586d6a80f6848b58e7f6bd6c973ffffadc52b4c06652db7def02773a1
       kube_prometheus:
         enabled: True
         version: v0.25.0
@@ -314,3 +314,4 @@ haproxy:
         proxy02:
           host: 172.17.4.252
           port: 31390
+          check: check

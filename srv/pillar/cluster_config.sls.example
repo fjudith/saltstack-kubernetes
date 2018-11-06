@@ -4,8 +4,8 @@ public-domain: example.com
 
 kubernetes:
   common:
-    image: gcr.io/google_containers/hyperkube:v1.12.1
-    version: v1.12.1
+    image: gcr.io/google_containers/hyperkube:v1.12.2
+    version: v1.12.2
     cri:
       provider: containerd
       crictl_version: 1.12.0

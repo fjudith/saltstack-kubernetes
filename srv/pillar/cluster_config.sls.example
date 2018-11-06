@@ -1,102 +1,36 @@
 # https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG-1.10.md#external-dependencies
 # https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG-1.11.md#external-dependencies
 public-domain: example.com
+
 kubernetes:
   common:
-    image: quay.io/fjudith/hyperkube:v1.10.5
-    version: v1.10.5
-    addons:
-      dns:
-        enabled: True
-        domain: cluster.local
-        server: 10.3.0.10
-        autoscaler:
-          enabled: True
-        coredns:
-          enabled: True
-      helm:
-        enabled: False
-        tiller_image: gcr.io/kubernetes-helm/tiller:v2.4.2
-      kube_prometheus:
-        enabled: True
-        version: v0.23.2
-      heapster-influxdb:
-        enabled: True
-      dashboard:
-        enabled: True
-      ingress_traefik:
-        enabled: False
-        password: '$apr1$mHqffeCI$8Bl8/cCsjejRsAYt7qFrj/'
-        acme_email:  user.name@example.com
-      npd:
-        enabled: True
-      ingress_nginx:
-        enabled: False
-      ingress_istio:
-        enabled: True
-      cert_manager:
-        enabled: True
-        acme_email: florian.judith.b@gmail.com
-        dns:
-          provider: cloudflare
-          email: user.name@example.com
-          secret: my_cloudflare_api_key
-      fluentd-elasticsearch:
-        enabled: True
-      weave-scope:
-        enabled: True
-  etcd:
-    host: 127.0.0.1
-    members:
-      - host: 172.17.4.51
-        name: etcd01
-      - host: 172.17.4.52
-        name: etcd02
-      - host: 172.17.4.53
-        name: etcd03
-    version: v3.1.12
-  master:
-    service_addresses: 10.3.0.0/24
-    members:
-      - host: 172.17.4.101
-        name: master01
-      - host: 172.17.4.102
-        name: master02
-      - host: 172.17.4.103
-        name: master03
-    encryption-key: 'ScKZBwy8IYi8vpUnJNXkQF/ODsGWJX22+nc8WGFzZgw=' 
-    token:
-      admin: 227c24c3e683a4ea584f95580023387e
-      kubelet: 3e749c1636005866f497ec5877d103df
-      calico: 07519ca856c5a8742e23d5f7c4bed7f2
-      kube_scheduler: bbfd644a90a5fb95827f5b3091c80efc
-      kube_controller_manager: f1ab133b52ea3501e6d744656d22a1ae
-      kube_proxy: 5f5b9898b76a8cebbc7114a0fdc31883
-      bootstrap: 92a007b80db4b2b85cd60270f822a3b9
-      monitoring: 617b5a516e217054391940f158f7221d
-      logging: c377a4832fc3cc914a18cd7324c2549f
-      dns: cb49512c71db4e60d5c7373c21e07504
-    storage:
-      rook:
-        enabled: True
-  node:
-    runtime:
-      provider: docker
+    image: gcr.io/google_containers/hyperkube:v1.12.1
+    version: v1.12.1
+    cri:
+      provider: containerd
+      crictl_version: 1.12.0
+      runc_version: 1.0.0-rc5
       docker:
         version: 17.03.2-ce
-        data-dir: /var/lib/docker
+        data_dir: /var/lib/docker
       rkt:
-        version: 1.29.0
-    networking:
-      cni-version: v0.7.1
-      provider: flannel
+        version: 1.30.0
+      containerd:
+        version: 1.2.0
+        source_hash: b2956eecefdafb9bc038dd9beb989fafd852da1eb1e5e55199474db43a2b8275
+      crio:
+        version: 1.12
+    cni:
+      source: https://github.com/containernetworking/plugins/releases/download/v0.7.1/cni-plugins-amd64-v0.7.1.tgz
+      source_hash: e7e5751d43456f69ea1ed043647e0377
+      network: 10.2.0.0/16
+      provider: weave
       calico:
-        version: v3.1.3
-        cni-version: v3.1.3
-        calicoctl-version: v3.1.3
-        controller-version: 3.1-release
-        as-number: 64512
-        token: 7d8d28fe2500143b09cfceea3b48f00e
+        node_image: quay.io/calico/node:v3.2.1
+        typha_image: quay.io/calico/typha:v3.2.1
+        cni_image: quay.io/calico/cni:v3.2.1
+        controller_image: quay.io/calico/kube-controllers:v3.2.1
+        calicoctl-version: v3.2.1
         ipv4:
           range: 10.2.0.0/16
           nat: true
@@ -107,21 +41,140 @@ kubernetes:
           interface: eth0
           range: fd80:24e2:f998:72d6::/64
       flannel:
-        version: v0.10.0-amd64
-        ipv4:
-          range: 10.2.0.0/16
-          interface: eth0
+        flannel_image: quay.io/coreos/flannel:v0.10.0-amd64
+        interface: eth0
+      weave:
+        weave_image: weaveworks/weave-kube:2.4.1
+        npc_image: weaveworks/weave-npc:2.4.1
+      canal:
+        node_image: quay.io/calico/node:v3.2.1
+        cni_image: quay.io/calico/cni:v3.2.1
+        flannel_image: quay.io/coreos/flannel:v0.9.1
+        interface: eth0
+      cilium:
+        cilium_image: docker.io/cilium/cilium:v1.2.1
+    addons:
+      dns:
+        enabled: True
+        domain: cluster.local
+        server: 10.3.0.10
+        autoscaler:
+          enabled: True
+        coredns:
+          enabled: True
+          version: 1.2.2
+      helm:
+        enabled: true
+        tiller_image: gcr.io/kubernetes-helm/tiller:v2.10.0
+        version: 2.10.0
+        source_hash: 0fa2ed4983b1e4a3f90f776d08b88b0c73fd83f305b5b634175cb15e61342ffe
+      kube_prometheus:
+        enabled: True
+        version: v0.25.0
+      heapster-influxdb:
+        enabled: True
+      dashboard:
+        enabled: True
+      ingress_traefik:
+        enabled: False
+        password: '$$apr1$$u7.rXtVi$$DQtLfP6lJJZqvENhyo6EX1'
+        acme_email: user@example.com
+      npd:
+        enabled: True
+        image: k8s.gcr.io/node-problem-detector:v0.5.0
+      ingress_nginx:
+        enabled: False
+      ingress_istio:
+        enabled: True
+        version: 1.0.2
+      cert_manager:
+        enabled: True
+        acme_email: user@example.com
+        dns:
+          provider: cloudflare
+          email: admin@example.com
+          secret: 012345abcde012345abcde012345abcde012345abcde
+      fluentd-elasticsearch:
+        enabled: True
+      weave-scope:
+        enabled: True
+      kubeless:
+        enabled: True
+        version: v1.0.0-alpha.8
+        ui_version: master
+      knative:
+        enabled: False
+        version: 0.1.1
+      httpbin:
+        enabled: True
+  etcd:
+    host: 127.0.0.1
+    members:
+      - host: 172.17.4.51
+        name: etcd01
+      - host: 172.17.4.52
+        name: etcd02
+      - host: 172.17.4.53
+        name: etcd03
+    version: v3.2.24
+  master:
+    service_addresses: 10.3.0.0/24
+    members:
+      - host: 172.17.4.101
+        name: master01
+      - host: 172.17.4.102
+        name: master02
+      - host: 172.17.4.103
+        name: master03
+    encryption_key: '9mmDipLv1QEjSzmNia/KyTl79aq6gCMWmqBsyk4P2Lc='
+    token:
+      admin: 3acb77307c903c780f341d5f0ae4a3b3
+      kubelet: 56c5903a3cd445c5dfc302e4674ccc1a
+      calico: 0b6c09902d7478220746cfe5605b9ef2
+      kube_scheduler: fea3115c71d7fb87fd078978601474d7
+      kube_controller_manager: 167945c664a88280d640ac45ff743ddb
+      kube_proxy: 3606ab299c3e5ce37e834058eb7618fb
+      bootstrap: 0d3bdadc181bdc504481195206314386
+      monitoring: af41e9fef61d6a253152d53c9d9decc2
+      logging: 45ceb5b4a0a82177aaadfcdabd51786f
+      dns: a219bb8d953055339fde377a6ba6dd7c
+    storage:
+      rook_ceph:
+        enabled: True
+        image: rook/ceph:v0.8.3
+      rook_minio:
+        enabled: True
+        image: rook/minio:v0.8.3
+        username: VzM0VjNMNEJNSU5JTzRDQzNTU0szWQ==
+        password: VzM0VjNMNEJNSU5JT1MzQ1IzVEszWQ==
   global:
     proxy:
       ipaddr: 172.16.4.251
       port: 8888
     vpnIP-range: 172.16.4.0/24
-    pod-network: 10.2.0.0/16
     kubernetes-service-ip: 10.3.0.1
     service-ip-range: 10.3.0.0/24
     cluster-dns: 10.3.0.10
     helm-version: v2.8.2
     dashboard-version: v1.8.3
+  charts:
+    keycloak:
+      enabled: True
+      db_size: 8Gi
+      admin_password: Ch4ng3M3
+      db_password: Ch4ng3M34ls0
+    mailhog:
+      enabled: True
+    spinnaker:
+      enabled: True
+    harbor:
+      enabled: true
+      version: 0.3.0
+      admin_password: Ch4ng3M3
+      secretkey: 2Ds7hlY9VHyKAcNd
+      database_password: Ch4ng3M34ls0
+      ingress:
+        enabled: False
 tinyproxy:
   User: tinyproxy
   Group: tinyproxy
@@ -155,8 +208,8 @@ keepalived:
         auth_type: PASS
         auth_pass: 1111
       virtual_ipaddress:
-        - 172.16.4.253
-        - 172.16.4.254
+        - 172.17.4.253
+        - 172.17.4.254
   virtual_server:
     0.0.0.0 6443:
       delay_loop: 6
@@ -191,7 +244,7 @@ haproxy:
   listens:
     stats:
       bind:
-        - "0.0.0.0:28080"
+        - "0.0.0.0:58080"
       mode: http
       stats:
         enable: True
@@ -210,6 +263,14 @@ haproxy:
       bind: "*:6443"
       mode: tcp
       default_backend: kube-apiserver
+    http:
+      bind: "*:80"
+      mode: tcp
+      default_backend: http
+    https:
+      bind: "*:443"
+      mode: tcp
+      default_backend: https
   backends:
     kube-apiserver:
       mode: tcp
@@ -228,3 +289,28 @@ haproxy:
           host: 172.17.4.103
           port: 6443
           check: check
+    http:
+      mode: tcp
+      balance: source
+      sticktable: "type binary len 32 size 30k expire 30m"
+      servers:
+        proxy01:
+          host: 172.17.4.251
+          port: 31380
+          check: check
+        proxy02:
+          host: 172.17.4.252
+          port: 31380
+          check: check
+    https:
+      mode: tcp
+      balance: source
+      sticktable: "type binary len 32 size 30k expire 30m"
+      servers:
+        proxy01:
+          host: 172.17.4.251
+          port: 31390
+          check: check
+        proxy02:
+          host: 172.17.4.252
+          port: 31390

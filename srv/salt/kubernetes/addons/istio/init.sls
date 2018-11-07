@@ -49,7 +49,7 @@
     file.managed:
     - source: salt://kubernetes/addons/istio/istio.yaml
     - user: root
-    - template: jinja
+    {# - template: jinja #}
     - group: root
     - mode: 644
 

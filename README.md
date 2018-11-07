@@ -43,7 +43,7 @@ The solution design carries the following requirements:
   <tr>
     <td><ul><li><b>hetzner</b></li><li>scaleway</li></ul></td>
     <td><ul><li><b>cloudflare</b></li></ul></td>
-    <td><ul><li>1.10.6</li><li>1.11.2</li><li><b>1.12.1</b></li></ul></td>
+    <td><ul><li>1.10.6</li><li>1.11.3</li><li><b>1.12.2</b></li></ul></td>
     <td><ul><li><b>docker 17.0.3-ce</b></li><li>containerd 1.2.0</li><li>cri-o 1.10,1.11,1.12</li><li>rkt 1.30.0</li></ul></td>
     <td><ul><li><b>cni 0.7.1</b></li><li>canal 3.2.1 (flannel 0.9.1)</li><li>flannel 0.1.0</li><li><b>weave 2.4.1</b></li><li>Cillium 1.21</li></ul></td>
   </tr>
@@ -64,6 +64,7 @@ Before starting check that following requirements are met:
 * [ ] Register with the cloud provider of your choice. Expect 100$ for a full month (i.e [Scaleway](https://scaleway.com), [Hetzner](https://hetzner.com/cloud))
 * [ ] Setup the `terraform/terraform.tfvars` with your appropriate credentials and configuration using this [Example](./terraform/terraform.tfvars.example)
 * [ ] Setup the `srv/pillar/cluster_config.sls` with your appropriate credentials and configuration using this [Example](./srv/pillar/cluster_config.sls.example)
+  * Use this [guide](./docs/password.md) to customize the various credentials.
 * [ ] Install the [required tools](./docs/prerequisits.md) (i.e. terraform, jq, wireguard-tools, etc.)
 * [ ] Create the SSH key required to send commands to the servers.
 

@@ -55,18 +55,22 @@ Solutions for software factory.
 
 <table>
   <tr align='center'>
+    <th align='center'>Continuous integration</th>
     <th align='center'>Container image registry</th>
     <th align='center'>Continuous delivery</th>
   </tr>
   <tr align='center'>
+    <td align='center'><a ref='https://concourse.io'>Concourse<a></td>
     <td align='center'><a ref='https://github.com/goharbor/harbor'>Harbor<a></td>
     <td align='center'><a ref='https://spinnaker.io'>Spinnaker<a></td>
   </tr>
   <tr align='center'>
+    <td align='center'><img src='media/concourse.png' width="50px"></td>
     <td align='center'><img src='media/harbor.png' width="50px"></td>
     <td align='center'><img src='media/spinnaker.png' width="50px"></td>
   </tr>
   <tr>
+    <td align='center'>Cloud Native Continuous Integration</td>
     <td align='center'>Secure image and Charts repository</td>
     <td align='center'>Cloud Native Continuous Delivery</td>
   </tr>

@@ -158,6 +158,11 @@ kubernetes:
     helm-version: v2.8.2
     dashboard-version: v1.8.3
   charts:
+    concourse:
+      enabled: true
+      db_password: Ch4ng3M34ls0
+      version: 4.2.1
+      source_hash: 7b0805adfba328d09cfa7ac377777cb6e270d66f
     keycloak:
       enabled: True
       db_size: 8Gi

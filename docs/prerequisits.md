@@ -57,3 +57,12 @@ HTTPie is an advanced command line HTTP client that works where cURL doesn't (e.
 ```bash
 apt-get install httpie
 ```
+
+## Install Concourse Fly
+
+Fly is required if Concourse is enabled in the salt pillar
+
+```bash
+curl -o /usr/local/bin/fly -L https://github.com/concourse/concourse/releases/download/v4.2.1/fly_linux_amd64
+chmod +x /usr/local/bin/fly
+```

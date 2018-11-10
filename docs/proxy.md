@@ -30,12 +30,10 @@ The following certificates are required for the TLS mutual authentication and en
 
 Proxy node configuration does not involes any pillar data.
 
-
-
-To manually deploy Etcd run the following command line from the **Salt-Master** (i.e. proxy01).
+To manually configure Proxy run the following command line from the **Salt-Master** (i.e. proxy01).
 
 ```bash
-salt -G role:proxy state.apply kubernetes.role.proxy
+salt -G role:proxy state.apply
 ```
 
 ## Troubleshooting

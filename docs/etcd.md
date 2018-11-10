@@ -1,8 +1,18 @@
 # Etcd
+Etcd is a role for servers dedicated to run the Etcd cluster used as backing store for all Kubernetes cluster data.
+
+
+The following certificates are required for the mutual TLS encryption of the communications between the cluster members and from etcd clients (e.g. kube-apiserver).
+
+* CA certificate: `/etc/etcd/ssl/ca.pem`
+* Server certificate: `/etc/etcd/ssl/etcd.pem`
+* Server private key: `/etc/etcd/ssl/etcd-key.pem`
+
+These certificates are generated during the Terraform process.
+
+---
 
 Etcd deployment is enabled by the following pillar data.
-
-> Required SSL certificate are generated during the Terraform process.
 
 ```yaml
 kubernetes:

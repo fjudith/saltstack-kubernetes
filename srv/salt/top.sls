@@ -3,7 +3,7 @@ base:
   {% if "etcd" in grains.get('role', []) %}
     - common
     - certs
-    - kubernetes.etcd
+    - kubernetes.role.etcd
   {% endif %}
   {% if "master" in grains.get('role', []) %}
     - common

@@ -146,7 +146,7 @@
 
 {%- set etcd = salt['grains.filter_by']({
   'default': {
-    'version': "v3.1.12",
+    'version': "v3.2.24",
   },
 }, merge=salt['pillar.get']('kubernetes:etcd')) %}
 

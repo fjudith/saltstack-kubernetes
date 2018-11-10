@@ -34,7 +34,7 @@ include:
 
 /usr/lib/coreos/etcd-wrapper:
   file.managed:
-    - source: salt://kubernetes/etcd/etcd-wrapper
+    - source: salt://kubernetes/role/etcd/scripts/etcd-wrapper
     - user: root
     - template: jinja
     - group: root
@@ -67,7 +67,7 @@ etcd-latest-archive:
 
 /etc/systemd/system/etcd-member.service:
   file.managed:
-    - source: salt://kubernetes/etcd/etcd-member.service
+    - source: salt://kubernetes/role/etcd/templates/etcd-member.service.jinja
     - user: root
     - template: jinja
     - group: root

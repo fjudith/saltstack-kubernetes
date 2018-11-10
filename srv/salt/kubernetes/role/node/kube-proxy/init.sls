@@ -9,7 +9,7 @@
 
 /etc/systemd/system/kube-proxy.service:
   file.managed:
-    - source: salt://kubernetes/node/kube-proxy/kube-proxy.service
+    - source: salt://kubernetes/role/node/kube-proxy/files/kube-proxy.service
     - user: root
     - template: jinja
     - group: root
@@ -24,7 +24,7 @@
 
 /etc/kubernetes/kube-proxy.kubeconfig:
   file.managed:
-    - source: salt://kubernetes/node/kube-proxy/kube-proxy.kubeconfig
+    - source: salt://kubernetes/role/node/kube-proxy/templates/kube-proxy.kubeconfig.jinja
     - user: root
     - template: jinja
     - group: root
@@ -32,7 +32,7 @@
 
 /var/lib/kube-proxy/kube-proxy-config.yaml:
   file.managed:
-    - source: salt://kubernetes/node/kube-proxy/kube-proxy-config.yaml
+    - source: salt://kubernetes/role/node/kube-proxy/templates/kube-proxy-config.yaml
     - user: root
     - template: jinja
     - group: root

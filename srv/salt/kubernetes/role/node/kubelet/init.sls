@@ -9,7 +9,7 @@
 
 /etc/systemd/system/kubelet.service:
   file.managed:
-    - source: salt://kubernetes/node/kubelet/kubelet.service
+    - source: salt://kubernetes/role/node/kubelet/templates/kubelet.service.jinja
     - user: root
     - template: jinja
     - group: root
@@ -17,7 +17,7 @@
 
 /etc/kubernetes/kubelet.kubeconfig:
   file.managed:
-    - source: salt://kubernetes/node/kubelet/kubelet.kubeconfig
+    - source: salt://kubernetes/role/node/kubelet/templates/kubelet.kubeconfig.jinja
     - user: root
     - template: jinja
     - group: root
@@ -25,7 +25,7 @@
 
 /etc/kubernetes/bootstrap.kubeconfig:
   file.managed:
-    - source: salt://kubernetes/node/kubelet/bootstrap.kubeconfig
+    - source: salt://kubernetes/role/node/kubelet/templates/bootstrap.kubeconfig.jinja
     - user: root
     - template: jinja
     - group: root
@@ -42,7 +42,7 @@
   file.managed:
     - require:
       - file: /var/lib/kubelet
-    - source: salt://kubernetes/node/kubelet/kubelet-config.yaml
+    - source: salt://kubernetes/role/node/kubelet/templates/kubelet-config.yaml.jinja
     - user: root
     - template: jinja
     - group: root

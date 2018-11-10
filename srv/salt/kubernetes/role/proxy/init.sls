@@ -13,7 +13,7 @@ include:
 
 /root/.kube/config:
   file.managed:
-    - source: salt://kubernetes/proxy/kubeconfig
+    - source: salt://kubernetes/role/proxy/templates/kubeconfig.jinja
     - user: root
     - template: jinja
     - group: root
@@ -27,7 +27,7 @@ include:
 
 /srv/kubernetes/acme.json:
   file.managed:
-    - source: salt://kubernetes/proxy/acme.json
+    - source: salt://kubernetes/role/proxy/files/acme.json
     - user: root
     - group: root
     - mode: 600

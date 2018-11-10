@@ -22,7 +22,7 @@ base:
   {% endif %}
   {% if "proxy" in grains.get('role', []) %}
     - common
-    - kubernetes.proxy
+    - kubernetes.role.proxy
     - certs
     - kubernetes.node
   {% endif %}

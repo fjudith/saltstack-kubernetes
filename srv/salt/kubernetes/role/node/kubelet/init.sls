@@ -1,11 +1,35 @@
 {%- from "kubernetes/map.jinja" import common with context -%}
 
-/usr/local/bin/kubelet:
+/etc/kubernetes/manifests:
+  file.directory:
+    - user: root
+    - group: root
+    - dir_mode: 750
+    - makedirs: True
+
+/tmp/kubelet-{{ common.version }}:
   file.managed:
     - source: https://storage.googleapis.com/kubernetes-release/release/{{ common.version }}/bin/linux/amd64/kubelet
     - skip_verify: true
     - group: root
-    - mode: 755
+    - mode: 444
+
+kubelet-install:
+  service.dead:
+    - name: kubelet.service
+    - watch:
+      - file: /tmp/kubelet-{{ common.version }}
+    - unless: cmp -s /usr/local/bin/kubelet /tmp/kubelet-{{ common.version }}
+  file.copy:
+    - name: /usr/local/bin/kubelet
+    - source: /tmp/kubelet-{{ common.version }}
+    - mode: 555
+    - user: root
+    - group: root
+    - force: true
+    - require:
+      - file: /tmp/kubelet-{{ common.version }}
+    - unless: cmp -s /usr/local/bin/kubelet /tmp/kubelet-{{ common.version }}
 
 /etc/systemd/system/kubelet.service:
   file.managed:

@@ -28,11 +28,16 @@ salt '*' saltutil.term_job <job id>
 ## Gource
 
 ```bash
-FILENAME=$(basename $(pwd))
-gource --start-date '2018-05-22 00:00:00' --auto-skip-seconds 1 --seconds-per-day 1 -1280x720 -o ${FILENAME}.ppm
-sleep 10
-ffmpeg -y -r 60 -f image2pipe -vcodec ppm -i ${FILENAME}.ppm -filter:v "setpts=0.25*PTS" -vcodec libx264 -preset ultrafast -pix_fmt yuv420p -crf 1 -threads 0 -bf 0 ${FILENAME}.x264.mp4
-rm -f saltstack-kubernetes.ppm
+FILENAME=$(basename $(pwd)) && \
+gource --start-date '2018-05-22 00:00:00' --auto-skip-seconds 1 --seconds-per-day 1 -1280x720 -o ${FILENAME}.ppm && \
+sleep 10 && \
+</dev/null ffmpeg -y \
+    -r 60 \
+    -f image2pipe -vcodec ppm -i ${FILENAME}.ppm \
+    -filter:v "setpts=0.25*PTS" -vcodec libx264 \
+    -preset ultrafast -pix_fmt yuv420p -crf 1 -threads 0 -bf 0 \
+    ${FILENAME}.x264.mp4 && \
+    rm -f ${FILENAME}.ppm
 ```
 
 ### Listen salt event bus

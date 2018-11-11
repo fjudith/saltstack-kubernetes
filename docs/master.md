@@ -52,7 +52,7 @@ kubernetes:
         name: master03
 ```
 
-To manually configure a Master run the following command line from the **Salt-Master** (i.e. proxy01).
+To manually configure a Master and deploy the Kubernetes [cluster addons](./features.md) run the following command line from the **Salt-Master** (i.e. proxy01).
 
 ```bash
 salt -G role:master state.apply

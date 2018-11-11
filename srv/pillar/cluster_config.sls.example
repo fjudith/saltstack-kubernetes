@@ -34,7 +34,7 @@ kubernetes:
         ipv4:
           range: 10.2.0.0/16
           nat: true
-          ip-in-ip: true
+          ip-in-ip: always
         ipv6:
           enable: false
           nat: true

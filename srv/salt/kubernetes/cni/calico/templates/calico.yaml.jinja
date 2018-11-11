@@ -1,4 +1,5 @@
 {%- from "kubernetes/map.jinja" import common with context -%}
+{%- from "kubernetes/map.jinja" import master with context -%}
 
 # Calico Version v3.2.1
 # https://docs.projectcalico.org/v3.2/releases#v3.2.1
@@ -244,7 +245,7 @@ spec:
               value: "autodetect"
             # Enable IPIP
             - name: CALICO_IPV4POOL_IPIP
-              value: "Always"
+              value: "{{ common.cni.calico.ipv4.ip_in_ip }}"
             # Enable IP-in-IP within Felix.
             - name: FELIX_IPINIPENABLED
               value: "true"
@@ -266,8 +267,14 @@ spec:
             - name: FELIX_DEFAULTENDPOINTTOHOSTACTION
               value: "ACCEPT"
             # Disable IPv6 on Kubernetes.
+            - name: CALICO_IPV6POOL_CIDR
+              value: "{{ common.cni.calico.ipv6.range }}"
             - name: FELIX_IPV6SUPPORT
               value: "false"
+            - name: IP_AUTODETECTION_METHOD
+              value: "can-reach={{ master.members[0].name }}"
+            - name: IP6_AUTODETECTION_METHOD
+              value: "interface={{ common.cni.calico.ipv6.interface }}"
             # Set Felix logging to "info"
             - name: FELIX_LOGSEVERITYSCREEN
               value: "info"

@@ -2,7 +2,7 @@
 
 /srv/kubernetes/manifests/npd.yaml:
     file.managed:
-    - source: salt://kubernetes/addons/node-problem-detector/npd.yaml
+    - source: salt://kubernetes/addons/node-problem-detector/templates/npd.yaml.jinja
     - user: root
     - template: jinja
     - group: root
@@ -14,4 +14,4 @@ kubernetes-npd-install:
       - /srv/kubernetes/manifests/npd.yaml
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/npd.yaml
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz'

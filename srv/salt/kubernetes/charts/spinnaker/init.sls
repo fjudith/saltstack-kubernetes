@@ -2,9 +2,18 @@
 {%- from "kubernetes/map.jinja" import common with context -%}
 {%- from "kubernetes/map.jinja" import master with context -%}
 
+/srv/kubernetes/manifests/spinnaker-ingress.yaml:
+  file.managed:
+    - source: salt://kubernetes/charts/spinnaker/templates/ingress.yaml.jinja
+    - user: root
+    - template: jinja
+    - group: root
+    - mode: 644
 
 spinnaker:
   cmd.run:
+    - watch:
+        - file:  /srv/kubernetes/manifests/spinnaker-ingress.yaml
     - runas: root
     - unless: helm list | grep spinnaker
     - env:
@@ -22,20 +31,4 @@ spinnaker:
             {%- endif %}
             --set redis.cluster.enabled=true \
             "stable/spinnaker"
-
-/srv/kubernetes/manifests/spinnaker-ingress.yaml:
-  file.managed:
-    - source: salt://kubernetes/charts/spinnaker/ingress.yaml
-    - user: root
-    - template: jinja
-    - group: root
-    - mode: 644
-
-spinnaker-ingress:
-  cmd.run:
-    - watch:
-        - file:  /srv/kubernetes/manifests/spinnaker-ingress.yaml
-    - runas: root
-    - use_vt: True
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
-    - name: kubectl apply -f /srv/kubernetes/manifests/spinnaker-ingress.yaml
+        kubectl apply -f /srv/kubernetes/manifests/spinnaker-ingress.yaml

@@ -49,8 +49,7 @@ kubectl -n kubeless get pods,svc,pvc -o wide
 ```
 
 ```text
-AME                                              READY   STATUS    RESTARTS   AGE    IP           NODE
-     NOMINATED NODE
+NAME                                              READY   STATUS    RESTARTS   AGE    IP           NODE     NOMINATED NODE
 pod/kubeless-controller-manager-9778cb7bd-nc8fp   3/3     Running   0          3d4h   10.2.96.2    node03   <none>
 pod/ui-84cf74cd9c-7tp6k                           2/2     Running   2          14d    10.2.192.2   node04   <none>
 

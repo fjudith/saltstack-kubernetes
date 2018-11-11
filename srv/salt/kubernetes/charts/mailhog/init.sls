@@ -2,9 +2,18 @@
 {%- from "kubernetes/map.jinja" import common with context -%}
 {%- from "kubernetes/map.jinja" import master with context -%}
 
+/srv/kubernetes/manifests/mailhog-ingress.yaml:
+  file.managed:
+    - source: salt://kubernetes/charts/mailhog/templates/ingress.yaml.jinja
+    - user: root
+    - template: jinja
+    - group: root
+    - mode: 644
 
 mailhog:
   cmd.run:
+    - watch:
+        - file:  /srv/kubernetes/manifests/mailhog-ingress.yaml
     - runas: root
     - unless: helm list | grep mailhog
     - env:
@@ -13,20 +22,4 @@ mailhog:
         helm install --name mailhog --namespace mailhog \
             --set env.MH_HOSTNAME=mail.{{ public_domain }} \
             "stable/mailhog"
-
-/srv/kubernetes/manifests/mailhog-ingress.yaml:
-  file.managed:
-    - source: salt://kubernetes/charts/mailhog/ingress.yaml
-    - user: root
-    - template: jinja
-    - group: root
-    - mode: 644
-
-mailhog-ingress:
-  cmd.run:
-    - watch:
-        - file:  /srv/kubernetes/manifests/mailhog-ingress.yaml
-    - runas: root
-    - use_vt: True
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
-    - name: kubectl apply -f /srv/kubernetes/manifests/mailhog-ingress.yaml
+        kubectl apply -f /srv/kubernetes/manifests/mailhog-ingress.yaml

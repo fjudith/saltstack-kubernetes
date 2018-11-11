@@ -7,38 +7,31 @@
     - dir_mode: 750
     - makedirs: True
 
-/srv/kubernetes/manifests/traefik/monitoring/kube-prometheus:
-  file.directory:
-    - user: root
-    - group: root
-    - dir_mode: 750
-    - makedirs: True
-
 /srv/kubernetes/manifests/traefik/traefik.yaml:
     require:
     - file: /srv/kubernetes/manifests/traefik
     file.managed:
-    - source: salt://kubernetes/addons/traefik/traefik.yaml
+    - source: salt://kubernetes/addons/traefik/templates/traefik.yaml.jinja
     - user: root
     - template: jinja
     - group: root
     - mode: 644
 
-/srv/kubernetes/manifests/traefik/monitoring/kube-prometheus/service-monitor.yaml:
+/srv/kubernetes/manifests/traefik/service-monitor.yaml:
     require:
-    - file: /srv/kubernetes/manifests/traefik/monitoring/kube-prometheus
+    - file: /srv/kubernetes/manifests/traefik
     file.managed:
-    - source: salt://kubernetes/addons/traefik/monitoring/kube-prometheus/service-monitor.yaml
+    - source: salt://kubernetes/addons/traefik/files/service-monitor.yaml
     - user: root
     - template: jinja
     - group: root
     - mode: 644
 
-/srv/kubernetes/manifests/traefik/monitoring/kube-prometheus/grafana-dashboard.yaml:
+/srv/kubernetes/manifests/traefik/grafana-dashboard.yaml:
     require:
-    - file: /srv/kubernetes/manifests/traefik/monitoring/kube-prometheus
+    - file: /srv/kubernetes/manifests/traefik
     file.managed:
-    - source: salt://kubernetes/addons/traefik/monitoring/kube-prometheus/grafana-dashboard.yaml
+    - source: salt://kubernetes/addons/traefik/files/grafana-dashboard-configmap.yaml
     - user: root
     - group: root
     - mode: 644
@@ -50,7 +43,7 @@ kubernetes-traefik-install:
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/traefik/traefik.yaml
         {%- if common.addons.get('kube_prometheus', {'enabled': False}).enabled %}
-        kubectl apply -f /srv/kubernetes/manifests/traefik/monitoring/kube-prometheus/service-monitor.yaml
-        kubectl apply -f /srv/kubernetes/manifests/traefik/monitoring/kube-prometheus/grafana-dashboard.yaml
+        kubectl apply -f /srv/kubernetes/manifests/traefik/service-monitor.yaml
+        kubectl apply -f /srv/kubernetes/manifests/traefik/grafana-dashboard-configmap.yaml
         {%- endif %}
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz'

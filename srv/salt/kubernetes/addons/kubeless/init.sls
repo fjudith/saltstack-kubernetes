@@ -24,7 +24,6 @@
     - source: https://github.com/kubeless/kubeless/releases/download/v{{ common.addons.kubeless.version }}/kubeless-{{ common.addons.kubeless.version }}.yaml
     - skip_verify: true
     - user: root
-    - template: jinja
     - group: root
     - mode: 644
 
@@ -35,7 +34,6 @@
     - source: https://raw.githubusercontent.com/kubeless/kubeless-ui/{{ common.addons.kubeless.ui_version }}/k8s.yaml
     - skip_verify: true
     - user: root
-    - template: jinja
     - group: root
     - mode: 644
 

@@ -9,7 +9,7 @@
     file.managed:
     - require:
       - file: /srv/kubernetes/manifests/flannel
-    - source: salt://kubernetes/cni/flannel/flannel.yaml
+    - source: salt://kubernetes/cni/flannel/templates/flannel.yaml.jinja
     - user: root
     - template: jinja
     - group: root

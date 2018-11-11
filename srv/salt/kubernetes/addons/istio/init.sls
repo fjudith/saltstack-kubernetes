@@ -27,18 +27,11 @@
     - dir_mode: 750
     - makedirs: True
 
-/srv/kubernetes/manifests/istio/monitoring:
-  file.directory:
-    - user: root
-    - group: root
-    - dir_mode: 750
-    - makedirs: True
-
 /srv/kubernetes/manifests/istio/crds.yaml:
     require:
     - file: /srv/kubernetes/manifests/istio
     file.managed:
-    - source: salt://kubernetes/addons/istio/crds.yaml
+    - source: salt://kubernetes/addons/istio/files/crds.yaml
     - user: root
     - group: root
     - mode: 644
@@ -47,9 +40,8 @@
     require:
     - file: /srv/kubernetes/manifests/istio
     file.managed:
-    - source: salt://kubernetes/addons/istio/istio.yaml
+    - source: salt://kubernetes/addons/istio/files/istio.yaml
     - user: root
-    {# - template: jinja #}
     - group: root
     - mode: 644
 
@@ -57,17 +49,17 @@
     require:
     - file: /srv/kubernetes/manifests/istio
     file.managed:
-    - source: salt://kubernetes/addons/istio/gateway.yaml
+    - source: salt://kubernetes/addons/istio/templates/gateway.yaml.jinja
     - user: root
     - template: jinja
     - group: root
     - mode: 644
 
-/srv/kubernetes/manifests/istio/monitoring/istio-dashboard.yaml:
+/srv/kubernetes/manifests/istio/ingress.yaml:
     require:
-    - file: /srv/kubernetes/manifests/istio/monitoring
+    - file: /srv/kubernetes/manifests/istio
     file.managed:
-    - source: salt://kubernetes/addons/istio/monitoring/istio-dashboard.yaml
+    - source: salt://kubernetes/addons/istio/templates/ingress.yaml.jinja
     - user: root
     - template: jinja
     - group: root
@@ -82,5 +74,5 @@ kubernetes-istio-install:
         kubectl apply -f /srv/kubernetes/manifests/istio/crds.yaml
         kubectl apply -f /srv/kubernetes/manifests/istio/istio.yaml
         kubectl apply -f /srv/kubernetes/manifests/istio/gateway.yaml
-        kubectl apply -f /srv/kubernetes/manifests/istio/monitoring/istio-dashboard.yaml
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+        kubectl apply -f /srv/kubernetes/manifests/istio/ingress.yaml
+    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz'

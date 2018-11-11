@@ -14,9 +14,8 @@ rkt.install:
 
 /opt/bin/host-rkt:
     file.managed:
-    - source: salt://kubernetes/cri/rkt/host-rkt
+    - source: salt://kubernetes/cri/rkt/scripts/host-rkt
     - user: root
-    - template: jinja
     - group: root
     - mode: 755
     - require:
@@ -25,9 +24,8 @@ rkt.install:
 
 /etc/systemd/system/load-rkt-stage1.service:
     file.managed:
-    - source: salt://kubernetes/cri/rkt/load-rkt-stage1.service
+    - source: salt://kubernetes/cri/rkt/files/load-rkt-stage1.service
     - user: root
-    - template: jinja
     - group: root
     - mode: 644
     - require:
@@ -45,9 +43,8 @@ load-rkt-stage1:
 
 /etc/systemd/system/rkt-api.service:
     file.managed:
-    - source: salt://kubernetes/cri/rkt/rkt-api.service
+    - source: salt://kubernetes/cri/rkt/files/rkt-api.service
     - user: root
-    - template: jinja
     - group: root
     - mode: 644
     - require:

@@ -11,7 +11,7 @@
     file.managed:
     - require:
       - file: /srv/kubernetes/manifests/kubeless
-    - source: salt://kubernetes/addons/kubeless/namespace.yaml
+    - source: salt://kubernetes/addons/kubeless/files/namespace.yaml
     - user: root
     - template: jinja
     - group: root
@@ -76,7 +76,7 @@ kubernetes-kubeless-install:
     require:
     - file: /srv/kubernetes/manifests/kubeless
     file.managed:
-    - source: salt://kubernetes/addons/kubeless/ingress.yaml
+    - source: salt://kubernetes/addons/kubeless/templates/ingress.yaml.jinja
     - user: root
     - template: jinja
     - group: root

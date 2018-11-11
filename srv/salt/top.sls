@@ -8,7 +8,7 @@ base:
   {% if "master" in grains.get('role', []) %}
     - common
     - certs
-    - kubernetes.master
+    - kubernetes.role.master
     {%- if pillar.kubernetes.master.storage.get('rook', {'enabled': False}).enabled %}
     - kubernetes.csi.rook
     {%- endif %}

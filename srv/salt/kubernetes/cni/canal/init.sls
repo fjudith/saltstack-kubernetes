@@ -9,9 +9,8 @@
     file.managed:
     - require:
       - file: /srv/kubernetes/manifests/canal
-    - source: salt://kubernetes/cni/canal/canal-rbac.yaml
+    - source: salt://kubernetes/cni/canal/files/canal-rbac.yaml
     - user: root
-    #- template: jinja
     - group: root
     - mode: 644
 
@@ -19,7 +18,7 @@
     file.managed:
     - require:
       - file: /srv/kubernetes/manifests/canal
-    - source: salt://kubernetes/cni/canal/canal.yaml
+    - source: salt://kubernetes/cni/canal/templates/canal.yaml.jinja
     - user: root
     - template: jinja
     - group: root

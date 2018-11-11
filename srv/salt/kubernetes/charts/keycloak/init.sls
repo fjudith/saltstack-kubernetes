@@ -13,17 +13,16 @@
   file.managed:
     - require:
       - file:  /srv/kubernetes/manifests/keycloak
-    - source: salt://kubernetes/charts/keycloak/values.yaml
+    - source: salt://kubernetes/charts/keycloak/files/values.yaml
     - user: root
-    {# - template: jinja #}
     - group: root
     - mode: 644
 
-/srv/kubernetes/manifests/keycloak/ingress.yaml:
+/srv/kubernetes/manifests/keycloak/keycloak-ingress.yaml:
   file.managed:
     - require:
       - file:  /srv/kubernetes/manifests/keycloak
-    - source: salt://kubernetes/charts/keycloak/ingress.yaml
+    - source: salt://kubernetes/charts/keycloak/templates/ingress.yaml.jinja
     - user: root
     - template: jinja
     - group: root
@@ -33,7 +32,7 @@ keycloak:
   cmd.run:
     - watch:
       - file: /srv/kubernetes/manifests/keycloak/values.yaml
-      - file: /srv/kubernetes/manifests/keycloak/ingress.yaml
+      - file: /srv/kubernetes/manifests/keycloak/keycloak-ingress.yaml
     - runas: root
     - unless: helm list | grep keycloak
     - env:
@@ -42,5 +41,5 @@ keycloak:
         helm install --name keycloak --namespace keycloak \
             -f /srv/kubernetes/manifests/keycloak/values.yaml \
             "stable/keycloak"
-        kubectl apply -f /srv/kubernetes/manifests/keycloak/ingress.yaml
+        kubectl apply -f /srv/kubernetes/manifests/keycloak/keycloak-ingress.yaml
 

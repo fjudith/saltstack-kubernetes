@@ -2,7 +2,7 @@
 
 /srv/kubernetes/manifests/dns-horizontal-autoscaler.yaml:
     file.managed:
-    - source: salt://kubernetes/addons/dns-horizontal-autoscaler/dns-horizontal-autoscaler.yaml
+    - source: salt://kubernetes/addons/dns-horizontal-autoscaler/files/dns-horizontal-autoscaler.yaml
     - user: root
     - template: jinja
     - group: root
@@ -14,4 +14,4 @@ kubernetes-dns-horizontal-autoscaler-install:
       - /srv/kubernetes/manifests/dns-horizontal-autoscaler.yaml
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/dns-horizontal-autoscaler.yaml
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz'

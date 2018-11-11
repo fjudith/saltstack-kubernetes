@@ -9,7 +9,7 @@ addon-prometheus-operator:
 
 /srv/kubernetes/manifests/kube-prometheus-ingress.yaml:
     file.managed:
-    - source: salt://kubernetes/addons/prometheus-operator/ingress.yaml
+    - source: salt://kubernetes/addons/prometheus-operator/templates/ingress.yaml.jinja
     - user: root
     - template: jinja
     - group: root
@@ -19,7 +19,7 @@ addon-prometheus-operator:
 
 /srv/kubernetes/manifests/grafana-deployment.yaml:
     file.managed:
-    - source: salt://kubernetes/addons/prometheus-operator/grafana-deployment.yaml
+    - source: salt://kubernetes/addons/prometheus-operator/templates/grafana-deployment.yaml.jinja
     - user: root
     - template: jinja
     - group: root
@@ -40,4 +40,4 @@ kubernetes-kube-prometheus-install:
         kubectl apply -f /srv/kubernetes/manifests/prometheus-operator/contrib/kube-prometheus/manifests/ 2>/dev/null || true
         kubectl apply -f /srv/kubernetes/manifests/grafana-deployment.yaml
         kubectl apply -f /srv/kubernetes/manifests/kube-prometheus-ingress.yaml
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz'

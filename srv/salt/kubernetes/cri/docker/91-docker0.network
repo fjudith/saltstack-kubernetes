@@ -1,5 +1,0 @@
-[Match]
-name=docker0
-
-[Network]
-Address=172.18.0.1/16

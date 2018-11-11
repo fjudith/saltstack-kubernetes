@@ -7,11 +7,11 @@ include:
   - kubernetes.cni
   - kubernetes.cri
   - kubernetes.cri.{{ common.cri.provider }}
-  - kubernetes.master.kubelet
-  - kubernetes.master.kube-proxy
-  - kubernetes.master.kube-apiserver
-  - kubernetes.master.kube-controller-manager
-  - kubernetes.master.kube-scheduler
+  - kubernetes.role.master.kubelet
+  - kubernetes.role.master.kube-proxy
+  - kubernetes.role.master.kube-apiserver
+  - kubernetes.role.master.kube-controller-manager
+  - kubernetes.role.master.kube-scheduler
   - kubernetes.cni.{{ common.cni.provider }}
 
 conntrack:

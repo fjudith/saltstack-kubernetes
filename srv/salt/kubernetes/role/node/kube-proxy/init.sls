@@ -49,7 +49,7 @@ kube-proxy-install:
 
 /var/lib/kube-proxy/kube-proxy-config.yaml:
   file.managed:
-    - source: salt://kubernetes/role/node/kube-proxy/templates/kube-proxy-config.yaml
+    - source: salt://kubernetes/role/node/kube-proxy/templates/kube-proxy-config.yaml.jinja
     - user: root
     - template: jinja
     - group: root

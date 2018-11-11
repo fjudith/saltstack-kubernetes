@@ -2,12 +2,12 @@
 {%- set os = salt['grains.get']('os') -%}
 
 include:
-  - kubernetes/cni
-  - kubernetes/cri
-  - kubernetes/cri/{{ common.cri.provider }}
-  - kubernetes/cri/rkt
-  - kubernetes/node/kubelet
-  - kubernetes/node/kube-proxy
+  - kubernetes.cni
+  - kubernetes.cri
+  - kubernetes.cri.{{ common.cri.provider }}
+  - kubernetes.cri.rkt
+  - kubernetes.role.node.kubelet
+  - kubernetes.role.node.kube-proxy
 
 {% if os == "Debian" or os == "Ubuntu" %}
 glusterfs-client:
@@ -71,13 +71,6 @@ net.bridge.bridge-nf-pass-vlan-input-dev:
 /usr/sbin/modprobe:
   file.symlink:
     - target: /sbin/modprobe
-
-/etc/kubernetes/manifests:
-  file.directory:
-    - user: root
-    - group: root
-    - dir_mode: 750
-    - makedirs: True
 
 /usr/lib/coreos:
   file.directory:

@@ -26,9 +26,8 @@ kube-proxy-install:
 
 /etc/systemd/system/kube-proxy.service:
   file.managed:
-    - source: salt://kubernetes/master/kube-proxy/kube-proxy.service
+    - source: salt://kubernetes/role/master/kube-proxy/files/kube-proxy.service
     - user: root
-    - template: jinja
     - group: root
     - mode: 644
 
@@ -41,19 +40,18 @@ kube-proxy-install:
 
 /etc/kubernetes/kube-proxy.kubeconfig:
   file.managed:
-    - source: salt://kubernetes/master/kube-proxy/kube-proxy.kubeconfig
+    - source: salt://kubernetes/role/master/kube-proxy/files/kube-proxy.kubeconfig
     - user: root
-    - template: jinja
     - group: root
     - mode: 644
 
 /var/lib/kube-proxy/kube-proxy-config.yaml:
   file.managed:
-    - source: salt://kubernetes/master/kube-proxy/kube-proxy-config.yaml
+    - source: salt://kubernetes/role/master/kube-proxy/templates/kube-proxy-config.yaml.jinja
     - user: root
-    - template: jinja
     - group: root
     - mode: 644
+    - template: jinja
 
 kube-proxy.service:
   service.running:

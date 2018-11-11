@@ -12,9 +12,8 @@
     - group:  root
     - mode:  '744'
 
-/opt/docker-v{{ common.cri.docker.version }}
+/opt/docker-v{{ common.cri.docker.version }}:
   archive.extracted:
-    - name: /opt/
     - source: https://download.docker.com/linux/static/stable/x86_64/docker-{{ common.cri.docker.version }}.tgz
     - skip_verify: true
     - archive_format: tar
@@ -83,7 +82,6 @@ docker.socket:
 
 docker.service:
   service.enabled:
-    - watch:
-      - /etc/systemd/system/docker.service
     - require:
       - group: docker
+      - /etc/systemd/system/docker.service

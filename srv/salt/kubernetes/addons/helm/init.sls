@@ -11,7 +11,7 @@
     file.managed:
     - require:
       - file: /srv/kubernetes/manifests/helm
-    - source: salt://kubernetes/addons/helm/helm-rbac.yaml
+    - source: salt://kubernetes/addons/helm/files/helm-rbac.yaml
     - user: root
     - template: jinja
     - group: root
@@ -21,7 +21,7 @@
     file.managed:
     - require:
       - file: /srv/kubernetes/manifests/helm
-    - source: salt://kubernetes/addons/helm/helm-tiller.yaml
+    - source: salt://kubernetes/addons/helm/templates/helm-tiller.yaml.jinja
     - user: root
     - template: jinja
     - group: root
@@ -31,7 +31,7 @@
     file.managed:
     - require:
       - file: /srv/kubernetes/manifests/helm
-    - source: salt://kubernetes/addons/helm/helm-serviceaccount.yaml
+    - source: salt://kubernetes/addons/helm/files/helm-serviceaccount.yaml
     - user: root
     - template: jinja
     - group: root
@@ -49,7 +49,7 @@ tiller:
         kubectl apply -f /srv/kubernetes/manifests/helm/helm-rbac.yaml
         kubectl apply -f /srv/kubernetes/manifests/helm/helm-tiller.yaml
         kubectl apply -f /srv/kubernetes/manifests/helm/helm-serviceaccount.yaml
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz'
 
 /tmp/helm-v{{ common.addons.helm.version }}:
   archive.extracted:

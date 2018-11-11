@@ -2,23 +2,7 @@
 
 /srv/kubernetes/manifests/heapster.yaml:
     file.managed:
-    - source: salt://kubernetes/addons/influxdb-grafana/heapster.yaml
-    - user: root
-    - template: jinja
-    - group: root
-    - mode: 644
-
-/srv/kubernetes/manifests/heapster-rbac.yaml:
-    file.managed:
-    - source: salt://kubernetes/addons/influxdb-grafana/heapster-rbac.yaml
-    - user: root
-    - template: jinja
-    - group: root
-    - mode: 644
-
-/srv/kubernetes/manifests/heapster-service.yaml:
-    file.managed:
-    - source: salt://kubernetes/addons/influxdb-grafana/heapster-service.yaml
+    - source: salt://kubernetes/addons/influxdb-grafana/templates/heapster.yaml.jinja
     - user: root
     - template: jinja
     - group: root
@@ -26,7 +10,23 @@
 
 /srv/kubernetes/manifests/influxdb-grafana.yaml:
     file.managed:
-    - source: salt://kubernetes/addons/influxdb-grafana/influxdb-grafana.yaml
+    - source: salt://kubernetes/addons/influxdb-grafana/templates/influxdb-grafana.yaml.jinja
+    - user: root
+    - template: jinja
+    - group: root
+    - mode: 644
+
+/srv/kubernetes/manifests/heapster-rbac.yaml:
+    file.managed:
+    - source: salt://kubernetes/addons/influxdb-grafana/files/heapster-rbac.yaml
+    - user: root
+    - template: jinja
+    - group: root
+    - mode: 644
+
+/srv/kubernetes/manifests/heapster-service.yaml:
+    file.managed:
+    - source: salt://kubernetes/addons/influxdb-grafana/files/heapster-service.yaml
     - user: root
     - template: jinja
     - group: root
@@ -39,7 +39,7 @@ kubernetes-heapster-influxdb-install:
       - /srv/kubernetes/manifests/heapster-rbac.yaml
       - /srv/kubernetes/manifests/heapster-service.yaml
       - /srv/kubernetes/manifests/influxdb-grafana.yaml
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz'
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/heapster.yaml
         kubectl apply -f /srv/kubernetes/manifests/heapster-rbac.yaml

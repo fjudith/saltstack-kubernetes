@@ -92,7 +92,7 @@ ostree-install:
   file.managed:
     - require:
       - file: /etc/containers
-    - source: salt://kubernetes/cri/crio/policy.json
+    - source: salt://kubernetes/cri/crio/files/policy.json
     - user: root
     - template: jinja
     - group: root
@@ -102,7 +102,7 @@ ostree-install:
   file.managed:
     - require:
       - file: /etc/containers
-    - source: salt://kubernetes/cri/crio/seccomp.json
+    - source: salt://kubernetes/cri/crio/files/seccomp.json
     - user: root
     - template: jinja
     - group: root
@@ -119,7 +119,7 @@ ostree-install:
   file.managed:
     - require:
       - file: /etc/crio
-    - source: salt://kubernetes/cri/crio/crio.service
+    - source: salt://kubernetes/cri/crio/files/crio.service
     - user: root
     - template: jinja
     - group: root
@@ -129,7 +129,7 @@ ostree-install:
   file.managed:
     - require:
       - file: /etc/crio
-    - source: salt://kubernetes/cri/crio/crio-shutdown.service
+    - source: salt://kubernetes/cri/crio/files/crio-shutdown.service
     - user: root
     - template: jinja
     - group: root
@@ -139,7 +139,7 @@ ostree-install:
   file.managed:
     - require:
       - file: /etc/crio
-    - source: salt://kubernetes/cri/crio/crio.conf
+    - source: salt://kubernetes/cri/crio/files/crio.conf
     - user: root
     - template: jinja
     - group: root

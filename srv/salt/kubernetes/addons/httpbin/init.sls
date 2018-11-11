@@ -11,7 +11,7 @@
     file.managed:
     - require:
       - file: /srv/kubernetes/manifests/httpbin
-    - source: salt://kubernetes/addons/httpbin/deployment.yaml
+    - source: salt://kubernetes/addons/httpbin/files/deployment.yaml
     - user: root
     - group: root
     - file_mode: 644
@@ -21,7 +21,7 @@
     file.managed:
     - require:
       - file: /srv/kubernetes/manifests/httpbin
-    - source: salt://kubernetes/addons/httpbin/service.yaml
+    - source: salt://kubernetes/addons/httpbin/files/service.yaml
     - user: root
     - group: root
     - file_mode: 644
@@ -31,7 +31,7 @@
     file.managed:
     - require:
       - file: /srv/kubernetes/manifests/httpbin
-    - source: salt://kubernetes/addons/httpbin/ingress.yaml
+    - source: salt://kubernetes/addons/httpbin/templates/ingress.yaml.jinja
     - user: root
     - group: root
     - file_mode: 644

@@ -9,9 +9,7 @@ base:
     - common
     - certs
     - kubernetes.role.master
-    {%- if pillar.kubernetes.master.storage.get('rook', {'enabled': False}).enabled %}
-    - kubernetes.csi.rook
-    {%- endif %}
+    - kubernetes.csi
     - kubernetes.addons
     - kubernetes.charts
   {% endif %}

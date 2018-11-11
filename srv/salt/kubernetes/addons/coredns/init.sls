@@ -2,7 +2,7 @@
 
 /srv/kubernetes/manifests/coredns.yaml:
     file.managed:
-    - source: salt://kubernetes/addons/coredns/coredns.yaml
+    - source: salt://kubernetes/addons/coredns/templates/deployment.yaml.jinja
     - user: root
     - template: jinja
     - group: root
@@ -14,4 +14,4 @@ kubernetes-coredns-install:
       - /srv/kubernetes/manifests/coredns.yaml
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/coredns.yaml
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz'

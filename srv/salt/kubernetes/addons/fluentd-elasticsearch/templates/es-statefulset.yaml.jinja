@@ -1,3 +1,5 @@
+{%- from "kubernetes/map.jinja" import master with context -%}
+
 # RBAC authn and authz
 apiVersion: v1
 kind: ServiceAccount
@@ -98,7 +100,12 @@ spec:
               fieldPath: metadata.namespace
       volumes:
       - name: elasticsearch-logging
+      {%- if master.storage.get('rook_ceph', {'enabled': False}).enabled %}
+        persistentVolumeClaim:
+          claimName: elasticsearch-logging        
+      {%- else -%}
         emptyDir: {}
+      {%- endif %}
       # Elasticsearch requires vm.max_map_count to be at least 262144.
       # If your OS already sets up this number to a higher value, feel free
       # to remove this init container.
@@ -108,3 +115,21 @@ spec:
         name: elasticsearch-logging-init
         securityContext:
           privileged: true
+---
+{%- if master.storage.get('rook_ceph', {'enabled': False}).enabled %}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: elasticsearch-logging
+  namespace: kube-system
+  labels:
+    k8s-app: elasticsearch-logging
+spec:
+  storageClassName: rook-ceph-block
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+{% endif %}

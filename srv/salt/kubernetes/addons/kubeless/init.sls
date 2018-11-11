@@ -21,7 +21,7 @@
     file.managed:
     - require:
       - file: /srv/kubernetes/manifests/kubeless
-    - source: https://github.com/kubeless/kubeless/releases/download/{{ common.addons.kubeless.version }}/kubeless-{{ common.addons.kubeless.version }}.yaml
+    - source: https://github.com/kubeless/kubeless/releases/download/v{{ common.addons.kubeless.version }}/kubeless-{{ common.addons.kubeless.version }}.yaml
     - skip_verify: true
     - user: root
     - template: jinja
@@ -41,7 +41,7 @@
 
 /tmp/kubeless-v{{ common.addons.kubeless.version }}:
   archive.extracted:
-    - source: https://github.com/kubeless/kubeless/releases/download/{{ common.addons.kubeless.version }}/kubeless_linux-amd64.zip
+    - source: https://github.com/kubeless/kubeless/releases/download/v{{ common.addons.kubeless.version }}/kubeless_linux-amd64.zip
     - skip_verify: true
     {# - source_hash: {{ common.addons.kubeless.source_hash }} #}
     - user: root

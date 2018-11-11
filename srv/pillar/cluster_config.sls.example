@@ -100,7 +100,7 @@ kubernetes:
         enabled: True
       kubeless:
         enabled: True
-        version: v1.0.0
+        version: 1.0.0
         ui_version: master
       knative:
         enabled: False

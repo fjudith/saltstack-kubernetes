@@ -9,7 +9,7 @@
 
 /srv/kubernetes/manifests/kube-apiserver-crb.yaml:
     file.managed:
-    - source: salt://kubernetes/addons/default-cluster-role-binding/kube-apiserver-crb.yaml
+    - source: salt://kubernetes/addons/default-cluster-role-binding/files/kube-apiserver-crb.yaml
     - user: root
     - template: jinja
     - group: root
@@ -17,7 +17,7 @@
 
 /srv/kubernetes/manifests/kubelet-crb.yaml:
     file.managed:
-    - source: salt://kubernetes/addons/default-cluster-role-binding/kubelet-crb.yaml
+    - source: salt://kubernetes/addons/default-cluster-role-binding/files/kubelet-crb.yaml
     - user: root
     - template: jinja
     - group: root
@@ -33,4 +33,4 @@ kubernetes-role-install:
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/kube-apiserver-crb.yaml
         kubectl apply -f /srv/kubernetes/manifests/kubelet-crb.yaml
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz'

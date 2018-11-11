@@ -2,10 +2,9 @@
 
 /srv/kubernetes/manifests/ingress-nginx:
     file.recurse:
-    - source: salt://kubernetes/addons/ingress-nginx
+    - source: salt://kubernetes/addons/ingress-nginx/files
     - include_empty: True
     - user: root
-    - template: jinja
     - group: root
     - file_mode: 644
 
@@ -27,4 +26,4 @@ kubernetes-nginx-install:
         kubectl apply -f /srv/kubernetes/manifests/ingress-nginx/rbac.yaml
         kubectl apply -f /srv/kubernetes/manifests/ingress-nginx/default-backend.yaml
         kubectl apply -f /srv/kubernetes/manifests/ingress-nginx/with-rbac.yaml
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz'

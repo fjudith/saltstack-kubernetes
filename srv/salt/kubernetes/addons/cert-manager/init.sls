@@ -35,7 +35,7 @@ kubernetes-cert-manager-install:
         - git:  addon-cert-manager
     - runas: root
     - use_vt: True
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz/'
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/cert-manager/contrib/manifests/cert-manager/with-rbac.yaml
         kubectl -n cert-manager delete secret public-dns-secret

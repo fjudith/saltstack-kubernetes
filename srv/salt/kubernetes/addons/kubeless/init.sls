@@ -21,7 +21,7 @@
     file.managed:
     - require:
       - file: /srv/kubernetes/manifests/kubeless
-    - source: https://github.com/kubeless/kubeless/releases/download/v{{ common.addons.kubeless.version }}/kubeless-{{ common.addons.kubeless.version }}.yaml
+    - source: https://github.com/kubeless/kubeless/releases/download/v{{ common.addons.kubeless.version }}/kubeless-v{{ common.addons.kubeless.version }}.yaml
     - skip_verify: true
     - user: root
     - group: root

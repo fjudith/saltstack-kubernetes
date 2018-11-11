@@ -38,10 +38,19 @@
     - dir_mode: 750
     - makedirs: True
 
+/srv/kubernetes/manifests/concourse-ingress.yaml:
+  file.managed:
+    - source: salt://kubernetes/charts/concourse/templates/ingress.yaml.jinja
+    - user: root
+    - template: jinja
+    - group: root
+    - mode: 644
+
 concourse:
   cmd.run:
     - watch:
       - file: /srv/kubernetes/manifests/concourse
+      - file: /srv/kubernetes/manifests/concourse-ingress.yaml
     - runas: root
     - unless: helm list | grep concourse
     - env:
@@ -57,20 +66,5 @@ concourse:
             --set postgresql.persistence.enabled=true \
              {%- endif %}
             "stable/concourse"
-
-/srv/kubernetes/manifests/concourse-ingress.yaml:
-  file.managed:
-    - source: salt://kubernetes/charts/concourse/ingress.yaml
-    - user: root
-    - template: jinja
-    - group: root
-    - mode: 644
-
-concourse-ingress:
-  cmd.run:
-    - watch:
-        - file:  /srv/kubernetes/manifests/concourse-ingress.yaml
-    - runas: root
-    - use_vt: True
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
-    - name: kubectl apply -f /srv/kubernetes/manifests/concourse-ingress.yaml
+        - name: kubectl apply -f /srv/kubernetes/manifests/concourse-ingress.yaml
+    

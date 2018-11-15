@@ -215,7 +215,7 @@ resource "hcloud_server" "proxy02" {
     bastion_host        = "${hcloud_server.proxy01.0.ipv4_address}"
     bastion_user        = "${var.ssh_user}"
     bastion_private_key = "${file(var.ssh_private_key)}"
-    timeout             = "1m"
+    timeout             = "2m"
   }
 
   provisioner "remote-exec" {
@@ -313,7 +313,7 @@ resource "hcloud_server" "etcd" {
     bastion_host        = "${hcloud_server.proxy01.0.ipv4_address}"
     bastion_user        = "${var.ssh_user}"
     bastion_private_key = "${file(var.ssh_private_key)}"
-    timeout             = "1m"
+    timeout             = "2m"
   }
 
   provisioner "remote-exec" {
@@ -409,7 +409,7 @@ resource "hcloud_server" "master" {
     bastion_host        = "${hcloud_server.proxy01.0.ipv4_address}"
     bastion_user        = "${var.ssh_user}"
     bastion_private_key = "${file(var.ssh_private_key)}"
-    timeout             = "1m"
+    timeout             = "2m"
   }
 
   provisioner "remote-exec" {
@@ -505,7 +505,7 @@ resource "hcloud_server" "node" {
     bastion_host        = "${hcloud_server.proxy01.0.ipv4_address}"
     bastion_user        = "${var.ssh_user}"
     bastion_private_key = "${file(var.ssh_private_key)}"
-    timeout             = "1m"
+    timeout             = "2m"
   }
 
   provisioner "remote-exec" {
@@ -550,7 +550,7 @@ provisioner "remote-exec" {
 
   provisioner "remote-exec" {
     inline = [
-      "session required pam_limits.so' | tee -a  /etc/pam.d/common-session",
+      "echo 'session required pam_limits.so' | tee -a  /etc/pam.d/common-session",
     ]
   }
   

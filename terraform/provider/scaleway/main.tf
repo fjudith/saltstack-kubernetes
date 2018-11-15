@@ -243,7 +243,7 @@ resource "scaleway_server" "proxy02" {
     bastion_host        = "${scaleway_server.proxy01.0.public_ip}"
     bastion_user        = "${var.ssh_user}"
     bastion_private_key = "${file(var.ssh_private_key)}"
-    timeout             = "1m"
+    timeout             = "2m"
   }
 
   provisioner "remote-exec" {
@@ -343,7 +343,7 @@ resource "scaleway_server" "etcd" {
     bastion_host        = "${scaleway_server.proxy01.0.public_ip}"
     bastion_user        = "${var.ssh_user}"
     bastion_private_key = "${file(var.ssh_private_key)}"
-    timeout             = "1m"
+    timeout             = "2m"
   }
 
   provisioner "remote-exec" {
@@ -441,7 +441,7 @@ resource "scaleway_server" "master" {
     bastion_host        = "${scaleway_server.proxy01.0.public_ip}"
     bastion_user        = "${var.ssh_user}"
     bastion_private_key = "${file(var.ssh_private_key)}"
-    timeout             = "1m"
+    timeout             = "2m"
   }
 
   provisioner "remote-exec" {
@@ -537,7 +537,7 @@ resource "scaleway_server" "node" {
     bastion_host        = "${scaleway_server.proxy01.0.public_ip}"
     bastion_user        = "${var.ssh_user}"
     bastion_private_key = "${file(var.ssh_private_key)}"
-    timeout             = "1m"
+    timeout             = "2m"
   }
 
   volume {

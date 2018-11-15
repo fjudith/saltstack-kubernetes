@@ -122,6 +122,38 @@ resource "hcloud_server" "proxy01" {
 
   provisioner "remote-exec" {
     inline = [
+      "echo '*    soft nofile 1048576' | tee -a /etc/security/limits.conf", 
+      "echo '*    hard nofile 1048576' | tee -a /etc/security/limits.conf",
+      "echo 'root soft nofile 1048576' | tee -a /etc/security/limits.conf",
+      "echo 'root hard nofile 1048576' | tee -a /etc/security/limits.conf",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "session required pam_limits.so' | tee -a  /etc/pam.d/common-session",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "echo 'fs.file-max=2097152' | tee -a  /etc/sysctl.conf",
+      "echo 'fs.nr_open=1048576' | tee -a  /etc/sysctl.conf",
+      "sysctl -p",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "echo 'net.ipv4.netfilter.ip_conntrack_max=1048576' | tee -a  /etc/sysctl.conf",
+      "echo 'net.nf_conntrack_max=1048576' | tee -a  /etc/sysctl.conf",
+      "echo 'net.core.somaxconn = 1048576' | tee -a  /etc/sysctl.conf",
+      "sysctl -p",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
       "apt-get update -yqq",
       "apt-get install -yqq apt-transport-https ufw tinyproxy ${join(" ", var.apt_packages)}",
       "echo 'MaxSessions 100' | tee -a  /etc/ssh/sshd_config",
@@ -212,6 +244,38 @@ resource "hcloud_server" "proxy02" {
 
   provisioner "remote-exec" {
     inline = [
+      "echo '*    soft nofile 1048576' | tee -a /etc/security/limits.conf", 
+      "echo '*    hard nofile 1048576' | tee -a /etc/security/limits.conf",
+      "echo 'root soft nofile 1048576' | tee -a /etc/security/limits.conf",
+      "echo 'root hard nofile 1048576' | tee -a /etc/security/limits.conf",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "session required pam_limits.so' | tee -a  /etc/pam.d/common-session",
+    ]
+  }
+  
+  provisioner "remote-exec" {
+    inline = [
+      "echo 'fs.file-max=2097152' | tee -a  /etc/sysctl.conf",
+      "echo 'fs.nr_open=1048576' | tee -a  /etc/sysctl.conf",
+      "sysctl -p",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "echo 'net.ipv4.netfilter.ip_conntrack_max=1048576' | tee -a  /etc/sysctl.conf",
+      "echo 'net.nf_conntrack_max=1048576' | tee -a  /etc/sysctl.conf",
+      "echo 'net.core.somaxconn = 1048576' | tee -a  /etc/sysctl.conf",
+      "sysctl -p",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
       "apt-get update -yqq",
       "apt-get install -yqq apt-transport-https ufw ${join(" ", var.apt_packages)}",
       "echo 'MaxSessions 100' | tee -a  /etc/ssh/sshd_config",
@@ -271,6 +335,38 @@ resource "hcloud_server" "etcd" {
       "echo 'net.bridge.bridge-nf-filter-pppoe-tagged=0' | tee -a  /etc/sysctl.conf",
       "echo 'net.bridge.bridge-nf-filter-vlan-tagged=0' | tee -a  /etc/sysctl.conf",
       "echo 'net.bridge.bridge-nf-pass-vlan-input-dev=0' | tee -a  /etc/sysctl.conf",
+      "sysctl -p",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "echo '*    soft nofile 1048576' | tee -a /etc/security/limits.conf", 
+      "echo '*    hard nofile 1048576' | tee -a /etc/security/limits.conf",
+      "echo 'root soft nofile 1048576' | tee -a /etc/security/limits.conf",
+      "echo 'root hard nofile 1048576' | tee -a /etc/security/limits.conf",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "session required pam_limits.so' | tee -a  /etc/pam.d/common-session",
+    ]
+  }
+  
+  provisioner "remote-exec" {
+    inline = [
+      "echo 'fs.file-max=2097152' | tee -a  /etc/sysctl.conf",
+      "echo 'fs.nr_open=1048576' | tee -a  /etc/sysctl.conf",
+      "sysctl -p",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "echo 'net.ipv4.netfilter.ip_conntrack_max=1048576' | tee -a  /etc/sysctl.conf",
+      "echo 'net.nf_conntrack_max=1048576' | tee -a  /etc/sysctl.conf",
+      "echo 'net.core.somaxconn = 1048576' | tee -a  /etc/sysctl.conf",
       "sysctl -p",
     ]
   }
@@ -340,6 +436,38 @@ resource "hcloud_server" "master" {
 
   provisioner "remote-exec" {
     inline = [
+      "echo '*    soft nofile 1048576' | tee -a /etc/security/limits.conf", 
+      "echo '*    hard nofile 1048576' | tee -a /etc/security/limits.conf",
+      "echo 'root soft nofile 1048576' | tee -a /etc/security/limits.conf",
+      "echo 'root hard nofile 1048576' | tee -a /etc/security/limits.conf",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "session required pam_limits.so' | tee -a  /etc/pam.d/common-session",
+    ]
+  }
+  
+  provisioner "remote-exec" {
+    inline = [
+      "echo 'fs.file-max=2097152' | tee -a  /etc/sysctl.conf",
+      "echo 'fs.nr_open=1048576' | tee -a  /etc/sysctl.conf",
+      "sysctl -p",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "echo 'net.ipv4.netfilter.ip_conntrack_max=1048576' | tee -a  /etc/sysctl.conf",
+      "echo 'net.nf_conntrack_max=1048576' | tee -a  /etc/sysctl.conf",
+      "echo 'net.core.somaxconn = 1048576' | tee -a  /etc/sysctl.conf",
+      "sysctl -p",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
       "apt-get update -yqq",
       "apt-get install -yqq apt-transport-https ufw git ${join(" ", var.apt_packages)}",
     ]
@@ -400,6 +528,38 @@ resource "hcloud_server" "node" {
     ]
   }
 
+  provisioner "remote-exec" {
+    inline = [
+      "echo '*    soft nofile 1048576' | tee -a /etc/security/limits.conf", 
+      "echo '*    hard nofile 1048576' | tee -a /etc/security/limits.conf",
+      "echo 'root soft nofile 1048576' | tee -a /etc/security/limits.conf",
+      "echo 'root hard nofile 1048576' | tee -a /etc/security/limits.conf",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "session required pam_limits.so' | tee -a  /etc/pam.d/common-session",
+    ]
+  }
+  
+  provisioner "remote-exec" {
+    inline = [
+      "echo 'fs.file-max=2097152' | tee -a  /etc/sysctl.conf",
+      "echo 'fs.nr_open=1048576' | tee -a  /etc/sysctl.conf",
+      "sysctl -p",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "echo 'net.ipv4.netfilter.ip_conntrack_max=1048576' | tee -a  /etc/sysctl.conf",
+      "echo 'net.nf_conntrack_max=1048576' | tee -a  /etc/sysctl.conf",
+      "echo 'net.core.somaxconn = 1048576' | tee -a  /etc/sysctl.conf",
+      "sysctl -p",
+    ]
+  }
+  
   provisioner "remote-exec" {
     inline = [
       "apt-get update -yqq",

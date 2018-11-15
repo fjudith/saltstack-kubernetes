@@ -140,6 +140,38 @@ resource "scaleway_server" "proxy01" {
 
   provisioner "remote-exec" {
     inline = [
+      "echo '*    soft nofile 1048576' | tee -a /etc/security/limits.conf", 
+      "echo '*    hard nofile 1048576' | tee -a /etc/security/limits.conf",
+      "echo 'root soft nofile 1048576' | tee -a /etc/security/limits.conf",
+      "echo 'root hard nofile 1048576' | tee -a /etc/security/limits.conf",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "session required pam_limits.so' | tee -a  /etc/pam.d/common-session",
+    ]
+  }
+  
+  provisioner "remote-exec" {
+    inline = [
+      "echo 'fs.file-max=2097152' | tee -a  /etc/sysctl.conf",
+      "echo 'fs.nr_open=1048576' | tee -a  /etc/sysctl.conf",
+      "sysctl -p",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "echo 'net.ipv4.netfilter.ip_conntrack_max=1048576' | tee -a  /etc/sysctl.conf",
+      "echo 'net.nf_conntrack_max=1048576' | tee -a  /etc/sysctl.conf",
+      "echo 'net.core.somaxconn = 1048576' | tee -a  /etc/sysctl.conf",
+      "sysctl -p",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
       "rm -rf /var/lib/apt/lists/*",
       "apt-get update -yqq",
       "apt-get install -yqq apt-transport-https ufw tinyproxy ${join(" ", var.apt_packages)}",
@@ -230,6 +262,38 @@ resource "scaleway_server" "proxy02" {
 
   provisioner "remote-exec" {
     inline = [
+      "echo '*    soft nofile 1048576' | tee -a /etc/security/limits.conf", 
+      "echo '*    hard nofile 1048576' | tee -a /etc/security/limits.conf",
+      "echo 'root soft nofile 1048576' | tee -a /etc/security/limits.conf",
+      "echo 'root hard nofile 1048576' | tee -a /etc/security/limits.conf",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "session required pam_limits.so' | tee -a  /etc/pam.d/common-session",
+    ]
+  }
+  
+  provisioner "remote-exec" {
+    inline = [
+      "echo 'fs.file-max=2097152' | tee -a  /etc/sysctl.conf",
+      "echo 'fs.nr_open=1048576' | tee -a  /etc/sysctl.conf",
+      "sysctl -p",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "echo 'net.ipv4.netfilter.ip_conntrack_max=1048576' | tee -a  /etc/sysctl.conf",
+      "echo 'net.nf_conntrack_max=1048576' | tee -a  /etc/sysctl.conf",
+      "echo 'net.core.somaxconn = 1048576' | tee -a  /etc/sysctl.conf",
+      "sysctl -p",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
       "echo 'http_proxy=http://${scaleway_server.proxy01.0.private_ip}:8888' | tee -a  /etc/environment",
       "echo 'https_proxy=http://${scaleway_server.proxy01.0.private_ip}:8888' | tee -a  /etc/environment",
     ]
@@ -297,6 +361,38 @@ resource "scaleway_server" "etcd" {
 
   provisioner "remote-exec" {
     inline = [
+      "echo '*    soft nofile 1048576' | tee -a /etc/security/limits.conf", 
+      "echo '*    hard nofile 1048576' | tee -a /etc/security/limits.conf",
+      "echo 'root soft nofile 1048576' | tee -a /etc/security/limits.conf",
+      "echo 'root hard nofile 1048576' | tee -a /etc/security/limits.conf",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "session required pam_limits.so' | tee -a  /etc/pam.d/common-session",
+    ]
+  }
+  
+  provisioner "remote-exec" {
+    inline = [
+      "echo 'fs.file-max=2097152' | tee -a  /etc/sysctl.conf",
+      "echo 'fs.nr_open=1048576' | tee -a  /etc/sysctl.conf",
+      "sysctl -p",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "echo 'net.ipv4.netfilter.ip_conntrack_max=1048576' | tee -a  /etc/sysctl.conf",
+      "echo 'net.nf_conntrack_max=1048576' | tee -a  /etc/sysctl.conf",
+      "echo 'net.core.somaxconn = 1048576' | tee -a  /etc/sysctl.conf",
+      "sysctl -p",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
       "echo 'http_proxy=http://${scaleway_server.proxy01.0.private_ip}:8888' | tee -a  /etc/environment",
       "echo 'https_proxy=http://${scaleway_server.proxy01.0.private_ip}:8888' | tee -a  /etc/environment",
     ]
@@ -356,6 +452,38 @@ resource "scaleway_server" "master" {
       "echo 'net.bridge.bridge-nf-filter-pppoe-tagged=0' | tee -a  /etc/sysctl.conf",
       "echo 'net.bridge.bridge-nf-filter-vlan-tagged=0' | tee -a  /etc/sysctl.conf",
       "echo 'net.bridge.bridge-nf-pass-vlan-input-dev=0' | tee -a  /etc/sysctl.conf",
+      "sysctl -p",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "echo '*    soft nofile 1048576' | tee -a /etc/security/limits.conf", 
+      "echo '*    hard nofile 1048576' | tee -a /etc/security/limits.conf",
+      "echo 'root soft nofile 1048576' | tee -a /etc/security/limits.conf",
+      "echo 'root hard nofile 1048576' | tee -a /etc/security/limits.conf",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "session required pam_limits.so' | tee -a  /etc/pam.d/common-session",
+    ]
+  }
+  
+  provisioner "remote-exec" {
+    inline = [
+      "echo 'fs.file-max=2097152' | tee -a  /etc/sysctl.conf",
+      "echo 'fs.nr_open=1048576' | tee -a  /etc/sysctl.conf",
+      "sysctl -p",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "echo 'net.ipv4.netfilter.ip_conntrack_max=1048576' | tee -a  /etc/sysctl.conf",
+      "echo 'net.nf_conntrack_max=1048576' | tee -a  /etc/sysctl.conf",
+      "echo 'net.core.somaxconn = 1048576' | tee -a  /etc/sysctl.conf",
       "sysctl -p",
     ]
   }
@@ -428,6 +556,38 @@ resource "scaleway_server" "node" {
     ]
   }
 
+  provisioner "remote-exec" {
+    inline = [
+      "echo '*    soft nofile 1048576' | tee -a /etc/security/limits.conf", 
+      "echo '*    hard nofile 1048576' | tee -a /etc/security/limits.conf",
+      "echo 'root soft nofile 1048576' | tee -a /etc/security/limits.conf",
+      "echo 'root hard nofile 1048576' | tee -a /etc/security/limits.conf",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "session required pam_limits.so' | tee -a  /etc/pam.d/common-session",
+    ]
+  }
+  
+  provisioner "remote-exec" {
+    inline = [
+      "echo 'fs.file-max=2097152' | tee -a  /etc/sysctl.conf",
+      "echo 'fs.nr_open=1048576' | tee -a  /etc/sysctl.conf",
+      "sysctl -p",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "echo 'net.ipv4.netfilter.ip_conntrack_max=1048576' | tee -a  /etc/sysctl.conf",
+      "echo 'net.nf_conntrack_max=1048576' | tee -a  /etc/sysctl.conf",
+      "echo 'net.core.somaxconn = 1048576' | tee -a  /etc/sysctl.conf",
+      "sysctl -p",
+    ]
+  }
+  
   provisioner "remote-exec" {
     inline = [
       "echo 'http_proxy=http://${scaleway_server.proxy01.0.private_ip}:8888' | tee -a  /etc/environment",

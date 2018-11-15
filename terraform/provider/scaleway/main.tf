@@ -126,19 +126,38 @@ resource "scaleway_server" "proxy01" {
   provisioner "remote-exec" {
     inline = [
       "modprobe br_netfilter",
-      "echo 'net.ipv4.ip_forward=1' | tee -a  /etc/sysctl.conf",
-      "echo 'net.ipv6.conf.all.forwarding=1' | tee -a  /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-call-arptables=1' | tee -a  /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-call-ip6tables=1' | tee -a  /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-call-iptables=1' | tee -a  /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-filter-pppoe-tagged=0' | tee -a  /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-filter-vlan-tagged=0' | tee -a  /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-pass-vlan-input-dev=0' | tee -a  /etc/sysctl.conf",
+      "echo 'net.ipv4.ip_forward=1' | tee -a /etc/sysctl.conf",
+      "echo 'net.ipv6.conf.all.forwarding=1' | tee -a /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-call-arptables=1' | tee -a /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-call-ip6tables=1' | tee -a /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-call-iptables=1' | tee -a /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-filter-pppoe-tagged=0' | tee -a /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-filter-vlan-tagged=0' | tee -a /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-pass-vlan-input-dev=0' | tee -a /etc/sysctl.conf",
       "sysctl -p",
     ]
   }
 
   provisioner "remote-exec" {
+    inline = [
+      "rm -rf /var/lib/apt/lists/*",
+      "apt-get update -yqq",
+      "apt-get install -yqq apt-transport-https conntrack ufw tinyproxy ${join(" ", var.apt_packages)}",
+      "echo 'MaxSessions 100' | tee -a  /etc/ssh/sshd_config",
+      "systemctl reload sshd",
+      "systemctl enable tinyproxy",
+      "echo 'Allow 127.0.0.1' | tee -a  /etc/tinyproxy.conf",
+      "echo 'Allow 192.168.0.0/16' | tee -a  /etc/tinyproxy.conf",
+      "echo 'Allow 172.16.0.0/12' | tee -a  /etc/tinyproxy.conf",
+      "echo 'Allow 10.0.0.0/8' | tee -a  /etc/tinyproxy.conf",
+      "systemctl daemon-reload",
+      "systemctl start tinyproxy",
+      "echo 'http_proxy=http://localhost:8888' | tee -a  /etc/environment",
+      "echo 'https_proxy=http://localhost:8888' | tee -a  /etc/environment",
+    ]
+  }
+
+provisioner "remote-exec" {
     inline = [
       "echo '*    soft nofile 1048576' | tee -a /etc/security/limits.conf", 
       "echo '*    hard nofile 1048576' | tee -a /etc/security/limits.conf",
@@ -155,37 +174,19 @@ resource "scaleway_server" "proxy01" {
   
   provisioner "remote-exec" {
     inline = [
-      "echo 'fs.file-max=2097152' | tee -a  /etc/sysctl.conf",
-      "echo 'fs.nr_open=1048576' | tee -a  /etc/sysctl.conf",
+      "echo 'fs.file-max=2097152' | tee -a /etc/sysctl.conf",
+      "echo 'fs.nr_open=1048576' | tee -a /etc/sysctl.conf",
       "sysctl -p",
     ]
   }
 
   provisioner "remote-exec" {
     inline = [
-      "echo 'net.ipv4.netfilter.ip_conntrack_max=1048576' | tee -a  /etc/sysctl.conf",
-      "echo 'net.nf_conntrack_max=1048576' | tee -a  /etc/sysctl.conf",
-      "echo 'net.core.somaxconn=1048576' | tee -a  /etc/sysctl.conf",
+      "modprobe ip_conntrack",
+      "echo 'net.netfilter.nf_conntrack_max=1048576' | tee -a /etc/sysctl.conf",
+      "echo 'net.nf_conntrack_max=1048576' | tee -a /etc/sysctl.conf",
+      "echo 'net.core.somaxconn=1048576' | tee -a /etc/sysctl.conf",
       "sysctl -p",
-    ]
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "rm -rf /var/lib/apt/lists/*",
-      "apt-get update -yqq",
-      "apt-get install -yqq apt-transport-https ufw tinyproxy ${join(" ", var.apt_packages)}",
-      "echo 'MaxSessions 100' | tee -a  /etc/ssh/sshd_config",
-      "systemctl reload sshd",
-      "systemctl enable tinyproxy",
-      "echo 'Allow 127.0.0.1' | tee -a  /etc/tinyproxy.conf",
-      "echo 'Allow 192.168.0.0/16' | tee -a  /etc/tinyproxy.conf",
-      "echo 'Allow 172.16.0.0/12' | tee -a  /etc/tinyproxy.conf",
-      "echo 'Allow 10.0.0.0/8' | tee -a  /etc/tinyproxy.conf",
-      "systemctl daemon-reload",
-      "systemctl start tinyproxy",
-      "echo 'http_proxy=http://localhost:8888' | tee -a  /etc/environment",
-      "echo 'https_proxy=http://localhost:8888' | tee -a  /etc/environment",
     ]
   }
 
@@ -248,19 +249,36 @@ resource "scaleway_server" "proxy02" {
   provisioner "remote-exec" {
     inline = [
       "modprobe br_netfilter",
-      "echo 'net.ipv4.ip_forward=1' | tee -a  /etc/sysctl.conf",
-      "echo 'net.ipv6.conf.all.forwarding=1' | tee -a  /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-call-arptables=1' | tee -a  /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-call-ip6tables=1' | tee -a  /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-call-iptables=1' | tee -a  /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-filter-pppoe-tagged=0' | tee -a  /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-filter-vlan-tagged=0' | tee -a  /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-pass-vlan-input-dev=0' | tee -a  /etc/sysctl.conf",
+      "echo 'net.ipv4.ip_forward=1' | tee -a /etc/sysctl.conf",
+      "echo 'net.ipv6.conf.all.forwarding=1' | tee -a /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-call-arptables=1' | tee -a /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-call-ip6tables=1' | tee -a /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-call-iptables=1' | tee -a /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-filter-pppoe-tagged=0' | tee -a /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-filter-vlan-tagged=0' | tee -a /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-pass-vlan-input-dev=0' | tee -a /etc/sysctl.conf",
       "sysctl -p",
     ]
   }
 
   provisioner "remote-exec" {
+    inline = [
+      "echo 'http_proxy=http://${scaleway_server.proxy01.0.private_ip}:8888' | tee -a  /etc/environment",
+      "echo 'https_proxy=http://${scaleway_server.proxy01.0.private_ip}:8888' | tee -a  /etc/environment",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "rm -rf /var/lib/apt/lists/*",
+      "apt-get update -yqq",
+      "apt-get install -yqq apt-transport-https conntrack ufw ${join(" ", var.apt_packages)}",
+      "echo 'MaxSessions 100' | tee -a  /etc/ssh/sshd_config",
+      "systemctl reload sshd",
+    ]
+  }
+
+ provisioner "remote-exec" {
     inline = [
       "echo '*    soft nofile 1048576' | tee -a /etc/security/limits.conf", 
       "echo '*    hard nofile 1048576' | tee -a /etc/security/limits.conf",
@@ -277,35 +295,19 @@ resource "scaleway_server" "proxy02" {
   
   provisioner "remote-exec" {
     inline = [
-      "echo 'fs.file-max=2097152' | tee -a  /etc/sysctl.conf",
-      "echo 'fs.nr_open=1048576' | tee -a  /etc/sysctl.conf",
+      "echo 'fs.file-max=2097152' | tee -a /etc/sysctl.conf",
+      "echo 'fs.nr_open=1048576' | tee -a /etc/sysctl.conf",
       "sysctl -p",
     ]
   }
 
   provisioner "remote-exec" {
     inline = [
-      "echo 'net.ipv4.netfilter.ip_conntrack_max=1048576' | tee -a  /etc/sysctl.conf",
-      "echo 'net.nf_conntrack_max=1048576' | tee -a  /etc/sysctl.conf",
-      "echo 'net.core.somaxconn=1048576' | tee -a  /etc/sysctl.conf",
+      "modprobe ip_conntrack",
+      "echo 'net.netfilter.nf_conntrack_max=1048576' | tee -a /etc/sysctl.conf",
+      "echo 'net.nf_conntrack_max=1048576' | tee -a /etc/sysctl.conf",
+      "echo 'net.core.somaxconn=1048576' | tee -a /etc/sysctl.conf",
       "sysctl -p",
-    ]
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "echo 'http_proxy=http://${scaleway_server.proxy01.0.private_ip}:8888' | tee -a  /etc/environment",
-      "echo 'https_proxy=http://${scaleway_server.proxy01.0.private_ip}:8888' | tee -a  /etc/environment",
-    ]
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "rm -rf /var/lib/apt/lists/*",
-      "apt-get update -yqq",
-      "apt-get install -yqq apt-transport-https ufw ${join(" ", var.apt_packages)}",
-      "echo 'MaxSessions 100' | tee -a  /etc/ssh/sshd_config",
-      "systemctl reload sshd",
     ]
   }
 
@@ -347,19 +349,34 @@ resource "scaleway_server" "etcd" {
   provisioner "remote-exec" {
     inline = [
       "modprobe br_netfilter",
-      "echo 'net.ipv4.ip_forward=1' | tee -a  /etc/sysctl.conf",
-      "echo 'net.ipv6.conf.all.forwarding=1' | tee -a  /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-call-arptables=1' | tee -a  /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-call-ip6tables=1' | tee -a  /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-call-iptables=1' | tee -a  /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-filter-pppoe-tagged=0' | tee -a  /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-filter-vlan-tagged=0' | tee -a  /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-pass-vlan-input-dev=0' | tee -a  /etc/sysctl.conf",
+      "echo 'net.ipv4.ip_forward=1' | tee -a /etc/sysctl.conf",
+      "echo 'net.ipv6.conf.all.forwarding=1' | tee -a /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-call-arptables=1' | tee -a /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-call-ip6tables=1' | tee -a /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-call-iptables=1' | tee -a /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-filter-pppoe-tagged=0' | tee -a /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-filter-vlan-tagged=0' | tee -a /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-pass-vlan-input-dev=0' | tee -a /etc/sysctl.conf",
       "sysctl -p",
     ]
   }
 
   provisioner "remote-exec" {
+    inline = [
+      "echo 'http_proxy=http://${scaleway_server.proxy01.0.private_ip}:8888' | tee -a  /etc/environment",
+      "echo 'https_proxy=http://${scaleway_server.proxy01.0.private_ip}:8888' | tee -a  /etc/environment",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "rm -rf /var/lib/apt/lists/*",
+      "apt-get update -yqq",
+      "apt-get install -yqq apt-transport-https conntrack ufw ${join(" ", var.apt_packages)}",
+    ]
+  }
+
+provisioner "remote-exec" {
     inline = [
       "echo '*    soft nofile 1048576' | tee -a /etc/security/limits.conf", 
       "echo '*    hard nofile 1048576' | tee -a /etc/security/limits.conf",
@@ -376,33 +393,19 @@ resource "scaleway_server" "etcd" {
   
   provisioner "remote-exec" {
     inline = [
-      "echo 'fs.file-max=2097152' | tee -a  /etc/sysctl.conf",
-      "echo 'fs.nr_open=1048576' | tee -a  /etc/sysctl.conf",
+      "echo 'fs.file-max=2097152' | tee -a /etc/sysctl.conf",
+      "echo 'fs.nr_open=1048576' | tee -a /etc/sysctl.conf",
       "sysctl -p",
     ]
   }
 
   provisioner "remote-exec" {
     inline = [
-      "echo 'net.ipv4.netfilter.ip_conntrack_max=1048576' | tee -a  /etc/sysctl.conf",
-      "echo 'net.nf_conntrack_max=1048576' | tee -a  /etc/sysctl.conf",
-      "echo 'net.core.somaxconn=1048576' | tee -a  /etc/sysctl.conf",
+      "modprobe ip_conntrack",
+      "echo 'net.netfilter.nf_conntrack_max=1048576' | tee -a /etc/sysctl.conf",
+      "echo 'net.nf_conntrack_max=1048576' | tee -a /etc/sysctl.conf",
+      "echo 'net.core.somaxconn=1048576' | tee -a /etc/sysctl.conf",
       "sysctl -p",
-    ]
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "echo 'http_proxy=http://${scaleway_server.proxy01.0.private_ip}:8888' | tee -a  /etc/environment",
-      "echo 'https_proxy=http://${scaleway_server.proxy01.0.private_ip}:8888' | tee -a  /etc/environment",
-    ]
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "rm -rf /var/lib/apt/lists/*",
-      "apt-get update -yqq",
-      "apt-get install -yqq apt-transport-https ufw ${join(" ", var.apt_packages)}",
     ]
   }
 
@@ -444,19 +447,34 @@ resource "scaleway_server" "master" {
   provisioner "remote-exec" {
     inline = [
       "modprobe br_netfilter",
-      "echo 'net.ipv4.ip_forward=1' | tee -a  /etc/sysctl.conf",
-      "echo 'net.ipv6.conf.all.forwarding=1' | tee -a  /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-call-arptables=1' | tee -a  /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-call-ip6tables=1' | tee -a  /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-call-iptables=1' | tee -a  /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-filter-pppoe-tagged=0' | tee -a  /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-filter-vlan-tagged=0' | tee -a  /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-pass-vlan-input-dev=0' | tee -a  /etc/sysctl.conf",
+      "echo 'net.ipv4.ip_forward=1' | tee -a /etc/sysctl.conf",
+      "echo 'net.ipv6.conf.all.forwarding=1' | tee -a /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-call-arptables=1' | tee -a /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-call-ip6tables=1' | tee -a /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-call-iptables=1' | tee -a /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-filter-pppoe-tagged=0' | tee -a /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-filter-vlan-tagged=0' | tee -a /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-pass-vlan-input-dev=0' | tee -a /etc/sysctl.conf",
       "sysctl -p",
     ]
   }
 
   provisioner "remote-exec" {
+    inline = [
+      "echo 'http_proxy=http://${scaleway_server.proxy01.0.private_ip}:8888' | tee -a  /etc/environment",
+      "echo 'https_proxy=http://${scaleway_server.proxy01.0.private_ip}:8888' | tee -a  /etc/environment",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "rm -rf /var/lib/apt/lists/*",
+      "apt-get update -yqq",
+      "apt-get install -yqq apt-transport-https conntrack ufw git ${join(" ", var.apt_packages)}",
+    ]
+  }
+
+provisioner "remote-exec" {
     inline = [
       "echo '*    soft nofile 1048576' | tee -a /etc/security/limits.conf", 
       "echo '*    hard nofile 1048576' | tee -a /etc/security/limits.conf",
@@ -473,33 +491,19 @@ resource "scaleway_server" "master" {
   
   provisioner "remote-exec" {
     inline = [
-      "echo 'fs.file-max=2097152' | tee -a  /etc/sysctl.conf",
-      "echo 'fs.nr_open=1048576' | tee -a  /etc/sysctl.conf",
+      "echo 'fs.file-max=2097152' | tee -a /etc/sysctl.conf",
+      "echo 'fs.nr_open=1048576' | tee -a /etc/sysctl.conf",
       "sysctl -p",
     ]
   }
 
   provisioner "remote-exec" {
     inline = [
-      "echo 'net.ipv4.netfilter.ip_conntrack_max=1048576' | tee -a  /etc/sysctl.conf",
-      "echo 'net.nf_conntrack_max=1048576' | tee -a  /etc/sysctl.conf",
-      "echo 'net.core.somaxconn=1048576' | tee -a  /etc/sysctl.conf",
+      "modprobe ip_conntrack",
+      "echo 'net.netfilter.nf_conntrack_max=1048576' | tee -a /etc/sysctl.conf",
+      "echo 'net.nf_conntrack_max=1048576' | tee -a /etc/sysctl.conf",
+      "echo 'net.core.somaxconn=1048576' | tee -a /etc/sysctl.conf",
       "sysctl -p",
-    ]
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "echo 'http_proxy=http://${scaleway_server.proxy01.0.private_ip}:8888' | tee -a  /etc/environment",
-      "echo 'https_proxy=http://${scaleway_server.proxy01.0.private_ip}:8888' | tee -a  /etc/environment",
-    ]
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "rm -rf /var/lib/apt/lists/*",
-      "apt-get update -yqq",
-      "apt-get install -yqq apt-transport-https ufw git ${join(" ", var.apt_packages)}",
     ]
   }
 
@@ -544,19 +548,34 @@ resource "scaleway_server" "node" {
   provisioner "remote-exec" {
     inline = [
       "modprobe br_netfilter",
-      "echo 'net.ipv4.ip_forward=1' | tee -a  /etc/sysctl.conf",
-      "echo 'net.ipv6.conf.all.forwarding=1' | tee -a  /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-call-arptables=1' | tee -a  /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-call-ip6tables=1' | tee -a  /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-call-iptables=1' | tee -a  /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-filter-pppoe-tagged=0' | tee -a  /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-filter-vlan-tagged=0' | tee -a  /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-pass-vlan-input-dev=0' | tee -a  /etc/sysctl.conf",
+      "echo 'net.ipv4.ip_forward=1' | tee -a /etc/sysctl.conf",
+      "echo 'net.ipv6.conf.all.forwarding=1' | tee -a /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-call-arptables=1' | tee -a /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-call-ip6tables=1' | tee -a /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-call-iptables=1' | tee -a /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-filter-pppoe-tagged=0' | tee -a /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-filter-vlan-tagged=0' | tee -a /etc/sysctl.conf",
+      "echo 'net.bridge.bridge-nf-pass-vlan-input-dev=0' | tee -a /etc/sysctl.conf",
       "sysctl -p",
     ]
   }
 
   provisioner "remote-exec" {
+    inline = [
+      "echo 'http_proxy=http://${scaleway_server.proxy01.0.private_ip}:8888' | tee -a  /etc/environment",
+      "echo 'https_proxy=http://${scaleway_server.proxy01.0.private_ip}:8888' | tee -a  /etc/environment",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "rm -rf /var/lib/apt/lists/*",
+      "apt-get update -yqq",
+      "apt-get install -yqq apt-transport-https conntrack ufw ${join(" ", var.apt_packages)}",
+    ]
+  }
+
+provisioner "remote-exec" {
     inline = [
       "echo '*    soft nofile 1048576' | tee -a /etc/security/limits.conf", 
       "echo '*    hard nofile 1048576' | tee -a /etc/security/limits.conf",
@@ -573,33 +592,19 @@ resource "scaleway_server" "node" {
   
   provisioner "remote-exec" {
     inline = [
-      "echo 'fs.file-max=2097152' | tee -a  /etc/sysctl.conf",
-      "echo 'fs.nr_open=1048576' | tee -a  /etc/sysctl.conf",
+      "echo 'fs.file-max=2097152' | tee -a /etc/sysctl.conf",
+      "echo 'fs.nr_open=1048576' | tee -a /etc/sysctl.conf",
       "sysctl -p",
     ]
   }
 
   provisioner "remote-exec" {
     inline = [
-      "echo 'net.ipv4.netfilter.ip_conntrack_max=1048576' | tee -a  /etc/sysctl.conf",
-      "echo 'net.nf_conntrack_max=1048576' | tee -a  /etc/sysctl.conf",
-      "echo 'net.core.somaxconn=1048576' | tee -a  /etc/sysctl.conf",
+      "modprobe ip_conntrack",
+      "echo 'net.netfilter.nf_conntrack_max=1048576' | tee -a /etc/sysctl.conf",
+      "echo 'net.nf_conntrack_max=1048576' | tee -a /etc/sysctl.conf",
+      "echo 'net.core.somaxconn=1048576' | tee -a /etc/sysctl.conf",
       "sysctl -p",
-    ]
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "echo 'http_proxy=http://${scaleway_server.proxy01.0.private_ip}:8888' | tee -a  /etc/environment",
-      "echo 'https_proxy=http://${scaleway_server.proxy01.0.private_ip}:8888' | tee -a  /etc/environment",
-    ]
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "rm -rf /var/lib/apt/lists/*",
-      "apt-get update -yqq",
-      "apt-get install -yqq apt-transport-https ufw ${join(" ", var.apt_packages)}",
     ]
   }
 

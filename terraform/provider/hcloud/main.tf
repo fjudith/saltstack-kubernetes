@@ -147,7 +147,7 @@ resource "hcloud_server" "proxy01" {
     inline = [
       "echo 'net.ipv4.netfilter.ip_conntrack_max=1048576' | tee -a  /etc/sysctl.conf",
       "echo 'net.nf_conntrack_max=1048576' | tee -a  /etc/sysctl.conf",
-      "echo 'net.core.somaxconn = 1048576' | tee -a  /etc/sysctl.conf",
+      "echo 'net.core.somaxconn=1048576' | tee -a  /etc/sysctl.conf",
       "sysctl -p",
     ]
   }
@@ -269,7 +269,7 @@ resource "hcloud_server" "proxy02" {
     inline = [
       "echo 'net.ipv4.netfilter.ip_conntrack_max=1048576' | tee -a  /etc/sysctl.conf",
       "echo 'net.nf_conntrack_max=1048576' | tee -a  /etc/sysctl.conf",
-      "echo 'net.core.somaxconn = 1048576' | tee -a  /etc/sysctl.conf",
+      "echo 'net.core.somaxconn=1048576' | tee -a  /etc/sysctl.conf",
       "sysctl -p",
     ]
   }
@@ -366,7 +366,7 @@ resource "hcloud_server" "etcd" {
     inline = [
       "echo 'net.ipv4.netfilter.ip_conntrack_max=1048576' | tee -a  /etc/sysctl.conf",
       "echo 'net.nf_conntrack_max=1048576' | tee -a  /etc/sysctl.conf",
-      "echo 'net.core.somaxconn = 1048576' | tee -a  /etc/sysctl.conf",
+      "echo 'net.core.somaxconn=1048576' | tee -a  /etc/sysctl.conf",
       "sysctl -p",
     ]
   }
@@ -461,7 +461,7 @@ resource "hcloud_server" "master" {
     inline = [
       "echo 'net.ipv4.netfilter.ip_conntrack_max=1048576' | tee -a  /etc/sysctl.conf",
       "echo 'net.nf_conntrack_max=1048576' | tee -a  /etc/sysctl.conf",
-      "echo 'net.core.somaxconn = 1048576' | tee -a  /etc/sysctl.conf",
+      "echo 'net.core.somaxconn=1048576' | tee -a  /etc/sysctl.conf",
       "sysctl -p",
     ]
   }
@@ -555,7 +555,7 @@ resource "hcloud_server" "node" {
     inline = [
       "echo 'net.ipv4.netfilter.ip_conntrack_max=1048576' | tee -a  /etc/sysctl.conf",
       "echo 'net.nf_conntrack_max=1048576' | tee -a  /etc/sysctl.conf",
-      "echo 'net.core.somaxconn = 1048576' | tee -a  /etc/sysctl.conf",
+      "echo 'net.core.somaxconn=1048576' | tee -a  /etc/sysctl.conf",
       "sysctl -p",
     ]
   }

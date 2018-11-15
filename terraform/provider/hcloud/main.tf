@@ -131,7 +131,7 @@ resource "hcloud_server" "proxy01" {
 
   provisioner "remote-exec" {
     inline = [
-      "session required pam_limits.so' | tee -a  /etc/pam.d/common-session",
+      "echo 'session required pam_limits.so' | tee -a  /etc/pam.d/common-session",
     ]
   }
 
@@ -253,7 +253,7 @@ resource "hcloud_server" "proxy02" {
 
   provisioner "remote-exec" {
     inline = [
-      "session required pam_limits.so' | tee -a  /etc/pam.d/common-session",
+      "echo 'session required pam_limits.so' | tee -a  /etc/pam.d/common-session",
     ]
   }
   
@@ -350,7 +350,7 @@ resource "hcloud_server" "etcd" {
 
   provisioner "remote-exec" {
     inline = [
-      "session required pam_limits.so' | tee -a  /etc/pam.d/common-session",
+      "echo 'session required pam_limits.so' | tee -a  /etc/pam.d/common-session",
     ]
   }
   
@@ -445,7 +445,7 @@ resource "hcloud_server" "master" {
 
   provisioner "remote-exec" {
     inline = [
-      "session required pam_limits.so' | tee -a  /etc/pam.d/common-session",
+      "echo 'session required pam_limits.so' | tee -a  /etc/pam.d/common-session",
     ]
   }
   
@@ -559,7 +559,7 @@ resource "hcloud_server" "node" {
       "sysctl -p",
     ]
   }
-  
+
   provisioner "remote-exec" {
     inline = [
       "apt-get update -yqq",

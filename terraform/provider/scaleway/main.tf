@@ -149,7 +149,7 @@ resource "scaleway_server" "proxy01" {
 
   provisioner "remote-exec" {
     inline = [
-      "session required pam_limits.so' | tee -a  /etc/pam.d/common-session",
+      "echo 'session required pam_limits.so' | tee -a  /etc/pam.d/common-session",
     ]
   }
   
@@ -271,7 +271,7 @@ resource "scaleway_server" "proxy02" {
 
   provisioner "remote-exec" {
     inline = [
-      "session required pam_limits.so' | tee -a  /etc/pam.d/common-session",
+      "echo 'session required pam_limits.so' | tee -a  /etc/pam.d/common-session",
     ]
   }
   
@@ -370,7 +370,7 @@ resource "scaleway_server" "etcd" {
 
   provisioner "remote-exec" {
     inline = [
-      "session required pam_limits.so' | tee -a  /etc/pam.d/common-session",
+      "echo 'session required pam_limits.so' | tee -a  /etc/pam.d/common-session",
     ]
   }
   
@@ -467,7 +467,7 @@ resource "scaleway_server" "master" {
 
   provisioner "remote-exec" {
     inline = [
-      "session required pam_limits.so' | tee -a  /etc/pam.d/common-session",
+      "echo 'session required pam_limits.so' | tee -a  /etc/pam.d/common-session",
     ]
   }
   
@@ -567,7 +567,7 @@ resource "scaleway_server" "node" {
 
   provisioner "remote-exec" {
     inline = [
-      "session required pam_limits.so' | tee -a  /etc/pam.d/common-session",
+      "echo 'session required pam_limits.so' | tee -a  /etc/pam.d/common-session",
     ]
   }
   
@@ -587,7 +587,7 @@ resource "scaleway_server" "node" {
       "sysctl -p",
     ]
   }
-  
+
   provisioner "remote-exec" {
     inline = [
       "echo 'http_proxy=http://${scaleway_server.proxy01.0.private_ip}:8888' | tee -a  /etc/environment",

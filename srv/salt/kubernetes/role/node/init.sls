@@ -99,6 +99,7 @@ net.bridge.bridge-nf-pass-vlan-input-dev:
     - user: root
     - group: root
     - dir_mode: 755
+    - makedirs: True
 
 {% if common.cni.calico.ipv6.enable == true %}
 net.ipv6.conf.all.forwarding:

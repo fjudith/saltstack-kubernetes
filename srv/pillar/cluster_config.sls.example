@@ -44,8 +44,8 @@ kubernetes:
         flannel_image: quay.io/coreos/flannel:v0.10.0-amd64
         interface: eth0
       weave:
-        weave_image: weaveworks/weave-kube:2.4.1
-        npc_image: weaveworks/weave-npc:2.4.1
+        weave_image: weaveworks/weave-kube:2.5.0
+        npc_image: weaveworks/weave-npc:2.5.0
         password: 1234567890abcdefghij
       canal:
         node_image: quay.io/calico/node:v3.2.1

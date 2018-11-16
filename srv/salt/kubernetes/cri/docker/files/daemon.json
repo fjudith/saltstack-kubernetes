@@ -1,5 +1,3 @@
-{%- from "kubernetes/map.jinja" import common with context -%}
-
 {
     "storage-driver": "overlay2"
 }

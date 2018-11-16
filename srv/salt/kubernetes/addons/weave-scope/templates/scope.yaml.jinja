@@ -1,3 +1,5 @@
+{%- from "kubernetes/map.jinja" import common with context -%}
+
 apiVersion: v1
 kind: List
 items:
@@ -162,7 +164,7 @@ items:
               command:
                 - /home/weave/scope
               env: []
-              image: 'docker.io/weaveworks/scope:1.9.1'
+              image: '{{ common.addons.weave_scope.image }}'
               imagePullPolicy: IfNotPresent
               ports:
                 - containerPort: 4040
@@ -243,7 +245,7 @@ items:
                     fieldRef:
                       apiVersion: v1
                       fieldPath: spec.nodeName
-              image: 'docker.io/weaveworks/scope:1.9.1'
+              image: '{{ common.addons.weave_scope.image }}'
               imagePullPolicy: IfNotPresent
               securityContext:
                 privileged: true

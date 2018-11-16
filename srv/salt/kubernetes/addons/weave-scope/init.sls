@@ -11,7 +11,7 @@
     require:
     - file: /srv/kubernetes/manifests/weave-scope
     file.managed:
-    - source: salt://kubernetes/addons/weave-scope/files/scope.yaml
+    - source: salt://kubernetes/addons/weave-scope/templates/scope.yaml.jinja
     - user: root
     - template: jinja
     - group: root

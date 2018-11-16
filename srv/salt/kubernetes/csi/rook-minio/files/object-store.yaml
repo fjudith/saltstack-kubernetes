@@ -14,9 +14,9 @@ metadata:
 type: Opaque
 data:
   # Base64 encoded string: "TEMP_DEMO_ACCESS_KEY"
-  username: {{ master.storage.rook_minio.username }}
+  username: {{ master.storage.rook_minio.username | base64_encode }}
   # Base64 encoded string: "TEMP_DEMO_SECRET_KEY"
-  password: {{ master.storage.rook_minio.password }}
+  password: {{ master.storage.rook_minio.password | base64_encode }}
 ---
 apiVersion: minio.rook.io/v1alpha1
 kind: ObjectStore

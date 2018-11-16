@@ -71,3 +71,14 @@ kubelet-install:
     - template: jinja
     - group: root
     - mode: 644
+  
+kubelet.service:
+  service.running:
+    - require:
+      - file: /etc/kubernetes/manifests
+    - watch:
+      - file: /etc/systemd/system/kubelet.service
+      - file: /etc/kubernetes/kubelet.kubeconfig
+      - file: /var/lib/kubelet/kubelet-config.yaml
+      - file: /usr/local/bin/kubelet
+    - enable: True

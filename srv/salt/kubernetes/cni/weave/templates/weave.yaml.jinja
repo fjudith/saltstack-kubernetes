@@ -124,6 +124,11 @@ items:
               env:
                 - name: IPALLOC_RANGE
                   value: {{ common.cni.network }}
+                - name: WEAVE_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: weave-net
+                      key: WEAVE_PASSWORD
                 - name: HOSTNAME
                   valueFrom:
                     fieldRef:
@@ -208,3 +213,10 @@ items:
                 type: FileOrCreate
       updateStrategy:
         type: RollingUpdate
+  - apiVersion: v1
+    kind: Secret
+    metadata:
+      name: weave-net
+      namespace: kube-system
+    data:
+      WEAVE_PASSWORD: "{{ common.cni.weave.password | base64_encode }}"

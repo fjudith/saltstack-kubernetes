@@ -46,6 +46,7 @@ kubernetes:
       weave:
         weave_image: weaveworks/weave-kube:2.4.1
         npc_image: weaveworks/weave-npc:2.4.1
+        password: 1234567890abcdefghij
       canal:
         node_image: quay.io/calico/node:v3.2.1
         cni_image: quay.io/calico/cni:v3.2.1

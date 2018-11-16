@@ -183,6 +183,8 @@ provisioner "remote-exec" {
   provisioner "remote-exec" {
     inline = [
       "modprobe ip_conntrack",
+      "echo '1024 65535' | tee -a /proc/sys/net/ipv4/ip_local_port_range",
+      "echo 'net.ipv4.tcp_tw_reuse=1' | tee -a /etc/sysctl.conf",
       "echo 'net.netfilter.nf_conntrack_max=1048576' | tee -a /etc/sysctl.conf",
       "echo 'net.nf_conntrack_max=1048576' | tee -a /etc/sysctl.conf",
       "echo 'net.core.somaxconn=1048576' | tee -a /etc/sysctl.conf",
@@ -304,6 +306,8 @@ resource "scaleway_server" "proxy02" {
   provisioner "remote-exec" {
     inline = [
       "modprobe ip_conntrack",
+      "echo '1024 65535' | tee -a /proc/sys/net/ipv4/ip_local_port_range",
+      "echo 'net.ipv4.tcp_tw_reuse=1' | tee -a /etc/sysctl.conf",
       "echo 'net.netfilter.nf_conntrack_max=1048576' | tee -a /etc/sysctl.conf",
       "echo 'net.nf_conntrack_max=1048576' | tee -a /etc/sysctl.conf",
       "echo 'net.core.somaxconn=1048576' | tee -a /etc/sysctl.conf",
@@ -402,6 +406,8 @@ provisioner "remote-exec" {
   provisioner "remote-exec" {
     inline = [
       "modprobe ip_conntrack",
+      "echo '1024 65535' | tee -a /proc/sys/net/ipv4/ip_local_port_range",
+      "echo 'net.ipv4.tcp_tw_reuse=1' | tee -a /etc/sysctl.conf",
       "echo 'net.netfilter.nf_conntrack_max=1048576' | tee -a /etc/sysctl.conf",
       "echo 'net.nf_conntrack_max=1048576' | tee -a /etc/sysctl.conf",
       "echo 'net.core.somaxconn=1048576' | tee -a /etc/sysctl.conf",
@@ -500,6 +506,8 @@ provisioner "remote-exec" {
   provisioner "remote-exec" {
     inline = [
       "modprobe ip_conntrack",
+      "echo '1024 65535' | tee -a /proc/sys/net/ipv4/ip_local_port_range",
+      "echo 'net.ipv4.tcp_tw_reuse=1' | tee -a /etc/sysctl.conf",
       "echo 'net.netfilter.nf_conntrack_max=1048576' | tee -a /etc/sysctl.conf",
       "echo 'net.nf_conntrack_max=1048576' | tee -a /etc/sysctl.conf",
       "echo 'net.core.somaxconn=1048576' | tee -a /etc/sysctl.conf",
@@ -601,6 +609,8 @@ provisioner "remote-exec" {
   provisioner "remote-exec" {
     inline = [
       "modprobe ip_conntrack",
+      "echo '1024 65535' | tee -a /proc/sys/net/ipv4/ip_local_port_range",
+      "echo 'net.ipv4.tcp_tw_reuse=1' | tee -a /etc/sysctl.conf",
       "echo 'net.netfilter.nf_conntrack_max=1048576' | tee -a /etc/sysctl.conf",
       "echo 'net.nf_conntrack_max=1048576' | tee -a /etc/sysctl.conf",
       "echo 'net.core.somaxconn=1048576' | tee -a /etc/sysctl.conf",

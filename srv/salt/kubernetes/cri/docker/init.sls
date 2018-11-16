@@ -21,31 +21,31 @@
 
 /usr/bin/docker-containerd:
   file.symlink:
-    - target: /opt/docker-v{{ common.cri.docker.version }}/docker-containerd
+    - target: /opt/docker-v{{ common.cri.docker.version }}/docker/docker-containerd
 
 /usr/bin/docker-containerd-ctr:
   file.symlink:
-    - target: /opt/docker-v{{ common.cri.docker.version }}/docker-containerd-ctr
+    - target: /opt/docker-v{{ common.cri.docker.version }}/docker/docker-containerd-ctr
 
 /usr/bin/docker-containerd-shim:
   file.symlink:
-    - target: /opt/docker-v{{ common.cri.docker.version }}/docker-containerd-shim
+    - target: /opt/docker-v{{ common.cri.docker.version }}/docker/docker-containerd-shim
 
 /usr/bin/dockerd:
   file.symlink:
-    - target: /opt/docker-v{{ common.cri.docker.version }}/dockerd
+    - target: /opt/docker-v{{ common.cri.docker.version }}/docker/dockerd
 
 /usr/bin/docker:
   file.symlink:
-    - target: /opt/docker-v{{ common.cri.docker.version }}/docker
+    - target: /opt/docker-v{{ common.cri.docker.version }}/docker/docker
 
 /usr/bin/docker-proxy:
   file.symlink:
-    - target: /opt/docker-v{{ common.cri.docker.version }}/docker-proxy
+    - target: /opt/docker-v{{ common.cri.docker.version }}/docker/docker-proxy
 
 /usr/bin/docker-runc:
   file.symlink:
-    - target: /opt/docker-v{{ common.cri.docker.version }}/docker-runc
+    - target: /opt/docker-v{{ common.cri.docker.version }}/docker/docker-runc
 
 /etc/docker/daemon.json:
     file.managed:

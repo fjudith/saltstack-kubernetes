@@ -10,6 +10,7 @@ kubernetes:
   charts:
     mailhog:
       enabled: True
+    external_hostname: mail
 ```
 
 To manually deploy Mailhog, run the following command line from the **Salt-Master** (i.e. proxy01).

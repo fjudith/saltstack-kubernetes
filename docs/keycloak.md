@@ -10,6 +10,7 @@ kubernetes:
   charts:
     keycloak:
       enabled: True
+      external_hostname: sso
 ```
 
 To manually deploy Keycloak, run the following command line from the **Salt-Master** (i.e. proxy01).

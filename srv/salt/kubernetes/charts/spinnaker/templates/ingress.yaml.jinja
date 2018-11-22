@@ -1,5 +1,5 @@
 {%- set public_domain = pillar['public-domain'] -%}
-{%- from "kubernetes/map.jinja" import common with context -%}
+{%- from "kubernetes/map.jinja" import charts with context -%}
 
 {%- if common.addons.get('ingress_traefik', {'enabled': False}).enabled %}
 apiVersion: extensions/v1beta1
@@ -9,7 +9,7 @@ metadata:
   namespace: spinnaker
 spec:
   rules:
-  - host: spinnaker.{{ public_domain }}
+  - host: {{ charts.spinnaker.external_hostname }}.{{ public_domain }}
     http:
       paths:
       - path: /
@@ -24,7 +24,7 @@ metadata:
   namespace: spinnaker
 spec:
   rules:
-  - host: spinnaker-gate.{{ public_domain }}
+  - host: {{ charts.spinnaker.external_hostname }}-gate.{{ public_domain }}
     http:
       paths:
       - path: /
@@ -44,7 +44,7 @@ spec:
   gateways:
   - istio-gateway
   hosts:
-  - spinnaker.{{ public_domain }}
+  - {{ charts.spinnaker.external_hostname }}.{{ public_domain }}
   http:
   - match:
     - uri:
@@ -64,7 +64,7 @@ spec:
   gateways:
   - istio-gateway
   hosts:
-  - spinnaker-gate.{{ public_domain }}
+  - {{ charts.spinnaker.external_hostname }}-gate.{{ public_domain }}
   http:
   - match:
     - uri:

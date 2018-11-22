@@ -1,5 +1,5 @@
 {%- set public_domain = pillar['public-domain'] -%}
-{%- from "kubernetes/map.jinja" import common with context -%}
+{%- from "kubernetes/map.jinja" import charts with context -%}
 
 {%- if common.addons.get('ingress_traefik', {'enabled': False}).enabled %}
 apiVersion: extensions/v1beta1
@@ -9,7 +9,7 @@ metadata:
   namespace: harbor
 spec:
   rules:
-  - host: registry.{{ public_domain }}
+  - host: {{ charts.harbor.external_hostname }}.{{ public_domain }}
     http:
       paths:
       - path: /api
@@ -88,7 +88,7 @@ spec:
   gateways:
   - istio-gateway
   hosts:
-  - registry.{{ public_domain }}
+  - {{ charts.harbor.external_hostname }}.{{ public_domain }}
   http:
   - match:
     - uri:

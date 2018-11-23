@@ -9,7 +9,7 @@ metadata:
   namespace: harbor
 spec:
   rules:
-  - host: {{ charts.harbor.external_hostname }}.{{ public_domain }}
+  - host: {{ charts.harbor.ingress_host }}.{{ public_domain }}
     http:
       paths:
       - path: /api
@@ -88,7 +88,7 @@ spec:
   gateways:
   - istio-gateway
   hosts:
-  - {{ charts.harbor.external_hostname }}.{{ public_domain }}
+  - {{ charts.harbor.ingress_host }}.{{ public_domain }}
   http:
   - match:
     - uri:

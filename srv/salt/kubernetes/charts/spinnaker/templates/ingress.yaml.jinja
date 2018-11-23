@@ -9,7 +9,7 @@ metadata:
   namespace: spinnaker
 spec:
   rules:
-  - host: {{ charts.spinnaker.external_hostname }}.{{ public_domain }}
+  - host: {{ charts.spinnaker.ingress_host }}.{{ public_domain }}
     http:
       paths:
       - path: /
@@ -24,7 +24,7 @@ metadata:
   namespace: spinnaker
 spec:
   rules:
-  - host: {{ charts.spinnaker.external_hostname }}-gate.{{ public_domain }}
+  - host: {{ charts.spinnaker.ingress_host }}-gate.{{ public_domain }}
     http:
       paths:
       - path: /
@@ -44,7 +44,7 @@ spec:
   gateways:
   - istio-gateway
   hosts:
-  - {{ charts.spinnaker.external_hostname }}.{{ public_domain }}
+  - {{ charts.spinnaker.ingress_host }}.{{ public_domain }}
   http:
   - match:
     - uri:
@@ -64,7 +64,7 @@ spec:
   gateways:
   - istio-gateway
   hosts:
-  - {{ charts.spinnaker.external_hostname }}-gate.{{ public_domain }}
+  - {{ charts.spinnaker.ingress_host }}-gate.{{ public_domain }}
   http:
   - match:
     - uri:

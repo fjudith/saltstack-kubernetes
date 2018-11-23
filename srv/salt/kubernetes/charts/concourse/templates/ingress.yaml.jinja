@@ -9,7 +9,7 @@ metadata:
   namespace: concourse
 spec:
   rules:
-  - host: {{ charts.concourse.external_hostname }}.{{ public_domain }}
+  - host: {{ charts.concourse.ingress_host }}.{{ public_domain }}
     http:
       paths:
       - path: /
@@ -29,7 +29,7 @@ spec:
   gateways:
   - istio-gateway
   hosts:
-  - {{ charts.concourse.external_hostname }}.{{ public_domain }}
+  - {{ charts.concourse.ingress_host }}.{{ public_domain }}
   http:
   - match:
     - uri:

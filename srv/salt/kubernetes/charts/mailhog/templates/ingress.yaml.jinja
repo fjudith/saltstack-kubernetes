@@ -9,7 +9,7 @@ metadata:
   namespace: mailhog
 spec:
   rules:
-  - host: {{ charts.mailhog.external_hostname }}.{{ public_domain }}
+  - host: {{ charts.mailhog.ingress_host }}.{{ public_domain }}
     http:
       paths:
       - path: /
@@ -33,7 +33,7 @@ spec:
   gateways:
   - istio-gateway
   hosts:
-  - {{ charts.mailhog.external_hostname }}.{{ public_domain }}
+  - {{ charts.mailhog.ingress_host }}.{{ public_domain }}
   http:
   - match:
     - uri:

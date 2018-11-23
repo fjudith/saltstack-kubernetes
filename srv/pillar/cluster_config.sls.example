@@ -165,15 +165,19 @@ kubernetes:
       db_password: Ch4ng3M34ls0
       version: 4.2.1
       source_hash: 7b0805adfba328d09cfa7ac377777cb6e270d66f
+      ingress_host: ci
     keycloak:
       enabled: True
       db_size: 8Gi
       admin_password: Ch4ng3M3
       db_password: Ch4ng3M34ls0
+      ingress_host: sso
     mailhog:
       enabled: True
+      ingress_host: mail
     spinnaker:
       enabled: True
+      ingress_host: spinnaker
     harbor:
       enabled: true
       version: 0.3.0
@@ -182,6 +186,7 @@ kubernetes:
       database_password: Ch4ng3M34ls0
       ingress:
         enabled: False
+      ingress_host: registry
 tinyproxy:
   User: tinyproxy
   Group: tinyproxy

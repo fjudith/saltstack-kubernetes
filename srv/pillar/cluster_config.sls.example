@@ -99,7 +99,7 @@ kubernetes:
         enabled: True
       weave-scope:
         enabled: True
-        image: docker.io/weaveworks/scope:1.10.0
+        image: docker.io/weaveworks/scope:1.10.1
       kubeless:
         enabled: True
         version: 1.0.0

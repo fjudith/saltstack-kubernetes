@@ -1,4 +1,5 @@
 {%- set public_domain = pillar['public-domain'] -%}
+{%- from "kubernetes/map.jinja" import common with context -%}
 {%- from "kubernetes/map.jinja" import charts with context -%}
 
 {%- if common.addons.get('ingress_traefik', {'enabled': False}).enabled %}

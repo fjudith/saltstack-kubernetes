@@ -87,7 +87,7 @@ kubernetes:
         enabled: False
       ingress_istio:
         enabled: True
-        version: 1.0.3
+        version: 1.0.4
       cert_manager:
         enabled: True
         acme_email: user@example.com

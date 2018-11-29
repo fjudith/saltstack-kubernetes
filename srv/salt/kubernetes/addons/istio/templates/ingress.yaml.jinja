@@ -64,6 +64,26 @@ spec:
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
+  name: istio-prometheus
+  namespace: default
+spec:
+  gateways:
+  - istio-gateway
+  hosts:
+  - istio-prometheus.{{ public_domain }}
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: prometheus.istio-system.svc.cluster.local
+        port:
+          number: 9090
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
   name: istio-grafana
   namespace: default
 spec:

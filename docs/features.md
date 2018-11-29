@@ -86,6 +86,7 @@ Solutions for monitoring, logging and tracing.
     <th align='center' colspan='3'>kube-prometheus</th>
     <th align='center' colspan='3'>EFK</th>
     <th align='center'>Weave Scope</th>
+    <th align='center'>Vistio</th>
   </tr>
   <tr align='center'>
     <td align='center'>Dashboard</td>
@@ -96,6 +97,7 @@ Solutions for monitoring, logging and tracing.
     <td align='center'>Elasticsearch</td>
     <td align='center'>Fluentd</td>
     <td align='center'>Weave Scope</td>
+    <td align='center'>Vistio</td>
   </tr>
   <tr align='center'>
     <td align='center'><img src='media/kubernetes.png' width="50px"></td>
@@ -106,6 +108,7 @@ Solutions for monitoring, logging and tracing.
     <td align='center'><img src='media/elasticsearch.png' width="50px"></td>
     <td align='center'><img src='media/fluentd.png' width="50px"></td>
     <td align='center'><img src='media/weaveworks.png' width="50px"></td>
+    <td align='center'><img src='media/istio.png' width="50px"></td>
   </tr>
   <tr>
     <td align='center'>Cluster administration and monitoring</td>
@@ -116,6 +119,7 @@ Solutions for monitoring, logging and tracing.
     <td align='center'>Logs aggregation</td>
     <td align='center'>Logs shipping</td>
     <td align='center'>Network visualisation</td>
+    <td align='center'>Istio mesh visualisation</td>
   </tr>
 </table>
 

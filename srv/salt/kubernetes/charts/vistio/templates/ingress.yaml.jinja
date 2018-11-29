@@ -1,0 +1,79 @@
+{%- set public_domain = pillar['public-domain'] -%}
+{%- from "kubernetes/map.jinja" import common with context -%}
+{%- from "kubernetes/map.jinja" import charts with context -%}
+
+{%- if common.addons.get('ingress_traefik', {'enabled': False}).enabled %}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: vistio-web
+  namespace: default
+spec:
+  rules:
+  - host: {{ charts.vistio.ingress_host }}.{{ public_domain }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: vistio-web
+          servicePort: 8080
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: vistio-api
+  namespace: vistio
+spec:
+  rules:
+  - host: {{ charts.vistio.ingress_host }}-api.{{ public_domain }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: vistio-api
+          servicePort: 9091
+---
+{% endif %}
+
+{%- if common.addons.get('ingress_istio', {'enabled': False}).enabled -%}
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: vistio-web
+  namespace: default
+spec:
+  gateways:
+  - istio-gateway
+  hosts:
+  - {{ charts.vistio.ingress_host }}.{{ public_domain }}
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: vistio-web.default.svc.cluster.local
+        port:
+          number: 8080
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: vistio-api
+  namespace: default
+spec:
+  gateways:
+  - istio-gateway
+  hosts:
+  - {{ charts.vistio.ingress_host }}-api.{{ public_domain }}
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: vistio-api.default.svc.cluster.local
+        port:
+          number: 9091
+---
+{% endif %}

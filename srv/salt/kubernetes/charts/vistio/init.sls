@@ -31,6 +31,7 @@ kubernetes-vistio-install:
     - name: |
         helm install --name vistio --namespace default \
           --values helm/vistio/values-with-ingress.yaml \
+          --set web.env.updateURL=https://{{ charts.vistio.ingress_host }}-api.{{ public_domain }}/graph \
           {%- if master.storage.get('rook_ceph', {'enabled': False}).enabled %}
           --set api.storage.class=rook-ceph-block \
           {%- endif %}

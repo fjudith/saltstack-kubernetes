@@ -11,3 +11,6 @@ include:
 {%- if charts.get('harbor', {'enabled': False}).enabled %}
   - kubernetes.charts.harbor
 {%- endif -%}
+{%- if charts.get('vistio', {'enabled': False}).enabled %}
+  - kubernetes.charts.vistio
+{%- endif -%}

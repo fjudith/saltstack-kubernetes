@@ -191,6 +191,13 @@ kubernetes:
       enabled: true
       version: 0.1.3
       ingress_host: vistio
+    ethereum:
+      enabled: true
+      version: 1.8.19
+      address: "0xDd7bC23204b6f4529D91ba79c185984ADcf12CbD"
+      private_key: "92c69eb5fdae8af5ed2cffbf9eb5e40d30aa646db354338f7b7841038aa61c9e"
+      secret: "some_random_secret"
+      ingress_host: blockchain
 tinyproxy:
   User: tinyproxy
   Group: tinyproxy

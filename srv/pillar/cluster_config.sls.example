@@ -143,10 +143,11 @@ kubernetes:
     storage:
       rook_ceph:
         enabled: True
-        image: rook/ceph:v0.8.3
+        image: rook/ceph:v0.9.0
+        ceph_image: ceph/ceph:v13.2.2-20181023
       rook_minio:
         enabled: True
-        image: rook/minio:v0.8.3
+        image: rook/minio:v0.9.0
         username: VzM0VjNMNEJNSU5JTzRDQzNTU0szWQ==
         password: VzM0VjNMNEJNSU5JT1MzQ1IzVEszWQ==
   global:

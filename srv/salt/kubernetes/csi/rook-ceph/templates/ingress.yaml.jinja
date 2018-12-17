@@ -14,7 +14,7 @@ spec:
       paths:
       - path: /
         backend:
-          serviceName: rook-ceph-mgr-dashboard-external
+          serviceName: rook-ceph-mgr-dashboard-external-https
           servicePort: dashboard
 ---
 {% endif %}
@@ -36,8 +36,8 @@ spec:
         prefix: /
     route:
     - destination:
-        host: rook-ceph-mgr-dashboard-external.rook-ceph.svc.cluster.local
+        host: rook-ceph-mgr-dashboard-external-https.rook-ceph.svc.cluster.local
         port:
-          number: 7000
+          number: 8443
 ---
 {% endif %}

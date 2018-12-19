@@ -53,7 +53,7 @@ kubernetes:
         flannel_image: quay.io/coreos/flannel:v0.9.1
         interface: eth0
       cilium:
-        cilium_image: docker.io/cilium/cilium:v1.2.1
+        cilium_image: docker.io/cilium/cilium:v1.3.0
     addons:
       dns:
         enabled: True

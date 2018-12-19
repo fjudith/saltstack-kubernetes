@@ -63,7 +63,7 @@ kubernetes:
           enabled: True
         coredns:
           enabled: True
-          version: 1.2.2
+          image: coredns/coredns:1.2.6
       helm:
         enabled: true
         tiller_image: gcr.io/kubernetes-helm/tiller:v2.11.0

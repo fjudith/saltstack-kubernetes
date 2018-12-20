@@ -102,7 +102,7 @@ kubernetes:
         image: docker.io/weaveworks/scope:1.10.1
       kubeless:
         enabled: True
-        version: 1.0.0
+        version: 1.0.1
         ui_version: master
       knative:
         enabled: False

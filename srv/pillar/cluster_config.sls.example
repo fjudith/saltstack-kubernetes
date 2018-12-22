@@ -148,8 +148,8 @@ kubernetes:
       rook_minio:
         enabled: True
         image: rook/minio:v0.9.0
-        username: VzM0VjNMNEJNSU5JTzRDQzNTU0szWQ==
-        password: VzM0VjNMNEJNSU5JT1MzQ1IzVEszWQ==
+        username: Ch4ng3M3
+        password: Ch4ng3M34ls0
   global:
     proxy:
       ipaddr: 172.16.4.251

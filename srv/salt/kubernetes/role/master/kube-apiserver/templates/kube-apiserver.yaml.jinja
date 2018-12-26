@@ -45,7 +45,7 @@ spec:
     - --etcd-keyfile=/etc/kubernetes/ssl/apiserver-key.pem
     - --etcd-servers={% for member in etcd.members %}https://{{ member.host }}:2379{% if not loop.last %},{% endif %}{% endfor %}
     - --event-ttl=1h
-    - --experimental-encryption-provider-config=/etc/kubernetes/encryption-config.yaml
+    - --encryption-provider-config=/etc/kubernetes/encryption-config.yaml
     - --insecure-bind-address=127.0.0.1
     # https://kubernetes.io/docs/admin/kubelet-authentication-authorization/#kubelet-authentication
     - --kubelet-certificate-authority=/etc/kubernetes/ssl/ca.pem

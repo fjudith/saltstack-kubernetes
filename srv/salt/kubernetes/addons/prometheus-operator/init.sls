@@ -5,7 +5,7 @@ addon-prometheus-operator:
     - name: https://github.com/coreos/prometheus-operator
     - target: /srv/kubernetes/manifests/prometheus-operator
     - force_reset: True
-    - rev: {{ common.addons.kube_prometheus.version }}
+    - rev: v{{ common.addons.kube_prometheus.version }}
 
 /srv/kubernetes/manifests/kube-prometheus-ingress.yaml:
     file.managed:

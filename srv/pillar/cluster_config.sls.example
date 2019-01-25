@@ -44,8 +44,8 @@ kubernetes:
         flannel_image: quay.io/coreos/flannel:v0.10.0-amd64
         interface: eth0
       weave:
-        weave_image: weaveworks/weave-kube:2.5.0
-        npc_image: weaveworks/weave-npc:2.5.0
+        weave_image: weaveworks/weave-kube:2.5.1
+        npc_image: weaveworks/weave-npc:2.5.1
         password: 1234567890abcdefghij
       canal:
         node_image: quay.io/calico/node:v3.2.1
@@ -87,7 +87,7 @@ kubernetes:
         enabled: False
       ingress_istio:
         enabled: True
-        version: 1.0.4
+        version: 1.0.6
       cert_manager:
         enabled: True
         acme_email: user@example.com
@@ -143,11 +143,11 @@ kubernetes:
     storage:
       rook_ceph:
         enabled: True
-        image: rook/ceph:v0.9.0
+        image: rook/ceph:v0.9.1
         ceph_image: ceph/ceph:v13.2.2-20181023
       rook_minio:
         enabled: True
-        image: rook/minio:v0.9.0
+        image: rook/minio:v0.9.1
         username: Ch4ng3M3
         password: Ch4ng3M34ls0
   global:

@@ -5,3 +5,4 @@ certs/*.pem
 *.ppm
 *.mp4
 .vscode
+CHANGELOG.md

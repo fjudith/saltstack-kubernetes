@@ -5,4 +5,8 @@ certs/*.pem
 *.ppm
 *.mp4
 .vscode
+<<<<<<< HEAD
 /.gtm/
+=======
+CHANGELOG.md
+>>>>>>> f21c4b746a72f6ff6ecd52fdb09773d6b9db0283

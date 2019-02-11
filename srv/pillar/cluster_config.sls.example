@@ -66,9 +66,9 @@ kubernetes:
           image: coredns/coredns:1.3.1
       helm:
         enabled: true
-        tiller_image: gcr.io/kubernetes-helm/tiller:v2.12.1
-        version: 2.12.1
-        source_hash: 891004bec55431b39515e2cedc4f4a06e93782aa03a4904f2bd742b168160451
+        tiller_image: gcr.io/kubernetes-helm/tiller:v2.12.3
+        version: 2.12.3
+        source_hash: 3425a1b37954dabdf2ba37d5d8a0bd24a225bb8454a06f12b115c55907809107
       kube_prometheus:
         enabled: True
         version: 0.28.0
@@ -159,7 +159,7 @@ kubernetes:
     kubernetes-service-ip: 10.3.0.1
     service-ip-range: 10.3.0.0/24
     cluster-dns: 10.3.0.10
-    helm-version: v2.8.2
+    helm-version: v2.12.3
     dashboard-version: v1.8.3
   charts:
     concourse:
@@ -182,7 +182,7 @@ kubernetes:
       ingress_host: spinnaker
     harbor:
       enabled: true
-      version: 0.3.0
+      version: 1.0.0
       admin_password: Ch4ng3M3
       secretkey: 2Ds7hlY9VHyKAcNd
       database_password: Ch4ng3M34ls0

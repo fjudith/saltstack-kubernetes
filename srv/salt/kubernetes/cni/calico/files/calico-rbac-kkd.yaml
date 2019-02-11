@@ -1,48 +1,5 @@
-# Calico Version v3.2.1
-# https://docs.projectcalico.org/v3.2/releases#v3.2.1
-
----
-
-kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1beta1
-metadata:
-  name: calico-kube-controllers
-rules:
-  - apiGroups:
-    - ""
-    - extensions
-    resources:
-      - pods
-      - namespaces
-      - networkpolicies
-      - nodes
-      - serviceaccounts
-    verbs:
-      - watch
-      - list
-  - apiGroups:
-    - networking.k8s.io
-    resources:
-      - networkpolicies
-    verbs:
-      - watch
-      - list
----
-kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1beta1
-metadata:
-  name: calico-kube-controllers
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: calico-kube-controllers
-subjects:
-- kind: ServiceAccount
-  name: calico-kube-controllers
-  namespace: kube-system
-
----
-
+# Calico Version v3.2.4
+# https://docs.projectcalico.org/v3.2/releases#v3.2.4
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
@@ -50,10 +7,75 @@ metadata:
 rules:
   - apiGroups: [""]
     resources:
+      - namespaces
+      - serviceaccounts
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups: [""]
+    resources:
+      - pods/status
+    verbs:
+      - update
+  - apiGroups: [""]
+    resources:
       - pods
+    verbs:
+      - get
+      - list
+      - watch
+      - patch
+  - apiGroups: [""]
+    resources:
+      - services
+    verbs:
+      - get
+  - apiGroups: [""]
+    resources:
+      - endpoints
+    verbs:
+      - get
+  - apiGroups: [""]
+    resources:
       - nodes
     verbs:
       - get
+      - list
+      - update
+      - watch
+  - apiGroups: ["extensions"]
+    resources:
+      - networkpolicies
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups: ["networking.k8s.io"]
+    resources:
+      - networkpolicies
+    verbs:
+      - watch
+      - list
+  - apiGroups: ["crd.projectcalico.org"]
+    resources:
+      - globalfelixconfigs
+      - felixconfigurations
+      - bgppeers
+      - globalbgpconfigs
+      - bgpconfigurations
+      - ippools
+      - globalnetworkpolicies
+      - globalnetworksets
+      - networkpolicies
+      - clusterinformations
+      - hostendpoints
+    verbs:
+      - create
+      - get
+      - list
+      - update
+      - watch
 
 ---
 

@@ -9,7 +9,7 @@
 
 /usr/bin/calicoctl:
   file.managed:
-    - source: https://github.com/projectcalico/calicoctl/releases/download/v{{ common.cni.calico.version }}/calicoctl-amd64
+    - source: https://github.com/projectcalico/calicoctl/releases/download/v{{ common.cni.calico.version }}/calicoctl-linux-amd64
     - skip_verify: true
     - group: root
     - mode: 755
@@ -46,7 +46,7 @@
     - group: root
     - mode: 755
     - require:
-      - sls: node/cni
+      - sls: kubernetes/cni
 
 /opt/cni/bin/calico-ipam:
   file.managed:
@@ -55,7 +55,7 @@
     - group: root
     - mode: 755
     - require:
-      - sls: node/cni
+      - sls: kubernetes/cni
 
 /etc/calico/kube/kubeconfig:
     file.managed:
@@ -65,7 +65,16 @@
     - group: root
     - mode: 640
     - require:
-      - sls: node/cni
+      - sls: kubernetes/cni
+
+/srv/kubernetes/manifests/calico/calico-rbac-kkd.yaml:
+    file.managed:
+    - watch:
+      - file: /srv/kubernetes/manifests/calico
+    - source: salt://kubernetes/cni/calico/files/calico-rbac-kkd.yaml
+    - user: root
+    - group: root
+    - mode: 644
 
 /srv/kubernetes/manifests/calico/calico.yaml:
     file.managed:
@@ -92,4 +101,6 @@ calico-install:
     - watch:
       - file: /srv/kubernetes/manifests/calico/calico.yaml
     - runas: root
-    - name: kubectl apply -f /srv/kubernetes/manifests/calico/calico.yaml
+    - name:
+        kubectl apply -f /srv/kubernetes/manifests/calico/calico-rbac-kkd.yaml 
+        kubectl apply -f /srv/kubernetes/manifests/calico/calico.yaml

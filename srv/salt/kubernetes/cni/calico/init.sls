@@ -1,5 +1,4 @@
-{%- set calicoCniVersion = pillar['kubernetes']['node']['networking']['calico']['cni-version'] -%}
-{%- set calicoctlVersion = pillar['kubernetes']['node']['networking']['calico']['calicoctl-version'] -%}
+{%- from "kubernetes/map.jinja" import common with context -%}
 
 /srv/kubernetes/manifests/calico:
   file.directory:
@@ -10,7 +9,7 @@
 
 /usr/bin/calicoctl:
   file.managed:
-    - source: https://github.com/projectcalico/calicoctl/releases/download/{{ calicoctlVersion }}/calicoctl
+    - source: https://github.com/projectcalico/calicoctl/releases/download/v{{ common.cni.calico.version }}/calicoctl-amd64
     - skip_verify: true
     - group: root
     - mode: 755
@@ -42,7 +41,7 @@
 
 /opt/cni/bin/calico:
   file.managed:
-    - source: https://github.com/projectcalico/cni-plugin/releases/download/{{ calicoCniVersion }}/calico
+    - source: https://github.com/projectcalico/cni-plugin/releases/download/{{ common.cni.calico.version }}/calico-amd64
     - skip_verify: true
     - group: root
     - mode: 755
@@ -51,7 +50,7 @@
 
 /opt/cni/bin/calico-ipam:
   file.managed:
-    - source: https://github.com/projectcalico/cni-plugin/releases/download/{{ calicoCniVersion }}/calico-ipam
+    - source: https://github.com/projectcalico/cni-plugin/releases/download/{{ common.cni.calico.version }}/calico-ipam-amd64
     - skip_verify: true
     - group: root
     - mode: 755

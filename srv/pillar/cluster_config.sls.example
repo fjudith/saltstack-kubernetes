@@ -28,11 +28,11 @@ kubernetes:
         typha_image: quay.io/calico/typha:v3.2.4
         cni_image: quay.io/calico/cni:v3.2.4
         controller_image: quay.io/calico/kube-controllers:v3.2.4
-        version: v3.2.4
+        version: 3.2.4
         ipv4:
           range: 10.2.0.0/16
           nat: true
-          ip-in-ip: always
+          ip_in_ip: always
         ipv6:
           enable: false
           nat: true

@@ -101,6 +101,6 @@ calico-install:
     - watch:
       - file: /srv/kubernetes/manifests/calico/calico.yaml
     - runas: root
-    - name:
+    - name: |
         kubectl apply -f /srv/kubernetes/manifests/calico/calico-rbac-kkd.yaml 
         kubectl apply -f /srv/kubernetes/manifests/calico/calico.yaml

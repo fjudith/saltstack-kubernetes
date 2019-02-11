@@ -24,11 +24,11 @@ kubernetes:
       network: 10.2.0.0/16
       provider: weave
       calico:
-        node_image: quay.io/calico/node:v3.2.1
-        typha_image: quay.io/calico/typha:v3.2.1
-        cni_image: quay.io/calico/cni:v3.2.1
-        controller_image: quay.io/calico/kube-controllers:v3.2.1
-        calicoctl_version: v3.2.1
+        node_image: quay.io/calico/node:v3.2.4
+        typha_image: quay.io/calico/typha:v3.2.4
+        cni_image: quay.io/calico/cni:v3.2.4
+        controller_image: quay.io/calico/kube-controllers:v3.2.4
+        version: v3.2.4
         ipv4:
           range: 10.2.0.0/16
           nat: true

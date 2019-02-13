@@ -113,6 +113,64 @@ EOF
     cfssl gencert -initca $OUTDIR/${CERTBASE}-csr.json | cfssljson -bare $OUTDIR/ca
 }
 
+# Etcd Root CA certificate
+# ---------------------------------------------
+function write-ssl-etcd-ca {
+    # Write cfssl JSON template for signing configuration
+    local TEMPLATE=$OUTDIR/etcd-ca-config.json
+    echo "local TEMPLATE: $TEMPLATE"
+    mkdir -p $(dirname $TEMPLATE)
+    cat << EOF > $TEMPLATE
+{
+  "signing": {
+    "default": {
+      "expiry": "12000h"
+    },
+    "profiles": {
+      "etcd": {
+        "usages": [
+            "signing",
+            "key encipherment",
+            "server auth",
+            "client auth"
+        ],
+        "expiry": "12000h"
+      }
+    }
+  }
+}
+EOF
+
+    # Write cfssl JSON template
+    local TEMPLATE=$OUTDIR/etcd-ca-csr.json
+    echo "local TEMPLATE: $TEMPLATE"
+    mkdir -p $(dirname $TEMPLATE)
+    cat << EOF > $TEMPLATE
+{
+  "CN": "etcd-ca",
+  "key": {
+    "algo": "ecdsa",
+    "size": 256
+  },
+  "names": [
+    {
+      "O": "Kubernetes",
+      "OU": "Etcd cluster"
+    }
+  ]
+}
+EOF
+
+    local CERTIFICATE=$OUTDIR/${CERTBASE}.pem
+    echo "local CERTIFICATE: $CERTIFICATE"
+    mkdir -p $(dirname $CERTIFICATE)
+    CAFILE="$OUTDIR/etcd-ca.pem"
+    CAKEYFILE="$OUTDIR/etcd-ca-key.pem"
+    CACONFIG=$OUTDIR/etcd-ca-config.json
+
+    cfssl gencert -initca $OUTDIR/${CERTBASE}-csr.json | cfssljson -bare $OUTDIR/etcd-ca
+}
+
 # Kube-Aggregator Root CA certificate
 # ---------------------------------------------
 function write-ssl-kube-aggregator-ca {
@@ -207,14 +265,14 @@ EOF
     CERTIFICATE=$OUTDIR/${CERTBASE}.pem
     echo "local CERTIFICATE: $CERTIFICATE"
     mkdir -p $(dirname $CERTIFICATE)
-    CAFILE="$OUTDIR/../ca.pem"
-    CAKEYFILE="$OUTDIR/../ca-key.pem"
-    CACONFIG=$OUTDIR/../ca-config.json
+    CAFILE="$OUTDIR/../etcd-ca.pem"
+    CAKEYFILE="$OUTDIR/../etcd-ca-key.pem"
+    CACONFIG=$OUTDIR/../etcd-ca-config.json
     
     cfssl gencert -ca=$CAFILE \
     -ca-key=$CAKEYFILE \
     -config=$CACONFIG \
-    -profile=kubernetes $OUTDIR/${CERTBASE}-csr.json | cfssljson -bare $OUTDIR/etcd
+    -profile=etcd $OUTDIR/${CERTBASE}-csr.json | cfssljson -bare $OUTDIR/etcd
 }
 
 # Admin certificate
@@ -673,6 +731,58 @@ EOF
     -profile=kubernetes $OUTDIR/${CERTBASE}-csr.json | cfssljson -bare $OUTDIR/kube-aggregator-client
 }
 
+# Kube-Apiserver etcd certificate
+# ---------------------------------------------
+function write-ssl-etcd-client {
+    # Convert SANs to JSON supported array (e.g 1,2,3 --> "1","2","3",) 
+    APISERVER_IP=$(for i in $(printf ${SANS} | tr ',' '\n'); do printf "\"$i\","; done)
+
+    # Extracting the IP address from the CN (i.e kube-apiserver-xxx.xxx.xxx.xxx)
+    IP_ADDRESS=$(printf ${CN} | awk -F '-' '{print $3}')
+
+    # Write cfssl JSON template
+    local TEMPLATE=$OUTDIR/${CERTBASE}-csr.json
+    echo "local TEMPLATE: $TEMPLATE"
+    mkdir -p $(dirname $TEMPLATE)
+    cat << EOF > $TEMPLATE
+{
+  "CN": "apiserver-etcd-certificate",
+  "hosts": [
+    "127.0.0.1",
+    ${APISERVER_IP}
+    "localhost",
+    "kubernetes",
+    "kubernetes.default",
+    "kubernetes.default.svc",
+    "kubernetes.default.svc.cluster",
+    "kubernetes.default.svc.cluster.local"
+  ],
+  "key": {
+    "algo": "ecdsa",
+    "size": 256
+  },
+  "names": [
+    {
+      "O": "Kubernetes",
+      "OU": "Etcd cluster"
+    }
+  ]
+}
+EOF
+
+    local CERTIFICATE=$OUTDIR/${CERTBASE}.pem
+    echo "local CERTIFICATE: $CERTIFICATE"
+    mkdir -p $(dirname $CERTIFICATE)
+    CAFILE="$OUTDIR/../etcd-ca.pem"
+    CAKEYFILE="$OUTDIR/../etcd-ca-key.pem"
+    CACONFIG=$OUTDIR/../etcd-ca-config.json
+    
+    cfssl gencert -ca=$CAFILE \
+    -ca-key=$CAKEYFILE \
+    -config=$CACONFIG \
+    -profile=kubernetes $OUTDIR/${CERTBASE}-csr.json | cfssljson -bare $OUTDIR/${CERTBASE}
+}
+
 case "$2" in
     "ca" )
       write-ssl-ca
@@ -685,6 +795,9 @@ case "$2" in
       ;;
     "etcd" )
       write-ssl-etcd
+      ;;
+    "etcd-client" )
+      write-ssl-etcd-client
       ;;
     "admin" )
       write-ssl-admin

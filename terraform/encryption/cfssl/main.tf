@@ -260,6 +260,16 @@ resource "null_resource" "cert-master" {
     destination = "/tmp/kube-aggregator-client.tar"
   }
 
+  provisioner "local-exec" {
+    interpreter = ["bash", "-c"]
+    command     = "${path.module}/scripts/cfssl.sh ssl/master-${element(var.master_hostnames, count.index)} etcd-client kube-apiserver-etcd-client-${element(var.master_hostnames, count.index)} ${join(",", concat(var.master_hostnames, var.master_private_ips, list(var.master_cluster_ip), list(var.cluster_public_dns)))}"
+  }
+
+  provisioner "file" {
+    source      = "ssl/master-${element(var.master_hostnames, count.index)}/kube-apiserver-etcd-client-${element(var.master_hostnames, count.index)}.tar"
+    destination = "/tmp/kube-apiserver-etcd-client.tar"
+  }
+
   provisioner "remote-exec" {
     inline = [
       "mkdir -p /etc/kubernetes/ssl",
@@ -272,6 +282,7 @@ resource "null_resource" "cert-master" {
       "tar -C /etc/kubernetes/ssl -xf /tmp/kube-scheduler.tar",
       "tar -C /etc/kubernetes/ssl -xf /tmp/service-account.tar",
       "tar -C /etc/kubernetes/ssl -xf /tmp/kube-aggregator-client.tar",
+      "tar -C /etc/kubernetes/ssl -xf /tmp/kube-apiserver-etcd-client.tar",
       "mv /tmp/ca-key.pem /etc/kubernetes/ssl/",
     ]
   }

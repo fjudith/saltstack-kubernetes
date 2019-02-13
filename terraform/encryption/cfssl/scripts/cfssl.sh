@@ -636,7 +636,7 @@ EOF
     -profile=kubernetes $OUTDIR/${CERTBASE}-csr.json | cfssljson -bare $OUTDIR/service-account
 }
 
-# Dashboard certificate
+# Kube-Aggregator client certificate
 # ---------------------------------------------
 function write-ssl-kube-aggregator-client {
     # Write cfssl JSON template
@@ -665,7 +665,7 @@ EOF
     mkdir -p $(dirname $CERTIFICATE)
     CAFILE="$OUTDIR/kube-aggregator-ca.pem"
     CAKEYFILE="$OUTDIR/kube-aggregator-ca-key.pem"
-    CACONFIG=$OUTDIR/kube-aggregator-ca-config.json
+    CACONFIG=$OUTDIR/../kube-aggregator-ca-config.json
     
     cfssl gencert -ca=$CAFILE \
     -ca-key=$CAKEYFILE \

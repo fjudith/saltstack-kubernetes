@@ -36,9 +36,9 @@ ExecStart=/usr/local/bin/kube-apiserver \
     --enable-bootstrap-token-auth \
     --enable-swagger-ui=true \
     --storage-backend=etcd3 \
-    --etcd-cafile=/etc/kubernetes/ssl/ca.pem \
-    --etcd-certfile=/etc/kubernetes/ssl/apiserver.pem \
-    --etcd-keyfile=/etc/kubernetes/ssl/apiserver-key.pem \
+    --etcd-cafile=/etc/kubernetes/ssl/etcd-ca.pem \
+    --etcd-certfile=/etc/kubernetes/ssl/etcd-client.pem \
+    --etcd-keyfile=/etc/kubernetes/ssl/etcd-client-key.pem \
     --etcd-servers={% for member in etcd.members %}https://{{ member.host }}:2379{% if not loop.last %},{% endif %}{% endfor %} \
     --event-ttl=1h \
     --experimental-encryption-provider-config=/etc/kubernetes/encryption-config.yaml \
@@ -53,7 +53,7 @@ ExecStart=/usr/local/bin/kube-apiserver \
     --requestheader-group-headers=X-Remote-Group \
     --requestheader-username-headers=X-Remote-User \
     --proxy-client-cert-file=/etc/kubernetes/ssl/kube-aggregator-client.pem \
-    --proxy-client-key-file=/etc/kubernetes/ssl/kube-aggregator-ca-key.pem \
+    --proxy-client-key-file=/etc/kubernetes/ssl/kube-aggregator-client-key.pem \
     --runtime-config=api/all \
     --runtime-config=extensions/v1beta1/networkpolicies=true \
     --service-account-key-file=/etc/kubernetes/ssl/service-account.pem \

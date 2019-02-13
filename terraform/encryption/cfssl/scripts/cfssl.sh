@@ -780,7 +780,7 @@ EOF
     cfssl gencert -ca=$CAFILE \
     -ca-key=$CAKEYFILE \
     -config=$CACONFIG \
-    -profile=kubernetes $OUTDIR/${CERTBASE}-csr.json | cfssljson -bare $OUTDIR/${CERTBASE}
+    -profile=etcd $OUTDIR/${CERTBASE}-csr.json | cfssljson -bare $OUTDIR/${CERTBASE}
 }
 
 case "$2" in

@@ -90,6 +90,18 @@ resource "null_resource" "cert-kube-aggregator-ca" {
   }
 }
 
+resource "null_resource" "cert-etcd-ca" {
+  provisioner "local-exec" {
+    interpreter = ["bash", "-c"]
+    command     = "mkdir -p ssl"
+  }
+
+  provisioner "local-exec" {
+    interpreter = ["bash", "-c"]
+    command     = "${path.module}/scripts/cfssl.sh ssl etcd-ca etcd-ca"
+  }
+}
+
 resource "null_resource" "cert-admin" {
   depends_on = ["null_resource.cert-ca"]
 
@@ -136,7 +148,7 @@ resource "null_resource" "cert-service-account" {
 }
 
 resource "null_resource" "cert-etcd" {
-  depends_on = ["null_resource.cert-ca"]
+  depends_on = ["null_resource.cert-etcd-ca"]
   count      = "${var.etcd_count}"
 
   connection {
@@ -170,7 +182,7 @@ resource "null_resource" "cert-etcd" {
 }
 
 resource "null_resource" "cert-master" {
-  depends_on = ["null_resource.cert-ca", "null_resource.cert-dashboard"]
+  depends_on = ["null_resource.cert-ca", "null_resource.cert-etcd-ca", "null_resource.cert-kube-aggregator-ca", "null_resource.cert-dashboard"]
   count      = "${var.master_count}"
 
   connection {

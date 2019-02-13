@@ -663,8 +663,8 @@ EOF
     local CERTIFICATE=$OUTDIR/${CERTBASE}.pem
     echo "local CERTIFICATE: $CERTIFICATE"
     mkdir -p $(dirname $CERTIFICATE)
-    CAFILE="$OUTDIR/kube-aggregator-ca.pem"
-    CAKEYFILE="$OUTDIR/kube-aggregator-ca-key.pem"
+    CAFILE="$OUTDIR/../kube-aggregator-ca.pem"
+    CAKEYFILE="$OUTDIR/../kube-aggregator-ca-key.pem"
     CACONFIG=$OUTDIR/../kube-aggregator-ca-config.json
     
     cfssl gencert -ca=$CAFILE \

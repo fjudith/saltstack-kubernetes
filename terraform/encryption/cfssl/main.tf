@@ -78,6 +78,18 @@ resource "null_resource" "cert-ca" {
   }
 }
 
+resource "null_resource" "cert-kube-aggregator-ca" {
+  provisioner "local-exec" {
+    interpreter = ["bash", "-c"]
+    command     = "mkdir -p ssl"
+  }
+
+  provisioner "local-exec" {
+    interpreter = ["bash", "-c"]
+    command     = "${path.module}/scripts/cfssl.sh ssl kube-aggregator-ca kube-aggregator-ca"
+  }
+}
+
 resource "null_resource" "cert-admin" {
   depends_on = ["null_resource.cert-ca"]
 
@@ -238,6 +250,16 @@ resource "null_resource" "cert-master" {
     destination = "/tmp/flanneld.tar"
   }
 
+  provisioner "local-exec" {
+    interpreter = ["bash", "-c"]
+    command     = "${path.module}/scripts/cfssl.sh ssl/master-${element(var.master_hostnames, count.index)} kube-aggregator-client kube-aggregator-client-${element(var.master_hostnames, count.index)}"
+  }
+
+  provisioner "file" {
+    source      = "ssl/master-${element(var.master_hostnames, count.index)}/kube-aggregator-client-${element(var.master_hostnames, count.index)}.tar"
+    destination = "/tmp/kube-aggregator-client.tar"
+  }
+
   provisioner "remote-exec" {
     inline = [
       "mkdir -p /etc/kubernetes/ssl",
@@ -249,6 +271,7 @@ resource "null_resource" "cert-master" {
       "tar -C /etc/kubernetes/ssl -xf /tmp/kube-controller-manager.tar",
       "tar -C /etc/kubernetes/ssl -xf /tmp/kube-scheduler.tar",
       "tar -C /etc/kubernetes/ssl -xf /tmp/service-account.tar",
+      "tar -C /etc/kubernetes/ssl -xf /tmp/kube-aggregator-client.tar",
       "mv /tmp/ca-key.pem /etc/kubernetes/ssl/",
     ]
   }

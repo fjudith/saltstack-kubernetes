@@ -113,6 +113,64 @@ EOF
     cfssl gencert -initca $OUTDIR/${CERTBASE}-csr.json | cfssljson -bare $OUTDIR/ca
 }
 
+# Kube-Aggregator Root CA certificate
+# ---------------------------------------------
+function write-ssl-kube-aggregator-ca {
+    # Write cfssl JSON template for signing configuration
+    local TEMPLATE=$OUTDIR/kube-aggregator-ca-config.json
+    echo "local TEMPLATE: $TEMPLATE"
+    mkdir -p $(dirname $TEMPLATE)
+    cat << EOF > $TEMPLATE
+{
+  "signing": {
+    "default": {
+      "expiry": "12000h"
+    },
+    "profiles": {
+      "kubernetes": {
+        "usages": [
+            "signing",
+            "key encipherment",
+            "server auth",
+            "client auth"
+        ],
+        "expiry": "12000h"
+      }
+    }
+  }
+}
+EOF
+
+    # Write cfssl JSON template
+    local TEMPLATE=$OUTDIR/kube-aggregator-ca-csr.json
+    echo "local TEMPLATE: $TEMPLATE"
+    mkdir -p $(dirname $TEMPLATE)
+    cat << EOF > $TEMPLATE
+{
+  "CN": "kube-aggregator-ca",
+  "key": {
+    "algo": "ecdsa",
+    "size": 256
+  },
+  "names": [
+    {
+      "O": "Kubernetes",
+      "OU": "Kubernetes cluster"
+    }
+  ]
+}
+EOF
+
+    local CERTIFICATE=$OUTDIR/${CERTBASE}.pem
+    echo "local CERTIFICATE: $CERTIFICATE"
+    mkdir -p $(dirname $CERTIFICATE)
+    CAFILE="$OUTDIR/kube-aggregator-ca.pem"
+    CAKEYFILE="$OUTDIR/kube-aggregator-ca-key.pem"
+    CACONFIG=$OUTDIR/kube-aggregator-ca-config.json
+
+    cfssl gencert -initca $OUTDIR/${CERTBASE}-csr.json | cfssljson -bare $OUTDIR/kube-aggregator-ca
+}
+
 # Etcd certificate
 # ---------------------------------------------
 function write-ssl-etcd {
@@ -578,9 +636,52 @@ EOF
     -profile=kubernetes $OUTDIR/${CERTBASE}-csr.json | cfssljson -bare $OUTDIR/service-account
 }
 
+# Dashboard certificate
+# ---------------------------------------------
+function write-ssl-kube-aggregator-client {
+    # Write cfssl JSON template
+    local TEMPLATE=$OUTDIR/${CERTBASE}-csr.json
+    echo "local TEMPLATE: $TEMPLATE"
+    mkdir -p $(dirname $TEMPLATE)
+    cat << EOF > $TEMPLATE
+{
+  "CN": "kube-aggregator-client",
+  "hosts": [],
+  "key": {
+    "algo": "ecdsa",
+    "size": 256
+  },
+  "names": [
+    {
+      "O": "Kubernetes",
+      "OU": "Kubernetes cluster"
+    }
+  ]
+}
+EOF
+
+    local CERTIFICATE=$OUTDIR/${CERTBASE}.pem
+    echo "local CERTIFICATE: $CERTIFICATE"
+    mkdir -p $(dirname $CERTIFICATE)
+    CAFILE="$OUTDIR/kube-aggregator-ca.pem"
+    CAKEYFILE="$OUTDIR/kube-aggregator-ca-key.pem"
+    CACONFIG=$OUTDIR/kube-aggregator-ca-config.json
+    
+    cfssl gencert -ca=$CAFILE \
+    -ca-key=$CAKEYFILE \
+    -config=$CACONFIG \
+    -profile=kubernetes $OUTDIR/${CERTBASE}-csr.json | cfssljson -bare $OUTDIR/kube-aggregator-client
+}
+
 case "$2" in
     "ca" )
       write-ssl-ca
+      ;;
+    "kube-aggregator-ca" )
+      write-ssl-kube-aggregator-ca
+      ;;
+    "kube-aggregator-client" )
+      write-ssl-kube-aggregator-client
       ;;
     "etcd" )
       write-ssl-etcd

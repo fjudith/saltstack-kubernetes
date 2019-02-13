@@ -47,6 +47,13 @@ ExecStart=/usr/local/bin/kube-apiserver \
     --kubelet-client-certificate=/etc/kubernetes/ssl/apiserver.pem \
     --kubelet-client-key=/etc/kubernetes/ssl/apiserver-key.pem \
     --kubelet-https=true \
+    --requestheader-client-ca-file=/etc/kubernetes/ssl/kube-aggregator-ca.pem \
+    --requestheader-allowed-names=kube-aggregator-client \
+    --requestheader-extra-headers-prefix=X-Remote-Extra- \
+    --requestheader-group-headers=X-Remote-Group \
+    --requestheader-username-headers=X-Remote-User \
+    --proxy-client-cert-file=/etc/kubernetes/ssl/kube-aggregator-client.pem \
+    --proxy-client-key-file=/etc/kubernetes/ssl/kube-aggregator-ca-key.pem \
     --runtime-config=api/all \
     --runtime-config=extensions/v1beta1/networkpolicies=true \
     --service-account-key-file=/etc/kubernetes/ssl/service-account.pem \

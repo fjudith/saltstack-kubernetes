@@ -793,6 +793,9 @@ case "$2" in
     "kube-aggregator-client" )
       write-ssl-kube-aggregator-client
       ;;
+    "etcd-ca" )
+      write-ssl-etcd-ca
+      ;;
     "etcd" )
       write-ssl-etcd
       ;;

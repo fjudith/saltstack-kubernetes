@@ -3,17 +3,6 @@
 {# include:
   - etcd #}
 
-include:
-  - kubernetes.cni
-  - kubernetes.cri
-  - kubernetes.cri.{{ common.cri.provider }}
-  - kubernetes.role.master.kubelet
-  - kubernetes.role.master.kube-proxy
-  - kubernetes.role.master.kube-apiserver
-  - kubernetes.role.master.kube-controller-manager
-  - kubernetes.role.master.kube-scheduler
-  - kubernetes.cni.{{ common.cni.provider }}
-
 conntrack:
   pkg.latest
   
@@ -88,3 +77,14 @@ net.bridge.bridge-nf-pass-vlan-input-dev:
 /etc/kubernetes/ssl/node-key.pem:
   file.symlink:
     - target: /etc/kubernetes/ssl/master-key.pem
+
+include:
+  - kubernetes.cni
+  - kubernetes.cri
+  - kubernetes.cri.{{ common.cri.provider }}
+  - kubernetes.role.master.kubelet
+  - kubernetes.role.master.kube-proxy
+  - kubernetes.role.master.kube-apiserver
+  - kubernetes.role.master.kube-controller-manager
+  - kubernetes.role.master.kube-scheduler
+  - kubernetes.cni.{{ common.cni.provider }}

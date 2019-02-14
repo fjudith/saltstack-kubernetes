@@ -1,14 +1,6 @@
 {%- from "kubernetes/map.jinja" import common with context -%}
 {%- set os = salt['grains.get']('os') -%}
 
-include:
-  - kubernetes.cni
-  - kubernetes.cri
-  - kubernetes.cri.{{ common.cri.provider }}
-  - kubernetes.cri.rkt
-  - kubernetes.role.node.kubelet
-  - kubernetes.role.node.kube-proxy
-
 {% if os == "Debian" or os == "Ubuntu" %}
 glusterfs-client:
   pkg.latest
@@ -106,3 +98,12 @@ net.ipv6.conf.all.forwarding:
   sysctl.present:
     - value: 1
 {% endif %}
+
+
+include:
+  - kubernetes.cni
+  - kubernetes.cri
+  - kubernetes.cri.{{ common.cri.provider }}
+  - kubernetes.cri.rkt
+  - kubernetes.role.node.kubelet
+  - kubernetes.role.node.kube-proxy

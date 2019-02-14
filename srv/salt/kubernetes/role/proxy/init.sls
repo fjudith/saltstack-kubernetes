@@ -1,10 +1,5 @@
 {%- from "kubernetes/map.jinja" import common with context -%}
 
-include:
-  - tinyproxy
-  - keepalived
-  - haproxy
-
 /root/.kube:
   file.directory:
     - user: root
@@ -32,3 +27,8 @@ include:
     - group: root
     - mode: 600
     - replace: False
+
+include:
+  - tinyproxy
+  - keepalived
+  - haproxy

@@ -37,8 +37,8 @@ kubernetes-cert-manager-install:
     - use_vt: True
     - onlyif: curl --silent 'http://127.0.0.1:8080/healthz/'
     - name: |
-        kubectl apply -f /srv/kubernetes/manifests/cert-manager/deploy/manifests/00-crds.yaml
         kubectl apply -f /srv/kubernetes/manifests/cert-manager/deploy/manifests/01-namespace.yaml
+        kubectl apply -f /srv/kubernetes/manifests/cert-manager/deploy/manifests/00-crds.yaml
         kubectl apply -f /srv/kubernetes/manifests/cert-manager/deploy/manifests/cert-manager.yaml
         kubectl -n cert-manager delete secret public-dns-secret
         kubectl -n cert-manager create secret generic public-dns-secret --from-literal=secret-access-key="{{ common.addons.cert_manager.dns.secret }}"

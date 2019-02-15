@@ -1,11 +1,11 @@
 {%- from "kubernetes/map.jinja" import common with context -%}
 {%- from "kubernetes/map.jinja" import master with context -%}
 
-# Calico Version v3.2.1
-# https://docs.projectcalico.org/v3.2/releases#v3.2.1
+# Calico Version v3.3.3
+# https://docs.projectcalico.org/v3.3/releases#v3.3.3
 # This manifest includes the following component versions:
-#   calico/node:v3.2.1
-#   calico/cni:v3.2.1
+#   calico/node:v3.3.3
+#   calico/cni:v3.3.3
 
 # This ConfigMap is used to configure a self-hosted Calico installation.
 kind: ConfigMap
@@ -107,7 +107,10 @@ spec:
         # add-on, ensuring it gets priority scheduling and that its resources are reserved
         # if it ever gets evicted.
         scheduler.alpha.kubernetes.io/critical-pod: ''
+        cluster-autoscaler.kubernetes.io/safe-to-evict: 'true'
     spec:
+      nodeSelector:
+        beta.kubernetes.io/os: linux
       hostNetwork: true
       tolerations:
         # Mark the pod as a critical add-on for rescheduling.
@@ -164,6 +167,23 @@ spec:
 
 ---
 
+# This manifest creates a Pod Disruption Budget for Typha to allow K8s Cluster Autoscaler to evict
+
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: calico-typha
+  namespace: kube-system
+  labels:
+    k8s-app: calico-typha
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      k8s-app: calico-typha
+
+---
+
 # This manifest installs the calico/node container, as well
 # as the Calico CNI plugins and network config on
 # each master and worker node in a Kubernetes cluster.
@@ -193,6 +213,8 @@ spec:
         # if it ever gets evicted.
         scheduler.alpha.kubernetes.io/critical-pod: ''
     spec:
+      nodeSelector:
+        beta.kubernetes.io/os: linux
       hostNetwork: true
       tolerations:
         # Make sure calico-node gets scheduled on all nodes.
@@ -246,9 +268,6 @@ spec:
             # Enable IPIP
             - name: CALICO_IPV4POOL_IPIP
               value: "{{ common.cni.calico.ipv4.ip_in_ip }}"
-            # Enable IP-in-IP within Felix.
-            - name: FELIX_IPINIPENABLED
-              value: "true"
             # Set MTU for tunnel device used if ipip is enabled
             - name: FELIX_IPINIPMTU
               valueFrom:
@@ -304,6 +323,9 @@ spec:
             - mountPath: /lib/modules
               name: lib-modules
               readOnly: true
+            - mountPath: /run/xtables.lock
+              name: xtables-lock
+              readOnly: false
             - mountPath: /var/run/calico
               name: var-run-calico
               readOnly: false
@@ -352,6 +374,10 @@ spec:
         - name: var-lib-calico
           hostPath:
             path: /var/lib/calico
+        - name: xtables-lock
+          hostPath:
+            path: /run/xtables.lock
+            type: FileOrCreate
         # Used to install CNI.
         - name: cni-bin-dir
           hostPath:

@@ -41,14 +41,14 @@
 
 /opt/cni/bin/calico:
   file.managed:
-    - source: https://github.com/projectcalico/cni-plugin/releases/download/{{ common.cni.calico.version }}/calico-amd64
+    - source: https://github.com/projectcalico/cni-plugin/releases/download/v{{ common.cni.calico.version }}/calico-amd64
     - skip_verify: true
     - group: root
     - mode: 755
 
 /opt/cni/bin/calico-ipam:
   file.managed:
-    - source: https://github.com/projectcalico/cni-plugin/releases/download/{{ common.cni.calico.version }}/calico-ipam-amd64
+    - source: https://github.com/projectcalico/cni-plugin/releases/download/v{{ common.cni.calico.version }}/calico-ipam-amd64
     - skip_verify: true
     - group: root
     - mode: 755

@@ -33,6 +33,7 @@ kubernetes:
           range: 10.2.0.0/16
           nat: true
           ip_in_ip: always
+          interface: eth0
         ipv6:
           enable: false
           nat: true

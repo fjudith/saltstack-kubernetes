@@ -324,7 +324,7 @@ spec:
             - name: FELIX_IPV6SUPPORT
               value: "false"
             - name: IP_AUTODETECTION_METHOD
-              value: "can-reach={{ master.members[0].name }}"
+              value: "interface={{ common.cni.calico.ipv4.interface }}"
             - name: IP6_AUTODETECTION_METHOD
               value: "interface={{ common.cni.calico.ipv6.interface }}"
             # Set Felix logging to "info"

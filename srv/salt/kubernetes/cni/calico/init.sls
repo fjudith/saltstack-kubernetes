@@ -45,8 +45,6 @@
     - skip_verify: true
     - group: root
     - mode: 755
-    - require:
-      - sls: kubernetes/cni
 
 /opt/cni/bin/calico-ipam:
   file.managed:
@@ -54,8 +52,6 @@
     - skip_verify: true
     - group: root
     - mode: 755
-    - require:
-      - sls: kubernetes/cni
 
 /etc/calico/kube/kubeconfig:
     file.managed:
@@ -64,8 +60,6 @@
     - template: jinja
     - group: root
     - mode: 640
-    - require:
-      - sls: kubernetes/cni
 
 /srv/kubernetes/manifests/calico/calico-rbac-kkd.yaml:
     file.managed:

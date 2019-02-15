@@ -98,12 +98,3 @@ net.ipv6.conf.all.forwarding:
   sysctl.present:
     - value: 1
 {% endif %}
-
-
-include:
-  - kubernetes.cni
-  - kubernetes.cri
-  - kubernetes.cri.{{ common.cri.provider }}
-  - kubernetes.cri.rkt
-  - kubernetes.role.node.kubelet
-  - kubernetes.role.node.kube-proxy

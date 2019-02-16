@@ -1,0 +1,67 @@
+# Install into /etc/ufw/applications.d/ and run 'ufw app update'
+
+# https://docs.saltstack.com/en/latest/topics/tutorials/firewall.html
+[salt]
+title=salt
+description=fast and powerful configuration management and remote execution
+ports=4505,4506/tcp
+
+# https://kubernetes.io/docs/setup/independent/install-kubeadm/
+[kube-apiserver]
+title=kube-apiserver
+description=Kubernetes API Server
+ports=6443/tcp
+
+[etcd]
+title=Etcd server port
+description=Etcd client request
+ports=2379/tcp
+
+[etcd-peer]
+title=Etcd cluster
+description=Etcd cluster peering
+ports=2380/tcp
+
+# https://docs.projectcalico.org/master/getting-started/kubernetes/requirement
+[calico-bgp]
+title=calico
+description=Cloud native connectivity and network policy
+ports=172/tcp
+
+[calico-typha-agent]
+title=calico typha
+description="Calico's datastore fan-out daemon"
+ports=5479/tcp
+
+# https://docs.cilium.io/en/stable/install/system_requirements/
+[cillium-vxlan]
+title=Cilium VXLAN
+description=Cillium VXLAN overlay mode 
+ports=8472/udp
+
+[cillium-geneve]
+title=Cilium Geneve
+description=Cillium Geneve overlay mode 
+ports=6081/udp
+
+[cillium-health]
+title=Cilium health
+description=Cillium monitoring
+ports=4240/tcp
+
+# https://github.com/coreos/flannel/blob/master/Documentation/backends.md
+[flannel-vxlan]
+title=flannel
+description=Flannel is a network fabric for containers, designed for Kubernetes
+ports=8472,4789/udp
+
+# https://www.weave.works/docs/net/latest/faq/
+[weave]
+title=weave
+description=Weave Net communications
+ports=6783/tcp|6783,6784/udp
+
+[weave-metrics]
+title=weave-metrics
+description=Weave Net monitoring
+ports=6781,6782

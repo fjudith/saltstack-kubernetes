@@ -37,23 +37,23 @@ sudo ufw logging off
 sudo ufw allow ssh
 
 # Allow Saltstack
-sudo ufw allow in on ${vpn_interface} salt
+sudo ufw allow salt on ${vpn_interface} 
 
 # Allow Flannel / Canal
-sudo ufw allow in flannel-vxlan
+sudo ufw allow flannel-vxlan
 
 # Allow Calico
-sudo ufw allow in calico-bgp
+sudo ufw allow calico-bgp
 # ufw allow in calico-typha-agent
 
 # Allow Weave Net
-sudo ufw allow in weave
+sudo ufw allow weave
 # ufw allow in weave-metrics
 
 # Allow Cilium
-sudo ufw allow in cilium-vxlan
-sudo ufw allow in cillium-geneve
-# ufw allow in cillium-health
+sudo ufw allow cilium-vxlan
+sudo ufw allow cillium-geneve
+# sudo ufw allow in cillium-health
 
 # Deny Incoming connection by default
 sudo ufw default deny Incoming

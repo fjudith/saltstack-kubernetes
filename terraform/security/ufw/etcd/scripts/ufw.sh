@@ -29,10 +29,10 @@ sudo ufw logging off
 sudo ufw allow ssh
 
 # Allow Saltstack
-sudo ufw allow in on ${vpn_interface} salt
+sudo ufw allow salt on ${vpn_interface} 
 
 # Allow Etcd
-sudo ufw allow in on ${vpn_interface} etcd
+sudo ufw allow etcd on ${vpn_interface} 
 
 # Deny Incoming connection by default
 sudo ufw default deny Incoming

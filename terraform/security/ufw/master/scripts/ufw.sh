@@ -43,24 +43,24 @@ sudo ufw allow ssh
 sudo ufw allow salt in on ${vpn_interface}
 
 # Allow Etcd port
-sudo ufw allow in on ${vpn_interface} etcd 
-sudo ufw allow in on ${vpn_interface} etcd-peer 
+sudo ufw allow etcd on ${vpn_interface}  
+sudo ufw allow etcd-peer on ${vpn_interface} 
 
 # Allow Flannel / Canal
-sudo ufw allow in flannel-vxlan
+sudo ufw allow flannel-vxlan
 
 # Allow Calico
-sudo ufw allow in calico-bgp
-# ufw allow in calico-typha-agent
+sudo ufw allow calico-bgp
+# sudo ufw allow in calico-typha-agent
 
 # Allow Weave Net
-sudo ufw allow in weave
-# ufw allow in weave-metrics
+sudo ufw allow weave
+# sudo ufw allow in weave-metrics
 
 # Allow Cilium
-sudo ufw allow in cilium-vxlan
-sudo ufw allow in cillium-geneve
-# ufw allow in cillium-health
+sudo ufw allow cilium-vxlan
+sudo ufw allow cillium-geneve
+# sudo ufw allow cillium-health
 
 # Deny Incoming connection by default
 sudo ufw default deny incoming

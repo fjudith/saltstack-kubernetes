@@ -18,17 +18,17 @@ description="Calico's datastore fan-out daemon"
 ports=5479/tcp
 
 # https://docs.cilium.io/en/stable/install/system_requirements/
-[cillium-vxlan]
+[cilium-vxlan]
 title=Cilium VXLAN
 description=Cillium VXLAN overlay mode 
 ports=8472/udp
 
-[cillium-geneve]
+[cilium-geneve]
 title=Cilium Geneve
 description=Cillium Geneve overlay mode 
 ports=6081/udp
 
-[cillium-health]
+[cilium-health]
 title=Cilium health
 description=Cillium monitoring
 ports=4240/tcp

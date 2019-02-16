@@ -59,8 +59,8 @@ sudo ufw allow weave
 
 # Allow Cilium
 sudo ufw allow cilium-vxlan
-sudo ufw allow cillium-geneve
-# sudo ufw allow cillium-health
+sudo ufw allow cilium-geneve
+# sudo ufw allow cilium-health
 
 # Deny Incoming connection by default
 sudo ufw default deny incoming

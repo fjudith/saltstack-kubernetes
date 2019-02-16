@@ -64,7 +64,7 @@ ports=6783/tcp|6783,6784/udp
 [weave-metrics]
 title=weave-metrics
 description=Weave Net monitoring
-ports=6781,6782
+ports=6781,6782/tcp
 
 [tinyproxy]
 title=tinyproxy

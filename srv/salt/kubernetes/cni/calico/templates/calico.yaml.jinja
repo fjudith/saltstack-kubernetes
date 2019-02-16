@@ -332,6 +332,8 @@ spec:
               value: "info"
             - name: FELIX_HEALTHENABLED
               value: "true"
+            - name: CALICO_ADVERTISE_CLUSTER_IPS
+              value: "{{ master.service_addresses }}"
           securityContext:
             privileged: true
           resources:

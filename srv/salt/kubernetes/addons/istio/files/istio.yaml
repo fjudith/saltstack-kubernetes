@@ -12974,7 +12974,7 @@ metadata:
     app: istio-ingressgateway
     istio: ingressgateway
 spec:
-  replicas: 2
+  replicas: 1
   template:
     metadata:
       labels:
@@ -12984,11 +12984,6 @@ spec:
         sidecar.istio.io/inject: "false"
         scheduler.alpha.kubernetes.io/critical-pod: ""
     spec:
-      tolerations:
-        - key: node-role.kubernetes.io/ingress
-          effect: NoSchedule
-      nodeSelector:
-        node-role.kubernetes.io/ingress: "true"
       serviceAccountName: istio-ingressgateway-service-account
       containers:
         - name: istio-proxy
@@ -14366,9 +14361,6 @@ webhooks:
 ---
 # Source: istio/charts/grafana/templates/pvc.yaml
 
-
----
-# Source: istio/charts/grafana/templates/secret.yaml
 
 ---
 # Source: istio/charts/pilot/templates/meshexpansion.yaml

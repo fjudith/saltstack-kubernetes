@@ -55,7 +55,7 @@ resource "null_resource" "firewall" {
     timeout             = "1m"
   }
   provisioner "file" {
-    source = "${path.module}/../application.d/"
+    source = "${path.module}/files/"
     destination = "/etc/ufw/application.d"
   }
   provisioner "remote-exec" {

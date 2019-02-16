@@ -1,0 +1,9 @@
+# Install into /etc/ufw/applications.d/ and run 'ufw app update' to add flannel
+# firewall rules to systems with UFW.  Activate with 'ufw allow flannel'
+#
+# https://github.com/coreos/flannel/blob/master/Documentation/backends.md
+#
+[flannel-vxlan]
+title=flannel
+description=Flannel is a network fabric for containers, designed for Kubernetes
+ports=8472,4789/udp

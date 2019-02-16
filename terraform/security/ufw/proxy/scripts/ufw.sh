@@ -41,7 +41,7 @@ sudo ufw logging off
 sudo ufw allow ssh
 
 # Allow Saltstack
-sudo ufw allow salt
+# sudo ufw allow salt
 
 # Allow HTTP and HTTPS
 sudo ufw allow http

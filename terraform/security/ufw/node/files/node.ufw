@@ -10,7 +10,7 @@ ports=4505,4506/tcp
 [calico-bgp]
 title=calico
 description=Cloud native connectivity and network policy
-ports=172/tcp
+ports=179/tcp
 
 [calico-typha-agent]
 title=calico typha

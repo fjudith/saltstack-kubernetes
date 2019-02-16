@@ -41,24 +41,36 @@ sudo ufw logging off
 sudo ufw allow ssh
 
 # Allow Saltstack
-sudo ufw allow 4505
-sudo ufw allow 4506
+sudo ufw allow in on ${vpn_interface} salt
 
 # Allow HTTP and HTTPS
 sudo ufw allow http
 sudo ufw allow https
 
 # Allow Kubernetes API Server
-sudo ufw allow 6443
+sudo ufw allow kube-apiserver
 
 # Allow Tinyproxy
-sudo ufw allow 8888
+sudo ufw allow in on ${vpn_interface} tinyproxy
 
 # Allow HAproxy Stats
-sudo ufw allow 58080
+sudo ufw allow in on ${vpn_interface} 58080/tcp
 
-# Allow Flannel vxlan
-ufw allow in 8472/udp
+# Allow Flannel / Canal
+sudo ufw allow in flannel-vxlan
+
+# Allow Calico
+sudo ufw allow in calico-bgp
+# ufw allow in calico-typha-agent
+
+# Allow Weave Net
+sudo ufw allow in weave
+# ufw allow in weave-metrics
+
+# Allow Cilium
+sudo ufw allow in cilium-vxlan
+sudo ufw allow in cillium-geneve
+# ufw allow in cillium-health
 
 # Deny Incoming connection by default
 sudo ufw default deny incoming

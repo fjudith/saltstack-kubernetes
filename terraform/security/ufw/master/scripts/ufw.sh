@@ -30,10 +30,8 @@ sudo sed -i -r 's|^COMMIT|-A ufw-reject-input -j DROP\nCOMMIT|g' /etc/ufw/after.
 sudo ufw allow in on ${private_interface} to any port ${vpn_port} # vpn on private interface
 sudo ufw allow in on ${vpn_interface}
 
-# Allow Kubernetes
-sudo ufw allow in on ${kubernetes_interface} # Kubernetes pod overlay interface
-
-ufw allow 6443 # Kubernetes API secure remote port
+# Kubernetes API secure remote port
+ufw allow in on ${vpn_interface} kube-apiserver
 
 # Disable Logging
 sudo ufw logging off
@@ -42,15 +40,27 @@ sudo ufw logging off
 sudo ufw allow ssh
 
 # Allow Saltstack
-sudo ufw allow 4505
-sudo ufw allow 4506
+sudo ufw allow salt in on ${vpn_interface}
 
 # Allow Etcd port
-sudo ufw allow 2379
-sudo ufw allow 2380
+sudo ufw allow in on ${vpn_interface} etcd 
+sudo ufw allow in on ${vpn_interface} etcd-peer 
 
-# Allow Flannel vxlan
-ufw allow in 8472/udp
+# Allow Flannel / Canal
+sudo ufw allow in flannel-vxlan
+
+# Allow Calico
+sudo ufw allow in calico-bgp
+# ufw allow in calico-typha-agent
+
+# Allow Weave Net
+sudo ufw allow in weave
+# ufw allow in weave-metrics
+
+# Allow Cilium
+sudo ufw allow in cilium-vxlan
+sudo ufw allow in cillium-geneve
+# ufw allow in cillium-health
 
 # Deny Incoming connection by default
 sudo ufw default deny incoming

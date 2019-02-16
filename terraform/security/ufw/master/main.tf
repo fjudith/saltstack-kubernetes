@@ -54,6 +54,11 @@ resource "null_resource" "firewall" {
     timeout             = "1m"
   }
 
+  provisioner "file" {
+    source = "${path.module}/../application.d/"
+    destination = "/etc/ufw/application.d"
+  }
+
   provisioner "remote-exec" {
     inline = <<EOF
 ${data.template_file.ufw.rendered}

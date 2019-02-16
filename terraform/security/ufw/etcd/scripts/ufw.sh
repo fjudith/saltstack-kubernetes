@@ -29,15 +29,10 @@ sudo ufw logging off
 sudo ufw allow ssh
 
 # Allow Saltstack
-sudo ufw allow 4505
-sudo ufw allow 4506
+sudo ufw allow in on ${vpn_interface} salt
 
-# Allow HTTP and HTTPS
-sudo ufw allow http
-sudo ufw allow https
-
-# Allow Kubernetes API secure port
-sudo ufw allow 6443
+# Allow Etcd
+sudo ufw allow in on ${vpn_interface} etcd
 
 # Deny Incoming connection by default
 sudo ufw default deny Incoming

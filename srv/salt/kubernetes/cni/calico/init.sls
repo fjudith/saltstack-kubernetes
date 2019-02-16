@@ -2,7 +2,7 @@
 
 ufw-calico:
   file.managed:
-    - name: /etc/ufw/application.d/calico.ufw
+    - name: /etc/ufw/applications.d/calico.ufw
     - source: salt://kubernetes/cni/calico/files/calico.ufw
     - user: root
     - group: root

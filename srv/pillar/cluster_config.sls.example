@@ -86,7 +86,7 @@ kubernetes:
         enabled: False
       ingress_istio:
         enabled: True
-        version: 1.0.5
+        version: 1.0.6
       cert_manager:
         enabled: True
         version: 0.6.0

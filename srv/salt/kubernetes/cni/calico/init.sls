@@ -1,22 +1,5 @@
 {%- from "kubernetes/map.jinja" import common with context -%}
 
-ufw-calico:
-  file.managed:
-    - name: /etc/ufw/applications.d/calico.ufw
-    - source: salt://kubernetes/cni/calico/files/calico.ufw
-    - user: root
-    - group: root
-    - mode: 644
-    - onlyif: systemctl status ufw | grep enabled
-  cmd.run:
-    - watch:
-      - file: /etc/ufw/applications.d/calico.ufw
-    - runas: root
-    - use_vt: True
-    - name: |
-        ufw app update
-        ufw allow calico
-
 /srv/kubernetes/manifests/calico:
   file.directory:
     - user: root
@@ -42,7 +25,6 @@ ufw-calico:
     - user: root
     - group: root
     - dir_mode: 750
-
 
 /opt/calico/:
   file.directory:

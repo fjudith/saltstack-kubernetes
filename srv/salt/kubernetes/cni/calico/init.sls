@@ -10,7 +10,7 @@ ufw-calico:
     - onlyif: systemctl status ufw | grep enabled
   cmd.run:
     - watch:
-      - file: /etc/ufw/application.d/calico.ufw
+      - file: /etc/ufw/applications.d/calico.ufw
     - runas: root
     - use_vt: True
     - name: |

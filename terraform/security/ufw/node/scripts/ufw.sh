@@ -37,7 +37,7 @@ sudo ufw logging off
 sudo ufw allow ssh
 
 # Allow Saltstack
-sudo ufw allow salt on ${vpn_interface} 
+# sudo ufw allow salt
 
 # Allow Flannel / Canal
 sudo ufw allow flannel-vxlan

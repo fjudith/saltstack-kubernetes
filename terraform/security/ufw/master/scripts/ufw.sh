@@ -40,11 +40,11 @@ sudo ufw logging off
 sudo ufw allow ssh
 
 # Allow Saltstack
-sudo ufw allow salt in on ${vpn_interface}
+# sudo ufw allow salt
 
 # Allow Etcd port
-sudo ufw allow etcd on ${vpn_interface}  
-sudo ufw allow etcd-peer on ${vpn_interface} 
+# sudo ufw allow etcd
+# sudo ufw allow etcd-peer
 
 # Allow Flannel / Canal
 sudo ufw allow flannel-vxlan

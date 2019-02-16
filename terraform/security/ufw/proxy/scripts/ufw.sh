@@ -41,7 +41,7 @@ sudo ufw logging off
 sudo ufw allow ssh
 
 # Allow Saltstack
-sudo ufw allow salt on ${vpn_interface} 
+sudo ufw allow salt
 
 # Allow HTTP and HTTPS
 sudo ufw allow http
@@ -51,7 +51,7 @@ sudo ufw allow https
 sudo ufw allow kube-apiserver
 
 # Allow Tinyproxy
-sudo ufw allow tinyproxy on ${vpn_interface} 
+# sudo ufw allow tinyproxy
 
 # Allow HAproxy Stats
 sudo ufw allow 58080/tcp

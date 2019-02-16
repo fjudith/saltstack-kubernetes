@@ -31,7 +31,7 @@ sudo ufw allow in on ${private_interface} to any port ${vpn_port} # vpn on priva
 sudo ufw allow in on ${vpn_interface}
 
 # Kubernetes API secure remote port
-ufw allow in on ${vpn_interface} kube-apiserver
+# ufw allow in kube-apiserver
 
 # Disable Logging
 sudo ufw logging off

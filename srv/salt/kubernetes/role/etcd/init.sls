@@ -1,9 +1,5 @@
 {%- from "kubernetes/map.jinja" import etcd with context -%}
 
-include:
-  - kubernetes.cri.docker
-  - kubernetes.cri.rkt
-
 /etc/etcd:
   file.directory:
     - user: root

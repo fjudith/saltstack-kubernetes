@@ -5,6 +5,8 @@ base:
   {% if "etcd" in grains.get('role', []) %}
     - common
     - certs
+    - kubernetes.cri.docker
+    - kubernetes.cri.rkt
     - kubernetes.role.etcd
   {% endif %}
   {% if "master" in grains.get('role', []) %}

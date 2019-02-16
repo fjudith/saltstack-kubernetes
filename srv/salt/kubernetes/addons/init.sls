@@ -40,7 +40,7 @@ include:
   - kubernetes.addons.prometheus-operator
 {%- endif -%}
 {%- if common.addons.get('weave_scope', {'enabled': False}).enabled %}
-  - kubernetes.addons.weave_scope
+  - kubernetes.addons.weave-scope
 {%- endif -%}
 {%- if common.addons.get('kubeless', {'enabled': False}).enabled %}
   - kubernetes.addons.kubeless

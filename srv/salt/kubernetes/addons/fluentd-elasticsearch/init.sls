@@ -6,7 +6,7 @@
     - include_empty: True
     - user: root
     - group: root
-    - mode: 644
+    - file_mode: 644
 
 /srv/kubernetes/manifests/fluentd-elasticsearch/es-statefulset.yaml:
     file.managed:

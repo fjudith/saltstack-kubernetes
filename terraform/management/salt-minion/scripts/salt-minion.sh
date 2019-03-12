@@ -1,13 +1,13 @@
 #!/bin/bash
 set -e
 
-apt-get update -yqq
-apt-get install -yqq curl wget
-cat << EOF > /etc/apt/sources.list.d/salt.list
-deb http://repo.saltstack.com/apt/ubuntu/18.04/amd64/2018.3 bionic main
+apt-get update -yqq && apt-get install -yqq curl wget
+
+cat << EOF > /etc/apt/sources.list.d/saltstack.list
+deb http://repo.saltstack.com/apt/ubuntu/18.04/amd64/2019.2 bionic main
 EOF
 
-curl -fsSL https://repo.saltstack.com/apt/ubuntu/18.04/amd64/2018.3/SALTSTACK-GPG-KEY.pub | sudo apt-key add -
+curl -fsS Lhttps://repo.saltstack.com/apt/ubuntu/18.04/amd64/2019.2/SALTSTACK-GPG-KEY.pub | sudo apt-key add -
 
 apt-get clean -yqq
 apt-get update -yqq
@@ -17,9 +17,11 @@ apt-get install -yqq \
     python-boto \
     python-boto3 \
     python-pyinotify \
-    python-psutil \
+    python-psutil \    
     reclass
 
 systemctl enable salt-minion
+
 systemctl daemon-reload
+
 systemctl restart salt-minion

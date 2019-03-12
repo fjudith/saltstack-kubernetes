@@ -14,7 +14,7 @@
     - source: salt://kubernetes/addons/httpbin/files/deployment.yaml
     - user: root
     - group: root
-    - file_mode: 644
+    - mode: 644
     - template: jinja
 
 /srv/kubernetes/manifests/httpbin/service.yaml:
@@ -24,7 +24,7 @@
     - source: salt://kubernetes/addons/httpbin/files/service.yaml
     - user: root
     - group: root
-    - file_mode: 644
+    - mode: 644
     - template: jinja
 
 /srv/kubernetes/manifests/httpbin/ingress.yaml:
@@ -34,7 +34,7 @@
     - source: salt://kubernetes/addons/httpbin/templates/ingress.yaml.jinja
     - user: root
     - group: root
-    - file_mode: 644
+    - mode: 644
     - template: jinja
 
 httpbin-install:

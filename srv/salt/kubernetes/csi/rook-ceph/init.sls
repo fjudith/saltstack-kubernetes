@@ -15,7 +15,7 @@
     - source: salt://kubernetes/csi/rook-ceph/files/rbac.yaml
     - user: root
     - group: root
-    - file_mode: 644
+    - mode: 644
 
 /srv/kubernetes/manifests/rook-ceph/cluster.yaml:
     file.managed:
@@ -24,7 +24,7 @@
     - source: salt://kubernetes/csi/rook-ceph/files/cluster.yaml
     - user: root
     - group: root
-    - file_mode: 644
+    - mode: 644
 
 /srv/kubernetes/manifests/rook-ceph/dashboard-external.yaml:
     file.managed:
@@ -33,7 +33,7 @@
     - source: salt://kubernetes/csi/rook-ceph/files/dashboard-external.yaml
     - user: root
     - group: root
-    - file_mode: 644
+    - mode: 644
 
 /srv/kubernetes/manifests/rook-ceph/filesystem.yaml:
     file.managed:
@@ -42,7 +42,7 @@
     - source: salt://kubernetes/csi/rook-ceph/files/filesystem.yaml
     - user: root
     - group: root
-    - file_mode: 644
+    - mode: 644
 
 /srv/kubernetes/manifests/rook-ceph/object.yaml:
     file.managed:
@@ -51,7 +51,7 @@
     - source: salt://kubernetes/csi/rook-ceph/files/object.yaml
     - user: root
     - group: root
-    - file_mode: 644
+    - mode: 644
 
 /srv/kubernetes/manifests/rook-ceph/operator.yaml:
     file.managed:
@@ -60,7 +60,7 @@
     - source: salt://kubernetes/csi/rook-ceph/templates/operator.yaml.jinja
     - user: root
     - group: root
-    - file_mode: 644
+    - mode: 644
     - template: jinja
 
 /srv/kubernetes/manifests/rook-ceph/pool.yaml:
@@ -70,7 +70,7 @@
     - source: salt://kubernetes/csi/rook-ceph/files/pool.yaml
     - user: root
     - group: root
-    - file_mode: 644
+    - mode: 644
 
 /srv/kubernetes/manifests/rook-ceph/storageclass.yaml:
     file.managed:
@@ -79,7 +79,7 @@
     - source: salt://kubernetes/csi/rook-ceph/files/storageclass.yaml
     - user: root
     - group: root
-    - file_mode: 644
+    - mode: 644
 
 /srv/kubernetes/manifests/rook-ceph/toolbox.yaml:
     file.managed:
@@ -88,7 +88,7 @@
     - source: salt://kubernetes/csi/rook-ceph/files/toolbox.yaml
     - user: root
     - group: root
-    - file_mode: 644
+    - mode: 644
 
 /srv/kubernetes/manifests/rook-ceph/prometheus-service.yaml:
     file.managed:
@@ -97,7 +97,7 @@
     - source: salt://kubernetes/csi/rook-ceph/files/prometheus-service.yaml
     - user: root
     - group: root
-    - file_mode: 644
+    - mode: 644
 
 /srv/kubernetes/manifests/rook-ceph/prometheus.yaml:
     file.managed:
@@ -106,7 +106,7 @@
     - source: salt://kubernetes/csi/rook-ceph/files/prometheus.yaml
     - user: root
     - group: root
-    - file_mode: 644
+    - mode: 644
 
 /srv/kubernetes/manifests/rook-ceph/service-monitor.yaml:
     file.managed:
@@ -115,7 +115,7 @@
     - source: salt://kubernetes/csi/rook-ceph/files/service-monitor.yaml
     - user: root
     - group: root
-    - file_mode: 644
+    - mode: 644
 
 /srv/kubernetes/manifests/rook-ceph/kube-prometheus-prometheus.yaml:
     file.managed:
@@ -124,7 +124,7 @@
     - source: salt://kubernetes/csi/rook-ceph/files/kube-prometheus-prometheus.yaml
     - user: root
     - group: root
-    - file_mode: 644
+    - mode: 644
 
 /srv/kubernetes/manifests/rook-ceph/kube-prometheus-ceph-exporter.yaml:
     file.managed:
@@ -133,7 +133,7 @@
     - source: salt://kubernetes/csi/rook-ceph/files/kube-prometheus-ceph-exporter.yaml
     - user: root
     - group: root
-    - file_mode: 644
+    - mode: 644
     - template: jinja
 
 /srv/kubernetes/manifests/rook-ceph/kube-prometheus-service-monitor.yaml:
@@ -143,7 +143,7 @@
     - source: salt://kubernetes/csi/rook-ceph/files/kube-prometheus-service-monitor.yaml
     - user: root
     - group: root
-    - file_mode: 644
+    - mode: 644
     - template: jinja
 
 /srv/kubernetes/manifests/rook-ceph/kube-prometheus-grafana-dashboard.yaml:
@@ -153,7 +153,7 @@
     - source: salt://kubernetes/csi/rook-ceph/files/kube-prometheus-grafana-dashboard.yaml
     - user: root
     - group: root
-    - file_mode: 644
+    - mode: 644
 
 /srv/kubernetes/manifests/rook-ceph/rook-ceph-ingress.yaml:
     file.managed:
@@ -162,7 +162,7 @@
     - source: salt://kubernetes/csi/rook-ceph/templates/ingress.yaml.jinja
     - user: root
     - group: root
-    - file_mode: 644
+    - mode: 644
     - template: jinja
 
 rook-operator-install:

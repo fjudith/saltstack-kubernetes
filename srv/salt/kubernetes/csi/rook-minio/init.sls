@@ -15,7 +15,7 @@
     - source: salt://kubernetes/csi/rook-minio/templates/ingress.yaml.jinja
     - user: root
     - group: root
-    - file_mode: 644
+    - mode: 644
     - template: jinja
 
 /srv/kubernetes/manifests/rook-minio/object-store.yaml:
@@ -25,7 +25,7 @@
     - source: salt://kubernetes/csi/rook-minio/files/object-store.yaml
     - user: root
     - group: root
-    - file_mode: 644
+    - mode: 644
     - template: jinja
 
 /srv/kubernetes/manifests/rook-minio/operator.yaml:
@@ -35,7 +35,7 @@
     - source: salt://kubernetes/csi/rook-minio/files/operator.yaml
     - user: root
     - group: root
-    - file_mode: 644
+    - mode: 644
     - template: jinja
 
 

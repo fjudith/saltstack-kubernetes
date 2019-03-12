@@ -7,7 +7,7 @@ cat << EOF > /etc/apt/sources.list.d/saltstack.list
 deb http://repo.saltstack.com/apt/ubuntu/18.04/amd64/2019.2 bionic main
 EOF
 
-curl -fsS Lhttps://repo.saltstack.com/apt/ubuntu/18.04/amd64/2019.2/SALTSTACK-GPG-KEY.pub | sudo apt-key add -
+curl -fsSL https://repo.saltstack.com/apt/ubuntu/18.04/amd64/2019.2/SALTSTACK-GPG-KEY.pub | sudo apt-key add -
 
 apt-get clean -yqq
 apt-get update -yqq

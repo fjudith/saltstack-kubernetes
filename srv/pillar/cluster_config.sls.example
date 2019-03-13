@@ -144,7 +144,7 @@ kubernetes:
       rook_ceph:
         enabled: True
         image: rook/ceph:v0.9.3
-        ceph_image: ceph/ceph:v13.2.2-20181023
+        ceph_image: ceph/ceph:v13.2.4-20190109
       rook_minio:
         enabled: True
         image: rook/minio:v0.9.3

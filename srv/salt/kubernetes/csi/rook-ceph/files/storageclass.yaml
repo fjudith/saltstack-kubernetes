@@ -1,39 +1,23 @@
 apiVersion: ceph.rook.io/v1
 kind: CephBlockPool
 metadata:
-  name: replicated-metadata-pool
+  name: replicapool
   namespace: rook-ceph
 spec:
   failureDomain: host
   replicated:
     size: 3
 ---
-apiVersion: ceph.rook.io/v1
-kind: CephBlockPool
-metadata:
-  name: ec-data-pool
-  namespace: rook-ceph
-spec:
-  failureDomain: host
-  # Make sure you have enough nodes and OSDs running bluestore to support the replica size or erasure code chunks.
-  # For the below settings, you need at least 3 OSDs on different nodes (because the `failureDomain` is `host` by default).
-  erasureCoded:
-    dataChunks: 2
-    codingChunks: 1
----
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: rook-ceph-block
-  annotations:
-    storageclass.kubernetes.io/is-default-class: "true"
+   name: rook-ceph-block
 provisioner: ceph.rook.io/block
 parameters:
-  blockPool: replicated-metadata-pool
-  dataBlockPool: ec-data-pool
-  # Specify the namespace of the rook cluster from which to create volumes.
-  # If not specified, it will use `rook` as the default namespace of the cluster.
-  # This is also the namespace where the cluster will be
+  blockPool: replicapool
+  # The value of "clusterNamespace" MUST be the same as the one in which your rook cluster exist
   clusterNamespace: rook-ceph
   # Specify the filesystem type of the volume. If not specified, it will use `ext4`.
   fstype: xfs
+# Optional, default reclaimPolicy is "Delete". Other options are: "Retain", "Recycle" as documented in https://kubernetes.io/docs/concepts/storage/storage-classes/
+reclaimPolicy: Retain

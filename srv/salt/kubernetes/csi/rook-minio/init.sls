@@ -22,7 +22,7 @@
     file.managed:
     - require:
       - file: /srv/kubernetes/manifests/rook-minio
-    - source: salt://kubernetes/csi/rook-minio/files/object-store.yaml
+    - source: salt://kubernetes/csi/rook-minio/templates/object-store.yaml.jinja
     - user: root
     - group: root
     - mode: 644

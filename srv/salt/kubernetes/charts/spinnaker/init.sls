@@ -16,6 +16,7 @@ spinnaker:
         - file:  /srv/kubernetes/manifests/spinnaker-ingress.yaml
     - runas: root
     - unless: helm list | grep spinnaker
+    - only_if: kubectl get storageclass | grep \(default\)
     - env:
       - HELM_HOME: /srv/helm/home
     - name: |

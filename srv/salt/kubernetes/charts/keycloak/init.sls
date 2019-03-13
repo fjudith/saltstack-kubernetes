@@ -35,6 +35,7 @@ keycloak:
       - file: /srv/kubernetes/manifests/keycloak/keycloak-ingress.yaml
     - runas: root
     - unless: helm list | grep keycloak
+    - only_if: kubectl get storageclass | grep \(default\)
     - env:
       - HELM_HOME: /srv/helm/home
     - name: |

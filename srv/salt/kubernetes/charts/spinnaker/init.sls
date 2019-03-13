@@ -26,8 +26,8 @@ spinnaker:
             --set s3.enabled=true \
             --set s3.bucket=spinnaker \
             --set s3.endpoint=https://minio.{{ public_domain }} \
-            --set s3.accessKey={{ salt.hashutil.base64_decodestring('VzM0VjNMNEJNSU5JTzRDQzNTU0szWQ==') }} \
-            --set s3.secretKey={{ salt.hashutil.base64_decodestring('VzM0VjNMNEJNSU5JT1MzQ1IzVEszWQ==') }} \
+            --set s3.accessKey={{ master.storage.rook_minio.username }} \
+            --set s3.secretKey={{ master.storage.rook_minio.password }} \
             --set redis.master.persistence.enabled=true \
             {%- endif %}
             --set redis.cluster.enabled=true \

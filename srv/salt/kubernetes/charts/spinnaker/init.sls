@@ -31,5 +31,5 @@ spinnaker:
             --set redis.master.persistence.enabled=true \
             {%- endif %}
             --set redis.cluster.enabled=true \
-            "stable/spinnaker"
+            "stable/spinnaker" --timeout 600
         kubectl apply -f /srv/kubernetes/manifests/spinnaker-ingress.yaml

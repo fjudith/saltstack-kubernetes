@@ -89,7 +89,7 @@ kubernetes:
         version: 1.0.6
       cert_manager:
         enabled: True
-        version: 0.6.0
+        version: 0.7.0
         acme_email: user@example.com
         dns:
           provider: cloudflare

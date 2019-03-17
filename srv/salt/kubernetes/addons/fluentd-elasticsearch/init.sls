@@ -22,7 +22,7 @@
     file.managed:
     - watch:
       - file: /srv/kubernetes/manifests/fluentd-elasticsearch
-    - source: salt://kubernetes/addons/fluentd-elasticsearch/templates/fluentd-es-configmap.yaml.jinja
+    - source: salt://kubernetes/addons/fluentd-elasticsearch/files/fluentd-es-configmap.yaml
     - user: root
     - template: jinja
     - group: root

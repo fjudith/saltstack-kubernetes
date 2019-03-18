@@ -123,7 +123,7 @@ resource "hcloud_server" "proxy01" {
   provisioner "remote-exec" {
     inline = [
       "apt-get update -yqq",
-      "apt-get install -yqq apt-transport-https conntrack ufw tinyproxy ${join(" ", var.apt_packages)}",
+      "apt-get install --no-install-recommends -yqq apt-transport-https conntrack ca-certificates tinyproxy ${join(" ", var.apt_packages)}",
       "echo 'MaxSessions 100' | tee -a  /etc/ssh/sshd_config",
       "systemctl reload sshd",
       "systemctl enable tinyproxy",
@@ -132,7 +132,8 @@ resource "hcloud_server" "proxy01" {
       "echo 'Allow 172.16.0.0/12' | tee -a  /etc/tinyproxy.conf",
       "echo 'Allow 10.0.0.0/8' | tee -a  /etc/tinyproxy.conf",
       "systemctl daemon-reload",
-      "systemctl start tinyproxy",
+      "systemctl start tinyproxy.service",
+      "systemctl is-active tinyproxy.service",
       "echo 'http_proxy=http://localhost:8888' | tee -a  /etc/environment",
       "echo 'https_proxy=http://localhost:8888' | tee -a  /etc/environment",
     ]
@@ -248,7 +249,7 @@ resource "hcloud_server" "proxy02" {
   provisioner "remote-exec" {
     inline = [
       "apt-get update -yqq",
-      "apt-get install -yqq apt-transport-https conntrack ufw ${join(" ", var.apt_packages)}",
+      "apt-get install --no-install-recommends -yqq apt-transport-https conntrack ca-certificates ${join(" ", var.apt_packages)}",
       "echo 'MaxSessions 100' | tee -a  /etc/ssh/sshd_config",
       "systemctl reload sshd",
     ]
@@ -348,7 +349,7 @@ resource "hcloud_server" "etcd" {
   provisioner "remote-exec" {
     inline = [
       "apt-get update -yqq",
-      "apt-get install -yqq apt-transport-https conntrack ufw ${join(" ", var.apt_packages)}",
+      "apt-get install --no-install-recommends -yqq apt-transport-https conntrack ca-certificates ${join(" ", var.apt_packages)}",
     ]
   }
 
@@ -446,7 +447,7 @@ resource "hcloud_server" "master" {
   provisioner "remote-exec" {
     inline = [
       "apt-get update -yqq",
-      "apt-get install -yqq apt-transport-https conntrack ufw git ${join(" ", var.apt_packages)}",
+      "apt-get install --no-install-recommends -yqq apt-transport-https conntrack ca-certificates git ${join(" ", var.apt_packages)}",
     ]
   }
 
@@ -543,7 +544,7 @@ resource "hcloud_server" "node" {
   provisioner "remote-exec" {
     inline = [
       "apt-get update -yqq",
-      "apt-get install -yqq apt-transport-https conntrack ufw ${join(" ", var.apt_packages)}",
+      "apt-get install --no-install-recommends -yqq apt-transport-https conntrack ca-certificates ${join(" ", var.apt_packages)}",
     ]
   }
 

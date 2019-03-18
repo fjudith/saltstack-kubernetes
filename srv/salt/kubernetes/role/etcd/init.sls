@@ -72,5 +72,5 @@ etcd-latest-archive:
 etcd-member.service:
   service.running:
     - watch:
-      - /etc/systemd/system/etcd-member.service
+      - file: /etc/systemd/system/etcd-member.service
     - enable: True

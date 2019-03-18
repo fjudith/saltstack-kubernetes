@@ -32,7 +32,7 @@ kubelet-install:
     - unless: cmp -s /usr/local/bin/kubelet /tmp/kubelet-{{ common.version }}
 
 /etc/systemd/system/kubelet.service:
-  file.managed:
+    file.managed:
     - source: salt://kubernetes/role/node/kubelet/templates/kubelet.service.jinja
     - user: root
     - template: jinja
@@ -40,7 +40,7 @@ kubelet-install:
     - mode: 644
 
 /etc/kubernetes/kubelet.kubeconfig:
-  file.managed:
+    file.managed:
     - source: salt://kubernetes/role/node/kubelet/templates/kubelet.kubeconfig.jinja
     - user: root
     - template: jinja
@@ -48,7 +48,7 @@ kubelet-install:
     - mode: 644
 
 /etc/kubernetes/bootstrap.kubeconfig:
-  file.managed:
+    file.managed:
     - source: salt://kubernetes/role/node/kubelet/templates/bootstrap.kubeconfig.jinja
     - user: root
     - template: jinja
@@ -71,15 +71,14 @@ kubelet-install:
     - template: jinja
     - group: root
     - mode: 644
-
+  
 kubelet.service:
   service.running:
-    - require:
-      - file: /etc/kubernetes/manifests
     - watch:
+      - file: /etc/kubernetes/manifests
       - file: /etc/systemd/system/kubelet.service
       - file: /etc/kubernetes/kubelet.kubeconfig
       - file: /var/lib/kubelet/kubelet-config.yaml
       - file: /usr/local/bin/kubelet
     - enable: True
-    - init_delay: 5
+    - retry: True

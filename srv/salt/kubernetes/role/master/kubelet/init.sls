@@ -74,11 +74,11 @@ kubelet-install:
   
 kubelet.service:
   service.running:
-    - require:
-      - file: /etc/kubernetes/manifests
     - watch:
+      - file: /etc/kubernetes/manifests
       - file: /etc/systemd/system/kubelet.service
       - file: /etc/kubernetes/kubelet.kubeconfig
       - file: /var/lib/kubelet/kubelet-config.yaml
       - file: /usr/local/bin/kubelet
     - enable: True
+    - retry: True

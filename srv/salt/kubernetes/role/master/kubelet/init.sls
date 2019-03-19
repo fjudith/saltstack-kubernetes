@@ -81,4 +81,6 @@ kubelet.service:
       - file: /var/lib/kubelet/kubelet-config.yaml
       - file: /usr/local/bin/kubelet
     - enable: True
-    - retry: True
+    - retry:
+        attempt: 3
+        interval: 10

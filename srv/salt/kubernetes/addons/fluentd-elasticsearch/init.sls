@@ -24,7 +24,6 @@
       - file: /srv/kubernetes/manifests/fluentd-elasticsearch
     - source: salt://kubernetes/addons/fluentd-elasticsearch/files/fluentd-es-configmap.yaml
     - user: root
-    - template: jinja
     - group: root
     - mode: 644
 

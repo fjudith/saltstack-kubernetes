@@ -81,7 +81,7 @@ kubernetes:
         acme_email: user@example.com
       npd:
         enabled: True
-        image: k8s.gcr.io/node-problem-detector:v0.5.0
+        image: k8s.gcr.io/node-problem-detector:v0.6.2
       ingress_nginx:
         enabled: False
       ingress_istio:

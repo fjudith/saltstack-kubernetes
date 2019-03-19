@@ -14,3 +14,6 @@ include:
 {%- if charts.get('vistio', {'enabled': False}).enabled %}
   - kubernetes.charts.vistio
 {%- endif -%}
+{%- if charts.get('concourse', {'enabled': False}).enabled %}
+  - kubernetes.charts.concourse
+{%- endif -%}

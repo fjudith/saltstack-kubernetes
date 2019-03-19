@@ -24,7 +24,7 @@ base:
     - kubernetes.cni.{{ common.cni.provider }}
     {%- if common.addons.dns.get('coredns', {'enabled': False}).enabled %}
     - kubernetes.addons.coredns
-    {%- endif -%}
+    {%- endif %}
     - kubernetes.ingress
     - kubernetes.csi
     - kubernetes.addons

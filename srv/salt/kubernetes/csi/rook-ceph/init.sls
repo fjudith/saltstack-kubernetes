@@ -178,7 +178,7 @@ rook-ceph-operator-wait:
     - require:
       - cmd: rook-ceph-operator-install
     - runas: root
-    - name: until kubectl -n rook-ceph-system get pods --selector=app=rook-ceph-operator --field-selector=status.phase=Running -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.status.phase}'; do printf 'rook-ceph-operator is not Running' && sleep 5; done
+    - name: until kubectl -n rook-ceph-system get pods --selector=app=rook-ceph-operator --field-selector=status.phase=Running -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.status.phase}{"\n"}{end}'; do printf 'rook-ceph-operator is not Running' && sleep 5; done
     - use_vt: True
     - timeout: 180
 
@@ -211,7 +211,7 @@ rook-ceph-cluster-wait:
     - require:
       - cmd: rook-ceph-cluster-install
     - runas: root
-    - name: until kubectl -n rook-ceph get pods --selector=app=rook-ceph-mgr --field-selector=status.phase=Running -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.status.phase}'; do printf 'rook-ceph-mgr is not Running' && sleep 5; done
+    - name: until kubectl -n rook-ceph get pods --selector=app=rook-ceph-mgr --field-selector=status.phase=Running -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.status.phase}{"\n"}{end}'; do printf 'rook-ceph-mgr is not Running' && sleep 5; done
     - use_vt: True
     - timeout: 180
 
@@ -220,7 +220,7 @@ rook-ceph-mon-wait:
     - require:
       - cmd: rook-ceph-cluster-install
     - runas: root
-    - name: until kubectl -n rook-ceph get pods --selector=app=rook-ceph-mon --field-selector=status.phase=Running -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.status.phase}'; do printf 'rook-ceph-mon are not Running' && sleep 5; done
+    - name: until kubectl -n rook-ceph get pods --selector=app=rook-ceph-mon --field-selector=status.phase=Running -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.status.phase}{"\n"}{end}'; do printf 'rook-ceph-mon are not Running' && sleep 5; done
     - use_vt: True
     - timeout: 180
 
@@ -229,7 +229,7 @@ rook-ceph-osd-wait:
     - require:
       - cmd: rook-ceph-cluster-install
     - runas: root
-    - name: until kubectl -n rook-ceph get pods --selector=app=rook-ceph-osd --field-selector=status.phase=Running -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.status.phase}'; do printf 'rook-ceph-osd are not Running' && sleep 5; done
+    - name: until kubectl -n rook-ceph get pods --selector=app=rook-ceph-osd --field-selector=status.phase=Running -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.status.phase}{"\n"}{end}'; do printf 'rook-ceph-osd are not Running' && sleep 5; done
     - use_vt: True
     - timeout: 180
 
@@ -238,7 +238,7 @@ rook-ceph-rgw-wait:
     - require:
       - cmd: rook-ceph-cluster-install
     - runas: root
-    - name: until kubectl -n rook-ceph get pods --selector=app=rook-ceph-rgw --field-selector=status.phase=Running -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.status.phase}'; do printf 'rook-ceph-rgw are not Running' && sleep 5; done
+    - name: until kubectl -n rook-ceph get pods --selector=app=rook-ceph-rgw --field-selector=status.phase=Running -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.status.phase}{"\n"}{end}'; do printf 'rook-ceph-rgw are not Running' && sleep 5; done
     - use_vt: True
     - timeout: 180
 

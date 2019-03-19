@@ -75,7 +75,8 @@ kubelet-install:
 kubelet-service-reload-daemon:
   module.run:
     - systemd.systemctl_reload:
-    - watch: /etc/systemd/system/kubelet.service
+    - watch: 
+      - file: /etc/systemd/system/kubelet.service
 
 kubelet.service:
   service.running:

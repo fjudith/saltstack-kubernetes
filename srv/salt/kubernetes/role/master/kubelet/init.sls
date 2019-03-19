@@ -71,9 +71,17 @@ kubelet-install:
     - template: jinja
     - group: root
     - mode: 644
-  
+
+kubelet-wait:
+  cmd.run:
+    - watch:
+      - file: /etc/systemd/system/kubelet.service
+    - name: sleep 5
+
 kubelet.service:
   service.running:
+    - require:
+      - cmd: kubelet-wait
     - watch:
       - file: /etc/kubernetes/manifests
       - file: /etc/systemd/system/kubelet.service
@@ -81,6 +89,3 @@ kubelet.service:
       - file: /var/lib/kubelet/kubelet-config.yaml
       - file: /usr/local/bin/kubelet
     - enable: True
-    - retry:
-        attempt: 3
-        interval: 10

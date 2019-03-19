@@ -49,4 +49,4 @@ keycloak-ingress:
       - watch:
         - file: /srv/kubernetes/manifests/keycloak/keycloak-ingress.yaml
       - runas: root
-      - name: kubectl apply -f /srv/kubernetes/manifests/keycloak-ingress.yaml
+      - name: kubectl apply -f /srv/kubernetes/manifests/keycloak/keycloak-ingress.yaml

@@ -165,7 +165,7 @@
     - mode: 644
     - template: jinja
 
-rook-operator-install:
+rook-ceph-operator-install:
   cmd.run:
     - watch:
       - file: /srv/kubernetes/manifests/rook-ceph/operator.yaml
@@ -173,20 +173,20 @@ rook-operator-install:
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/rook-ceph/operator.yaml
 
-rook-operator-wait:
+rook-ceph-operator-wait:
   cmd.run:
     - require:
-      - cmd: rook-operator-install
+      - cmd: rook-ceph-operator-install
     - runas: root
-    - name: until kubectl -n rook-ceph-system get pods --field-selector=status.phase=Running | grep rook-ceph-operator; do printf 'rook-ceph-operator is not Running' && sleep 5; done
+    - name: until kubectl -n rook-ceph-system get pods --selector=app=rook-ceph-operator --field-selector=status.phase=Running; do printf 'rook-ceph-operator is not Running' && sleep 5; done
     - use_vt: True
     - timeout: 180
 
-rook-cluster-install:
+rook-ceph-cluster-install:
   cmd.run:
     - require:
-      - cmd: rook-operator-wait
-      - cmd: rook-operator-install
+      - cmd: rook-ceph-operator-wait
+      - cmd: rook-ceph-operator-install
     - watch:
       - file: /srv/kubernetes/manifests/rook-ceph/rbac.yaml
       - file: /srv/kubernetes/manifests/rook-ceph/cluster.yaml
@@ -206,20 +206,50 @@ rook-cluster-install:
         kubectl apply -f /srv/kubernetes/manifests/rook-ceph/dashboard-external.yaml
         kubectl apply -f /srv/kubernetes/manifests/rook-ceph/rook-ceph-ingress.yaml
 
-rook-cluster-wait:
+rook-ceph-cluster-wait:
   cmd.run:
     - require:
-      - cmd: rook-cluster-install
+      - cmd: rook-ceph-cluster-install
     - runas: root
-    - name: until kubectl -n rook-ceph get pods --field-selector=status.phase=Running | grep rook-ceph-mgr; do printf 'rook-ceph-mgr is not Running' && sleep 5; done
+    - name: until kubectl -n rook-ceph get pods --selector=app=rook-ceph-mgr --field-selector=status.phase=Running ; do printf 'rook-ceph-mgr is not Running' && sleep 5; done
     - use_vt: True
     - timeout: 180
 
-rook-monitoring-install:
+rook-ceph-mon-wait:
   cmd.run:
     - require:
-      - cmd: rook-cluster-wait
-      - cmd: rook-cluster-install
+      - cmd: rook-ceph-cluster-install
+    - runas: root
+    - name: until kubectl -n rook-ceph get pods --selector=app=rook-ceph-mon --field-selector=status.phase=Running ; do printf 'rook-ceph-mon are not Running' && sleep 5; done
+    - use_vt: True
+    - timeout: 180
+
+rook-ceph-osd-wait:
+  cmd.run:
+    - require:
+      - cmd: rook-ceph-cluster-install
+    - runas: root
+    - name: until kubectl -n rook-ceph get pods --selector=app=rook-ceph-osd --field-selector=status.phase=Running ; do printf 'rook-ceph-osd are not Running' && sleep 5; done
+    - use_vt: True
+    - timeout: 180
+
+rook-ceph-rgw-wait:
+  cmd.run:
+    - require:
+      - cmd: rook-ceph-cluster-install
+    - runas: root
+    - name: until kubectl -n rook-ceph get pods --selector=app=rook-ceph-rgw --field-selector=status.phase=Running ; do printf 'rook-ceph-rgw are not Running' && sleep 5; done
+    - use_vt: True
+    - timeout: 180
+
+rook-ceph-monitoring-install:
+  cmd.run:
+    - require:
+      - cmd: rook-ceph-cluster-wait
+      - cmd: rook-ceph-mon-wait
+      - cmd: rook-ceph-osd-wait
+      - cmd: rook-ceph-cluster-install
+      - cmd: rook-ceph-rgw-wait
     - watch:
       - file: /srv/kubernetes/manifests/rook-ceph/toolbox.yaml
       - file: /srv/kubernetes/manifests/rook-ceph/prometheus.yaml

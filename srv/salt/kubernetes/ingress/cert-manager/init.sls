@@ -13,7 +13,7 @@ addon-cert-manager:
       - git: addon-cert-manager
     - watch:
       - git: addon-cert-manager
-    - source: salt://kubernetes/addons/cert-manager/templates/{{ common.addons.cert_manager.dns.provider }}-clusterissuer.yaml.jinja
+    - source: salt://kubernetes/ingress/cert-manager/templates/{{ common.addons.cert_manager.dns.provider }}-clusterissuer.yaml.jinja
     - user: root
     - template: jinja
     - group: root
@@ -23,7 +23,7 @@ addon-cert-manager:
   file.managed:
     - watch:
       - git: addon-cert-manager
-    - source: salt://kubernetes/addons/cert-manager/templates/certificate.yaml.jinja
+    - source: salt://kubernetes/ingress/cert-manager/templates/certificate.yaml.jinja
     - user: root
     - template: jinja
     - group: root

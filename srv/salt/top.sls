@@ -22,6 +22,10 @@ base:
     - kubernetes.role.master.kube-controller-manager
     - kubernetes.role.master.kube-scheduler
     - kubernetes.cni.{{ common.cni.provider }}
+    {%- if common.addons.dns.get('coredns', {'enabled': False}).enabled %}
+    - kubernetes.addons.coredns
+    {%- endif -%}
+    - kubernetes.ingress
     - kubernetes.csi
     - kubernetes.addons
     - kubernetes.charts

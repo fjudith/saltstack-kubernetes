@@ -31,7 +31,7 @@
     require:
     - file: /srv/kubernetes/manifests/istio
     file.managed:
-    - source: salt://kubernetes/addons/istio/files/crds.yaml
+    - source: salt://kubernetes/ingress/istio/files/crds.yaml
     - user: root
     - group: root
     - mode: 644
@@ -40,7 +40,7 @@
     require:
     - file: /srv/kubernetes/manifests/istio
     file.managed:
-    - source: salt://kubernetes/addons/istio/files/istio.yaml
+    - source: salt://kubernetes/ingress/istio/files/istio.yaml
     - user: root
     - group: root
     - mode: 644
@@ -49,7 +49,7 @@
     require:
     - file: /srv/kubernetes/manifests/istio
     file.managed:
-    - source: salt://kubernetes/addons/istio/templates/gateway.yaml.jinja
+    - source: salt://kubernetes/ingress/istio/templates/gateway.yaml.jinja
     - user: root
     - template: jinja
     - group: root
@@ -59,7 +59,7 @@
     require:
     - file: /srv/kubernetes/manifests/istio
     file.managed:
-    - source: salt://kubernetes/addons/istio/templates/ingress.yaml.jinja
+    - source: salt://kubernetes/ingress/istio/templates/ingress.yaml.jinja
     - user: root
     - template: jinja
     - group: root

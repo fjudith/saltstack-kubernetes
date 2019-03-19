@@ -11,7 +11,7 @@
     require:
     - file: /srv/kubernetes/manifests/traefik
     file.managed:
-    - source: salt://kubernetes/addons/traefik/templates/traefik.yaml.jinja
+    - source: salt://kubernetes/ingress/traefik/templates/traefik.yaml.jinja
     - user: root
     - template: jinja
     - group: root
@@ -21,7 +21,7 @@
     require:
     - file: /srv/kubernetes/manifests/traefik
     file.managed:
-    - source: salt://kubernetes/addons/traefik/files/service-monitor.yaml
+    - source: salt://kubernetes/ingress/traefik/files/service-monitor.yaml
     - user: root
     - template: jinja
     - group: root
@@ -31,7 +31,7 @@
     require:
     - file: /srv/kubernetes/manifests/traefik
     file.managed:
-    - source: salt://kubernetes/addons/traefik/files/grafana-dashboard-configmap.yaml
+    - source: salt://kubernetes/ingress/traefik/files/grafana-dashboard-configmap.yaml
     - user: root
     - group: root
     - mode: 644

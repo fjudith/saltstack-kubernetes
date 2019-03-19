@@ -2,7 +2,7 @@
 
 /srv/kubernetes/manifests/ingress-nginx:
     file.recurse:
-    - source: salt://kubernetes/addons/ingress-nginx/files
+    - source: salt://kubernetes/ingress/ingress-nginx/files
     - include_empty: True
     - user: root
     - group: root

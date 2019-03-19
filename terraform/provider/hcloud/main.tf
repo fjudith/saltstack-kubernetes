@@ -1,8 +1,3 @@
-resource "hcloud_floating_ip" "proxy" {
-  type = "ipv4"
-  server_id = "${hcloud_server.proxy01.id}"
-}
-
 ##################################################
 # proxy01
 ##################################################

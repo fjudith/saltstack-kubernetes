@@ -70,7 +70,7 @@ kubernetes:
         source_hash: 15eca6ad225a8279de80c7ced42305e24bc5ac60bb7d96f2d2fa4af86e02c794
       kube_prometheus:
         enabled: True
-        version: 0.28.0
+        version: 0.29.0
       heapster-influxdb:
         enabled: True
       dashboard:

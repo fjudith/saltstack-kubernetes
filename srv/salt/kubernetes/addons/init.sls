@@ -23,9 +23,6 @@ include:
 {%- if common.addons.get('fluentd-elasticsearch', {'enabled': False}).enabled %}
   - kubernetes.addons.fluentd-elasticsearch
 {%- endif -%}
-{%- if common.addons.get('kube_prometheus', {'enabled': False}).enabled %}
-  - kubernetes.addons.prometheus-operator
-{%- endif -%}
 {%- if common.addons.get('weave_scope', {'enabled': False}).enabled %}
   - kubernetes.addons.weave-scope
 {%- endif -%}

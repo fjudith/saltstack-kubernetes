@@ -26,6 +26,9 @@ base:
     - kubernetes.addons.coredns
     {%- endif %}
     - kubernetes.ingress
+    {%- if common.addons.get('kube_prometheus', {'enabled': False}).enabled %}
+    - kubernetes.addons.kube-prometheus
+    {%- endif %}
     - kubernetes.csi
     - kubernetes.addons
     - kubernetes.charts

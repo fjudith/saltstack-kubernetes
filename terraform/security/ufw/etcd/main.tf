@@ -27,6 +27,18 @@ resource "null_resource" "firewall" {
 ${data.template_file.ufw.rendered}
 EOF
   }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo ufw --force enable &"
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo ufw status verbose"
+    ]
+  }
 }
 
 data "template_file" "ufw" {

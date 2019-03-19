@@ -64,9 +64,3 @@ sudo ufw allow cilium-geneve
 
 # Deny Incoming connection by default
 sudo ufw default deny incoming
-
-# Enable UFW
-sudo ufw --force enable
-
-# Display UFW status
-sudo ufw status verbose

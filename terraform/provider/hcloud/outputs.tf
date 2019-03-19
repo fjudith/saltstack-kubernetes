@@ -65,7 +65,7 @@ output "salt_syndic" {
 }
 
 output "bastion_host" {
-  value = "${hcloud_floating_ip.proxy.0.ipv4_address}"
+  value = "${hcloud_server.proxy01.0.ipv4_address}"
 }
 
 output "proxy_private_ips" {

@@ -12,8 +12,6 @@
 
 spinnaker:
   cmd.run:
-    - watch:
-        - file:  /srv/kubernetes/manifests/spinnaker-ingress.yaml
     - runas: root
     - unless: helm list | grep spinnaker
     - only_if: kubectl get storageclass | grep \(default\)
@@ -32,4 +30,12 @@ spinnaker:
             {%- endif %}
             --set redis.cluster.enabled=true \
             "stable/spinnaker" --timeout 600
-        kubectl apply -f /srv/kubernetes/manifests/spinnaker-ingress.yaml
+
+spinnaker-ingress:
+    cmd.run:
+      - require:
+        - cmd: spinnaker
+      - watch:
+        - file:  /srv/kubernetes/manifests/spinnaker-ingress.yaml
+      - runas: root
+      - name: kubectl apply -f /srv/kubernetes/manifests/spinnaker-ingress.yaml

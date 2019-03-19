@@ -57,7 +57,7 @@ concourse:
       - HELM_HOME: /srv/helm/home
     - name: |
         helm install --name concourse --namespace concourse \
-            --set concourse.web.externalUrl=https://ci.{{ public_domain }} \
+            --set concourse.web.externalUrl=https://{{ charts.concourse.ingress_host }}.{{ public_domain }} \
             --set rbac.create=true \
             --set postgresql.enabled=true \
             --set postgresql.password={{ charts.concourse.db_password }} \
@@ -66,5 +66,11 @@ concourse:
             --set postgresql.persistence.enabled=true \
              {%- endif %}
             "stable/concourse"
-        - name: kubectl apply -f /srv/kubernetes/manifests/concourse-ingress.yaml
+            
+concourse-ingress:
+    cmd.run:
+      - require:
+        - cmd: concourse
+      - runas: root
+      - name: kubectl apply -f /srv/kubernetes/manifests/concourse-ingress.yaml
     

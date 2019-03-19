@@ -3,7 +3,7 @@
 {%- from "kubernetes/map.jinja" import master with context -%}
 {%- from "kubernetes/map.jinja" import charts with context -%}
 
-addon-harbor:
+harbor-addon:
   git.latest:
     - name: https://github.com/goharbor/harbor-helm
     - target: /srv/kubernetes/manifests/harbor
@@ -18,11 +18,10 @@ addon-harbor:
     - group: root
     - mode: 644
 
-kubernetes-harbor-install:
+harbor:
   cmd.run:
     - watch:
-        - git:  addon-harbor
-        - file: /srv/kubernetes/manifests/harbor-ingress.yaml
+        - git:  harbor-addon
     - runas: root
     - unless: helm list | grep registry
     - cwd: /srv/kubernetes/manifests/harbor
@@ -45,4 +44,12 @@ kubernetes-harbor-install:
           --set secretkey={{ charts.harbor.secretkey }} \
           --set externalURL=https://registry.{{ public_domain }} \
           "./"
-        kubectl apply -f /srv/kubernetes/manifests/harbor-ingress.yaml
+
+harbor-ingress:
+    cmd.run:
+      - require:
+        - cmd: harbor
+      - watch:
+        - file: /srv/kubernetes/manifests/harbor-ingress.yaml
+      - runas: root
+      - name: kubectl apply -f /srv/kubernetes/manifests/harbor-ingress.yaml

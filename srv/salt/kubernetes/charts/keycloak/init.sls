@@ -32,7 +32,6 @@ keycloak:
   cmd.run:
     - watch:
       - file: /srv/kubernetes/manifests/keycloak/values.yaml
-      - file: /srv/kubernetes/manifests/keycloak/keycloak-ingress.yaml
     - runas: root
     - unless: helm list | grep keycloak
     - only_if: kubectl get storageclass | grep \(default\)
@@ -42,5 +41,12 @@ keycloak:
         helm install --name keycloak --namespace keycloak \
             -f /srv/kubernetes/manifests/keycloak/values.yaml \
             "stable/keycloak"
-        kubectl apply -f /srv/kubernetes/manifests/keycloak/keycloak-ingress.yaml
 
+keycloak-ingress:
+    cmd.run:
+      - require:
+        - cmd: keycloak
+      - watch:
+        - file: /srv/kubernetes/manifests/keycloak/keycloak-ingress.yaml
+      - runas: root
+      - name: kubectl apply -f /srv/kubernetes/manifests/keycloak-ingress.yaml

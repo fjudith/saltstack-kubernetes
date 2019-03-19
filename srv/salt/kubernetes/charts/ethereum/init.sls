@@ -18,10 +18,8 @@
     - group: root
     - mode: 644
 
-keycloak:
+ethereum:
   cmd.run:
-    - watch:
-      - file: /srv/kubernetes/manifests/ethereum/ethereum-ingress.yaml
     - runas: root
     - unless: helm list | grep ethereum
     - env:
@@ -36,4 +34,12 @@ keycloak:
             --set ethstats.image.tag=latest \
             --set geth.image.tag=v{{ charts.ethereum.version }} \
             "stable/ethereum"
-        kubectl apply -f /srv/kubernetes/manifests/ethereum/ethereum-ingress.yaml
+  
+ethereum-ingress:
+    cmd.run:
+      - require:
+        - cmd: ethereum
+      - watch:
+        - file: /srv/kubernetes/manifests/ethereum-ingress.yaml
+      - runas: root
+      - name: kubectl apply -f /srv/kubernetes/manifests/ethereum-ingress.yaml

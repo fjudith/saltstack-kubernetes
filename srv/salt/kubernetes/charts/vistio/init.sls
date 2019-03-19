@@ -3,7 +3,7 @@
 {%- from "kubernetes/map.jinja" import master with context -%}
 {%- from "kubernetes/map.jinja" import charts with context -%}
 
-addon-vistio:
+vistio-addon:
   git.latest:
     - name: https://github.com/nmnellis/vistio
     - target: /srv/kubernetes/manifests/vistio
@@ -25,11 +25,10 @@ addon-vistio:
     - group: root
     - mode: 644
 
-kubernetes-vistio-install:
+vistio:
   cmd.run:
     - watch:
-        - git:  addon-vistio
-        - file: /srv/kubernetes/manifests/vistio-ingress.yaml
+        - git:  vistio-addon
         - file: /srv/kubernetes/manifests/vistio-values.yaml
     - runas: root
     - unless: helm list | grep vistio
@@ -44,4 +43,12 @@ kubernetes-vistio-install:
           --set api.storage.class=rook-ceph-block \
           {%- endif %}
           "helm/vistio"
-        kubectl apply -f /srv/kubernetes/manifests/vistio-ingress.yaml
+
+vistio-ingress:
+    cmd.run:
+      - require:
+        - cmd: vistio
+      - watch:
+        - file: /srv/kubernetes/manifests/vistio-ingress.yaml
+      - runas: root
+      - name: kubectl apply -f /srv/kubernetes/manifests/vistio-ingress.yaml

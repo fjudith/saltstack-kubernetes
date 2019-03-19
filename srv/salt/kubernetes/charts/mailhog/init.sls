@@ -12,8 +12,6 @@
 
 mailhog:
   cmd.run:
-    - watch:
-        - file:  /srv/kubernetes/manifests/mailhog-ingress.yaml
     - runas: root
     - unless: helm list | grep mailhog
     - env:
@@ -22,4 +20,12 @@ mailhog:
         helm install --name mailhog --namespace mailhog \
             --set env.MH_HOSTNAME=mail.{{ public_domain }} \
             "stable/mailhog"
-        kubectl apply -f /srv/kubernetes/manifests/mailhog-ingress.yaml
+
+mailhog-ingress:
+    cmd.run:
+      - require:
+        - cmd: mailhog
+      - watch:
+        - file:  /srv/kubernetes/manifests/mailhog-ingress.yaml
+      - runas: root
+      - name: kubectl apply -f /srv/kubernetes/manifests/mailhog-ingress.yaml

@@ -107,44 +107,24 @@ variable "saltsyndic_host" {
   default     = "salt-master.domain.tld"
 }
 
-variable "web_proxy_host" {
-  description = "Ip address, Hostname or FQDN of Web Proxy"
-  default     = "web-proxy.domain.tld"
-}
-
-variable "IFACE" {
-  description = "Network "
-  default     = "web-proxy.domain.tld"
-}
-
 variable "etcd_bit" {
-  description = "Zerotier etcd starting IP"
+  description = "VPN starting IP for etcd"
   default     = 50
 }
 
 variable "master_bit" {
-  description = "Zerotier master starting IP"
+  description = "VPN starting IP for master"
   default     = 100
 }
 
 variable "node_bit" {
-  description = "Zerotier node starting IP"
+  description = "VPN starting IP for node"
   default     = 200
 }
 
 variable "proxy_bit" {
-  description = "Zerotier proxy starting IP"
+  description = "VPN starting IP for proxy"
   default     = 250
-}
-
-variable "zerotier_api_key" {
-  description = "Zerotier MeshVPN API key"
-  default     = "01234567890123456789012345678901"
-}
-
-variable "zerotier_cidr" {
-  description = "Zerotier MeshVPN subnet CIDR"
-  default     = "172.16.4.0/24"
 }
 
 variable "overlay_cidr" {

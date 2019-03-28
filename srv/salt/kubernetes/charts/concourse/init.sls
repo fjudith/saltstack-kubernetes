@@ -58,6 +58,7 @@ concourse:
     - name: |
         helm install --name concourse --namespace concourse \
             --set concourse.web.externalUrl=https://{{ charts.concourse.ingress_host }}.{{ public_domain }} \
+            --set concourse.worker.driver=detect \
             --set rbac.create=true \
             --set postgresql.enabled=true \
             --set postgresql.password={{ charts.concourse.db_password }} \

@@ -87,6 +87,8 @@ kubernetes:
       istio:
         enabled: True
         version: 1.1.1
+        tracing: jaeger
+        cni_version: 0.1.0
       cert_manager:
         enabled: True
         version: 0.7.0

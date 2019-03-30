@@ -9,6 +9,14 @@
     - group: root
     - archive_format: tar
 
+/srv/kubernetes/manifests/istio/istio-{{ common.addons.istio.version }}/install/kubernetes/helm/:
+  archive.extracted:
+    - source: /srv/kubernetes/manifests/istio/istio-{{ common.addons.istio.version }}/install/kubernetes/helm/charts/istio-cni-{{ common.addons.istio.cni_version }}.tgz
+    - skip_verify: true
+    - user: root
+    - group: root
+    - archive_format: tar
+
 /usr/local/bin/istioctl:
   file.copy:
     - source: /srv/kubernetes/manifests/istio/istio-{{ common.addons.istio.version }}/bin/istioctl
@@ -51,7 +59,7 @@ kubernetes-istio-install:
     - cwd: /srv/kubernetes/manifests/istio/istio-{{ common.addons.istio.version }}
     - whatch:
       - cmd: kubernetes-istio-namespace 
-      - archive: /srv/kubernetes/manifests/istio
+      - archive: /srv/kubernetes/manifests/istio/istio-{{ common.addons.istio.version }}/install/kubernetes/helm/
     - name: |
         helm template install/kubernetes/helm/istio-cni \
           --name=istio-cni \

@@ -67,6 +67,10 @@ kubernetes-istio-install:
           --name=istio-cni \
           --set tracing.enabled=true \
           --namespace=istio-system | kubectl apply -f -
+        helm template install/kubernetes/helm/istio \
+          --name istio \
+          --namespace istio-system \
+          --set istio_cni.enabled=true | kubectl apply -f -
 
 kubernetes-istio-gateway-install:
   cmd.run:

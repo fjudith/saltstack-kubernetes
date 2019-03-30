@@ -40,14 +40,23 @@
     - group: root
     - mode: 644
 
-kubernetes-istio-install:
+kubernetes-istio-namespace:
   cmd.run:
+    - unless: kubectl get namespace istio-system
+    - name: |
+        kubectl create namespace istio-system
+
+kubernetes-istio-install:
+  cmd.run: 
     - cwd: /srv/kubernetes/manifests/istio/istio-{{ common.addons.istio.version }}
     - whatch:
+      - cmd: kubernetes-istio-namespace 
       - archive: /srv/kubernetes/manifests/istio
     - name: |
-       for i in install/kubernetes/helm/istio-init/files/crd*yaml; do kubectl apply -f $i; done
-       kubectl apply -f install/kubernetes/istio-demo.yaml
+        helm template install/kubernetes/helm/istio-cni \
+          --name=istio-cni \
+          --set tracing.enabled=true \
+          --namespace=istio-system | kubectl apply -f -
 
 kubernetes-istio-gateway-install:
   cmd.run:

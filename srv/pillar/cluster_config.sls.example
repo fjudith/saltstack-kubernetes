@@ -171,6 +171,7 @@ kubernetes:
       ingress_host: ci
     keycloak:
       enabled: True
+      version: 5.0.0
       db_size: 8Gi
       admin_password: Ch4ng3M3
       db_password: Ch4ng3M34ls0

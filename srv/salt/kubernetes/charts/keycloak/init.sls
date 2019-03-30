@@ -1,6 +1,6 @@
 {%- set public_domain = pillar['public-domain'] -%}
 {%- from "kubernetes/map.jinja" import common with context -%}
-{%- from "kubernetes/map.jinja" import master with context -%}
+{%- from "kubernetes/map.jinja" import charts with context -%}
 
 /srv/kubernetes/manifests/keycloak:
   file.directory:
@@ -40,6 +40,7 @@ keycloak:
     - name: |
         helm install --name keycloak --namespace keycloak \
             -f /srv/kubernetes/manifests/keycloak/values.yaml \
+            --set image.tag={{ charts.keycloak.version }} \
             "stable/keycloak"
 
 keycloak-ingress:

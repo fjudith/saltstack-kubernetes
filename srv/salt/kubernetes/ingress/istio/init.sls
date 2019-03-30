@@ -70,7 +70,7 @@ kubernetes-istio-install:
         helm template install/kubernetes/helm/istio \
           --name istio \
           --namespace istio-system \
-          -f values-istio-demo.yaml \
+          -f install/kubernetes/helm/istio/values-istio-demo.yaml \
           --set istio_cni.enabled=true | kubectl apply -f -
 
 kubernetes-istio-gateway-install:

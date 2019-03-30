@@ -86,7 +86,7 @@ kubernetes:
         enabled: False
       istio:
         enabled: True
-        version: 1.0.6
+        version: 1.1.1
       cert_manager:
         enabled: True
         version: 0.7.0

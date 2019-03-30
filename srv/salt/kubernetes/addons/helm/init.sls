@@ -73,7 +73,8 @@ tiller:
 
 helm:
   cmd.run:
-    - name: /usr/local/bin/helm init --client-only --home /srv/helm/home
-    - unless: test -d /srv/helm/home
+    - name: | 
+        /usr/local/bin/helm init --client-only --home /srv/helm/home
+        /usr/local/bin/helm repo update
     - require:
       - file: /usr/local/bin/helm

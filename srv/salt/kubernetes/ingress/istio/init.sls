@@ -11,6 +11,8 @@
 
 /srv/kubernetes/manifests/istio/istio-{{ common.addons.istio.version }}/install/kubernetes/helm/:
   archive.extracted:
+    - watch:
+      - archive: /srv/kubernetes/manifests/istio
     - source: /srv/kubernetes/manifests/istio/istio-{{ common.addons.istio.version }}/install/kubernetes/helm/charts/istio-cni-{{ common.addons.istio.cni_version }}.tgz
     - skip_verify: true
     - user: root

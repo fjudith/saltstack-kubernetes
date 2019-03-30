@@ -84,7 +84,7 @@ kubernetes:
         image: k8s.gcr.io/node-problem-detector:v0.6.2
       ingress_nginx:
         enabled: False
-      ingress_istio:
+      istio:
         enabled: True
         version: 1.0.6
       cert_manager:

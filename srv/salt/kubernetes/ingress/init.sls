@@ -11,6 +11,6 @@ include:
 {%- if common.addons.get('ingress_traefik', {'enabled': False}).enabled %}
   - kubernetes.ingress.traefik
 {%- endif -%}
-{%- if common.addons.get('ingress_istio', {'enabled': False}).enabled %}
+{%- if common.addons.get('istio', {'enabled': False}).enabled %}
   - kubernetes.ingress.istio
 {%- endif -%}

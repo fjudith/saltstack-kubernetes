@@ -50,6 +50,15 @@
     - group: root
     - mode: 644
 
+/srv/kubernetes/manifests/istio/namespace.yaml:
+    require:
+    - archive: /srv/kubernetes/manifests/istio
+    file.managed:
+    - source: salt://kubernetes/ingress/istio/files/namespace.yaml
+    - user: root
+    - group: root
+    - mode: 644
+
 kubernetes-istio-namespace:
   cmd.run:
     - unless: kubectl get namespace istio-system
@@ -80,4 +89,15 @@ kubernetes-istio-gateway-install:
     - name: | 
         kubectl apply -f /srv/kubernetes/manifests/istio/gateway.yaml
         kubectl apply -f /srv/kubernetes/manifests/istio/ingress.yaml
+    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz'
+
+kubernetes-istio-bookinfo-install:
+  cmd.run:
+    - cwd: /srv/kubernetes/manifests/istio/istio-{{ common.addons.istio.version }}
+    - watch:
+      - cmd: kubernetes-istio-gateway-install
+      - file: /srv/kubernetes/manifests/istio/namespace.yaml
+    - name: | 
+        kubectl apply -f /srv/kubernetes/manifests/istio/namespace.yaml
+        kubectl apply -n bookinfo -f samples/bookinfo/platform/kube/bookinfo.yaml
     - onlyif: curl --silent 'http://127.0.0.1:8080/healthz'

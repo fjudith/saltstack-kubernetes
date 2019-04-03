@@ -1,0 +1,44 @@
+{%- set public_domain = pillar['public-domain'] -%}
+{%- from "kubernetes/map.jinja" import common with context -%}
+{%- from "kubernetes/map.jinja" import charts with context -%}
+
+{%- if common.addons.get('ingress_traefik', {'enabled': False}).enabled %}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: kubernetes-dashboard
+  namespace: kube-system
+spec:
+  rules:
+  - host: kubernetes-dashboard.{{ public_domain }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: kubernetes-dashboard
+          servicePort: 443
+---
+{% endif %}
+
+{%- if common.addons.get('istio', {'enabled': False}).enabled -%}
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: kubernetes-dashboard
+  namespace: default
+spec:
+  gateways:
+  - istio-gateway
+  hosts:
+  - kubernetes-dashboard.{{ public_domain }}
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: kubernetes-dashboard.kube-system.svc.cluster.local
+        port:
+          number: 443
+---
+{% endif %}

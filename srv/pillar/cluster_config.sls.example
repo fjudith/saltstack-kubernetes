@@ -202,6 +202,11 @@ kubernetes:
       private_key: "92c69eb5fdae8af5ed2cffbf9eb5e40d30aa646db354338f7b7841038aa61c9e"
       secret: "some_random_secret"
       ingress_host: blockchain
+    keycloak_gatekeeper:
+      enabled: true
+      version: "master"
+      realm: "default"
+      groups: "groups"
 tinyproxy:
   User: tinyproxy
   Group: tinyproxy

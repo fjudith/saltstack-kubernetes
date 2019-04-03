@@ -25,3 +25,11 @@ azure-cli:
 ceph-common:
   pkg.latest:
     - refresh: true
+
+httpie:
+  pkg.latest:
+    - refresh: true
+
+jq:
+  pkg.latest:
+    - refresh: true

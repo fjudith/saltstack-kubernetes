@@ -17,11 +17,11 @@ helm-charts:
     - force_reset: True
     - rev: {{ charts.keycloak_gatekeeper.version }}
 
-/srv/kubernetes/manifests/keycloak-gatekeeper/kcclient.sh:
+/srv/kubernetes/manifests/keycloak-gatekeeper/kcgk-injector.sh:
     file.managed:
     - require:
       - file: /srv/kubernetes/manifests/keycloak-gatekeeper
-    - source: salt://kubernetes/charts/keycloak-gatekeeper/scripts/kcclient.sh
+    - source: salt://kubernetes/charts/keycloak-gatekeeper/scripts/kcgk-injector.sh
     - user: root
     - group: root
     - mode: 555
@@ -64,7 +64,7 @@ keycloak-create-realm:
     - runas: root
     - use_vt: true
     - name: |
-        ./kcclient.sh create-realm keycloak $(kubectl get secret --namespace keycloak keycloak-http -o jsonpath="{.data.password}" | base64 --decode; echo) https://{{ charts.keycloak.ingress_host }}.{{ public_domain }} {{ charts.keycloak_gatekeeper.realm }}
+        ./kcgk-injector.sh create-realm keycloak $(kubectl get secret --namespace keycloak keycloak-http -o jsonpath="{.data.password}" | base64 --decode; echo) https://{{ charts.keycloak.ingress_host }}.{{ public_domain }} {{ charts.keycloak_gatekeeper.realm }}
 
 keycloak-create-groups:
   cmd.run:
@@ -75,7 +75,7 @@ keycloak-create-groups:
     - runas: root
     - use_vt: true
     - name: |
-        ./kcclient.sh create-groups keycloak $(kubectl get secret --namespace keycloak keycloak-http -o jsonpath="{.data.password}" | base64 --decode; echo) https://{{ charts.keycloak.ingress_host }}.{{ public_domain }} {{ charts.keycloak_gatekeeper.realm }}
+        ./kcgk-injector.sh create-groups keycloak $(kubectl get secret --namespace keycloak keycloak-http -o jsonpath="{.data.password}" | base64 --decode; echo) https://{{ charts.keycloak.ingress_host }}.{{ public_domain }} {{ charts.keycloak_gatekeeper.realm }}
 
 keycloak-create-client-scopes:
   cmd.run:
@@ -86,7 +86,7 @@ keycloak-create-client-scopes:
     - runas: root
     - use_vt: true
     - name: |
-        ./kcclient.sh create-client-scopes keycloak $(kubectl get secret --namespace keycloak keycloak-http -o jsonpath="{.data.password}" | base64 --decode; echo) https://{{ charts.keycloak.ingress_host }}.{{ public_domain }} {{ charts.keycloak_gatekeeper.realm }}
+        ./kcgk-injector.sh create-client-scopes keycloak $(kubectl get secret --namespace keycloak keycloak-http -o jsonpath="{.data.password}" | base64 --decode; echo) https://{{ charts.keycloak.ingress_host }}.{{ public_domain }} {{ charts.keycloak_gatekeeper.realm }}
 
 {% if common.addons.get('dashboard', {'enabled': False}).enabled %}
 /srv/kubernetes/manifests/keycloak-gatekeeper/files:
@@ -112,6 +112,14 @@ keycloak-create-client-scopes:
     - template: jinja
     - mode: 644
 
+/srv/kubernetes/manifests/keycloak-gatekeeper/groups-protocolmapper.json:
+  file.managed:
+    - source: salt://kubernetes/charts/keycloak-gatekeeper/files/groups-protocolmapper.json
+    - user: root
+    - group: root
+    - template: jinja
+    - mode: 644
+
 /srv/kubernetes/manifests/keycloak-gatekeeper/files/keycloak-admin-rbac.yaml:
   file.managed:
     - require:
@@ -129,10 +137,11 @@ keycloak-kubernetes-dashboard:
       - cmd: keycloak-create-groups
       - file: /srv/kubernetes/manifests/keycloak-gatekeeper/kubernetes-dashboard.json
       - file: /srv/kubernetes/manifests/keycloak-gatekeeper/kubernetes-dashboard-protocolmapper.json
+      - file: /srv/kubernetes/manifests/keycloak-gatekeeper/groups-protocolmapper.json
     - runas: root
     - use_vt: true
     - name: |
-        ./kcclient.sh create-client-kubernetes keycloak $(kubectl get secret --namespace keycloak keycloak-http -o jsonpath="{.data.password}" | base64 --decode; echo) https://{{ charts.keycloak.ingress_host }}.{{ public_domain }} {{ charts.keycloak_gatekeeper.realm }} https://kubernetes-dashboard.{{ public_domain }}
+        ./kcgk-injector.sh create-client-kubernetes keycloak $(kubectl get secret --namespace keycloak keycloak-http -o jsonpath="{.data.password}" | base64 --decode; echo) https://{{ charts.keycloak.ingress_host }}.{{ public_domain }} {{ charts.keycloak_gatekeeper.realm }} https://kubernetes-dashboard.{{ public_domain }}
 {% endif %}
 
 {% if common.addons.get('weave_scope', {'enabled': False}).enabled %}
@@ -162,5 +171,5 @@ keycloak-weave-scope:
     - runas: root
     - use_vt: true
     - name: |
-        ./kcclient.sh create-client-weave-scope keycloak $(kubectl get secret --namespace keycloak keycloak-http -o jsonpath="{.data.password}" | base64 --decode; echo) https://{{ charts.keycloak.ingress_host }}.{{ public_domain }} {{ charts.keycloak_gatekeeper.realm }} https://scope.{{ public_domain }}
+        ./kcgk-injector.sh create-client-weave-scope keycloak $(kubectl get secret --namespace keycloak keycloak-http -o jsonpath="{.data.password}" | base64 --decode; echo) https://{{ charts.keycloak.ingress_host }}.{{ public_domain }} {{ charts.keycloak_gatekeeper.realm }} https://scope.{{ public_domain }}
 {% endif %}

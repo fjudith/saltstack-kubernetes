@@ -2,7 +2,7 @@
 # https://www.ctl.io/developers/blog/post/curl-vs-httpie-http-apis
 # https://www.keycloak.org/docs-api/5.0/rest-api/index.html
 # https://httpie.org/doc
-set -e
+set -ex
 
 ACTION=${1}
 USERNAME=${2}
@@ -98,6 +98,23 @@ function create-client-kubernetes {
     echo "Kubernetes protocolmapper already exists"
   fi
 
+  CID=$(http GET \
+    "${URL}/auth/admin/realms/${REALM}/clients" \
+    "Authorization: Bearer ${TOKEN}" | jq -M -e -r '.[] | select(.clientId=="kubernetes") | .id'
+  )
+
+  if ! http GET \
+    "${URL}/auth/admin/realms/${REALM}/clients/${CID}/protocol-mappers/models" \
+    "Authorization: Bearer ${TOKEN}" | jq -M -e '.[] | select(.name=="groups")'
+  then
+    http --pretty=none POST \
+      "${URL}/auth/admin/realms/${REALM}/clients/${CID}/protocol-mappers/models" \
+      'Content-Type: application/json' \
+      "Authorization: Bearer ${TOKEN}" < groups-protocolmapper.json
+  else
+    echo "Groups protocolmapper already exists"
+  fi
+
   CLIENT_SECRET=$(http GET \
   "${URL}/auth/admin/realms/${REALM}/clients/kubernetes/installation/providers/keycloak-oidc-keycloak-json" \
   "Authorization: Bearer ${TOKEN}" | jq -M -e -r .credentials.secret)
@@ -117,7 +134,7 @@ function create-client-kubernetes {
 
   # Update the istio ingress virtualservice to point to the `keycloak-gatekeeper`.
   kubectl patch virtualservice kubernetes-dashboard --type json \
-  --patch='[{"op": "replace", "path": "/spec/http/0/route/0/destination/host", "value": "kubernetes-dashboard-keycloak-gatekeeper.kubesystem.svc.cluster.local"}]'
+  --patch='[{"op": "replace", "path": "/spec/http/0/route/0/destination/host", "value": "kubernetes-dashboard-keycloak-gatekeeper.kube-system.svc.cluster.local"}]'
 
   kubectl patch virtualservice kubernetes-dashboard --type json \
   --patch='[{"op": "replace", "path": "/spec/http/0/route/0/destination/port/number", "value": 3000}]'

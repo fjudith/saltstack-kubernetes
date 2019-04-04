@@ -206,7 +206,7 @@ kubernetes:
       enabled: true
       version: "master"
       realm: "default"
-      groups: "groups"
+      groups: "admin"
 tinyproxy:
   User: tinyproxy
   Group: tinyproxy

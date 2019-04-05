@@ -1,0 +1,7 @@
+{
+    "name": "kubernetes-users",
+    "attributes": {},
+    "realmRoles": [],
+    "clientRoles": {},
+    "subGroups": []
+}

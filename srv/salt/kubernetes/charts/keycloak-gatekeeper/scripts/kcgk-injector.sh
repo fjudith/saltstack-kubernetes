@@ -38,17 +38,29 @@ function create-realm {
 
 ## Create Groups
 function create-groups {
-  if ! http GET \
-    "${URL}/auth/admin/realms/${REALM}/groups" \
-    "Authorization: Bearer ${TOKEN}" | jq -M -e '.[] | select(.name=="groups")'
-  then
-    http --pretty=none POST \
+    if ! http GET \
       "${URL}/auth/admin/realms/${REALM}/groups" \
-      'Content-Type: application/json' \
-      "Authorization: Bearer ${TOKEN}" < groups.json
-  else
-    echo "Groups already exists"
-  fi    
+      "Authorization: Bearer ${TOKEN}" | jq -M -e '.[] | select(.name=="kubernetes-admins")'
+    then
+      http --pretty=none POST \
+        "${URL}/auth/admin/realms/${REALM}/groups" \
+        'Content-Type: application/json' \
+        "Authorization: Bearer ${TOKEN}" < keycloak-kubernetes-admins-group.json
+    else
+      echo "Kubernetes admins group already exists"
+    fi
+
+    if ! http GET \
+      "${URL}/auth/admin/realms/${REALM}/groups" \
+      "Authorization: Bearer ${TOKEN}" | jq -M -e '.[] | select(.name=="kubernetes-users")'
+    then
+      http --pretty=none POST \
+        "${URL}/auth/admin/realms/${REALM}/groups" \
+        'Content-Type: application/json' \
+        "Authorization: Bearer ${TOKEN}" < keycloak-kubernetes-users-group.json
+    else
+      echo "Kubernetes users group already exists"
+    fi
 }
 
 ### Create Client Scopes to accept to fix client_id no longer added to the audience field 'aud'
@@ -130,7 +142,7 @@ function create-client-kubernetes {
     --set upstreamUrl=https://kubernetes-dashboard.kube-system.svc.cluster.local | kubectl apply -n kube-system -f -
   
   # Bind Keycloak authenticated users with the appropriate Kubernetes role.
-  kubectl apply -f ./files/keycloak-admin-rbac.yaml
+  kubectl apply -f ./files/keycloak-kubernetes-rbac.yaml
 
   # Update the istio ingress virtualservice to point to the `keycloak-gatekeeper`.
   kubectl patch virtualservice kubernetes-dashboard --type json \

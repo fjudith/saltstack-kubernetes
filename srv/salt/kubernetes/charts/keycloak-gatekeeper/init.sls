@@ -36,14 +36,22 @@ helm-charts:
     - template: jinja
     - mode: 555
 
-/srv/kubernetes/manifests/keycloak-gatekeeper/groups.json:
+/srv/kubernetes/manifests/keycloak-gatekeeper/keycloak-kubernetes-admins-group.json:
   file.managed:
     - require:
       - file: /srv/kubernetes/manifests/keycloak-gatekeeper
-    - source: salt://kubernetes/charts/keycloak-gatekeeper/templates/groups.json.jinja
+    - source: salt://kubernetes/charts/keycloak-gatekeeper/files/keycloak-kubernetes-admins-group.json
     - user: root
     - group: root
-    - template: jinja
+    - mode: 644
+
+/srv/kubernetes/manifests/keycloak-gatekeeper/keycloak-kubernetes-users-group.json:
+  file.managed:
+    - require:
+      - file: /srv/kubernetes/manifests/keycloak-gatekeeper
+    - source: salt://kubernetes/charts/keycloak-gatekeeper/files/keycloak-kubernetes-users-group.json
+    - user: root
+    - group: root
     - mode: 644
 
 /srv/kubernetes/manifests/keycloak-gatekeeper/client-scopes.json:
@@ -71,7 +79,8 @@ keycloak-create-groups:
     - cwd: /srv/kubernetes/manifests/keycloak-gatekeeper
     - watch: 
       - cmd: keycloak-create-realm
-      - file: /srv/kubernetes/manifests/keycloak-gatekeeper/groups.json  
+      - file: /srv/kubernetes/manifests/keycloak-gatekeeper/keycloak-kubernetes-admins-group.json
+      - file: /srv/kubernetes/manifests/keycloak-gatekeeper/keycloak-kubernetes-users-group.json
     - runas: root
     - use_vt: true
     - name: |
@@ -120,13 +129,14 @@ keycloak-create-client-scopes:
     - template: jinja
     - mode: 644
 
-/srv/kubernetes/manifests/keycloak-gatekeeper/files/keycloak-admin-rbac.yaml:
+/srv/kubernetes/manifests/keycloak-gatekeeper/files/keycloak-kubernetes-rbac.yaml:
   file.managed:
     - require:
       - file: /srv/kubernetes/manifests/keycloak-gatekeeper/files
-    - source: salt://kubernetes/charts/keycloak-gatekeeper/files/keycloak-admin-rbac.yaml
+    - source: salt://kubernetes/charts/keycloak-gatekeeper/templates/keycloak-kubernetes-rbac.yaml.jinja
     - user: root
     - group: root
+    - template: jinja
     - mode: 644
 
 keycloak-kubernetes-dashboard:
@@ -138,6 +148,7 @@ keycloak-kubernetes-dashboard:
       - file: /srv/kubernetes/manifests/keycloak-gatekeeper/kubernetes-dashboard.json
       - file: /srv/kubernetes/manifests/keycloak-gatekeeper/kubernetes-dashboard-protocolmapper.json
       - file: /srv/kubernetes/manifests/keycloak-gatekeeper/groups-protocolmapper.json
+      - file: /srv/kubernetes/manifests/keycloak-gatekeeper/files/keycloak-kubernetes-rbac.yaml
     - runas: root
     - use_vt: true
     - name: |

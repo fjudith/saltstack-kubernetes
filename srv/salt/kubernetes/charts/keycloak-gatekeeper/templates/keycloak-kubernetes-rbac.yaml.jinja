@@ -1,0 +1,19 @@
+{%- from "kubernetes/map.jinja" import charts with context -%}
+
+{%- for item in charts.keycloak_gatekeeper.groups -%}
+{%- set entry = item.split(',') -%}
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: keycloak-{{ entry[0] }}-group
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ entry[1] }}
+subjects:
+- kind: Group
+  name: /{{ entry[0] }}
+{%- if not loop.last %}
+---
+{% endif %}
+{%- endfor -%}

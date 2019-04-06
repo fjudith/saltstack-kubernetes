@@ -152,16 +152,6 @@ kubernetes:
         image: rook/minio:v0.9.3
         username: Ch4ng3M3
         password: Ch4ng3M34ls0
-  global:
-    proxy:
-      ipaddr: 172.16.4.251
-      port: 8888
-    vpnIP-range: 172.16.4.0/24
-    kubernetes-service-ip: 10.3.0.1
-    service-ip-range: 10.3.0.0/24
-    cluster-dns: 10.3.0.10
-    helm-version: v2.12.3
-    dashboard-version: v1.8.3
   charts:
     concourse:
       enabled: true
@@ -206,7 +196,9 @@ kubernetes:
       enabled: true
       version: "master"
       realm: "default"
-      groups: "admin"
+      groups:
+        - "kubernetes-admins,cluster-admin"
+        - "kubernetes-users,view"
 tinyproxy:
   User: tinyproxy
   Group: tinyproxy

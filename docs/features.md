@@ -4,6 +4,27 @@
 Project is designed to allow you compose the Kubernetes infrastructure that fits your needs.
 Refer to the [pillar example](../srv/pillar/cluster_config.sls.example) to learn how to enable/disable and customize features.
 
+## Identity & Access Management
+
+<table>
+  <tr align='center'>
+    <th align='center'>Identity & Access Management server</th>
+    <th align='center'>Autentication proxy</th>
+  </tr>
+  <tr align='center'>
+    <td align='center'><a ref='https://github.com/keycloak/keycloak'>keycloak<a></td>
+    <td align='center'><a ref='https://github.com/keycloak/keycloak-gatekeeper'>keycloak-gatekeeper<a></td>
+  </tr>
+  <tr align='center'>
+    <td align='center'><img src='media/keycloak.png' width="50px"></td>
+    <td align='center'><img src='media/keycloak.png' width="50px"></td>
+  </tr>
+  <tr>
+    <td align='center'>Single Sign-on service</td>
+    <td align='center'>Provide Authn and Authz to services that do not support OIDC/SAML</td>
+  </tr>
+</table>
+
 ## Website
 
 Kubernetes applications demonstration and troubleshooting.

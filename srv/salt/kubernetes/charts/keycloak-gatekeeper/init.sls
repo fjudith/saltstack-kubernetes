@@ -184,3 +184,92 @@ keycloak-weave-scope:
     - name: |
         ./kcgk-injector.sh create-client-weave-scope keycloak $(kubectl get secret --namespace keycloak keycloak-http -o jsonpath="{.data.password}" | base64 --decode; echo) https://{{ charts.keycloak.ingress_host }}.{{ public_domain }} {{ charts.keycloak_gatekeeper.realm }} https://scope.{{ public_domain }}
 {% endif %}
+
+{% if common.addons.get('kube_prometheus', {'enabled': False}).enabled %}
+/srv/kubernetes/manifests/keycloak-gatekeeper/alertmanager.json:
+  file.managed:
+    - source: salt://kubernetes/charts/keycloak-gatekeeper/templates/alertmanager.json.jinja
+    - user: root
+    - group: root
+    - template: jinja
+    - mode: 644
+
+/srv/kubernetes/manifests/keycloak-gatekeeper/alertmanager-protocolmapper.json:
+  file.managed:
+    - source: salt://kubernetes/charts/keycloak-gatekeeper/files/alertmanager-protocolmapper.json
+    - user: root
+    - group: root
+    - mode: 644
+
+keycloak-alertmanager:
+  cmd.run:
+    - cwd: /srv/kubernetes/manifests/keycloak-gatekeeper
+    - watch:
+      - cmd: keycloak-create-realm
+      - cmd: keycloak-create-groups
+      - file: /srv/kubernetes/manifests/keycloak-gatekeeper/alertmanager.json
+      - file: /srv/kubernetes/manifests/keycloak-gatekeeper/alertmanager-protocolmapper.json
+    - runas: root
+    - use_vt: true
+    - name: |
+        ./kcgk-injector.sh create-client-alertmanager keycloak $(kubectl get secret --namespace keycloak keycloak-http -o jsonpath="{.data.password}" | base64 --decode; echo) https://{{ charts.keycloak.ingress_host }}.{{ public_domain }} {{ charts.keycloak_gatekeeper.realm }} https://alertmanager.{{ public_domain }}
+
+/srv/kubernetes/manifests/keycloak-gatekeeper/prometheus.json:
+  file.managed:
+    - source: salt://kubernetes/charts/keycloak-gatekeeper/templates/prometheus.json.jinja
+    - user: root
+    - group: root
+    - template: jinja
+    - mode: 644
+
+/srv/kubernetes/manifests/keycloak-gatekeeper/prometheus-protocolmapper.json:
+  file.managed:
+    - source: salt://kubernetes/charts/keycloak-gatekeeper/files/prometheus-protocolmapper.json
+    - user: root
+    - group: root
+    - mode: 644
+
+keycloak-prometheus:
+  cmd.run:
+    - cwd: /srv/kubernetes/manifests/keycloak-gatekeeper
+    - watch:
+      - cmd: keycloak-create-realm
+      - cmd: keycloak-create-groups
+      - file: /srv/kubernetes/manifests/keycloak-gatekeeper/prometheus.json
+      - file: /srv/kubernetes/manifests/keycloak-gatekeeper/prometheus-protocolmapper.json
+    - runas: root
+    - use_vt: true
+    - name: |
+        ./kcgk-injector.sh create-client-prometheus keycloak $(kubectl get secret --namespace keycloak keycloak-http -o jsonpath="{.data.password}" | base64 --decode; echo) https://{{ charts.keycloak.ingress_host }}.{{ public_domain }} {{ charts.keycloak_gatekeeper.realm }} https://prometheus.{{ public_domain }}
+
+{% endif %}
+
+{% if master.storage.get('rook_ceph', {'enabled': False}).enabled %}
+/srv/kubernetes/manifests/keycloak-gatekeeper/rook-ceph.json:
+  file.managed:
+    - source: salt://kubernetes/charts/keycloak-gatekeeper/templates/rook-ceph.json.jinja
+    - user: root
+    - group: root
+    - template: jinja
+    - mode: 644
+
+/srv/kubernetes/manifests/keycloak-gatekeeper/rook-ceph-protocolmapper.json:
+  file.managed:
+    - source: salt://kubernetes/charts/keycloak-gatekeeper/files/rook-ceph-protocolmapper.json
+    - user: root
+    - group: root
+    - mode: 644
+
+keycloak-rook-ceph:
+  cmd.run:
+    - cwd: /srv/kubernetes/manifests/keycloak-gatekeeper
+    - watch:
+      - cmd: keycloak-create-realm
+      - cmd: keycloak-create-groups
+      - file: /srv/kubernetes/manifests/keycloak-gatekeeper/rook-ceph.json
+      - file: /srv/kubernetes/manifests/keycloak-gatekeeper/rook-ceph-protocolmapper.json
+    - runas: root
+    - use_vt: true
+    - name: |
+        ./kcgk-injector.sh create-client-rook-ceph keycloak $(kubectl get secret --namespace keycloak keycloak-http -o jsonpath="{.data.password}" | base64 --decode; echo) https://{{ charts.keycloak.ingress_host }}.{{ public_domain }} {{ charts.keycloak_gatekeeper.realm }} https://ceph.{{ public_domain }}
+{% endif %}

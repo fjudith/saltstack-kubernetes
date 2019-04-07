@@ -1,7 +1,7 @@
 apiVersion: ceph.rook.io/v1
 kind: CephFilesystem
 metadata:
-  name: myfs-ec
+  name: myfs
   namespace: rook-ceph
 spec:
   # The metadata pool spec
@@ -11,10 +11,13 @@ spec:
       size: 3
   # The list of data pool specs
   dataPools:
+    - failureDomain: host
+      replacated:
+        size: 3
     # You need at least three `bluestore` OSDs on different nodes for this config to work
-    - erasureCoded:
-        dataChunks: 2
-        codingChunks: 1
+    # - erasureCoded:
+    #     dataChunks: 2
+    #     codingChunks: 1
   # The metadata service (mds) configuration
   metadataServer:
     # The number of active MDS instances

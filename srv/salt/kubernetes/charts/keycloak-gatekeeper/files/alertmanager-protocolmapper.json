@@ -1,0 +1,11 @@
+{
+  "name": "audience-alertmanager",
+  "protocol": "openid-connect",
+  "protocolMapper": "oidc-audience-mapper",
+  "consentRequired": false,
+  "config": {
+    "included.client.audience": "alertmanager",
+    "id.token.claim": "false",
+    "access.token.claim": "true"
+  }
+}

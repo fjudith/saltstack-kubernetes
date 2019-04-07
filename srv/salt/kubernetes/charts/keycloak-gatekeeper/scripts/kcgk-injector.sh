@@ -1,7 +1,5 @@
 #! /bin/bash
-# https://www.ctl.io/developers/blog/post/curl-vs-httpie-http-apis
-# https://www.keycloak.org/docs-api/5.0/rest-api/index.html
-# https://httpie.org/doc
+
 set -ex
 
 ACTION=${1}
@@ -11,7 +9,9 @@ URL=${4}
 REALM=${5}
 REDIRECTURL=${6}
 
+##################################################
 # Authenticate to Keycloak and retreive session token
+##################################################
 TOKEN=$(http --form POST \
   "${URL}/auth/realms/master/protocol/openid-connect/token" \
   'Content-Type: application/x-www-form-urlencoded' \
@@ -36,7 +36,13 @@ function create-realm {
   fi
 }
 
-## Create Groups
+##################################################
+# Create groups associated to Kubernetes RBAC
+# keycloak group name | kubernetes cluster role
+# ------------------- | -----------------------
+# kubernetes-admins   | cluster-admin
+# kubernets-users     | view
+##################################################
 function create-groups {
     if ! http GET \
       "${URL}/auth/admin/realms/${REALM}/groups" \
@@ -63,8 +69,18 @@ function create-groups {
     fi
 }
 
-### Create Client Scopes to accept to fix client_id no longer added to the audience field 'aud'
-### https://stackoverflow.com/questions/53550321/keycloak-gatekeeper-aud-claim-and-client-id-do-not-match
+
+##################################################
+# With recent keycloak version 4.6.0 and later,
+# the client id is apparently no longer 
+# automatically added to the audience field 'aud'
+# of the access token. 
+# Therefore even though the login succeeds
+# the client rejects the user.
+# To fix this you need to configure the audience 
+# for your clients.
+# (<https://github.com/keycloak/keycloak-documentation/blob/master/server_admin/topics/clients/oidc/audience.adoc>).
+##################################################
 function create-client-scopes {
   if ! http GET \
     "${URL}/auth/admin/realms/${REALM}/client-scopes" \
@@ -79,7 +95,22 @@ function create-client-scopes {
   fi    
 }
 
-## Create client for Kubernetes Dashboard
+##################################################
+# ## Kubernetes + Dashboard
+# 1. Create the client "kubernetes" associated 
+#    to the Keycloak Gatekeeper proxy. 
+#    associated to "kubernetes-dashboard" Service.
+# 2. Insert the audience protocol mapper associated 
+#    to the "kubernetes" client in the "allowed-services"
+#    client scopes.
+# 3. Add the groups protocol mapper "groups" 
+#    to the "kubernetes" client.
+# 4. Add the client scopes "allowed-services"
+#    to the "kubernetes" client.
+# 5. Deploy the Keycloak Gatekeeper proxy.
+# 6. Update the Istio VirtualService "kubernetes-dashboard"
+#    to point to the Keycloak Gatekeeper proxy.
+##################################################
 function create-client-kubernetes {
    if ! http GET \
     "${URL}/auth/admin/realms/${REALM}/clients" \
@@ -127,8 +158,19 @@ function create-client-kubernetes {
     echo "Groups protocolmapper already exists"
   fi
 
+  if ! http GET \
+    "${URL}/auth/admin/realms/${REALM}/clients/${CID}/default-client-scopes" \
+    "Authorization: Bearer ${TOKEN}" | jq -M -e ".[] | select(.id==\"${CSID}\")"
+  then
+    http --pretty=none PUT \
+      "${URL}/auth/admin/realms/${REALM}/clients/${CID}/default-client-scopes/${CSID}" \
+      "Authorization: Bearer ${TOKEN}"
+  else
+    echo "Default Client Scope 'allowed-services' already allocated"
+  fi
+
   CLIENT_SECRET=$(http GET \
-  "${URL}/auth/admin/realms/${REALM}/clients/kubernetes/installation/providers/keycloak-oidc-keycloak-json" \
+  "${URL}/auth/admin/realms/${REALM}/clients/${CID}/installation/providers/keycloak-oidc-keycloak-json" \
   "Authorization: Bearer ${TOKEN}" | jq -M -e -r .credentials.secret)
 
   # Deploy the gateway in the `kube-system` namespace
@@ -139,7 +181,7 @@ function create-client-kubernetes {
     --set clientId=kubernetes \
     --set clientSecret=${CLIENT_SECRET} \
     --set redirectionUrl=${REDIRECTURL} \
-    --set upstreamUrl=https://kubernetes-dashboard.kube-system.svc.cluster.local | kubectl apply -n kube-system -f -
+    --set upstreamUrl=https://kubernetes-dashboard.kube-system | kubectl apply -n kube-system -f -
   
   # Bind Keycloak authenticated users with the appropriate Kubernetes role.
   kubectl apply -f ./files/keycloak-kubernetes-rbac.yaml
@@ -152,6 +194,22 @@ function create-client-kubernetes {
   --patch='[{"op": "replace", "path": "/spec/http/0/route/0/destination/port/number", "value": 3000}]'
 }
 
+##################################################
+# ## Weave Scope
+# 1. Create the client "weave-scope" associated 
+#    to the Keycloak Gatekeeper pod. 
+#    associated to "weave-scope-app" Service.
+# 2. Insert the audience protocol mapper associated 
+#    to the "weave-scope" client in the "allowed-services"
+#    client scopes.
+# 3. Add the groups protocol mapper "groups" 
+#    to the "weave-scope" client.
+# 4. Add the client scopes "allowed-services"
+#    to the "weave-scope" client.
+# 5. Deploy the Keycloak Gatekeeper proxy.
+# 6. Update the Istio VirtualService "weave-scope"
+#    to point to the Keycloak Gatekeeper proxy.
+##################################################
 function create-client-weave-scope {
    if ! http GET \
     "${URL}/auth/admin/realms/${REALM}/clients" \
@@ -182,8 +240,36 @@ function create-client-weave-scope {
     echo "Weave-scope protocolmapper already exists"
   fi
 
+  CID=$(http GET \
+    "${URL}/auth/admin/realms/${REALM}/clients" \
+    "Authorization: Bearer ${TOKEN}" | jq -M -e -r '.[] | select(.clientId=="weave-scope") | .id'
+  )
+
+  if ! http GET \
+    "${URL}/auth/admin/realms/${REALM}/clients/${CID}/protocol-mappers/models" \
+    "Authorization: Bearer ${TOKEN}" | jq -M -e '.[] | select(.name=="groups")'
+  then
+    http --pretty=none POST \
+      "${URL}/auth/admin/realms/${REALM}/clients/${CID}/protocol-mappers/models" \
+      'Content-Type: application/json' \
+      "Authorization: Bearer ${TOKEN}" < groups-protocolmapper.json
+  else
+    echo "Groups protocolmapper already exists"
+  fi
+
+  if ! http GET \
+    "${URL}/auth/admin/realms/${REALM}/clients/${CID}/default-client-scopes" \
+    "Authorization: Bearer ${TOKEN}" | jq -M -e ".[] | select(.id==\"${CSID}\")"
+  then
+    http --pretty=none PUT \
+      "${URL}/auth/admin/realms/${REALM}/clients/${CID}/default-client-scopes/${CSID}" \
+      "Authorization: Bearer ${TOKEN}"
+  else
+    echo "Default Client Scope 'allowed-services' already allocated"
+  fi
+
   CLIENT_SECRET=$(http GET \
-  "${URL}/auth/admin/realms/${REALM}/clients/weave-scope/installation/providers/keycloak-oidc-keycloak-json" \
+  "${URL}/auth/admin/realms/${REALM}/clients/${CID}/installation/providers/keycloak-oidc-keycloak-json" \
   "Authorization: Bearer ${TOKEN}" | jq -M -e -r .credentials.secret)
 
   # Deploy the gateway in the `kube-system` namespace
@@ -194,13 +280,301 @@ function create-client-weave-scope {
     --set clientId=weave-scope \
     --set clientSecret=${CLIENT_SECRET} \
     --set redirectionUrl=${REDIRECTURL} \
-    --set upstreamUrl=http://weave-scope-app.weave.svc.cluster.local | kubectl apply -n weave -f -
+    --set upstreamUrl=http://weave-scope-app.weave | kubectl apply -n weave -f -
 
   # Update the istio ingress virtualservice to point to the `keycloak-gatekeeper`.
   kubectl patch virtualservice weave-scope --type json \
   --patch='[{"op": "replace", "path": "/spec/http/0/route/0/destination/host", "value": "weave-scope-app-keycloak-gatekeeper.weave.svc.cluster.local"}]'
   
   kubectl patch virtualservice weave-scope --type json \
+  --patch='[{"op": "replace", "path": "/spec/http/0/route/0/destination/port/number", "value": 3000}]'
+}
+
+##################################################
+# ## Kube-Prometheus - AlertManager
+# 1. Create the client "alertmanager" associated 
+#    to the Keycloak Gatekeeper pod. 
+#    associated to "alertmanager-main" Service.
+# 2. Insert the audience protocol mapper associated 
+#    to the "weave-scope" client in the "alertmanager"
+#    client scopes.
+# 3. Add the groups protocol mapper "groups" 
+#    to the "alertmanager" client.
+# 4. Add the client scopes "allowed-services"
+#    to the "alertmanager" client.
+# 5. Deploy the Keycloak Gatekeeper proxy.
+# 6. Update the Istio VirtualService "alertmanager"
+#    to point to the Keycloak Gatekeeper proxy.
+##################################################
+function create-client-alertmanager {
+   if ! http GET \
+    "${URL}/auth/admin/realms/${REALM}/clients" \
+    "Authorization: Bearer ${TOKEN}" | jq -M -e '.[] | select(.clientId=="alertmanager")'
+  then
+    http --pretty=none POST \
+      "${URL}/auth/admin/realms/${REALM}/clients" \
+      'Content-Type: application/json' \
+      "Authorization: Bearer ${TOKEN}" < alertmanager.json
+  else
+    echo "AlertManager client already exists"
+  fi
+
+  CSID=$(http GET \
+    "${URL}/auth/admin/realms/${REALM}/client-scopes" \
+    "Authorization: Bearer ${TOKEN}" | jq -M -e -r '.[] | select(.name=="allowed-services") | .id'
+  )
+
+  if ! http GET \
+    "${URL}/auth/admin/realms/${REALM}/client-scopes/${CSID}/protocol-mappers/models" \
+    "Authorization: Bearer ${TOKEN}" | jq -M -e '.[] | select(.name=="audience-alertmanager")'
+  then
+    http --pretty=none POST \
+      "${URL}/auth/admin/realms/${REALM}/client-scopes/${CSID}/protocol-mappers/models" \
+      'Content-Type: application/json' \
+      "Authorization: Bearer ${TOKEN}" < alertmanager-protocolmapper.json
+  else
+    echo "AlertManager protocolmapper already exists"
+  fi
+
+  CID=$(http GET \
+    "${URL}/auth/admin/realms/${REALM}/clients" \
+    "Authorization: Bearer ${TOKEN}" | jq -M -e -r '.[] | select(.clientId=="alertmanager") | .id'
+  )
+
+  if ! http GET \
+    "${URL}/auth/admin/realms/${REALM}/clients/${CID}/protocol-mappers/models" \
+    "Authorization: Bearer ${TOKEN}" | jq -M -e '.[] | select(.name=="groups")'
+  then
+    http --pretty=none POST \
+      "${URL}/auth/admin/realms/${REALM}/clients/${CID}/protocol-mappers/models" \
+      'Content-Type: application/json' \
+      "Authorization: Bearer ${TOKEN}" < groups-protocolmapper.json
+  else
+    echo "Groups protocolmapper already exists"
+  fi
+
+  if ! http GET \
+    "${URL}/auth/admin/realms/${REALM}/clients/${CID}/default-client-scopes" \
+    "Authorization: Bearer ${TOKEN}" | jq -M -e ".[] | select(.id==\"${CSID}\")"
+  then
+    http --pretty=none PUT \
+      "${URL}/auth/admin/realms/${REALM}/clients/${CID}/default-client-scopes/${CSID}" \
+      "Authorization: Bearer ${TOKEN}"
+  else
+    echo "Default Client Scope 'allowed-services' already allocated"
+  fi
+
+  CLIENT_SECRET=$(http GET \
+  "${URL}/auth/admin/realms/${REALM}/clients/${CID}/installation/providers/keycloak-oidc-keycloak-json" \
+  "Authorization: Bearer ${TOKEN}" | jq -M -e -r .credentials.secret)
+
+  # Deploy the gateway in the `kube-system` namespace
+  helm template /srv/kubernetes/charts/incubator/keycloak-gatekeeper \
+    --name alertmanager \
+    --namespace monitoring \
+    --set discoveryUrl=${URL}/auth/realms/${REALM} \
+    --set clientId=alertmanager \
+    --set clientSecret=${CLIENT_SECRET} \
+    --set redirectionUrl=${REDIRECTURL} \
+    --set upstreamUrl=http://alertmanager-main.monitoring:9093 | kubectl apply -n monitoring -f -
+
+  # Update the istio ingress virtualservice to point to the `keycloak-gatekeeper`.
+  kubectl patch virtualservice alertmanager --type json \
+  --patch='[{"op": "replace", "path": "/spec/http/0/route/0/destination/host", "value": "alertmanager-keycloak-gatekeeper.monitoring.svc.cluster.local"}]'
+  
+  kubectl patch virtualservice alertmanager --type json \
+  --patch='[{"op": "replace", "path": "/spec/http/0/route/0/destination/port/number", "value": 3000}]'
+}
+
+##################################################
+# ## Kube-Prometheus - Prometheus
+# 1. Create the client "prometheus" associated 
+#    to the Keycloak Gatekeeper pod. 
+#    associated to "prometheus-k8s" Service.
+# 2. Insert the audience protocol mapper associated 
+#    to the "prometheus" client in the "alertmanager"
+#    client scopes.
+# 3. Add the groups protocol mapper "groups" 
+#    to the "alertmanager" client.
+# 4. Add the client scopes "allowed-services"
+#    to the "prometheus" client.
+# 5. Deploy the Keycloak Gatekeeper proxy.
+# 6. Update the Istio VirtualService "prometheus"
+#    to point to the Keycloak Gatekeeper proxy.
+##################################################
+function create-client-prometheus {
+   if ! http GET \
+    "${URL}/auth/admin/realms/${REALM}/clients" \
+    "Authorization: Bearer ${TOKEN}" | jq -M -e '.[] | select(.clientId=="prometheus")'
+  then
+    http --pretty=none POST \
+      "${URL}/auth/admin/realms/${REALM}/clients" \
+      'Content-Type: application/json' \
+      "Authorization: Bearer ${TOKEN}" < prometheus.json
+  else
+    echo "Prometheus client already exists"
+  fi
+
+  CSID=$(http GET \
+    "${URL}/auth/admin/realms/${REALM}/client-scopes" \
+    "Authorization: Bearer ${TOKEN}" | jq -M -e -r '.[] | select(.name=="allowed-services") | .id'
+  )
+
+  if ! http GET \
+    "${URL}/auth/admin/realms/${REALM}/client-scopes/${CSID}/protocol-mappers/models" \
+    "Authorization: Bearer ${TOKEN}" | jq -M -e '.[] | select(.name=="audience-prometheus")'
+  then
+    http --pretty=none POST \
+      "${URL}/auth/admin/realms/${REALM}/client-scopes/${CSID}/protocol-mappers/models" \
+      'Content-Type: application/json' \
+      "Authorization: Bearer ${TOKEN}" < prometheus-protocolmapper.json
+  else
+    echo "Prometheus protocolmapper already exists"
+  fi
+
+  CID=$(http GET \
+    "${URL}/auth/admin/realms/${REALM}/clients" \
+    "Authorization: Bearer ${TOKEN}" | jq -M -e -r '.[] | select(.clientId=="prometheus") | .id'
+  )
+
+  if ! http GET \
+    "${URL}/auth/admin/realms/${REALM}/clients/${CID}/protocol-mappers/models" \
+    "Authorization: Bearer ${TOKEN}" | jq -M -e '.[] | select(.name=="groups")'
+  then
+    http --pretty=none POST \
+      "${URL}/auth/admin/realms/${REALM}/clients/${CID}/protocol-mappers/models" \
+      'Content-Type: application/json' \
+      "Authorization: Bearer ${TOKEN}" < groups-protocolmapper.json
+  else
+    echo "Groups protocolmapper already exists"
+  fi
+
+  if ! http GET \
+    "${URL}/auth/admin/realms/${REALM}/clients/${CID}/default-client-scopes" \
+    "Authorization: Bearer ${TOKEN}" | jq -M -e ".[] | select(.id==\"${CSID}\")"
+  then
+    http --pretty=none PUT \
+      "${URL}/auth/admin/realms/${REALM}/clients/${CID}/default-client-scopes/${CSID}" \
+      "Authorization: Bearer ${TOKEN}"
+  else
+    echo "Default Client Scope 'allowed-services' already allocated"
+  fi
+
+  CLIENT_SECRET=$(http GET \
+  "${URL}/auth/admin/realms/${REALM}/clients/${CID}/installation/providers/keycloak-oidc-keycloak-json" \
+  "Authorization: Bearer ${TOKEN}" | jq -M -e -r .credentials.secret)
+
+  # Deploy the gateway in the `kube-system` namespace
+  helm template /srv/kubernetes/charts/incubator/keycloak-gatekeeper \
+    --name prometheus \
+    --namespace monitoring \
+    --set discoveryUrl=${URL}/auth/realms/${REALM} \
+    --set clientId=prometheus \
+    --set clientSecret=${CLIENT_SECRET} \
+    --set redirectionUrl=${REDIRECTURL} \
+    --set upstreamUrl=http://prometheus-k8s.monitoring:9090 | kubectl apply -n monitoring -f -
+
+  # Update the istio ingress virtualservice to point to the `keycloak-gatekeeper`.
+  kubectl patch virtualservice prometheus --type json \
+  --patch='[{"op": "replace", "path": "/spec/http/0/route/0/destination/host", "value": "prometheus-keycloak-gatekeeper.monitoring.svc.cluster.local"}]'
+  
+  kubectl patch virtualservice prometheus --type json \
+  --patch='[{"op": "replace", "path": "/spec/http/0/route/0/destination/port/number", "value": 3000}]'
+}
+
+##################################################
+# ## Rook-Ceph - Ceph Mgr Dashboard
+# 1. Create the client "rook-ceph" associated 
+#    to the Keycloak Gatekeeper pod. 
+#    associated to "rook-ceph-mgr-dashboard" Service.
+# 2. Insert the audience protocol mapper associated 
+#    to the "rook-ceph" client in the "alertmanager"
+#    client scopes.
+# 3. Add the groups protocol mapper "groups" 
+#    to the "rook-ceph" client.
+# 4. Add the client scopes "allowed-services"
+#    to the "rook-ceph" client.
+# 5. Deploy the Keycloak Gatekeeper proxy.
+# 6. Update the Istio VirtualService "rook-ceph-mgr-dashboard"
+#    to point to the Keycloak Gatekeeper proxy.
+##################################################
+function create-client-rook-ceph {
+  if ! http GET \
+    "${URL}/auth/admin/realms/${REALM}/clients" \
+    "Authorization: Bearer ${TOKEN}" | jq -M -e '.[] | select(.clientId=="rook-ceph")'
+  then
+    http --pretty=none POST \
+      "${URL}/auth/admin/realms/${REALM}/clients" \
+      'Content-Type: application/json' \
+      "Authorization: Bearer ${TOKEN}" < rook-ceph.json
+  else
+    echo "Rook-Ceph client already exists"
+  fi
+
+  CSID=$(http GET \
+    "${URL}/auth/admin/realms/${REALM}/client-scopes" \
+    "Authorization: Bearer ${TOKEN}" | jq -M -e -r '.[] | select(.name=="allowed-services") | .id'
+  )
+
+  if ! http GET \
+    "${URL}/auth/admin/realms/${REALM}/client-scopes/${CSID}/protocol-mappers/models" \
+    "Authorization: Bearer ${TOKEN}" | jq -M -e '.[] | select(.name=="audience-rook-ceph")'
+  then
+    http --pretty=none POST \
+      "${URL}/auth/admin/realms/${REALM}/client-scopes/${CSID}/protocol-mappers/models" \
+      'Content-Type: application/json' \
+      "Authorization: Bearer ${TOKEN}" < rook-ceph-protocolmapper.json
+  else
+    echo "Rook-Ceph protocolmapper already exists"
+  fi
+
+  CID=$(http GET \
+    "${URL}/auth/admin/realms/${REALM}/clients" \
+    "Authorization: Bearer ${TOKEN}" | jq -M -e -r '.[] | select(.clientId=="rook-ceph") | .id'
+  )
+
+  if ! http GET \
+    "${URL}/auth/admin/realms/${REALM}/clients/${CID}/protocol-mappers/models" \
+    "Authorization: Bearer ${TOKEN}" | jq -M -e '.[] | select(.name=="groups")'
+  then
+    http --pretty=none POST \
+      "${URL}/auth/admin/realms/${REALM}/clients/${CID}/protocol-mappers/models" \
+      'Content-Type: application/json' \
+      "Authorization: Bearer ${TOKEN}" < groups-protocolmapper.json
+  else
+    echo "Groups protocolmapper already exists"
+  fi
+
+  if ! http GET \
+    "${URL}/auth/admin/realms/${REALM}/clients/${CID}/default-client-scopes" \
+    "Authorization: Bearer ${TOKEN}" | jq -M -e ".[] | select(.id==\"${CSID}\")"
+  then
+    http --pretty=none PUT \
+      "${URL}/auth/admin/realms/${REALM}/clients/${CID}/default-client-scopes/${CSID}" \
+      "Authorization: Bearer ${TOKEN}"
+  else
+    echo "Default Client Scope 'allowed-services' already allocated"
+  fi
+
+  CLIENT_SECRET=$(http GET \
+  "${URL}/auth/admin/realms/${REALM}/clients/${CID}/installation/providers/keycloak-oidc-keycloak-json" \
+  "Authorization: Bearer ${TOKEN}" | jq -M -e -r .credentials.secret)
+
+  # Deploy the gateway in the `kube-system` namespace
+  helm template /srv/kubernetes/charts/incubator/keycloak-gatekeeper \
+    --name rook-ceph-mgr-dashboard \
+    --namespace rook-ceph \
+    --set discoveryUrl=${URL}/auth/realms/${REALM} \
+    --set clientId=rook-ceph \
+    --set clientSecret=${CLIENT_SECRET} \
+    --set redirectionUrl=${REDIRECTURL} \
+    --set upstreamUrl=https://rook-ceph-mgr-dashboard.rook-ceph:8443 | kubectl apply -n rook-ceph -f -
+
+  # Update the istio ingress virtualservice to point to the `keycloak-gatekeeper`.
+  kubectl patch virtualservice rook-ceph-mgr-dashboard --type json \
+  --patch='[{"op": "replace", "path": "/spec/http/0/route/0/destination/host", "value": "rook-ceph-mgr-dashboard-keycloak-gatekeeper.rook-ceph.svc.cluster.local"}]'
+  
+  kubectl patch virtualservice rook-ceph-mgr-dashboard --type json \
   --patch='[{"op": "replace", "path": "/spec/http/0/route/0/destination/port/number", "value": 3000}]'
 }
 
@@ -219,5 +593,14 @@ case "$1" in
       ;;
     "create-client-weave-scope" )
       create-client-weave-scope
+      ;;
+    "create-client-alertmanager" )
+      create-client-alertmanager
+      ;;
+    "create-client-prometheus" )
+      create-client-prometheus
+      ;;
+    "create-client-rook-ceph" )
+      create-client-rook-ceph
       ;;
 esac

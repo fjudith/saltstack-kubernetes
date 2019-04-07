@@ -17,6 +17,6 @@ include:
 {%- if charts.get('concourse', {'enabled': False}).enabled %}
   - kubernetes.charts.concourse
 {%- endif -%}
-{%- if charts.get('keycloak_gatekeeper', {'enabled': False}).enabled %}
+{%- if charts.get('keycloak', {'enabled': False}).enabled and charts.get('keycloak_gatekeeper', {'enabled': False}).enabled %}
   - kubernetes.charts.keycloak-gatekeeper
 {%- endif -%}

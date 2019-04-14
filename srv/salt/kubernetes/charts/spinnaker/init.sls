@@ -26,9 +26,13 @@ spinnaker:
             --set s3.endpoint=https://minio.{{ public_domain }} \
             --set s3.accessKey={{ master.storage.rook_minio.username }} \
             --set s3.secretKey={{ master.storage.rook_minio.password }} \
-            --set redis.master.persistence.enabled=true \
+            {%- else -%}
+            --set minio.enabled=true \
+            --set minio.persistence.enabled=true \
             {%- endif %}
+            --set redis.enabled=true \
             --set redis.cluster.enabled=true \
+            --set redis.master.persistence.enabled=true \
             "stable/spinnaker" --timeout 600
 
 spinnaker-ingress:

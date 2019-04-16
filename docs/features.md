@@ -58,15 +58,12 @@ Solutions for Function as a Service.
   </tr>
   <tr align='center'>
     <td align='center'><a ref='https://kubeless.io'>Kubeless<a></td>
-    <td align='center'><a ref='https://cloud.google.com/knative/'>knative<a></td>
   </tr>
   <tr align='center'>
     <td align='center'><img src='media/kubeless.png' width="50px"></td>
-    <td align='center'><img src='media/knative.png' width="50px"></td>
   </tr>
   <tr>
     <td align='center'>Python, Node, Java, Go, Ruby, .Net core, Berlina</td>
-    <td align='center'>Django, Ruby on Rails, Spring, etc...</td>
   </tr>
 </table>
 

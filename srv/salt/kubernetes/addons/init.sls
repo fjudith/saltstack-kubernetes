@@ -9,7 +9,7 @@ include:
   - kubernetes.addons.dns-horizontal-autoscaler
 {%- endif -%}
 {%- if common.addons.get('dashboard', {'enabled': False}).enabled %}
-  - kubernetes.addons.kube-dashboard
+  - kubernetes.addons.kubernetes-dashboard
 {%- endif -%}
 {%- if common.addons.get('helm', {'enabled': False}).enabled %}
   - kubernetes.addons.helm

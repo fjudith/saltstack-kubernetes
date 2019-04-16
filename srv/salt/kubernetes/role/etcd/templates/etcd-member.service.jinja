@@ -50,3 +50,6 @@ ExecStartPre=/usr/bin/mkdir --parents /var/lib/coreos
 ExecStartPre=-/usr/bin/rkt rm --uuid-file=/var/lib/coreos/etcd-member-wrapper.uuid
 ExecStart=/usr/lib/coreos/etcd-wrapper $ETCD_OPTS
 ExecStop=-/usr/bin/rkt stop --uuid-file=/var/lib/coreos/etcd-member-wrapper.uuid
+
+[Install]
+WantedBy=multi-user.target

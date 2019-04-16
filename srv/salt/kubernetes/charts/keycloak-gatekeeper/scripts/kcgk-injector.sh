@@ -108,7 +108,7 @@ function create-client-scopes {
 # 4. Add the client scopes "allowed-services"
 #    to the "kubernetes" client.
 # 5. Deploy the Keycloak Gatekeeper proxy.
-# 6. Update the Istio VirtualService "kubernetes-dashboard"
+# 6. Update the ingress resource "kubernetes-dashboard"
 #    to point to the Keycloak Gatekeeper proxy.
 ##################################################
 function create-client-kubernetes {
@@ -186,12 +186,12 @@ function create-client-kubernetes {
   # Bind Keycloak authenticated users with the appropriate Kubernetes role.
   kubectl apply -f ./files/keycloak-kubernetes-rbac.yaml
 
-  # Update the istio ingress virtualservice to point to the `keycloak-gatekeeper`.
-  kubectl patch virtualservice kubernetes-dashboard --type json \
-  --patch='[{"op": "replace", "path": "/spec/http/0/route/0/destination/host", "value": "kubernetes-dashboard-keycloak-gatekeeper.kube-system.svc.cluster.local"}]'
+  # Update the ingress to point to the `keycloak-gatekeeper`.
+  kubectl patch ingress -n kube-system kubernetes-dashboard --type json \
+  --patch='[{"op": "replace", "path": "/spec/rules/0/http/paths/0/backend/serviceName", "value": "kubernetes-dashboard-keycloak-gatekeeper"}]'
 
-  kubectl patch virtualservice kubernetes-dashboard --type json \
-  --patch='[{"op": "replace", "path": "/spec/http/0/route/0/destination/port/number", "value": 3000}]'
+  kubectl patch ingress -n kube-system kubernetes-dashboard --type json \
+  --patch='[{"op": "replace", "path": "/spec/rules/0/http/paths/0/backend/servicePort", "value": 3000}]'
 }
 
 ##################################################
@@ -207,7 +207,7 @@ function create-client-kubernetes {
 # 4. Add the client scopes "allowed-services"
 #    to the "weave-scope" client.
 # 5. Deploy the Keycloak Gatekeeper proxy.
-# 6. Update the Istio VirtualService "weave-scope"
+# 6. Update the ingress resource "weave-scope"
 #    to point to the Keycloak Gatekeeper proxy.
 ##################################################
 function create-client-weave-scope {
@@ -282,12 +282,12 @@ function create-client-weave-scope {
     --set redirectionUrl=${REDIRECTURL} \
     --set upstreamUrl=http://weave-scope-app.weave | kubectl apply -n weave -f -
 
-  # Update the istio ingress virtualservice to point to the `keycloak-gatekeeper`.
-  kubectl patch virtualservice weave-scope --type json \
-  --patch='[{"op": "replace", "path": "/spec/http/0/route/0/destination/host", "value": "weave-scope-app-keycloak-gatekeeper.weave.svc.cluster.local"}]'
+  # Update the ingress to point to the `keycloak-gatekeeper`.
+  kubectl patch ingress -n weave weave-scope --type json \
+  --patch='[{"op": "replace", "path": "/spec/rules/0/http/paths/0/backend/serviceName", "value": "weave-scope-app-keycloak-gatekeeper"}]'
   
-  kubectl patch virtualservice weave-scope --type json \
-  --patch='[{"op": "replace", "path": "/spec/http/0/route/0/destination/port/number", "value": 3000}]'
+  kubectl patch ingress -n weave weave-scope --type json \
+  --patch='[{"op": "replace", "path": "/spec/rules/0/http/paths/0/backend/servicePort", "value": 3000}]'
 }
 
 ##################################################
@@ -303,7 +303,7 @@ function create-client-weave-scope {
 # 4. Add the client scopes "allowed-services"
 #    to the "alertmanager" client.
 # 5. Deploy the Keycloak Gatekeeper proxy.
-# 6. Update the Istio VirtualService "alertmanager"
+# 6. Update the ingress resource "alertmanager"
 #    to point to the Keycloak Gatekeeper proxy.
 ##################################################
 function create-client-alertmanager {
@@ -378,12 +378,12 @@ function create-client-alertmanager {
     --set redirectionUrl=${REDIRECTURL} \
     --set upstreamUrl=http://alertmanager-main.monitoring:9093 | kubectl apply -n monitoring -f -
 
-  # Update the istio ingress virtualservice to point to the `keycloak-gatekeeper`.
-  kubectl patch virtualservice alertmanager --type json \
-  --patch='[{"op": "replace", "path": "/spec/http/0/route/0/destination/host", "value": "alertmanager-keycloak-gatekeeper.monitoring.svc.cluster.local"}]'
+  # Update the ingress to point to the `keycloak-gatekeeper`.
+  kubectl patch ingress -n monitoring alertmanager --type json \
+  --patch='[{"op": "replace", "path": "/spec/rules/0/http/paths/0/backend/serviceName", "value": "alertmanager-keycloak-gatekeeper"}]'
   
-  kubectl patch virtualservice alertmanager --type json \
-  --patch='[{"op": "replace", "path": "/spec/http/0/route/0/destination/port/number", "value": 3000}]'
+  kubectl patch ingress -n monitoring alertmanager --type json \
+  --patch='[{"op": "replace", "path": "/spec/rules/0/http/paths/0/backend/servicePort", "value": 3000}]'
 }
 
 ##################################################
@@ -399,7 +399,7 @@ function create-client-alertmanager {
 # 4. Add the client scopes "allowed-services"
 #    to the "prometheus" client.
 # 5. Deploy the Keycloak Gatekeeper proxy.
-# 6. Update the Istio VirtualService "prometheus"
+# 6. Update the ingress resource "prometheus"
 #    to point to the Keycloak Gatekeeper proxy.
 ##################################################
 function create-client-prometheus {
@@ -474,12 +474,12 @@ function create-client-prometheus {
     --set redirectionUrl=${REDIRECTURL} \
     --set upstreamUrl=http://prometheus-k8s.monitoring:9090 | kubectl apply -n monitoring -f -
 
-  # Update the istio ingress virtualservice to point to the `keycloak-gatekeeper`.
-  kubectl patch virtualservice prometheus --type json \
-  --patch='[{"op": "replace", "path": "/spec/http/0/route/0/destination/host", "value": "prometheus-keycloak-gatekeeper.monitoring.svc.cluster.local"}]'
+  # Update the ingress to point to the `keycloak-gatekeeper`.
+  kubectl patch ingress -n monitoring prometheus --type json \
+  --patch='[{"op": "replace", "path": "/spec/rules/0/http/paths/0/backend/serviceName", "value": "prometheus-keycloak-gatekeeper"}]'
   
-  kubectl patch virtualservice prometheus --type json \
-  --patch='[{"op": "replace", "path": "/spec/http/0/route/0/destination/port/number", "value": 3000}]'
+  kubectl patch ingress -n monitoring prometheus --type json \
+  --patch='[{"op": "replace", "path": "/spec/rules/0/http/paths/0/backend/servicePort", "value": 3000}]'
 }
 
 ##################################################
@@ -495,7 +495,7 @@ function create-client-prometheus {
 # 4. Add the client scopes "allowed-services"
 #    to the "rook-ceph" client.
 # 5. Deploy the Keycloak Gatekeeper proxy.
-# 6. Update the Istio VirtualService "rook-ceph-mgr-dashboard"
+# 6. Update the ingress resource "rook-ceph-mgr-dashboard"
 #    to point to the Keycloak Gatekeeper proxy.
 ##################################################
 function create-client-rook-ceph {
@@ -570,12 +570,12 @@ function create-client-rook-ceph {
     --set redirectionUrl=${REDIRECTURL} \
     --set upstreamUrl=https://rook-ceph-mgr-dashboard.rook-ceph:8443 | kubectl apply -n rook-ceph -f -
 
-  # Update the istio ingress virtualservice to point to the `keycloak-gatekeeper`.
-  kubectl patch virtualservice rook-ceph-mgr-dashboard --type json \
-  --patch='[{"op": "replace", "path": "/spec/http/0/route/0/destination/host", "value": "rook-ceph-mgr-dashboard-keycloak-gatekeeper.rook-ceph.svc.cluster.local"}]'
+  # Update the ingress to point to the `keycloak-gatekeeper`.
+  kubectl patch ingress -n rook-ceph rook-ceph-mgr-dashboard --type json \
+  --patch='[{"op": "replace", "path": "/spec/rules/0/http/paths/0/backend/serviceName", "value": "rook-ceph-mgr-dashboard-keycloak-gatekeeper"}]'
   
-  kubectl patch virtualservice rook-ceph-mgr-dashboard --type json \
-  --patch='[{"op": "replace", "path": "/spec/http/0/route/0/destination/port/number", "value": 3000}]'
+  kubectl patch ingress -n rook-ceph rook-ceph-mgr-dashboard --type json \
+  --patch='[{"op": "replace", "path": "/spec/rules/0/http/paths/0/backend/servicePort", "value": 3000}]'
 }
 
 case "$1" in

@@ -40,16 +40,6 @@
     - group: root
     - mode: 644
 
-/srv/kubernetes/manifests/istio/gateway.yaml:
-  file.managed:
-    - require:
-      - archive: /srv/kubernetes/manifests/istio
-    - source: salt://kubernetes/ingress/istio/templates/gateway.yaml.j2
-    - user: root
-    - template: jinja
-    - group: root
-    - mode: 644
-
 /srv/kubernetes/manifests/istio/ingress.yaml:
   file.managed:
     - require:

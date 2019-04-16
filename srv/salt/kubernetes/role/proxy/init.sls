@@ -6,7 +6,7 @@
 
 /root/.kube/config:
   file.managed:
-    - source: salt://kubernetes/role/proxy/templates/kubeconfig.jinja
+    - source: salt://kubernetes/role/proxy/templates/kubeconfig.j2
     - user: root
     - template: jinja
     - group: root

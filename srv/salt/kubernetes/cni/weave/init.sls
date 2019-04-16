@@ -9,7 +9,7 @@
     file.managed:
     - require:
       - file: /srv/kubernetes/manifests/weave
-    - source: salt://kubernetes/cni/weave/templates/weave.yaml.jinja
+    - source: salt://kubernetes/cni/weave/templates/weave.yaml.j2
     - user: root
     - template: jinja
     - group: root

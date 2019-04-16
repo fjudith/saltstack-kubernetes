@@ -2,7 +2,7 @@
 
 /srv/kubernetes/manifests/heapster.yaml:
     file.managed:
-    - source: salt://kubernetes/addons/influxdb-grafana/templates/heapster.yaml.jinja
+    - source: salt://kubernetes/addons/influxdb-grafana/templates/heapster.yaml.j2
     - user: root
     - template: jinja
     - group: root
@@ -10,7 +10,7 @@
 
 /srv/kubernetes/manifests/influxdb-grafana.yaml:
     file.managed:
-    - source: salt://kubernetes/addons/influxdb-grafana/templates/influxdb-grafana.yaml.jinja
+    - source: salt://kubernetes/addons/influxdb-grafana/templates/influxdb-grafana.yaml.j2
     - user: root
     - template: jinja
     - group: root

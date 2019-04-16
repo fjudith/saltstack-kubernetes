@@ -21,7 +21,7 @@
     file.managed:
     - require:
       - file: /srv/kubernetes/manifests/helm
-    - source: salt://kubernetes/addons/helm/templates/helm-tiller.yaml.jinja
+    - source: salt://kubernetes/addons/helm/templates/helm-tiller.yaml.j2
     - user: root
     - template: jinja
     - group: root

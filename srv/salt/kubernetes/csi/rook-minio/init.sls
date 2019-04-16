@@ -12,7 +12,7 @@
     file.managed:
     - require:
       - file: /srv/kubernetes/manifests/rook-minio
-    - source: salt://kubernetes/csi/rook-minio/templates/ingress.yaml.jinja
+    - source: salt://kubernetes/csi/rook-minio/templates/ingress.yaml.j2
     - user: root
     - group: root
     - mode: 644
@@ -22,7 +22,7 @@
     file.managed:
     - require:
       - file: /srv/kubernetes/manifests/rook-minio
-    - source: salt://kubernetes/csi/rook-minio/templates/object-store.yaml.jinja
+    - source: salt://kubernetes/csi/rook-minio/templates/object-store.yaml.j2
     - user: root
     - group: root
     - mode: 644

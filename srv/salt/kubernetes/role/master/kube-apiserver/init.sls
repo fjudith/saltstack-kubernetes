@@ -10,7 +10,7 @@
 
 /etc/kubernetes/encryption-config.yaml:    
     file.managed:
-    - source: salt://kubernetes/role/master/kube-apiserver/templates/encryption-config.yaml.jinja
+    - source: salt://kubernetes/role/master/kube-apiserver/templates/encryption-config.yaml.j2
     - user: root
     - template: jinja
     - group: root
@@ -42,7 +42,7 @@ kube-apiserver-install:
 
 /etc/systemd/system/kube-apiserver.service:    
     file.managed:
-    - source: salt://kubernetes/role/master/kube-apiserver/templates/kube-apiserver.service.jinja
+    - source: salt://kubernetes/role/master/kube-apiserver/templates/kube-apiserver.service.j2
     - user: root
     - template: jinja
     - group: root

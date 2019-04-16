@@ -19,7 +19,7 @@ vistio-addon:
 
 /srv/kubernetes/manifests/vistio-ingress.yaml:
     file.managed:
-    - source: salt://kubernetes/charts/vistio/templates/ingress.yaml.jinja
+    - source: salt://kubernetes/charts/vistio/templates/ingress.yaml.j2
     - user: root
     - template: jinja
     - group: root

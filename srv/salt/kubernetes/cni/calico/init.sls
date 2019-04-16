@@ -54,7 +54,7 @@
 
 /etc/calico/kube/kubeconfig:
     file.managed:
-    - source: salt://kubernetes/cni/calico/templates/kubeconfig.jinja
+    - source: salt://kubernetes/cni/calico/templates/kubeconfig.j2
     - user: root
     - template: jinja
     - group: root
@@ -73,7 +73,7 @@
     file.managed:
     - watch:
       - file: /srv/kubernetes/manifests/calico
-    - source: salt://kubernetes/cni/calico/templates/calico.yaml.jinja
+    - source: salt://kubernetes/cni/calico/templates/calico.yaml.j2
     - user: root
     - template: jinja
     - group: root

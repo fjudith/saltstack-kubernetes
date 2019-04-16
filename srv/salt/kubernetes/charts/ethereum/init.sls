@@ -12,7 +12,7 @@
   file.managed:
     - require:
       - file:  /srv/kubernetes/manifests/ethereum
-    - source: salt://kubernetes/charts/ethereum/templates/ingress.yaml.jinja
+    - source: salt://kubernetes/charts/ethereum/templates/ingress.yaml.j2
     - user: root
     - template: jinja
     - group: root

@@ -2,7 +2,7 @@
 
 /srv/kubernetes/manifests/npd.yaml:
     file.managed:
-    - source: salt://kubernetes/addons/node-problem-detector/templates/npd.yaml.jinja
+    - source: salt://kubernetes/addons/node-problem-detector/templates/npd.yaml.j2
     - user: root
     - template: jinja
     - group: root

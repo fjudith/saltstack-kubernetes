@@ -57,7 +57,7 @@
     file.managed:
     - require:
       - file: /srv/kubernetes/manifests/rook-ceph
-    - source: salt://kubernetes/csi/rook-ceph/templates/operator.yaml.jinja
+    - source: salt://kubernetes/csi/rook-ceph/templates/operator.yaml.j2
     - user: root
     - group: root
     - mode: 644
@@ -159,7 +159,7 @@
     file.managed:
     - require:
       - file: /srv/kubernetes/manifests/rook-ceph
-    - source: salt://kubernetes/csi/rook-ceph/templates/ingress.yaml.jinja
+    - source: salt://kubernetes/csi/rook-ceph/templates/ingress.yaml.j2
     - user: root
     - group: root
     - mode: 644

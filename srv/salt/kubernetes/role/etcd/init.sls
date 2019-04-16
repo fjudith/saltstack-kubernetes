@@ -63,7 +63,7 @@ etcd-latest-archive:
 
 /etc/systemd/system/etcd-member.service:
   file.managed:
-    - source: salt://kubernetes/role/etcd/templates/etcd-member.service.jinja
+    - source: salt://kubernetes/role/etcd/templates/etcd-member.service.j2
     - user: root
     - template: jinja
     - group: root

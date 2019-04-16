@@ -30,7 +30,7 @@ helm-charts:
     file.managed:
     - require:
       - file: /srv/kubernetes/manifests/keycloak-gatekeeper
-    - source: salt://kubernetes/charts/keycloak-gatekeeper/templates/realms.json.jinja
+    - source: salt://kubernetes/charts/keycloak-gatekeeper/templates/realms.json.j2
     - user: root
     - group: root
     - template: jinja
@@ -107,7 +107,7 @@ keycloak-create-client-scopes:
 
 /srv/kubernetes/manifests/keycloak-gatekeeper/kubernetes-dashboard.json:
   file.managed:
-    - source: salt://kubernetes/charts/keycloak-gatekeeper/templates/kubernetes-dashboard.json.jinja
+    - source: salt://kubernetes/charts/keycloak-gatekeeper/templates/kubernetes-dashboard.json.j2
     - user: root
     - group: root
     - template: jinja
@@ -133,7 +133,7 @@ keycloak-create-client-scopes:
   file.managed:
     - require:
       - file: /srv/kubernetes/manifests/keycloak-gatekeeper/files
-    - source: salt://kubernetes/charts/keycloak-gatekeeper/templates/keycloak-kubernetes-rbac.yaml.jinja
+    - source: salt://kubernetes/charts/keycloak-gatekeeper/templates/keycloak-kubernetes-rbac.yaml.j2
     - user: root
     - group: root
     - template: jinja
@@ -158,7 +158,7 @@ keycloak-kubernetes-dashboard:
 {% if common.addons.get('weave_scope', {'enabled': False}).enabled %}
 /srv/kubernetes/manifests/keycloak-gatekeeper/weave-scope.json:
   file.managed:
-    - source: salt://kubernetes/charts/keycloak-gatekeeper/templates/weave-scope.json.jinja
+    - source: salt://kubernetes/charts/keycloak-gatekeeper/templates/weave-scope.json.j2
     - user: root
     - group: root
     - template: jinja
@@ -188,7 +188,7 @@ keycloak-weave-scope:
 {% if common.addons.get('kube_prometheus', {'enabled': False}).enabled %}
 /srv/kubernetes/manifests/keycloak-gatekeeper/alertmanager.json:
   file.managed:
-    - source: salt://kubernetes/charts/keycloak-gatekeeper/templates/alertmanager.json.jinja
+    - source: salt://kubernetes/charts/keycloak-gatekeeper/templates/alertmanager.json.j2
     - user: root
     - group: root
     - template: jinja
@@ -216,7 +216,7 @@ keycloak-alertmanager:
 
 /srv/kubernetes/manifests/keycloak-gatekeeper/prometheus.json:
   file.managed:
-    - source: salt://kubernetes/charts/keycloak-gatekeeper/templates/prometheus.json.jinja
+    - source: salt://kubernetes/charts/keycloak-gatekeeper/templates/prometheus.json.j2
     - user: root
     - group: root
     - template: jinja
@@ -247,7 +247,7 @@ keycloak-prometheus:
 {% if master.storage.get('rook_ceph', {'enabled': False}).enabled %}
 /srv/kubernetes/manifests/keycloak-gatekeeper/rook-ceph.json:
   file.managed:
-    - source: salt://kubernetes/charts/keycloak-gatekeeper/templates/rook-ceph.json.jinja
+    - source: salt://kubernetes/charts/keycloak-gatekeeper/templates/rook-ceph.json.j2
     - user: root
     - group: root
     - template: jinja

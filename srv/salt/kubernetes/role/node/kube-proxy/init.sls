@@ -41,7 +41,7 @@ kube-proxy-install:
 
 /etc/kubernetes/kube-proxy.kubeconfig:
   file.managed:
-    - source: salt://kubernetes/role/node/kube-proxy/templates/kube-proxy.kubeconfig.jinja
+    - source: salt://kubernetes/role/node/kube-proxy/templates/kube-proxy.kubeconfig.j2
     - user: root
     - template: jinja
     - group: root
@@ -49,7 +49,7 @@ kube-proxy-install:
 
 /var/lib/kube-proxy/kube-proxy-config.yaml:
   file.managed:
-    - source: salt://kubernetes/role/node/kube-proxy/templates/kube-proxy-config.yaml.jinja
+    - source: salt://kubernetes/role/node/kube-proxy/templates/kube-proxy-config.yaml.j2
     - user: root
     - template: jinja
     - group: root

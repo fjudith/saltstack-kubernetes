@@ -4,7 +4,7 @@
 
 /srv/kubernetes/manifests/spinnaker-ingress.yaml:
   file.managed:
-    - source: salt://kubernetes/charts/spinnaker/templates/ingress.yaml.jinja
+    - source: salt://kubernetes/charts/spinnaker/templates/ingress.yaml.j2
     - user: root
     - template: jinja
     - group: root

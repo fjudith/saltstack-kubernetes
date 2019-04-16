@@ -12,7 +12,7 @@
     file.managed:
     - watch:
       - file: /srv/kubernetes/manifests/fluentd-elasticsearch
-    - source: salt://kubernetes/addons/fluentd-elasticsearch/templates/es-statefulset.yaml.jinja
+    - source: salt://kubernetes/addons/fluentd-elasticsearch/templates/es-statefulset.yaml.j2
     - user: root
     - template: jinja
     - group: root

@@ -19,16 +19,6 @@ addon-cert-manager:
     - group: root
     - mode: 644
 
-/srv/kubernetes/manifests/cert-manager/certificate.yaml:
-  file.managed:
-    - watch:
-      - git: addon-cert-manager
-    - source: salt://kubernetes/ingress/cert-manager/templates/certificate.yaml.jinja
-    - user: root
-    - template: jinja
-    - group: root
-    - mode: 644
-
 kubernetes-cert-manager-install:
   cmd.run:
     - watch:
@@ -58,10 +48,8 @@ kubernetes-cert-manager-config:
       - http: query-cert-manager-required-api
     - watch:
         - file: /srv/kubernetes/manifests/cert-manager/clusterissuer.yaml
-        - file: /srv/kubernetes/manifests/cert-manager/certificate.yaml
     - runas: root
     - use_vt: True
     - onlyif: curl --silent 'http://127.0.0.1:8080/apis/certmanager.k8s.io'
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/cert-manager/clusterissuer.yaml
-        kubectl apply -f /srv/kubernetes/manifests/cert-manager/certificate.yaml

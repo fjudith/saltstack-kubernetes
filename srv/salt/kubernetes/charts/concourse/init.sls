@@ -40,7 +40,7 @@
 
 /srv/kubernetes/manifests/concourse-ingress.yaml:
   file.managed:
-    - source: salt://kubernetes/charts/concourse/templates/ingress.yaml.jinja
+    - source: salt://kubernetes/charts/concourse/templates/ingress.yaml.j2
     - user: root
     - template: jinja
     - group: root

@@ -22,7 +22,7 @@
   file.managed:
     - require:
       - file:  /srv/kubernetes/manifests/keycloak
-    - source: salt://kubernetes/charts/keycloak/templates/ingress.yaml.jinja
+    - source: salt://kubernetes/charts/keycloak/templates/ingress.yaml.j2
     - user: root
     - template: jinja
     - group: root

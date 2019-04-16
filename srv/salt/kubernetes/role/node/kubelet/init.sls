@@ -33,7 +33,7 @@ kubelet-install:
 
 /etc/systemd/system/kubelet.service:
     file.managed:
-    - source: salt://kubernetes/role/node/kubelet/templates/kubelet.service.jinja
+    - source: salt://kubernetes/role/node/kubelet/templates/kubelet.service.j2
     - user: root
     - template: jinja
     - group: root
@@ -41,7 +41,7 @@ kubelet-install:
 
 /etc/kubernetes/kubelet.kubeconfig:
     file.managed:
-    - source: salt://kubernetes/role/node/kubelet/templates/kubelet.kubeconfig.jinja
+    - source: salt://kubernetes/role/node/kubelet/templates/kubelet.kubeconfig.j2
     - user: root
     - template: jinja
     - group: root
@@ -49,7 +49,7 @@ kubelet-install:
 
 /etc/kubernetes/bootstrap.kubeconfig:
     file.managed:
-    - source: salt://kubernetes/role/node/kubelet/templates/bootstrap.kubeconfig.jinja
+    - source: salt://kubernetes/role/node/kubelet/templates/bootstrap.kubeconfig.j2
     - user: root
     - template: jinja
     - group: root
@@ -66,7 +66,7 @@ kubelet-install:
   file.managed:
     - require:
       - file: /var/lib/kubelet
-    - source: salt://kubernetes/role/node/kubelet/templates/kubelet-config.yaml.jinja
+    - source: salt://kubernetes/role/node/kubelet/templates/kubelet-config.yaml.j2
     - user: root
     - template: jinja
     - group: root

@@ -4,7 +4,7 @@
 
 /srv/kubernetes/manifests/mailhog-ingress.yaml:
   file.managed:
-    - source: salt://kubernetes/charts/mailhog/templates/ingress.yaml.jinja
+    - source: salt://kubernetes/charts/mailhog/templates/ingress.yaml.j2
     - user: root
     - template: jinja
     - group: root

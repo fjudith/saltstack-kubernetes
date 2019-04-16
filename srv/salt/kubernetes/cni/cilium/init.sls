@@ -21,7 +21,7 @@
     file.managed:
     - require:
       - file: /srv/kubernetes/manifests/cilium
-    - source: salt://kubernetes/cni/cilium/templates/cilium.yaml.jinja
+    - source: salt://kubernetes/cni/cilium/templates/cilium.yaml.j2
     - user: root
     - template: jinja
     - group: root

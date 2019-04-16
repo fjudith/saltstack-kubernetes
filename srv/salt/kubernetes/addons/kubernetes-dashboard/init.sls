@@ -11,7 +11,7 @@
   file.managed:
     - require:
       - file: /srv/kubernetes/manifests/kubernetes-dashboard
-    - source: salt://kubernetes/addons/kubernetes-dashboard/templates/deployment.yaml.jinja
+    - source: salt://kubernetes/addons/kubernetes-dashboard/templates/deployment.yaml.j2
     - user: root
     - template: jinja
     - group: root
@@ -21,7 +21,7 @@
   file.managed:
     - require:
       - file: /srv/kubernetes/manifests/kubernetes-dashboard
-    - source: salt://kubernetes/addons/kubernetes-dashboard/templates/ingress.yaml.jinja
+    - source: salt://kubernetes/addons/kubernetes-dashboard/templates/ingress.yaml.j2
     - user: root
     - group: root
     - template: jinja

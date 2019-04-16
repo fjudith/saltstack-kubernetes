@@ -11,7 +11,7 @@
     require:
     - file: /srv/kubernetes/manifests/traefik
     file.managed:
-    - source: salt://kubernetes/ingress/traefik/templates/traefik.yaml.jinja
+    - source: salt://kubernetes/ingress/traefik/templates/traefik.yaml.j2
     - user: root
     - template: jinja
     - group: root

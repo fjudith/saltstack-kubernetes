@@ -31,7 +31,7 @@
     file.managed:
     - require:
       - file: /srv/kubernetes/manifests/httpbin
-    - source: salt://kubernetes/addons/httpbin/templates/ingress.yaml.jinja
+    - source: salt://kubernetes/addons/httpbin/templates/ingress.yaml.j2
     - user: root
     - group: root
     - mode: 644

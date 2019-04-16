@@ -18,7 +18,7 @@
     file.managed:
     - require:
       - file: /srv/kubernetes/manifests/canal
-    - source: salt://kubernetes/cni/canal/templates/canal.yaml.jinja
+    - source: salt://kubernetes/cni/canal/templates/canal.yaml.j2
     - user: root
     - template: jinja
     - group: root

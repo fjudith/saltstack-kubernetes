@@ -47,7 +47,7 @@ kube-proxy-install:
 
 /var/lib/kube-proxy/kube-proxy-config.yaml:
   file.managed:
-    - source: salt://kubernetes/role/master/kube-proxy/templates/kube-proxy-config.yaml.jinja
+    - source: salt://kubernetes/role/master/kube-proxy/templates/kube-proxy-config.yaml.j2
     - user: root
     - group: root
     - mode: 644

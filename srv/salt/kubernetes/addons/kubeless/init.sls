@@ -76,7 +76,7 @@ kubernetes-kubeless-install:
     require:
     - file: /srv/kubernetes/manifests/kubeless
     file.managed:
-    - source: salt://kubernetes/addons/kubeless/templates/ingress.yaml.jinja
+    - source: salt://kubernetes/addons/kubeless/templates/ingress.yaml.j2
     - user: root
     - template: jinja
     - group: root

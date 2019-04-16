@@ -33,7 +33,7 @@ kube-controller-manager-install:
 
 /etc/systemd/system/kube-controller-manager.service:    
     file.managed:
-    - source: salt://kubernetes/role/master/kube-controller-manager/templates/kube-controller-manager.service.jinja
+    - source: salt://kubernetes/role/master/kube-controller-manager/templates/kube-controller-manager.service.j2
     - user: root
     - template: jinja
     - group: root

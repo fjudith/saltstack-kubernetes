@@ -2,7 +2,7 @@
 
 /srv/kubernetes/manifests/coredns.yaml:
     file.managed:
-    - source: salt://kubernetes/addons/coredns/templates/deployment.yaml.jinja
+    - source: salt://kubernetes/addons/coredns/templates/deployment.yaml.j2
     - user: root
     - template: jinja
     - group: root

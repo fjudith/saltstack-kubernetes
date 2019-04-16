@@ -9,7 +9,7 @@ addon-prometheus-operator:
 
 /srv/kubernetes/manifests/kube-prometheus-ingress.yaml:
     file.managed:
-    - source: salt://kubernetes/addons/kube-prometheus/templates/ingress.yaml.jinja
+    - source: salt://kubernetes/addons/kube-prometheus/templates/ingress.yaml.j2
     - user: root
     - template: jinja
     - group: root
@@ -19,7 +19,7 @@ addon-prometheus-operator:
 
 /srv/kubernetes/manifests/grafana-deployment.yaml:
     file.managed:
-    - source: salt://kubernetes/addons/kube-prometheus/templates/grafana-deployment.yaml.jinja
+    - source: salt://kubernetes/addons/kube-prometheus/templates/grafana-deployment.yaml.j2
     - user: root
     - template: jinja
     - group: root

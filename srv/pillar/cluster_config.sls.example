@@ -82,7 +82,7 @@ kubernetes:
       npd:
         enabled: True
         image: k8s.gcr.io/node-problem-detector:v0.6.2
-      ingress_nginx:
+      nginx:
         enabled: False
       istio:
         enabled: True

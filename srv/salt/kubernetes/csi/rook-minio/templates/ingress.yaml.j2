@@ -17,7 +17,7 @@ metadata:
     kubernetes.io/ingress.class: {{ controller }}
 spec:
   rules:
-  - host: minio-service.{{ public_domain }}
+  - host: minio.{{ public_domain }}
     http:
       paths:
       - path: /*

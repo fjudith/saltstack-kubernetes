@@ -21,53 +21,29 @@ spec:
   - host: {{ charts.harbor.ingress_host }}.{{ public_domain }}
     http:
       paths:
-      - path: /api
+      - path: /api/*
         backend:
-          serviceName: registry-harbor-ui
+          serviceName: registry-harbor-core
           servicePort: 80
-      - path: /service
+      - path: /service/*
         backend:
-          serviceName: registry-harbor-ui
+          serviceName: registry-harbor-core
           servicePort: 80
-      - path: /v2
+      - path: /v2/*
         backend:
-          serviceName: registry-harbor-ui
+          serviceName: registry-harbor-core
           servicePort: 80
-      - path: /chartrepo
+      - path: /chartrepo/*
         backend:
-          serviceName: registry-harbor-ui
+          serviceName: registry-harbor-core
           servicePort: 80
-      - path: /login
+      - path: /c/*
         backend:
-          serviceName: registry-harbor-ui
+          serviceName: registry-harbor-core
           servicePort: 80
-      - path: /log_out
+      - path: /*
         backend:
-          serviceName: registry-harbor-ui
-          servicePort: 80
-      - path: /sendEmail
-        backend:
-          serviceName: registry-harbor-ui
-          servicePort: 80
-      - path: /language
-        backend:
-          serviceName: registry-harbor-ui
-          servicePort: 80
-      - path: /reset
-        backend:
-          serviceName: registry-harbor-ui
-          servicePort: 80
-      - path: /userExists
-        backend:
-          serviceName: registry-harbor-ui
-          servicePort: 80
-      - path: /reset_password
-        backend:
-          serviceName: registry-harbor-ui
-          servicePort: 80
-      - path: /
-        backend:
-          serviceName: registry-harbor-ui
+          serviceName: registry-harbor-portal
           servicePort: 80
 ---
 apiVersion: extensions/v1beta1
@@ -82,7 +58,7 @@ spec:
   - host: notary.{{ public_domain }}
     http:
       paths:
-      - path: /
+      - path: /*
         backend:
           serviceName: registry-harbor-notary-server
           servicePort: 4443

@@ -30,7 +30,9 @@ harbor:
     - name: |
         helm dependency update
         helm install --name registry --namespace harbor \
-          --set database.internal.password={{ charts.harbor.database_password }} \
+          --set expose.ingress.hosts.core=registry.{{ public_domain }} \
+          --set expose.ingress.hosts.notary=notary.{{ public_domain }} \
+          --set externalURL=https://registry.{{ public_domain }} \
           {%- if master.storage.get('rook_ceph', {'enabled': False}).enabled %}
           --set persistence.enabled=true \
           --set database.internal.volumes.data.storageClass=rook-ceph-block \
@@ -40,9 +42,9 @@ harbor:
           {%- else -%}
           --set persistence.enabled=false \
           {%- endif %}
+          --set database.internal.password={{ charts.harbor.database_password }} \
           --set harborAdminPassword={{ charts.harbor.admin_password }} \
-          --set secretkey={{ charts.harbor.secretkey }} \
-          --set externalURL=https://registry.{{ public_domain }} \
+          --set secretKey={{ charts.harbor.secretkey }} \
           "./"
 
 harbor-ingress:

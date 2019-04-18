@@ -30,9 +30,9 @@ harbor:
     - name: |
         helm dependency update
         helm install --name registry --namespace harbor \
-          --set expose.ingress.hosts.core=registry.{{ public_domain }} \
+          --set expose.ingress.hosts.core={{ charts.harbor.ingress_host }}.{{ public_domain }} \
           --set expose.ingress.hosts.notary=notary.{{ public_domain }} \
-          --set externalURL=https://registry.{{ public_domain }} \
+          --set externalURL=https://{{ charts.harbor.ingress_host }}.{{ public_domain }} \
           {%- if master.storage.get('rook_ceph', {'enabled': False}).enabled %}
           --set persistence.enabled=true \
           --set database.internal.volumes.data.storageClass=rook-ceph-block \

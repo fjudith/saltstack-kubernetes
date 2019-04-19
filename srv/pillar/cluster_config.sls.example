@@ -2,14 +2,14 @@ public-domain: example.com
 
 kubernetes:
   common:
-    image: gcr.io/google_containers/hyperkube:v1.14.0
-    version: v1.14.0
+    image: gcr.io/google_containers/hyperkube:v1.14.1
+    version: v1.14.1
     cri:
       provider: containerd
-      crictl_version: 1.13.0
-      runc_version: 1.0.0-rc5
+      crictl_version: 1.14.0
+      runc_version: 1.0.0-rc7
       docker:
-        version: 17.03.2-ce
+        version: 18.06.1-ce
         data_dir: /var/lib/docker
       rkt:
         version: 1.30.0
@@ -17,10 +17,10 @@ kubernetes:
         version: 1.2.6
         source_hash: 3c23bc34c7c0cb2e45fe469f5fcfdb3829aab8e51a425b1efb702f00f215c4c6
       crio:
-        version: 1.13
+        version: 1.14
     cni:
-      source: https://github.com/containernetworking/plugins/releases/download/v0.7.1/cni-plugins-amd64-v0.7.1.tgz
-      source_hash: e7e5751d43456f69ea1ed043647e0377
+      source: https://github.com/containernetworking/plugins/releases/download/v0.7.5/cni-plugins-amd64-v0.7.5.tgz
+      source_hash: 3ca15c0a18ee830520cf3a95408be826cbd255a1535a38e0be9608b25ad8bf64
       network: 10.2.0.0/16
       provider: weave
       calico:

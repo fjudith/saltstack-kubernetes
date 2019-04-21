@@ -75,7 +75,7 @@ kubernetes:
         enabled: True
       dashboard:
         enabled: True
-      ingress_traefik:
+      traefik:
         enabled: False
         password: '$$apr1$$u7.rXtVi$$DQtLfP6lJJZqvENhyo6EX1'
         acme_email: user@example.com

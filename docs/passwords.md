@@ -81,7 +81,7 @@ Record the value next to `admin:` in the Salt pillar.
 ```yaml
 kubernetes:
   addons:
-    ingress_traefik:
+    traefik:
       password: $$apr1$$u7.rXtVi$$DQtLfP6lJJZqvENhyo6EX1
 ```
 

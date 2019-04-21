@@ -64,10 +64,10 @@ data:
       [entryPoints.https]
       address = ":443"
       [entryPoints.https.auth.basic]
-      users = ["admin:{{ common.addons.ingress_traefik.password }}"]
+      users = ["admin:{{ common.addons.traefik.password }}"]
         [entryPoints.https.tls]
     [acme]
-    email = "{{ common.addons.ingress_traefik.acme_email }}"
+    email = "{{ common.addons.traefik.acme_email }}"
     storageFile = "/acme/acme.json"
     entryPoint = "https"
     onDemand = true

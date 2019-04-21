@@ -70,7 +70,7 @@ spec:
           name: grafana-dashboard-rook
           readOnly: false
         {%- endif %}
-        {%- if common.addons.get('ingress_traefik', {'enabled': False}).enabled %}
+        {%- if common.addons.get('traefik', {'enabled': False}).enabled %}
         - mountPath: /grafana-dashboard-definitions/0/traefik
           name: grafana-dashboard-traefik
           readOnly: false
@@ -117,7 +117,7 @@ spec:
           name: grafana-dashboard-rook
         name: grafana-dashboard-rook
       {%- endif %}
-      {%- if common.addons.get('ingress_traefik', {'enabled': False}).enabled %}
+      {%- if common.addons.get('traefik', {'enabled': False}).enabled %}
       - configMap:
           name: grafana-dashboard-traefik
         name: grafana-dashboard-traefik      

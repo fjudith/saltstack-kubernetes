@@ -8,7 +8,7 @@ include:
 {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
   - kubernetes.ingress.nginx
 {%- endif -%}
-{%- if common.addons.get('ingress_traefik', {'enabled': False}).enabled %}
+{%- if common.addons.get('traefik', {'enabled': False}).enabled %}
   - kubernetes.ingress.traefik
 {%- endif -%}
 {%- if common.addons.get('istio', {'enabled': False}).enabled %}

@@ -1,9 +1,10 @@
 controller:
   daemonset:
     useHostPort: true
-  autoscaling:
-    enabled: true
-    maxReplicas: 4
+    hostPorts:
+      http: 80
+      https: 443
+  kind: DaemonSet
   nodeSelector:
     node-role.kubernetes.io/ingress: "true"
   tolerations:

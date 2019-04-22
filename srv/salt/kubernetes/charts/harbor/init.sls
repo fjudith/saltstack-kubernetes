@@ -3,7 +3,7 @@
 {%- from "kubernetes/map.jinja" import master with context -%}
 {%- from "kubernetes/map.jinja" import charts with context -%}
 
-harbor-addon:
+harbor-repo:
   git.latest:
     - name: https://github.com/goharbor/harbor-helm
     - target: /srv/kubernetes/manifests/harbor
@@ -21,18 +21,19 @@ harbor-addon:
 harbor:
   cmd.run:
     - watch:
-        - git:  harbor-addon
+        - git:  harbor-repo
     - runas: root
-    - unless: helm list | grep registry
+    - unless: helm list | grep harbor
     - cwd: /srv/kubernetes/manifests/harbor
     - env:
       - HELM_HOME: /srv/helm/home
     - name: |
         helm dependency update
-        helm install --name registry --namespace harbor \
-          --set expose.ingress.hosts.core={{ charts.harbor.ingress_host }}.{{ public_domain }} \
-          --set expose.ingress.hosts.notary=notary.{{ public_domain }} \
-          --set externalURL=https://{{ charts.harbor.ingress_host }}.{{ public_domain }} \
+        helm install --name harbor --namespace harbor \
+          --set export.type=clusterIP \
+          --set expose.ingress.hosts.core={{ charts.harbor.core_ingress_host }}.{{ public_domain }} \
+          --set expose.ingress.hosts.notary={{ charts.harbor.notary_ingress_host }}.{{ public_domain }} \
+          --set externalURL=https://{{ charts.harbor.core_ingress_host }}.{{ public_domain }} \
           {%- if master.storage.get('rook_ceph', {'enabled': False}).enabled %}
           --set persistence.enabled=true \
           --set database.internal.volumes.data.storageClass=rook-ceph-block \

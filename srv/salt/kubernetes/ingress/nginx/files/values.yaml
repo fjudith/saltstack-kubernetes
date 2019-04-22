@@ -5,6 +5,18 @@ controller:
       http: 80
       https: 443
   kind: DaemonSet
+  config:
+    enable-vts-status: "true"
+    proxy-body-size: 4096m
+    proxy-buffer-size: 128k
+    proxy-connect-timeout: 600s
+    proxy-read-timeout: 3600s
+    proxy-request-buffering: "off"
+    proxy-send-timeout: 3600s
+    server-snippet: |
+      if ( $is_args = "" ){rewrite ^/(/*[^./]+)$$ $1/ permanent;}
+    server-tokens: "false"
+    worker-shutdown-timeout: 3600s
   nodeSelector:
     node-role.kubernetes.io/ingress: "true"
   tolerations:

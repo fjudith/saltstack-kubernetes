@@ -1,0 +1,12 @@
+configInline:
+  address-pools:
+  - name: default
+    protocol: layer2
+    addresses:
+      - 172.17.4.251-172.17.4.252
+# speaker:
+#   nodeSelector:
+#     node-role.kubernetes.io/ingress: "true"
+#   tolerations:
+#     - key: node-role.kubernetes.io/ingress
+#       effect: NoSchedule

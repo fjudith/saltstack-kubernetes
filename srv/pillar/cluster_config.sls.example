@@ -111,6 +111,8 @@ kubernetes:
         version: 0.1.1
       httpbin:
         enabled: True
+      metallb:
+        enabled: True
   etcd:
     host: 127.0.0.1
     members:
@@ -287,14 +289,6 @@ haproxy:
       bind: "*:6443"
       mode: tcp
       default_backend: kube-apiserver
-    http:
-      bind: "*:80"
-      mode: tcp
-      default_backend: http
-    https:
-      bind: "*:443"
-      mode: tcp
-      default_backend: https
   backends:
     kube-apiserver:
       mode: tcp
@@ -312,30 +306,4 @@ haproxy:
         master03:
           host: 172.17.4.103
           port: 6443
-          check: check
-    http:
-      mode: tcp
-      balance: source
-      sticktable: "type binary len 32 size 30k expire 30m"
-      servers:
-        proxy01:
-          host: 172.17.4.251
-          port: 31380
-          check: check
-        proxy02:
-          host: 172.17.4.252
-          port: 31380
-          check: check
-    https:
-      mode: tcp
-      balance: source
-      sticktable: "type binary len 32 size 30k expire 30m"
-      servers:
-        proxy01:
-          host: 172.17.4.251
-          port: 31390
-          check: check
-        proxy02:
-          host: 172.17.4.252
-          port: 31390
           check: check

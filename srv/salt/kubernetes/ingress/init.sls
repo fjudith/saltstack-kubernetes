@@ -2,6 +2,7 @@
 {%- from "kubernetes/map.jinja" import master with context -%}
 
 include:
+  - kubernetes.ingress.metallb
 {%- if common.addons.get('cert_manager', {'enabled': False}).enabled %}
   - kubernetes.ingress.cert-manager
 {%- endif -%}

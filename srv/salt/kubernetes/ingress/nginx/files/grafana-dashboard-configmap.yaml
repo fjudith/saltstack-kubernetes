@@ -4,7 +4,7 @@ metadata:
   name: grafana-dashboard-nginx
   namespace: monitoring
 data:
-  traefik-dashboard.json: |+
+  nginx-dashboard.json: |+
     {
       "__inputs": [
         {

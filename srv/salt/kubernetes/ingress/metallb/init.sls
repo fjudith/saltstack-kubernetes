@@ -16,7 +16,7 @@
     - group: root
     - mode: 644
 
-kubernetes-nginx-install:
+kubernetes-metallb-install:
   cmd.run:
     - watch:
       - file: /srv/kubernetes/manifests/metallb/values.yaml

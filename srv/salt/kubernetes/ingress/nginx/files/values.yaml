@@ -1,0 +1,24 @@
+controller:
+  daemonset:
+    useHostPort: true
+  autoscaling:
+    enabled: true
+    maxReplicas: 4
+  nodeSelector:
+    node-role.kubernetes.io/ingress: "true"
+  tolerations:
+    - key: node-role.kubernetes.io/ingress
+      effect: NoSchedule
+  stats:
+    enabled: true
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+defaultBackend:
+  enabled: true
+  replicaCount: 2
+rbac:
+  create: true
+serviceAccount:
+  create: true

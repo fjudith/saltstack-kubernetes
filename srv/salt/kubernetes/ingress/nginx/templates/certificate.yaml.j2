@@ -1,0 +1,23 @@
+{%- set public_domain = pillar['public-domain'] -%}
+{%- from "kubernetes/map.jinja" import common with context -%}
+
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  name: nginx-ingress-certs
+  namespace: ingress-nginx
+spec:
+  acme:
+    config:
+    - dns01:
+        provider: {{ common.addons.cert_manager.dns.provider }}
+      domains:
+      - '*.{{ public_domain }}'
+      - {{ public_domain }}
+  commonName: '*.{{ public_domain }}'
+  dnsNames:
+  - {{ public_domain }}
+  issuerRef:
+    kind: ClusterIssuer
+    name: letsencrypt
+  secretName: nginx-ingress-certs

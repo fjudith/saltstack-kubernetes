@@ -37,7 +37,27 @@ kubernetes-kube-prometheus-install:
     - use_vt: True
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/prometheus-operator/contrib/kube-prometheus/manifests/ || true
-        kubectl apply -f /srv/kubernetes/manifests/prometheus-operator/contrib/kube-prometheus/manifests/ 2>/dev/null || true
+        kubectl apply -f /srv/kubernetes/manifests/prometheus-operator/contrib/kube-prometheus/manifests/ 2>/dev/null || true      
+    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz'
+
+kubernetes-kube-prometheus-grafana:
+  cmd.run:
+    - watch:
+        - cmd: kubernetes-kube-prometheus-install
+        - file: /srv/kubernetes/manifests/grafana-deployment.yaml
+    - runas: root
+    - use_vt: True
+    - name: |
         kubectl apply -f /srv/kubernetes/manifests/grafana-deployment.yaml
+    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz'
+
+kubernetes-kube-prometheus-ingress:
+  cmd.run:
+    - watch:
+        - cmd: kubernetes-kube-prometheus-install
+        - file: /srv/kubernetes/manifests/kube-prometheus-ingress.yaml
+    - runas: root
+    - use_vt: True
+    - name: |
         kubectl apply -f /srv/kubernetes/manifests/kube-prometheus-ingress.yaml
     - onlyif: curl --silent 'http://127.0.0.1:8080/healthz'

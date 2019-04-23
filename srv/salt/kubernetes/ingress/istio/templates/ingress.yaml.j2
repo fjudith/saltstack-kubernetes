@@ -16,32 +16,25 @@ metadata:
   namespace: istio-system
   annotations:
     kubernetes.io/ingress.class: {{ controller }}
+    {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/tls-acme: "true"
+    {%- endif %}
 spec:
   rules:
-  - host: istio-tracing.{{ public_domain }}
+  - host: {{ common.addons.istio.tracing_ingress_host }}.{{ public_domain }}
     http:
       paths:
-      - path: /*
+      - path: /
         backend:
           serviceName: jaeger-query
           servicePort: 16686
----
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: istio-servicegraph
-  namespace: istio-system
-  annotations:
-    kubernetes.io/ingress.class: {{ controller }}
-spec:
-  rules:
-  - host: istio-servicegraph.{{ public_domain }}
-    http:
-      paths:
-      - path: /*
-        backend:
-          serviceName: servicegraph
-          servicePort: 8088
+  {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+  tls:
+  - secretName: tracing-prod-cert
+    hosts:
+    - {{ common.addons.istio.tracing_ingress_host }}.{{ public_domain }}
+  {%- endif %}
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -50,15 +43,25 @@ metadata:
   namespace: istio-system
   annotations:
     kubernetes.io/ingress.class: {{ controller }}
+    {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/tls-acme: "true"
+    {%- endif %}
 spec:
   rules:
-  - host: istio-telemetry.{{ public_domain }}
+  - host: {{ common.addons.istio.telemetry_ingress_host }}.{{ public_domain }}
     http:
       paths:
-      - path: /*
+      - path: /
         backend:
           serviceName: istio-telemetry
           servicePort: 9093
+  {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+  tls:
+  - secretName: telemetry-web-prod-cert
+    hosts:
+    - {{ common.addons.istio.telemetry_ingress_host }}.{{ public_domain }}
+  {%- endif %}
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -67,15 +70,25 @@ metadata:
   namespace: istio-system
   annotations:
     kubernetes.io/ingress.class: {{ controller }}
+    {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/tls-acme: "true"
+    {%- endif %}
 spec:
   rules:
-  - host: istio-prometheus.{{ public_domain }}
+  - host: {{ common.addons.istio.prometheus_ingress_host }}.{{ public_domain }}
     http:
       paths:
-      - path: /*
+      - path: /
         backend:
           serviceName: prometheus
           servicePort: 9090
+  {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+  tls:
+  - secretName: prometheus-web-prod-cert
+    hosts:
+    - {{ common.addons.istio.prometheus_ingress_host }}.{{ public_domain }}
+  {%- endif %}
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -84,15 +97,25 @@ metadata:
   namespace: istio-system
   annotations:
     kubernetes.io/ingress.class: {{ controller }}
+    {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/tls-acme: "true"
+    {%- endif %}
 spec:
   rules:
-  - host: istio-grafana.{{ public_domain }}
+  - host: {{ common.addons.istio.grafana_ingress_host }}.{{ public_domain }}
     http:
       paths:
-      - path: /*
+      - path: /
         backend:
           serviceName: grafana
           servicePort: 3000
+  {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+  tls:
+  - secretName: grafana-prod-cert
+    hosts:
+    - {{ common.addons.istio.grafana_ingress_host }}.{{ public_domain }}
+  {%- endif %}
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -101,15 +124,25 @@ metadata:
   namespace: istio-system
   annotations:
     kubernetes.io/ingress.class: {{ controller }}
+    {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/tls-acme: "true"
+    {%- endif %}
 spec:
   rules:
-  - host: istio-kiali.{{ public_domain }}
+  - host: {{ common.addons.istio.kiali_ingress_host }}.{{ public_domain }}
     http:
       paths:
-      - path: /*
+      - path: /kiali
         backend:
           serviceName: kiali
           servicePort: 20001
+  {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+  tls:
+  - secretName: kiali-prod-cert
+    hosts:
+    - {{ common.addons.istio.kiali_ingress_host }}.{{ public_domain }}
+  {%- endif %}
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -118,13 +151,23 @@ metadata:
   namespace: bookinfo
   annotations:
     kubernetes.io/ingress.class: {{ controller }}
+    {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/tls-acme: "true"
+    {%- endif %}
 spec:
   rules:
-  - host: bookinfo.{{ public_domain }}
+  - host: {{ common.addons.istio.bookinfo_ingress_host }}.{{ public_domain }}
     http:
       paths:
-      - path: /*
+      - path: /
         backend:
           serviceName: productpage
           servicePort: 9080
+  {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+  tls:
+  - secretName: bookinfo-prod-cert
+    hosts:
+    - {{ common.addons.istio.bookinfo_ingress_host }}.{{ public_domain }}
+  {%- endif %}
 ---

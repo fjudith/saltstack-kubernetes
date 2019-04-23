@@ -16,15 +16,25 @@ metadata:
   namespace: spinnaker
   annotations:
     kubernetes.io/ingress.class: {{ controller }}
+    {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/tls-acme: "true"
+    {%- endif %}
 spec:
   rules:
   - host: {{ charts.spinnaker.ingress_host }}.{{ public_domain }}
     http:
       paths:
-      - path: /*
+      - path: /
         backend:
           serviceName: spin-deck
           servicePort: 9000
+  {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+  tls:
+  - secretName: spinnaker-prod-cert
+    hosts:
+    - {{ charts.spinnaker.ingress_host }}.{{ public_domain }}
+  {%- endif %}
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -33,13 +43,23 @@ metadata:
   namespace: spinnaker
   annotations:
     kubernetes.io/ingress.class: {{ controller }}
+    {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/tls-acme: "true"
+    {%- endif %}
 spec:
   rules:
   - host: {{ charts.spinnaker.ingress_host }}-gate.{{ public_domain }}
     http:
       paths:
-      - path: /*
+      - path: /
         backend:
           serviceName: spin-gate
           servicePort: 8084
+  {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+  tls:
+  - secretName: spinnaker-gate-prod-cert
+    hosts:
+    - {{ charts.spinnaker.ingress_host }}-gate.{{ public_domain }}
+  {%- endif %}
 ---

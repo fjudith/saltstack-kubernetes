@@ -16,35 +16,45 @@ metadata:
   namespace: harbor
   annotations:
     kubernetes.io/ingress.class: {{ controller }}
+    {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/tls-acme: "true"
+    {%- endif %}
 spec:
   rules:
-  - host: {{ charts.harbor.ingress_host }}.{{ public_domain }}
+  - host: {{ charts.harbor.core_ingress_host }}.{{ public_domain }}
     http:
       paths:
-      - path: /api/*
+      - path: /api/
         backend:
-          serviceName: registry-harbor-core
+          serviceName: harbor-harbor-core
           servicePort: 80
-      - path: /service/*
+      - path: /service/
         backend:
-          serviceName: registry-harbor-core
+          serviceName: harbor-harbor-core
           servicePort: 80
-      - path: /v2/*
+      - path: /v2/
         backend:
-          serviceName: registry-harbor-core
+          serviceName: harbor-harbor-core
           servicePort: 80
-      - path: /chartrepo/*
+      - path: /chartrepo/
         backend:
-          serviceName: registry-harbor-core
+          serviceName: harbor-harbor-core
           servicePort: 80
-      - path: /c/*
+      - path: /c/
         backend:
-          serviceName: registry-harbor-core
+          serviceName: harbor-harbor-core
           servicePort: 80
-      - path: /*
+      - path: /
         backend:
-          serviceName: registry-harbor-portal
+          serviceName: harbor-harbor-portal
           servicePort: 80
+  {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+  tls:
+  - secretName: core-prod-cert
+    hosts:
+    - {{ charts.harbor.core_ingress_host }}.{{ public_domain }}
+  {%- endif %}
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -53,13 +63,23 @@ metadata:
   namespace: harbor
   annotations:
     kubernetes.io/ingress.class: {{ controller }}
+    {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/tls-acme: "true"
+    {%- endif %}
 spec:
   rules:
   - host: notary.{{ public_domain }}
     http:
       paths:
-      - path: /*
+      - path: /
         backend:
-          serviceName: registry-harbor-notary-server
+          serviceName: harbor-harbor-notary-server
           servicePort: 4443
+  {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+  tls:
+  - secretName: notary-prod-cert
+    hosts:
+    - {{ charts.harbor.notary_ingress_host }}.{{ public_domain }}
+  {%- endif %}
 ---

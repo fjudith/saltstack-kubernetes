@@ -15,14 +15,24 @@ metadata:
  namespace: monitoring
  annotations:
     kubernetes.io/ingress.class: {{ controller }}
+    {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/tls-acme: "true"
+    {%- endif %}
 spec:
- rules:
- - host: prometheus.{{ public_domain }}
-   http:
-     paths:
-     - backend:
-         serviceName: prometheus-k8s
-         servicePort: 9090
+  rules:
+  - host: {{ common.addons.kube_prometheus.prometheus_ingress_host }}.{{ public_domain }}
+    http:
+      paths:
+      - backend:
+          serviceName: prometheus-k8s
+          servicePort: 9090
+  {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+  tls:
+  - secretName: prometheus-prod-cert
+    hosts:
+    - {{ common.addons.kube_prometheus.prometheus_ingress_host }}.{{ public_domain }}
+  {%- endif %}
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -31,14 +41,24 @@ metadata:
  namespace: monitoring
  annotations:
     kubernetes.io/ingress.class: {{ controller }}
+    {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/tls-acme: "true"
+    {%- endif %}
 spec:
- rules:
- - host: alertmanager.{{ public_domain }}
-   http:
-     paths:
-     - backend:
-         serviceName: alertmanager-main
-         servicePort: 9093
+  rules:
+  - host: {{ common.addons.kube_prometheus.alertmanager_ingress_host }}.{{ public_domain }}
+    http:
+      paths:
+      - backend:
+          serviceName: alertmanager-main
+          servicePort: 9093
+  {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+  tls:
+  - secretName: alertmanager-prod-cert
+    hosts:
+    - {{ common.addons.kube_prometheus.alertmanager_ingress_host }}.{{ public_domain }}
+  {%- endif %}
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -47,11 +67,22 @@ metadata:
  namespace: monitoring
  annotations:
     kubernetes.io/ingress.class: {{ controller }}
+    {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/tls-acme: "true"
+    {%- endif %}
 spec:
- rules:
- - host: grafana.{{ public_domain }}
-   http:
-     paths:
-     - backend:
-         serviceName: grafana
-         servicePort: 3000
+  rules:
+  - host: {{ common.addons.kube_prometheus.grafana_ingress_host }}.{{ public_domain }}
+    http:
+      paths:
+      - backend:
+          serviceName: grafana
+          servicePort: 3000
+  {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+  tls:
+  - secretName: grafana-prod-cert
+    hosts:
+    - {{ common.addons.kube_prometheus.grafana_ingress_host }}.{{ public_domain }}
+  {%- endif %}
+---

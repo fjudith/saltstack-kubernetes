@@ -16,15 +16,25 @@ metadata:
   namespace: default
   annotations:
     kubernetes.io/ingress.class: {{ controller }}
+    {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/tls-acme: "true"
+    {%- endif %}
 spec:
   rules:
   - host: {{ charts.vistio.ingress_host }}.{{ public_domain }}
     http:
       paths:
-      - path: /*
+      - path: /
         backend:
           serviceName: vistio-web
           servicePort: 8080
+  {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+  tls:
+  - secretName: vistio-web-prod-cert
+    hosts:
+    - {{ charts.vistio.ingress_host }}.{{ public_domain }}
+  {%- endif %}
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -33,13 +43,23 @@ metadata:
   namespace: default
   annotations:
     kubernetes.io/ingress.class: {{ controller }}
+    {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/tls-acme: "true"
+    {%- endif %}
 spec:
   rules:
   - host: {{ charts.vistio.ingress_host }}-api.{{ public_domain }}
     http:
       paths:
-      - path: /*
+      - path: /
         backend:
           serviceName: vistio-api
           servicePort: 9091
+  {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+  tls:
+  - secretName: vistio-api-prod-cert
+    hosts:
+    - {{ charts.vistio.ingress_host }}-api.{{ public_domain }}
+  {%- endif %}
 ---

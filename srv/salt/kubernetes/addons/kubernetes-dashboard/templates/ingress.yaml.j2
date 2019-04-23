@@ -15,13 +15,23 @@ metadata:
   namespace: kube-system
   annotations:
     kubernetes.io/ingress.class: {{ controller }}
+    {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/tls-acme: "true"
+    {%- endif %}
 spec:
   rules:
-  - host: kubernetes-dashboard.{{ public_domain }}
+  - host: {{ common.addons.dashboard.ingress_host }}.{{ public_domain }}
     http:
       paths:
-      - path: /*
+      - path: /
         backend:
           serviceName: kubernetes-dashboard
           servicePort: 443
+  {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+  tls:
+  - secretName: kubernetes-dashboard-prod-cert
+    hosts:
+    - {{ common.addons.dashboard.ingress_host }}.{{ public_domain }}
+  {%- endif %}
 ---

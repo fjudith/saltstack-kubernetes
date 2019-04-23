@@ -1,5 +1,6 @@
 {%- set public_domain = pillar['public-domain'] -%}
 {%- from "kubernetes/map.jinja" import common with context -%}
+{%- from "kubernetes/map.jinja" import master with context -%}
 {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
   {%- set controller = "nginx" -%}
 {%- elif common.addons.get('traefik', {'enabled': False}).enabled %}
@@ -15,13 +16,23 @@ metadata:
   namespace: rook-minio
   annotations:
     kubernetes.io/ingress.class: {{ controller }}
+    {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/tls-acme: "true"
+    {%- endif %}
 spec:
   rules:
-  - host: minio.{{ public_domain }}
+  - host: {{ master.storage.rook_minio.ingress_host }}.{{ public_domain }}
     http:
       paths:
-      - path: /*
+      - path: /
         backend:
           serviceName: minio-service
           servicePort: 9000
+  {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+  tls:
+  - secretName: minio-prod-cert
+    hosts:
+    - {{ master.storage.rook_minio.ingress_host }}.{{ public_domain }}
+  {%- endif %}
 ---

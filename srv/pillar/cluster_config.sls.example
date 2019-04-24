@@ -5,7 +5,7 @@ kubernetes:
     image: gcr.io/google_containers/hyperkube:v1.14.1
     version: v1.14.1
     cri:
-      provider: containerd
+      provider: docker
       crictl_version: 1.14.0
       runc_version: 1.0.0-rc7
       docker:
@@ -22,7 +22,7 @@ kubernetes:
       source: https://github.com/containernetworking/plugins/releases/download/v0.7.5/cni-plugins-amd64-v0.7.5.tgz
       source_hash: 3ca15c0a18ee830520cf3a95408be826cbd255a1535a38e0be9608b25ad8bf64
       network: 10.2.0.0/16
-      provider: weave
+      provider: calico
       calico:
         node_image: quay.io/calico/node:v3.6.0
         typha_image: quay.io/calico/typha:v3.6.0
@@ -71,10 +71,14 @@ kubernetes:
       kube_prometheus:
         enabled: True
         version: 0.29.0
+        prometheus_ingress_host: prometheus
+        alertmanager_ingress_host: alertmanager
+        grafana_ingress_host: grafana
       heapster-influxdb:
         enabled: True
       dashboard:
         enabled: True
+        ingress_host: kubernetes-dashboard
       traefik:
         enabled: False
         password: '$$apr1$$u7.rXtVi$$DQtLfP6lJJZqvENhyo6EX1'
@@ -83,12 +87,18 @@ kubernetes:
         enabled: True
         image: k8s.gcr.io/node-problem-detector:v0.6.2
       nginx:
-        enabled: False
+        enabled: true
       istio:
         enabled: True
         version: 1.1.2
         tracing: jaeger
         cni_version: 0.1.0
+        prometheus_ingress_host: istio-prometheus
+        tracing_ingress_host: istio-tracing
+        telemetry_ingress_host: istio-telemetry
+        grafana_ingress_host: istio-grafana
+        kiali_ingress_host: istio-kiali
+        bookinfo_ingress_host: bookinfo
       cert_manager:
         enabled: True
         version: 0.7.0
@@ -102,15 +112,18 @@ kubernetes:
       weave_scope:
         enabled: True
         image: docker.io/weaveworks/scope:1.10.2
+        ingress_host: scope
       kubeless:
         enabled: True
         version: 1.0.1
         ui_version: master
+        ingress_host: kubeless
       knative:
         enabled: False
         version: 0.1.1
       httpbin:
         enabled: True
+        ingress_host: httpbin
       metallb:
         enabled: True
   etcd:
@@ -160,29 +173,30 @@ kubernetes:
       db_password: Ch4ng3M34ls0
       version: 4.2.1
       source_hash: 7b0805adfba328d09cfa7ac377777cb6e270d66f
-      ingress_host: ci
+      ingress_host: concourse
     keycloak:
       enabled: True
       version: 5.0.0
       db_size: 8Gi
       admin_password: Ch4ng3M3
       db_password: Ch4ng3M34ls0
-      ingress_host: sso
+      ingress_host: keycloak
     mailhog:
       enabled: True
-      ingress_host: mail
+      ingress_host: mail-relay
     spinnaker:
       enabled: True
       ingress_host: spinnaker
     harbor:
       enabled: true
-      version: 1.0.0
+      version: 1.0.1
       admin_password: Ch4ng3M3
       secretkey: 2Ds7hlY9VHyKAcNd
       database_password: Ch4ng3M34ls0
       ingress:
         enabled: False
       ingress_host: registry
+      notary_ingress_host: notary
     vistio:
       enabled: true
       version: 0.1.3

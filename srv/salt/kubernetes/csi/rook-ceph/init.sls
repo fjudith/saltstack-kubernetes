@@ -7,18 +7,18 @@
     - group: root
     - dir_mode: 750
     - makedirs: True
-
-/srv/kubernetes/manifests/rook-ceph/rbac.yaml:
-    file.managed:
+    
+/srv/kubernetes/manifests/rook-ceph/common.yaml:
+  file.managed:
     - require:
       - file: /srv/kubernetes/manifests/rook-ceph
-    - source: salt://kubernetes/csi/rook-ceph/files/rbac.yaml
+    - source: salt://kubernetes/csi/rook-ceph/files/common.yaml
     - user: root
     - group: root
     - mode: 644
 
 /srv/kubernetes/manifests/rook-ceph/cluster.yaml:
-    file.managed:
+  file.managed:
     - require:
       - file: /srv/kubernetes/manifests/rook-ceph
     - source: salt://kubernetes/csi/rook-ceph/files/cluster.yaml
@@ -27,7 +27,7 @@
     - mode: 644
 
 /srv/kubernetes/manifests/rook-ceph/dashboard-external.yaml:
-    file.managed:
+  file.managed:
     - require:
       - file: /srv/kubernetes/manifests/rook-ceph
     - source: salt://kubernetes/csi/rook-ceph/files/dashboard-external.yaml
@@ -36,7 +36,7 @@
     - mode: 644
 
 /srv/kubernetes/manifests/rook-ceph/filesystem.yaml:
-    file.managed:
+  file.managed:
     - require:
       - file: /srv/kubernetes/manifests/rook-ceph
     - source: salt://kubernetes/csi/rook-ceph/files/filesystem.yaml
@@ -45,7 +45,7 @@
     - mode: 644
 
 /srv/kubernetes/manifests/rook-ceph/object.yaml:
-    file.managed:
+  file.managed:
     - require:
       - file: /srv/kubernetes/manifests/rook-ceph
     - source: salt://kubernetes/csi/rook-ceph/files/object.yaml
@@ -54,7 +54,7 @@
     - mode: 644
 
 /srv/kubernetes/manifests/rook-ceph/operator.yaml:
-    file.managed:
+  file.managed:
     - require:
       - file: /srv/kubernetes/manifests/rook-ceph
     - source: salt://kubernetes/csi/rook-ceph/templates/operator.yaml.j2
@@ -64,7 +64,7 @@
     - template: jinja
 
 /srv/kubernetes/manifests/rook-ceph/pool.yaml:
-    file.managed:
+  file.managed:
     - require:
       - file: /srv/kubernetes/manifests/rook-ceph
     - source: salt://kubernetes/csi/rook-ceph/files/pool.yaml
@@ -73,7 +73,7 @@
     - mode: 644
 
 /srv/kubernetes/manifests/rook-ceph/storageclass.yaml:
-    file.managed:
+  file.managed:
     - require:
       - file: /srv/kubernetes/manifests/rook-ceph
     - source: salt://kubernetes/csi/rook-ceph/files/storageclass.yaml
@@ -82,7 +82,7 @@
     - mode: 644
 
 /srv/kubernetes/manifests/rook-ceph/toolbox.yaml:
-    file.managed:
+  file.managed:
     - require:
       - file: /srv/kubernetes/manifests/rook-ceph
     - source: salt://kubernetes/csi/rook-ceph/files/toolbox.yaml
@@ -90,8 +90,17 @@
     - group: root
     - mode: 644
 
+/srv/kubernetes/manifests/rook-ceph/prometheus-ceph-rules.yaml:
+  file.managed:
+    - require:
+      - file: /srv/kubernetes/manifests/rook-ceph
+    - source: salt://kubernetes/csi/rook-ceph/files/prometheus-ceph-rules.yaml
+    - user: root
+    - group: root
+    - mode: 644
+
 /srv/kubernetes/manifests/rook-ceph/prometheus-service.yaml:
-    file.managed:
+  file.managed:
     - require:
       - file: /srv/kubernetes/manifests/rook-ceph
     - source: salt://kubernetes/csi/rook-ceph/files/prometheus-service.yaml
@@ -100,7 +109,7 @@
     - mode: 644
 
 /srv/kubernetes/manifests/rook-ceph/prometheus.yaml:
-    file.managed:
+  file.managed:
     - require:
       - file: /srv/kubernetes/manifests/rook-ceph
     - source: salt://kubernetes/csi/rook-ceph/files/prometheus.yaml
@@ -109,7 +118,7 @@
     - mode: 644
 
 /srv/kubernetes/manifests/rook-ceph/service-monitor.yaml:
-    file.managed:
+  file.managed:
     - require:
       - file: /srv/kubernetes/manifests/rook-ceph
     - source: salt://kubernetes/csi/rook-ceph/files/service-monitor.yaml
@@ -118,7 +127,7 @@
     - mode: 644
 
 /srv/kubernetes/manifests/rook-ceph/kube-prometheus-prometheus.yaml:
-    file.managed:
+  file.managed:
     - require:
       - file: /srv/kubernetes/manifests/rook-ceph
     - source: salt://kubernetes/csi/rook-ceph/files/kube-prometheus-prometheus.yaml
@@ -127,7 +136,7 @@
     - mode: 644
 
 /srv/kubernetes/manifests/rook-ceph/kube-prometheus-ceph-exporter.yaml:
-    file.managed:
+  file.managed:
     - require:
       - file: /srv/kubernetes/manifests/rook-ceph
     - source: salt://kubernetes/csi/rook-ceph/files/kube-prometheus-ceph-exporter.yaml
@@ -137,7 +146,7 @@
     - template: jinja
 
 /srv/kubernetes/manifests/rook-ceph/kube-prometheus-service-monitor.yaml:
-    file.managed:
+  file.managed:
     - require:
       - file: /srv/kubernetes/manifests/rook-ceph
     - source: salt://kubernetes/csi/rook-ceph/files/kube-prometheus-service-monitor.yaml
@@ -147,7 +156,7 @@
     - template: jinja
 
 /srv/kubernetes/manifests/rook-ceph/kube-prometheus-grafana-dashboard.yaml:
-    file.managed:
+  file.managed:
     - require:
       - file: /srv/kubernetes/manifests/rook-ceph
     - source: salt://kubernetes/csi/rook-ceph/files/kube-prometheus-grafana-dashboard.yaml
@@ -155,8 +164,17 @@
     - group: root
     - mode: 644
 
+/srv/kubernetes/manifests/rook-ceph/nfs.yaml:
+  file.managed:
+    - require:
+      - file: /srv/kubernetes/manifests/rook-ceph
+    - source: salt://kubernetes/csi/rook-ceph/files/nfs.yaml
+    - user: root
+    - group: root
+    - mode: 644
+
 /srv/kubernetes/manifests/rook-ceph/rook-ceph-ingress.yaml:
-    file.managed:
+  file.managed:
     - require:
       - file: /srv/kubernetes/manifests/rook-ceph
     - source: salt://kubernetes/csi/rook-ceph/templates/ingress.yaml.j2
@@ -165,8 +183,18 @@
     - mode: 644
     - template: jinja
 
+rook-ceph-common-install:
+  cmd.run:
+    - watch:
+      - file: /srv/kubernetes/manifests/rook-ceph/common.yaml
+    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+    - name: |
+        kubectl apply -f /srv/kubernetes/manifests/rook-ceph/common.yaml
+
 rook-ceph-operator-install:
   cmd.run:
+    - require:
+      - cmd: rook-ceph-common-install
     - watch:
       - file: /srv/kubernetes/manifests/rook-ceph/operator.yaml
     - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
@@ -178,7 +206,7 @@ rook-ceph-operator-wait:
     - require:
       - cmd: rook-ceph-operator-install
     - runas: root
-    - name: until kubectl -n rook-ceph-system get pods --selector=app=rook-ceph-operator --field-selector=status.phase=Running -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.status.phase}{"\n"}{end}'; do printf 'rook-ceph-operator is not Running' && sleep 5; done
+    - name: until kubectl -n rook-ceph get pods --selector=app=rook-ceph-operator --field-selector=status.phase=Running -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.status.phase}{"\n"}{end}'; do printf 'rook-ceph-operator is not Running' && sleep 5; done
     - use_vt: True
     - timeout: 180
 
@@ -188,7 +216,6 @@ rook-ceph-cluster-install:
       - cmd: rook-ceph-operator-wait
       - cmd: rook-ceph-operator-install
     - watch:
-      - file: /srv/kubernetes/manifests/rook-ceph/rbac.yaml
       - file: /srv/kubernetes/manifests/rook-ceph/cluster.yaml
       - file: /srv/kubernetes/manifests/rook-ceph/pool.yaml
       - file: /srv/kubernetes/manifests/rook-ceph/object.yaml
@@ -197,7 +224,6 @@ rook-ceph-cluster-install:
       - file: /srv/kubernetes/manifests/rook-ceph/dashboard-external.yaml
       - file: /srv/kubernetes/manifests/rook-ceph/rook-ceph-ingress.yaml
     - name: |
-        kubectl apply -f /srv/kubernetes/manifests/rook-ceph/rbac.yaml
         kubectl apply -f /srv/kubernetes/manifests/rook-ceph/cluster.yaml
         kubectl apply -f /srv/kubernetes/manifests/rook-ceph/pool.yaml
         kubectl apply -f /srv/kubernetes/manifests/rook-ceph/object.yaml
@@ -252,6 +278,7 @@ rook-ceph-monitoring-install:
       - cmd: rook-ceph-rgw-wait
     - watch:
       - file: /srv/kubernetes/manifests/rook-ceph/toolbox.yaml
+      - file: /srv/kubernetes/manifests/rook-ceph/prometheus-ceph-rules.yaml
       - file: /srv/kubernetes/manifests/rook-ceph/prometheus.yaml
       - file: /srv/kubernetes/manifests/rook-ceph/prometheus-service.yaml
       - file: /srv/kubernetes/manifests/rook-ceph/service-monitor.yaml
@@ -266,8 +293,20 @@ rook-ceph-monitoring-install:
         kubectl apply -f /srv/kubernetes/manifests/rook-ceph/kube-prometheus-grafana-dashboard.yaml
         kubectl apply -f /srv/kubernetes/manifests/rook-ceph/kube-prometheus-prometheus.yaml
         kubectl apply -f /srv/kubernetes/manifests/rook-ceph/kube-prometheus-service-monitor.yaml
+        kubectl apply -f /srv/kubernetes/manifests/rook-ceph/prometheus-ceph-rules.yaml
         {%- else %}
         kubectl apply -f /srv/kubernetes/manifests/rook-ceph/prometheus.yaml
         kubectl apply -f /srv/kubernetes/manifests/rook-ceph/prometheus-service.yaml
         kubectl apply -f /srv/kubernetes/manifests/rook-ceph/service-monitor.yaml
+        kubectl apply -f /srv/kubernetes/manifests/rook-ceph/prometheus-ceph-rules.yaml
         {%- endif %}
+
+rook-ceph-nfs-install:
+  cmd.run:
+    - require:
+      - cmd: rook-ceph-monitoring-install
+    - watch:
+      - file: /srv/kubernetes/manifests/rook-ceph/common.yaml
+    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+    - name: |
+        kubectl apply -f /srv/kubernetes/manifests/rook-ceph/nfs.yaml

@@ -32,7 +32,7 @@
     file.managed:
     - require:
       - file: /srv/kubernetes/manifests/rook-minio
-    - source: salt://kubernetes/csi/rook-minio/files/operator.yaml
+    - source: salt://kubernetes/csi/rook-minio/templates/operator.yaml.j2
     - user: root
     - group: root
     - mode: 644

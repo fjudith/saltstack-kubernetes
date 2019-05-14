@@ -12,9 +12,9 @@ Kubernetes cluster deployment is managed using [Saltstack](https://saltstack.com
 
 ---
 
-## Design principles
+## Solution design
 
-<img src="./docs/diagram/high_level_architecture.png" >
+<img src="./docs/diagram/kubernetes_cluster.svg" >
 
 The solution design carries the following requirements:
 

@@ -5,7 +5,7 @@ addon-kube-prometheus:
     - name: https://github.com/coreos/kube-prometheus
     - target: /srv/kubernetes/manifests/kube-prometheus
     - force_reset: True
-    - rev: {{ common.addons.kube_prometheus.version }}
+    - rev: v{{ common.addons.kube_prometheus.version }}
 
 /srv/kubernetes/manifests/kube-prometheus-ingress.yaml:
     file.managed:

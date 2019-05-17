@@ -8,7 +8,7 @@ harbor-repo:
     - name: https://github.com/goharbor/harbor-helm
     - target: /srv/kubernetes/manifests/harbor
     - force_reset: True
-    - rev: {{ charts.harbor.version }}
+    - rev: v{{ charts.harbor.version }}
 
 /srv/kubernetes/manifests/harbor-ingress.yaml:
     file.managed:

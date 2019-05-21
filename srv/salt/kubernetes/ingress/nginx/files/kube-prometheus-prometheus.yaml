@@ -39,15 +39,15 @@ subjects:
 apiVersion: monitoring.coreos.com/v1
 kind: Prometheus
 metadata:
-  name: rook-prometheus
+  name: ingress-nginx
   namespace: ingress-nginx
   labels:
-    prometheus: rook-prometheus
+    prometheus: ingress-nginx
 spec:
   serviceAccountName: prometheus-k8s
   serviceMonitorSelector:
     matchLabels:
-      team: rook
+      team: ingress-nginx
   resources:
     requests:
       memory: 400Mi

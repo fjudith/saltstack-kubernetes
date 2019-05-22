@@ -85,10 +85,11 @@
   file.managed:
     - require:
       - file: /srv/kubernetes/manifests/rook-ceph
-    - source: salt://kubernetes/csi/rook-ceph/files/toolbox.yaml
+    - source: salt://kubernetes/csi/rook-ceph/templates/toolbox.yaml.j2
     - user: root
     - group: root
     - mode: 644
+    - template: jinja
 
 /srv/kubernetes/manifests/rook-ceph/prometheus-ceph-rules.yaml:
   file.managed:
@@ -135,11 +136,11 @@
     - group: root
     - mode: 644
 
-/srv/kubernetes/manifests/rook-ceph/kube-prometheus-ceph-exporter.yaml:
+/srv/kubernetes/manifests/rook-ceph/ceph-exporter.yaml:
   file.managed:
     - require:
       - file: /srv/kubernetes/manifests/rook-ceph
-    - source: salt://kubernetes/csi/rook-ceph/files/kube-prometheus-ceph-exporter.yaml
+    - source: salt://kubernetes/csi/rook-ceph/templates/ceph-exporter.yaml.j2
     - user: root
     - group: root
     - mode: 644
@@ -282,14 +283,14 @@ rook-ceph-monitoring-install:
       - file: /srv/kubernetes/manifests/rook-ceph/prometheus.yaml
       - file: /srv/kubernetes/manifests/rook-ceph/prometheus-service.yaml
       - file: /srv/kubernetes/manifests/rook-ceph/service-monitor.yaml
-      - file: /srv/kubernetes/manifests/rook-ceph/kube-prometheus-ceph-exporter.yaml
+      - file: /srv/kubernetes/manifests/rook-ceph/ceph-exporter.yaml
       - file: /srv/kubernetes/manifests/rook-ceph/kube-prometheus-prometheus.yaml
       - file: /srv/kubernetes/manifests/rook-ceph/kube-prometheus-service-monitor.yaml
       - file: /srv/kubernetes/manifests/rook-ceph/kube-prometheus-grafana-dashboard.yaml
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/rook-ceph/toolbox.yaml
         {%- if common.addons.get('kube_prometheus', {'enabled': False}).enabled %}
-        kubectl apply -f /srv/kubernetes/manifests/rook-ceph/kube-prometheus-ceph-exporter.yaml
+        kubectl apply -f /srv/kubernetes/manifests/rook-ceph/ceph-exporter.yaml
         kubectl apply -f /srv/kubernetes/manifests/rook-ceph/kube-prometheus-grafana-dashboard.yaml
         kubectl apply -f /srv/kubernetes/manifests/rook-ceph/kube-prometheus-prometheus.yaml
         kubectl apply -f /srv/kubernetes/manifests/rook-ceph/kube-prometheus-service-monitor.yaml

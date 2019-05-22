@@ -14,7 +14,7 @@ spec:
   # Settings for the NFS server
   server:
     # the number of active NFS servers
-    active: 3
+    active: 2
     # where to run the NFS server
     placement:
     #  nodeAffinity:

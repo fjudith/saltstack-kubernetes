@@ -67,3 +67,9 @@ sed -i 's#\"kubernetes\"##g' tmp.json
 curl -k -H "Content-Type: application/json" -X PUT --data-binary @tmp.json http://localhost:8001/api/v1/namespaces/${NAMESPACE}/finalize
 rm -f tmp.json
 ```
+
+NAMESPACE="rook-ceph"
+kubectl get namespace ${NAMESPACE} -o json > tmp.json
+sed -i 's#\"kubernetes\"##g' tmp.json
+curl -k -H "Content-Type: application/json" -X PUT --data-binary @tmp.json http://localhost:8001/api/v1/namespaces/${NAMESPACE}/finalize
+rm -f tmp.json

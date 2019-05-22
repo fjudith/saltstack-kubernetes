@@ -28,7 +28,7 @@ resource "cloudflare_record" "wildcard" {
   name    = "*"
   value   = "${element(var.public_ips, 0)}"
   type    = "A"
-  proxied = true
+  proxied = false
 }
 
 resource "cloudflare_record" "kubernetes" {

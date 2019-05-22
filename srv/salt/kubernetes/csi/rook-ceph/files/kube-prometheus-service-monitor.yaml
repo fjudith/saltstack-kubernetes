@@ -2,7 +2,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: ceph-exporter
-  namespace: monitoring
+  namespace: rook-ceph
   labels:
     k8s-app: ceph-exporter
 spec:

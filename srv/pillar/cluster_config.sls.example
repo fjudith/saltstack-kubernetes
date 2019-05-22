@@ -24,11 +24,11 @@ kubernetes:
       network: 10.2.0.0/16
       provider: calico
       calico:
-        node_image: quay.io/calico/node:v3.6.0
-        typha_image: quay.io/calico/typha:v3.6.0
-        cni_image: quay.io/calico/cni:v3.6.0
-        controller_image: quay.io/calico/kube-controllers:v3.6.0
-        version: 3.6.0
+        node_image: quay.io/calico/node:v3.6.2
+        typha_image: quay.io/calico/typha:v3.6.2
+        cni_image: quay.io/calico/cni:v3.6.2
+        controller_image: quay.io/calico/kube-controllers:v3.6.2
+        version: 3.6.2
         ipv4:
           range: 10.2.0.0/16
           nat: true
@@ -160,11 +160,11 @@ kubernetes:
     storage:
       rook_ceph:
         enabled: True
-        image: rook/ceph:v1.0.0
+        image: rook/ceph:v1.0.1
         ceph_image: ceph/ceph:v14.2.1-20190430
       rook_minio:
         enabled: True
-        image: rook/minio:v1.0.0
+        image: rook/minio:v1.0.1
         username: Ch4ng3M3
         password: Ch4ng3M34ls0
   charts:

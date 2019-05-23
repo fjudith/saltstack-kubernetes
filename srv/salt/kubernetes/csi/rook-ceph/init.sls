@@ -17,15 +17,6 @@
     - group: root
     - mode: 644
 
-/srv/kubernetes/manifests/rook-ceph/cluster.yaml:
-  file.managed:
-    - require:
-      - file: /srv/kubernetes/manifests/rook-ceph
-    - source: salt://kubernetes/csi/rook-ceph/files/cluster.yaml
-    - user: root
-    - group: root
-    - mode: 644
-
 /srv/kubernetes/manifests/rook-ceph/dashboard-external.yaml:
   file.managed:
     - require:
@@ -52,6 +43,16 @@
     - user: root
     - group: root
     - mode: 644
+
+/srv/kubernetes/manifests/rook-ceph/cluster.yaml:
+  file.managed:
+    - require:
+      - file: /srv/kubernetes/manifests/rook-ceph
+    - source: salt://kubernetes/csi/rook-ceph/templates/cluster.yaml.j2
+    - user: root
+    - group: root
+    - mode: 644
+    - template: jinja
 
 /srv/kubernetes/manifests/rook-ceph/operator.yaml:
   file.managed:
@@ -100,20 +101,20 @@
     - group: root
     - mode: 644
 
-/srv/kubernetes/manifests/rook-ceph/prometheus-service.yaml:
-  file.managed:
-    - require:
-      - file: /srv/kubernetes/manifests/rook-ceph
-    - source: salt://kubernetes/csi/rook-ceph/files/prometheus-service.yaml
-    - user: root
-    - group: root
-    - mode: 644
-
 /srv/kubernetes/manifests/rook-ceph/prometheus.yaml:
   file.managed:
     - require:
       - file: /srv/kubernetes/manifests/rook-ceph
     - source: salt://kubernetes/csi/rook-ceph/files/prometheus.yaml
+    - user: root
+    - group: root
+    - mode: 644
+
+/srv/kubernetes/manifests/rook-ceph/prometheus-service.yaml:
+  file.managed:
+    - require:
+      - file: /srv/kubernetes/manifests/rook-ceph
+    - source: salt://kubernetes/csi/rook-ceph/files/prometheus-service.yaml
     - user: root
     - group: root
     - mode: 644

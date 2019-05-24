@@ -59,34 +59,33 @@
     - group: root
     - mode: 644
 
-kubernetes-istio-namespace:
+istio-namespace:
   cmd.run:
     - unless: kubectl get namespace istio-system
     - name: |
         kubectl create namespace istio-system
 
-kubernetes-istio-install:
+istio:
   cmd.run: 
     - cwd: /srv/kubernetes/manifests/istio/istio-{{ common.addons.istio.version }}
     - whatch:
       - cmd: kubernetes-istio-namespace 
       - archive: /srv/kubernetes/manifests/istio/istio-{{ common.addons.istio.version }}/install/kubernetes/helm/
-    - name: |
-        helm template install/kubernetes/helm/istio-cni \
-          --name=istio-cni \
-          --set tracing.enabled=true \
-          --namespace=istio-system | kubectl apply -f -
+    - name: |       
         helm template install/kubernetes/helm/istio \
           --name istio \
           --namespace istio-system \
           -f install/kubernetes/helm/istio/values-istio-demo.yaml \
+          --set tracing.enabled=true \
+          --set istio_cni.enabled=true \
+          --set kiali.enabled=true \
           --set gateways.istio-ingressgateway.sds.enabled=true \
           --set global.k8sIngress.enabled=true \
           --set global.k8sIngress.enableHttps=true \
           --set global.k8sIngress.gatewayName=ingressgateway \
           --set istio_cni.enabled=true | kubectl apply -f -
 
-kubernetes-istio-gateway-install:
+istio-gateway:
   cmd.run:
     - watch:
       - cmd: kubernetes-istio-install
@@ -101,7 +100,7 @@ kubernetes-istio-gateway-install:
         kubectl apply -f /srv/kubernetes/manifests/istio/ingress.yaml
     - onlyif: curl --silent 'http://127.0.0.1:8080/healthz'
 
-kubernetes-istio-bookinfo-install:
+istio-bookinfo:
   cmd.run:
     - cwd: /srv/kubernetes/manifests/istio/istio-{{ common.addons.istio.version }}
     - watch:

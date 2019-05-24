@@ -12,7 +12,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: minio-service
+  name: minio-my-store
   namespace: rook-minio
   annotations:
     kubernetes.io/ingress.class: {{ controller }}
@@ -27,7 +27,7 @@ spec:
       paths:
       - path: /
         backend:
-          serviceName: minio-service
+          serviceName: minio-my-store
           servicePort: 9000
   {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
   tls:

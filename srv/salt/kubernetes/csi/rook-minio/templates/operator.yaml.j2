@@ -35,6 +35,7 @@ rules:
   - get
   - watch
   - create
+  - update
 - apiGroups:
   - apps
   resources:
@@ -42,6 +43,7 @@ rules:
   verbs:
   - get
   - create
+  - update
 - apiGroups:
   - minio.rook.io
   resources:
@@ -75,12 +77,17 @@ subjects:
   name: rook-minio-operator
   namespace: rook-minio-system
 ---
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: rook-minio-operator
   namespace: rook-minio-system
+  labels:
+    app: rook-minio-operator
 spec:
+  selector:
+    matchLabels:
+      app: rook-minio-operator
   replicas: 1
   template:
     metadata:

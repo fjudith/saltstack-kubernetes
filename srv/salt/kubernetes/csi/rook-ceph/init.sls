@@ -7,7 +7,7 @@
     - group: root
     - dir_mode: 750
     - makedirs: True
-    
+ 
 /srv/kubernetes/manifests/rook-ceph/common.yaml:
   file.managed:
     - require:

@@ -90,7 +90,7 @@ kubernetes:
         enabled: true
       istio:
         enabled: True
-        version: 1.1.2
+        version: 1.1.6
         tracing: jaeger
         cni_version: 0.1.0
         prometheus_ingress_host: istio-prometheus
@@ -197,6 +197,7 @@ kubernetes:
         enabled: False
       ingress_host: registry
       notary_ingress_host: notary
+      bucket: harbor
     vistio:
       enabled: true
       version: 0.1.3

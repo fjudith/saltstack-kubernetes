@@ -19,6 +19,19 @@
     - archive_format: tar
     - if_missing: /opt/docker-v{{ common.cri.docker.version }}
 
+docker-install:
+  service.dead:
+    - name: docker.service
+    - watch:
+      - archive: /opt/docker-v{{ common.cri.docker.version }}
+    - unless: cmp -s /opt/docker-v{{ common.cri.docker.version }}/docker /usr/bin/docker
+  file.symlink:
+    - name: /usr/bin/docker
+    - target: /opt/docker-v{{ common.cri.docker.version }}/docker/docker
+    - watch:
+      - archive: /opt/docker-v{{ common.cri.docker.version }}
+    - unless: cmp -s /opt/docker-v{{ common.cri.docker.version }}/docker /usr/bin/docker
+
 /usr/bin/containerd:
   file.symlink:
     - target: /opt/docker-v{{ common.cri.docker.version }}/docker/containerd
@@ -34,10 +47,6 @@
 /usr/bin/dockerd:
   file.symlink:
     - target: /opt/docker-v{{ common.cri.docker.version }}/docker/dockerd
-
-/usr/bin/docker:
-  file.symlink:
-    - target: /opt/docker-v{{ common.cri.docker.version }}/docker/docker
 
 /usr/bin/docker-proxy:
   file.symlink:
@@ -79,6 +88,12 @@ docker.socket:
       - /etc/systemd/system/docker.socket
     - require:
       - group: docker
+
+docker-service-reload-daemon:
+  module.run:
+    - name: service.systemctl_reload
+    - watch: 
+      - file: /etc/systemd/system/docker.service
 
 docker.service:
   service.enabled:

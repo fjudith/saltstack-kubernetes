@@ -135,7 +135,7 @@ kubernetes:
         name: etcd02
       - host: 172.17.4.53
         name: etcd03
-    version: v3.2.24
+    version: v3.3.10
   master:
     service_addresses: 10.3.0.0/24
     members:

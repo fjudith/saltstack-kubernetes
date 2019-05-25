@@ -19,17 +19,17 @@
     - archive_format: tar
     - if_missing: /opt/docker-v{{ common.cri.docker.version }}
 
-/usr/bin/docker-containerd:
+/usr/bin/containerd:
   file.symlink:
-    - target: /opt/docker-v{{ common.cri.docker.version }}/docker/docker-containerd
+    - target: /opt/docker-v{{ common.cri.docker.version }}/docker/containerd
 
-/usr/bin/docker-containerd-ctr:
+/usr/bin/ctr:
   file.symlink:
-    - target: /opt/docker-v{{ common.cri.docker.version }}/docker/docker-containerd-ctr
+    - target: /opt/docker-v{{ common.cri.docker.version }}/docker/ctr
 
-/usr/bin/docker-containerd-shim:
+/usr/bin/containerd-shim:
   file.symlink:
-    - target: /opt/docker-v{{ common.cri.docker.version }}/docker/docker-containerd-shim
+    - target: /opt/docker-v{{ common.cri.docker.version }}/docker/containerd-shim
 
 /usr/bin/dockerd:
   file.symlink:

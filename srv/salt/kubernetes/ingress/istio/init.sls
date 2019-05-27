@@ -83,7 +83,7 @@ istio:
           --set global.k8sIngress.enabled=true \
           --set global.k8sIngress.enableHttps=true \
           --set global.k8sIngress.gatewayName=ingressgateway \
-          --set istio_cni.enabled=true | kubectl apply -f -
+          --set istio_cni.enabled=true | kubectl apply --namespace istio-system -f -
 
 istio-gateway:
   cmd.run:

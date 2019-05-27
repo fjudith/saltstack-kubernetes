@@ -18,10 +18,18 @@ harbor-repo:
     - group: root
     - mode: 644
 
+harbor-namespace:
+  cmd.run:
+    - unless: kubectl get namespace harbor
+    - name: |
+        kubectl create namespace harbor
+
 harbor:
   cmd.run:
     - watch:
         - git: harbor-repo
+    - require:
+      - cmd: harbor-namespace
     - runas: root
     - unless: helm list | grep harbor
     - cwd: /srv/kubernetes/manifests/harbor
@@ -59,7 +67,7 @@ harbor:
           {%- endif %}
           --set database.internal.password={{ charts.harbor.database_password }} \
           --set harborAdminPassword={{ charts.harbor.admin_password }} \
-          --set secretKey={{ charts.harbor.secretkey }} | kubectl apply --validate=false -f -
+          --set secretKey={{ charts.harbor.secretkey }} | kubectl apply --namespace harbor --validate=false -f -
 
 harbor-ingress:
     cmd.run:

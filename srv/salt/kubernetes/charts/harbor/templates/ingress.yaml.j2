@@ -13,6 +13,7 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: harbor
+  namespace: harbor
   annotations:
     kubernetes.io/ingress.class: {{ controller }}
     {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
@@ -59,6 +60,7 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: notary
+  namespace: harbor
   annotations:
     kubernetes.io/ingress.class: {{ controller }}
     {%- if common.addons.get('nginx', {'enabled': False}).enabled %}

@@ -1,0 +1,34 @@
+{%- set public_domain = pillar['public-domain'] -%}
+{%- from "kubernetes/map.jinja" import master with context -%}
+{%- from "kubernetes/map.jinja" import charts with context -%}
+
+halyard:
+  additionalProfileConfigMaps:
+    data:
+      front50-local.yml:
+        spinnaker:
+          s3:
+            versioning: false
+      gate-local.yml:
+        server:
+          tomcat:
+            protocolHeader: X-Forwarded-Proto
+            remoteIpHeader: X-Forwarded-For
+            internalProxies: .*
+            httpsServerPort: X-Forwarded-Port
+  additionalConfigMaps:
+    create: true
+    data:
+      config.src: |-
+        GATE_URL="https://{{ charts.spinnaker.ingress_host }}-gate.{{ public_domain }}" # URL to access your gate
+        DECK_URL="https://{{ charts.spinnaker.ingress_host }}.{{ public_domain }}" # Url to access your deck    
+
+minio:
+  enabled: false
+
+s3:
+  enabled: true
+  bucket: spinnaker
+  endpoint: http://my-store.rook-minio.svc.cluster.local:9000
+  accessKey: {{ master.storage.rook_minio.username }}
+  secretKey: {{ master.storage.rook_minio.password }}

@@ -101,7 +101,7 @@ kubernetes:
         bookinfo_ingress_host: bookinfo
       cert_manager:
         enabled: True
-        version: 0.7.0
+        version: 0.8.0
         acme_email: user@example.com
         dns:
           provider: cloudflare
@@ -189,6 +189,9 @@ kubernetes:
       ingress_host: spinnaker
       version: 1.13.8
       halyard_version: 1.20.2
+      github:
+        enabled: True
+        token: 7b0805adfba328d09cfa7ac377777cb6e270d66f
     harbor:
       enabled: true
       version: 1.0.1

@@ -1,18 +1,27 @@
 {%- from "kubernetes/map.jinja" import common with context -%}
 
-addon-cert-manager:
-  git.latest:
-    - name: https://github.com/jetstack/cert-manager
-    - target: /srv/kubernetes/manifests/cert-manager
-    - force_reset: True
-    - rev: v{{ common.addons.cert_manager.version }}
+/srv/kubernetes/manifests/cert-manager:
+  file.directory:
+    - user: root
+    - group: root
+    - dir_mode: 750
+    - makedirs: True
+
+/srv/kubernetes/manifests/cert-manager/cert-manager.yaml:
+  file.managed:
+    - require:
+      - file: /srv/kubernetes/manifests/cert-manager
+    - source: https://github.com/jetstack/cert-manager/releases/download/v{{ common.addons.cert_manager.version }}/cert-manager.yaml
+    - user: root
+    - template: jinja
+    - group: root
+    - mode: 644
+    - skip_verify: true
 
 /srv/kubernetes/manifests/cert-manager/clusterissuer.yaml:
   file.managed:
     - require:
-      - git: addon-cert-manager
-    - watch:
-      - git: addon-cert-manager
+      - file: /srv/kubernetes/manifests/cert-manager
     - source: salt://kubernetes/ingress/cert-manager/templates/{{ common.addons.cert_manager.dns.provider }}-clusterissuer.yaml.jinja
     - user: root
     - template: jinja
@@ -22,15 +31,13 @@ addon-cert-manager:
 kubernetes-cert-manager-install:
   cmd.run:
     - watch:
-        - git:  addon-cert-manager
+        - file:  /srv/kubernetes/manifests/cert-manager/cert-manager.yaml
     - runas: root
     - use_vt: True
     - onlyif: curl --silent 'http://127.0.0.1:8080/healthz/'
     - name: |
-        kubectl apply -f /srv/kubernetes/manifests/cert-manager/deploy/manifests/01-namespace.yaml
-        kubectl apply -f /srv/kubernetes/manifests/cert-manager/deploy/manifests/00-crds.yaml
-        kubectl apply -f /srv/kubernetes/manifests/cert-manager/deploy/manifests/cert-manager.yaml
-        kubectl -n cert-manager delete secret public-dns-secret
+        kubectl apply -f /srv/kubernetes/manifests/cert-manager/cert-manager.yaml && \
+        kubectl -n cert-manager delete secret public-dns-secret && \
         kubectl -n cert-manager create secret generic public-dns-secret --from-literal=secret-access-key="{{ common.addons.cert_manager.dns.secret }}"
 
 query-cert-manager-required-api:

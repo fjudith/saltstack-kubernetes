@@ -1,0 +1,95 @@
+{%- set public_domain = pillar['public-domain'] -%}
+{%- from "kubernetes/map.jinja" import master with context -%}
+{%- from "kubernetes/map.jinja" import charts with context -%}
+
+halyard:
+  additionalProfileConfigMaps:
+    data:
+      front50-local.yml: |-
+        spinnaker:
+          s3:
+            path-style-access: true
+            versioning: false      
+      gate-local.yml: |-
+        server:
+          tomcat:
+            protocolHeader: X-Forwarded-Proto
+            remoteIpHeader: X-Forwarded-For
+            internalProxies: .*
+            httpsServerPort: X-Forwarded-Port
+  additionalSecrets:
+    create: true
+    data:
+      github.token: {{ charts.spinnaker.github.token | base64_encode }} # Github API key (repo permission only)
+  additionalConfigMaps:
+    create: true
+    data:
+      config.src: |-
+        DECK_URL="https://{{ charts.spinnaker.ingress_host }}.{{ public_domain }}" # Url to access your deck 
+        # GATE_URL="https://gate.{{ charts.spinnaker.ingress_host }}.{{ public_domain }}" # URL to access your gate
+           
+  additionalScripts:
+    create: true
+    data:
+      00-configure_url.sh: |-
+        source /opt/halyard/additionalConfigMaps/config.src
+        
+        $HAL_COMMAND config security ui edit --override-base-url "${DECK_URL}"
+        # $HAL_COMMAND config security api edit --override-base-url "${GATE_URL}"
+      01-configure_github.sh: |-
+        TOKEN_FILE=/opt/halyard/additionalSecrets/github.token
+        ARTIFACT_ACCOUNT_NAME=github-artifact-account
+        
+        $HAL_COMMAND config features edit --artifacts true
+        $HAL_COMMAND config artifact github enable
+        $HAL_COMMAND config artifact github account add ${ARTIFACT_ACCOUNT_NAME} --token-file ${TOKEN_FILE}
+      
+      {% if charts.get('keycloak', {'enabled': False}).enabled %}
+      {%- set keycloak_url = 'https://' + charts.get('keycloak', {}).get('ingress_host') + '.' + pillar['public-domain'] -%}
+      {%- set keycloak_password = salt['cmd.shell']("kubectl get secret --namespace keycloak keycloak-http -o jsonpath='{.data.password}' | base64 --decode; echo") -%}
+      {%- set client_secret     = salt['cmd.shell']('/srv/kubernetes/manifests/spinnaker/kc-clientsecret-spinnaker.sh' + ' ' + 'keycloak' + ' ' + keycloak_password + ' ' + keycloak_url + ' ' + charts.spinnaker.oauth.keycloak.realm) -%}
+      {%- set realm = charts.spinnaker.oauth.get('keycloak', {}).get('realm') -%}
+      02-configure_oauth2.sh: |-
+        source /opt/halyard/additionalConfigMaps/config.src
+        
+        $HAL_COMMAND config security authn oauth2 edit --access-token-uri "{{ keycloak_url}}/auth/realms/{{ realm }}/protocol/openid-connect/token"
+        # $HAL_COMMAND config security authn oauth2 edit --client-authentication-scheme
+        $HAL_COMMAND config security authn oauth2 edit --client-id "spinnaker"
+        $HAL_COMMAND config security authn oauth2 edit --client-secret "{{ client_secret }}"
+        # $HAL_COMMAND config security authn oauth2 edit --deployment
+        # $HAL_COMMAND config security authn oauth2 edit --pre-established-redirect-uri "${GATE_URL}/login"
+        $HAL_COMMAND config security authn oauth2 edit --pre-established-redirect-uri "${DECK_URL}/gate/login"
+        $HAL_COMMAND config security authn oauth2 edit --provider other
+        # $HAL_COMMAND config security authn oauth2 edit --scope
+        $HAL_COMMAND config security authn oauth2 edit --user-authorization-uri "{{ keycloak_url}}/auth/realms/{{ realm }}/protocol/openid-connect/auth"
+        $HAL_COMMAND config security authn oauth2 edit --user-info-mapping-email "email"
+        $HAL_COMMAND config security authn oauth2 edit --user-info-mapping-first-name "firstName"
+        $HAL_COMMAND config security authn oauth2 edit --user-info-mapping-last-name "lastName"
+        $HAL_COMMAND config security authn oauth2 edit --user-info-mapping-username "username"
+        # $HAL_COMMAND config security authn oauth2 edit --user-info-requirements  
+        $HAL_COMMAND config security authn oauth2 edit --user-info-uri "{{ keycloak_url}}/auth/realms/{{ realm }}/protocol/openid-connect/userinfo"
+        $HAL_COMMAND config security authn oauth2 enable
+      {% endif %}
+
+minio:
+  enabled: false
+
+s3:
+  enabled: true
+  bucket: spinnaker
+  endpoint: http://my-store.rook-minio.svc.cluster.local:9000
+  accessKey: {{ master.storage.rook_minio.username }}
+  secretKey: {{ master.storage.rook_minio.password }}
+
+dockerRegistries:
+- name: dockerhub
+  address: index.docker.io
+  repositories:
+    - library/alpine
+    - library/ubuntu
+    - library/centos
+    - library/nginx
+    - fjudith/spinnaker-sample-app
+    - fjudith/draw.io
+
+spinnakerFeatureFlags: []

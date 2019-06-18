@@ -10,35 +10,155 @@
     - dir_mode: 750
     - makedirs: True
 
-/srv/kubernetes/manifests/spinnaker/values-minio.yaml:
+{% if charts.get('keycloak', {'enabled': False}).enabled %}
+
+{%- set keycloak_password = salt['cmd.shell']("kubectl get secret --namespace keycloak keycloak-http -o jsonpath='{.data.password}' | base64 --decode; echo") -%}
+
+spinnaker-create-realm:
+  file.managed:
+    - name: /srv/kubernetes/manifests/spinnaker/realms.json
+    - source: salt://kubernetes/charts/spinnaker/oauth/keycloak/templates/realms.json.j2
+    - require:
+      - file: /srv/kubernetes/manifests/spinnaker
+    - user: root
+    - group: root
+    - template: jinja
+    - mode: 644
+  cmd.script:
+    - name: /srv/kubernetes/manifests/spinnaker/kc-config-spinnaker.sh
+    - source: salt://kubernetes/charts/spinnaker/oauth/keycloak/scripts/kc-config-spinnaker.sh
+    - cwd: /srv/kubernetes/manifests/spinnaker
+    - env:
+      - ACTION: "create-realm"
+      - USERNAME: "keycloak"
+      - PASSWORD: "{{ keycloak_password }}"
+      - URL: "https://{{ charts.keycloak.ingress_host }}.{{ public_domain }}"
+      - REALM: "{{ charts.spinnaker.oauth.keycloak.realm }}"
+    - user: root
+    - group: root
+    - mode: 644
+
+/srv/kubernetes/manifests/spinnaker/admins-group.json:
+  file.managed:
+    - source: salt://kubernetes/charts/spinnaker/oauth/keycloak/files/admins-group.json
+    - require:
+      - file: /srv/kubernetes/manifests/spinnaker
+    - user: root
+    - group: root
+    - mode: 644
+
+spinnaker-create-groups:
+  file.managed:
+    - name: /srv/kubernetes/manifests/spinnaker/users-group.json
+    - source: salt://kubernetes/charts/spinnaker/oauth/keycloak/files/users-group.json
+    - require:
+      - file: /srv/kubernetes/manifests/spinnaker
+    - user: root
+    - group: root
+    - mode: 644
+  cmd.script:
+    - name: /srv/kubernetes/manifests/spinnaker/kc-config-spinnaker.sh
+    - source: salt://kubernetes/charts/spinnaker/oauth/keycloak/scripts/kc-config-spinnaker.sh
+    - cwd: /srv/kubernetes/manifests/spinnaker
+    - env:
+      - ACTION: "create-groups"
+      - USERNAME: "keycloak"
+      - PASSWORD: "{{ keycloak_password }}"
+      - URL: "https://{{ charts.keycloak.ingress_host }}.{{ public_domain }}"
+      - REALM: "{{ charts.spinnaker.oauth.keycloak.realm }}"
+    - watch:
+      - file: /srv/kubernetes/manifests/spinnaker/admins-group.json
+      - file: /srv/kubernetes/manifests/spinnaker/users-group.json
+    - user: root
+    - group: root
+    - mode: 644
+
+spinnaker-create-client-scopes:
+  file.managed:
+    - name: /srv/kubernetes/manifests/spinnaker/client-scopes.json
+    - source: salt://kubernetes/charts/spinnaker/oauth/keycloak/files/client-scopes.json
+    - require:
+      - file: /srv/kubernetes/manifests/spinnaker
+    - user: root
+    - group: root
+    - mode: 644
+  cmd.script:
+    - name: /srv/kubernetes/manifests/spinnaker/kc-config-spinnaker.sh
+    - source: salt://kubernetes/charts/spinnaker/oauth/keycloak/scripts/kc-config-spinnaker.sh
+    - cwd: /srv/kubernetes/manifests/spinnaker
+    - env:
+      - ACTION: "create-client-scopes"
+      - USERNAME: "keycloak"
+      - PASSWORD: "{{ keycloak_password }}"
+      - URL: "https://{{ charts.keycloak.ingress_host }}.{{ public_domain }}"
+      - REALM: "{{ charts.spinnaker.oauth.keycloak.realm }}"
+    - watch:
+      - file: /srv/kubernetes/manifests/spinnaker/client-scopes.json
+    - user: root
+    - group: root
+    - mode: 644
+
+/srv/kubernetes/manifests/spinnaker/protocolmapper.json:
+  file.managed:
+    - source: salt://kubernetes/charts/spinnaker/oauth/keycloak/files/protocolmapper.json
+    - user: root
+    - group: root
+    - mode: 644
+
+/srv/kubernetes/manifests/spinnaker/groups-protocolmapper.json:
+  file.managed:
+    - source: salt://kubernetes/charts/spinnaker/oauth/keycloak/files/groups-protocolmapper.json
+    - user: root
+    - group: root
+    - template: jinja
+    - mode: 644
+
+spinnaker-create-client:
+  file.managed:
+    - name: /srv/kubernetes/manifests/spinnaker/client.json
+    - source: salt://kubernetes/charts/spinnaker/oauth/keycloak/templates/client.json.j2
+    - require:
+      - file: /srv/kubernetes/manifests/spinnaker
+    - user: root
+    - group: root
+    - template: jinja
+    - mode: 644
+  cmd.script:
+    - name: /srv/kubernetes/manifests/spinnaker/kc-config-spinnaker.sh
+    - source: salt://kubernetes/charts/spinnaker/oauth/keycloak/scripts/kc-config-spinnaker.sh
+    - cwd: /srv/kubernetes/manifests/spinnaker
+    - env:
+      - ACTION: "create-client"
+      - USERNAME: "keycloak"
+      - PASSWORD: "{{ keycloak_password }}"
+      - URL: "https://{{ charts.keycloak.ingress_host }}.{{ public_domain }}"
+      - REALM: "{{ charts.spinnaker.oauth.keycloak.realm }}"
+    - watch:
+      - file: /srv/kubernetes/manifests/spinnaker/protocolmapper.json
+      - file: /srv/kubernetes/manifests/spinnaker/groups-protocolmapper.json
+      - file: /srv/kubernetes/manifests/spinnaker/client.json
+    - user: root
+    - group: root
+    - mode: 644
+
+/srv/kubernetes/manifests/spinnaker/kc-clientsecret-spinnaker.sh:
+  file.managed:
+    - source: salt://kubernetes/charts/spinnaker/oauth/keycloak/scripts/kc-clientsecret-spinnaker.sh
+    - user: root
+    - group: root
+    - template: jinja
+    - mode: 744
+{% endif %}
+
+/srv/kubernetes/manifests/spinnaker/values.yaml:
   file.managed:
     - require:
       - file:  /srv/kubernetes/manifests/spinnaker
-    - source: salt://kubernetes/charts/spinnaker/templates/values-minio.yaml.j2
+    - source: salt://kubernetes/charts/spinnaker/templates/values.yaml.j2
     - user: root
     - group: root
     - mode: 755
     - template: jinja
-
-{# /srv/kubernetes/manifests/spinnaker/InstallHalyard.sh:
-  file.managed:
-    - require:
-      - file:  /srv/kubernetes/manifests/spinnaker
-    - source: https://raw.githubusercontent.com/spinnaker/halyard/master/install/debian/InstallHalyard.sh
-    - user: root
-    - group: root
-    - mode: 755
-    - skip_verify: true
-
-hal:
-  cmd.run:
-    - runas: root
-    - cwd: /srv/kubernetes/manifests/spinnaker
-    - watch:
-      - file: /srv/kubernetes/manifests/spinnaker/InstallHalyard.sh
-    - name: |
-        /srv/kubernetes/manifests/spinnaker/InstallHalyard.sh
-    - user_vt: true #}
 
 spinnaker-namespace:
   cmd.run:
@@ -50,19 +170,20 @@ spinnaker:
   cmd.run:
     - runas: root
     - only_if: kubectl get storageclass | grep \(default\)
+    - unless: helm list | grep spinnaker
     - env:
       - HELM_HOME: /srv/helm/home
     - require:
       - cmd: spinnaker-namespace
     - watch:
-      - file: /srv/kubernetes/manifests/spinnaker/values-minio.yaml
+      - file: /srv/kubernetes/manifests/spinnaker/values.yaml
     - name: |
         helm repo update
         helm upgrade --install spinnaker --namespace spinnaker \
           --set halyard.spinnakerVersion={{ charts.spinnaker.version }} \
           --set halyard.image.tag={{ charts.spinnaker.halyard_version }} \
           {%- if master.storage.get('rook_minio', {'enabled': False}).enabled %}
-          --values /srv/kubernetes/manifests/spinnaker/values-minio.yaml \
+          --values /srv/kubernetes/manifests/spinnaker/values.yaml \
           {%- else -%}
           --set minio.enabled=true \
           --set minio.persistence.enabled=true \
@@ -72,19 +193,20 @@ spinnaker:
           --set redis.master.persistence.enabled=true \
           "stable/spinnaker" --timeout 600
 
-/srv/kubernetes/manifests/spinnaker-ingress.yaml:
+spinnaker-ingress:
   file.managed:
+    - name: /srv/kubernetes/manifests/spinnaker/ingress.yaml
     - source: salt://kubernetes/charts/spinnaker/templates/ingress.yaml.j2
+    - require:
+      - file: /srv/kubernetes/manifests/spinnaker
     - user: root
     - template: jinja
     - group: root
     - mode: 644
-
-spinnaker-ingress:
-    cmd.run:
-      - require:
-        - cmd: spinnaker
-      - watch:
-        - file:  /srv/kubernetes/manifests/spinnaker-ingress.yaml
-      - runas: root
-      - name: kubectl apply -f /srv/kubernetes/manifests/spinnaker-ingress.yaml
+  cmd.run:
+    - require:
+      - cmd: spinnaker
+    - watch:
+      - file:  /srv/kubernetes/manifests/spinnaker/ingress.yaml
+    - runas: root
+    - name: kubectl apply -f /srv/kubernetes/manifests/spinnaker/ingress.yaml

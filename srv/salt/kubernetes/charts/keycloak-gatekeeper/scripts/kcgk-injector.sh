@@ -12,7 +12,7 @@ REDIRECTURL=${6}
 ##################################################
 # Authenticate to Keycloak and retreive session token
 ##################################################
-TOKEN=$(http --form POST \
+TOKEN=$(http --pretty=none --form POST \
   "${URL}/auth/realms/master/protocol/openid-connect/token" \
   'Content-Type: application/x-www-form-urlencoded' \
   'grant_type=password' \

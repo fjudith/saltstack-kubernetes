@@ -17,6 +17,7 @@ controller:
       if ( $is_args = "" ){rewrite ^/(/*[^./]+)$$ $1/ permanent;}
     server-tokens: "false"
     worker-shutdown-timeout: 3600s
+    use-forwarded-headers: "true"
   nodeSelector:
     node-role.kubernetes.io/ingress: "true"
   tolerations:

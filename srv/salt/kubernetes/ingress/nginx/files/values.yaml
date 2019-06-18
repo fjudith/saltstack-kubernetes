@@ -11,11 +11,11 @@ controller:
     proxy-buffer-size: 128k
     proxy-connect-timeout: 600s
     proxy-read-timeout: 3600s
-    proxy-request-buffering: "off"
+    # proxy-request-buffering: "off"
     proxy-send-timeout: 3600s
-    server-snippet: |
-      if ( $is_args = "" ){rewrite ^/(/*[^./]+)$$ $1/ permanent;}
-    server-tokens: "false"
+    # server-snippet: |
+    #   if ( $is_args = "" ){rewrite ^/(/*[^./]+)$$ $1/ permanent;}
+    # server-tokens: "false"
     worker-shutdown-timeout: 3600s
     use-forwarded-headers: "true"
   nodeSelector:

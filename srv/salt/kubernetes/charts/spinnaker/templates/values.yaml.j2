@@ -26,7 +26,7 @@ halyard:
     data:
       config.src: |-
         DECK_URL="https://{{ charts.spinnaker.ingress_host }}.{{ public_domain }}" # Url to access your deck 
-        # GATE_URL="https://gate.{{ charts.spinnaker.ingress_host }}.{{ public_domain }}" # URL to access your gate
+        GATE_URL="https://gate.{{ charts.spinnaker.ingress_host }}.{{ public_domain }}" # URL to access your gate
            
   additionalScripts:
     create: true
@@ -35,7 +35,7 @@ halyard:
         source /opt/halyard/additionalConfigMaps/config.src
         
         $HAL_COMMAND config security ui edit --override-base-url "${DECK_URL}"
-        # $HAL_COMMAND config security api edit --override-base-url "${GATE_URL}"
+        $HAL_COMMAND config security api edit --override-base-url "${GATE_URL}"
       01-configure_github.sh: |-
         TOKEN_FILE=/opt/halyard/additionalSecrets/github.token
         ARTIFACT_ACCOUNT_NAME=github-artifact-account
@@ -57,8 +57,8 @@ halyard:
         $HAL_COMMAND config security authn oauth2 edit --client-id "spinnaker"
         $HAL_COMMAND config security authn oauth2 edit --client-secret "{{ client_secret }}"
         # $HAL_COMMAND config security authn oauth2 edit --deployment
-        # $HAL_COMMAND config security authn oauth2 edit --pre-established-redirect-uri "${GATE_URL}/login"
-        $HAL_COMMAND config security authn oauth2 edit --pre-established-redirect-uri "${DECK_URL}/gate/login"
+        $HAL_COMMAND config security authn oauth2 edit --pre-established-redirect-uri "${GATE_URL}/login"
+        # $HAL_COMMAND config security authn oauth2 edit --pre-established-redirect-uri "${DECK_URL}/gate/login"
         $HAL_COMMAND config security authn oauth2 edit --provider other
         # $HAL_COMMAND config security authn oauth2 edit --scope
         $HAL_COMMAND config security authn oauth2 edit --user-authorization-uri "{{ keycloak_url}}/auth/realms/{{ realm }}/protocol/openid-connect/auth"

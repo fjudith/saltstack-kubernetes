@@ -90,15 +90,15 @@ kubernetes:
         enabled: true
       istio:
         enabled: True
-        version: 1.1.6
+        version: 1.1.9
         tracing: jaeger
-        cni_version: 0.1.0
         prometheus_ingress_host: istio-prometheus
         tracing_ingress_host: istio-tracing
         telemetry_ingress_host: istio-telemetry
         grafana_ingress_host: istio-grafana
         kiali_ingress_host: istio-kiali
         bookinfo_ingress_host: bookinfo
+        source_hash: 66431da2425c955e57836837435afafd296ba85a0639b6b566e9a13c6536e680
       cert_manager:
         enabled: True
         version: 0.8.0

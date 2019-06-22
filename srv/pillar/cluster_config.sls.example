@@ -183,7 +183,7 @@ kubernetes:
       ingress_host: concourse
     keycloak:
       enabled: True
-      version: 5.0.0
+      version: 6.0.1
       db_size: 8Gi
       admin_password: Ch4ng3M3
       db_password: Ch4ng3M34ls0

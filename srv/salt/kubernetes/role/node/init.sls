@@ -1,4 +1,5 @@
 {%- from "kubernetes/map.jinja" import common with context -%}
+{%- from "kubernetes/map.jinja" import master with context -%}
 {%- set os = salt['grains.get']('os') -%}
 
 {% if os == "Debian" or os == "Ubuntu" %}

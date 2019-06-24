@@ -35,6 +35,28 @@ EOF
   }
 
   provisioner "file" {
+    content     = <<EOF
+external_auth:
+  pam:
+    salt:
+      - .*
+      - '@runner'
+      - '@wheel'
+      - '@jobs'
+
+rest_cherrypy:
+    port: 3333
+    host: 0.0.0.0
+    disable_ssl: true
+    app: /saltgui/index.html
+    static: /saltgui/static
+    static_path: /static
+EOF
+
+    destination = "/etc/salt/master.d/syndic_master.conf"
+  }
+
+  provisioner "file" {
     content = <<EOF
 master: localhost
 timeout: 30

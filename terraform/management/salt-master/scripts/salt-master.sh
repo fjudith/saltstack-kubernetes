@@ -1,8 +1,10 @@
 #!/bin/bash
 set -e
 
-SALT_VERSION=2019.2.0
-DEBIAN_FRONTEND=noninteractive
+export SALT_VERSION=2019.2.0
+export SALTGUI_VERSION=1.16.0
+export DEBIAN_FRONTEND=noninteractive
+export SALT_USER=salt
 
 apt-get update -yqq && \
 apt-get install -yqq --no-install-recommends curl net-tools gnupg2  && \
@@ -36,8 +38,12 @@ apt-get install --no-install-recommends -yq \
   salt-cloud=${SALT_VERSION}* \
   salt-api=${SALT_VERSION}* \
   reclass && \
-echo "add a user for the frontend salt:salt" && \
-useradd -m -s/bin/bash -p $(openssl passwd -1 salt) salt && \
+echo "add a user for the frontend ${SALT_USER}:${SALT_USER}" && \
+if getent passwd ${SALT_USER} > /dev/null 2>&1; then 
+  echo "user \"${SALT_USER}\" already exists" ; 
+else 
+  useradd -m -s/bin/bash -p $(openssl passwd -1 ${SALT_USER}) ${SALT_USER}
+fi && \
 systemctl enable salt-master && \
 systemctl enable salt-minion && \
 systemctl enable salt-api && \

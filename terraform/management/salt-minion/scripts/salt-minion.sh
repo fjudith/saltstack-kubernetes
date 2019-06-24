@@ -1,8 +1,10 @@
 #!/bin/bash
 set -e
 
-SALT_VERSION=2019.2.0
-DEBIAN_FRONTEND=noninteractive
+export SALT_VERSION=2019.2.0
+export SALTGUI_VERSION=1.16.0
+export DEBIAN_FRONTEND=noninteractive
+export SALT_USER=salt
 
 apt-get update -yqq && \
 apt-get install -yqq --no-install-recommends curl net-tools gnupg2  && \
@@ -10,7 +12,6 @@ curl -fsSL http://repo.saltstack.com/py3/ubuntu/18.04/amd64/archive/${SALT_VERSI
 echo "deb http://repo.saltstack.com/py3/ubuntu/18.04/amd64/archive/${SALT_VERSION} bionic main" > /etc/apt/sources.list.d/saltstack.list && \
 echo "install salt-master and salt-api, dependencies" && \
 apt-get update -yqq && \
-apt-get install --no-install-recommends -yqq \
 apt-get install --no-install-recommends -yq \
   lsb-release \
   debconf-utils \
@@ -33,8 +34,31 @@ apt-get install --no-install-recommends -yq \
   salt-minion=${SALT_VERSION}* \
   salt-ssh=${SALT_VERSION}* \
   reclass && \
-echo "add a user for the frontend salt:salt" && \
-useradd -m -s/bin/bash -p $(openssl passwd -1 salt) salt && \
+echo "add a user for the frontend ${SALT_USER}:${SALT_USER}" && \
+if getent passwd ${SALT_USER} > /dev/null 2>&1; then 
+  echo "user \"${SALT_USER}\" already exists" ; 
+else 
+  useradd -m -s/bin/bash -p $(openssl passwd -1 ${SALT_USER}) ${SALT_USER}
+fi && \
+cat << EOF > /etc/salt/master.d/saltgui.conf
+external_auth:
+  pam:
+    salt:
+      - .*
+      - '@runner'
+      - '@wheel'
+      - '@jobs'
+
+rest_cherrypy:
+    port: 3333
+    host: 0.0.0.0
+    disable_ssl: true
+    app: /srv/saltgui/index.html
+    static: /saltgui/static
+    static_path: /static
+EOF && \
+cd /opt && curl -L https://github.com/erwindon/SaltGUI/archive/${SALTGUI_VERSION}.tar.gz | tar -xvzf - && \
+ln -fs /opt/SaltGUI-${SALTGUI_VERSION} /srv/saltgui && \
 systemctl enable salt-minion && \
 systemctl daemon-reload && \
 systemctl restart salt-minion

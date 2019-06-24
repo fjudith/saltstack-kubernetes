@@ -66,6 +66,7 @@ nginx-ingress-install:
     - watch:
       - file: /srv/kubernetes/manifests/nginx/values.yaml
     - name: |
+        helm repo update
         helm upgrade --install \
           nginx \
           --namespace ingress-nginx \

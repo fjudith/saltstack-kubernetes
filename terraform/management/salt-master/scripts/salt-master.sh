@@ -60,7 +60,8 @@ rest_cherrypy:
     app: /srv/saltgui/index.html
     static: /saltgui/static
     static_path: /static
-EOF && \
+EOF
+&& \
 cd /opt && curl -L https://github.com/erwindon/SaltGUI/archive/${SALTGUI_VERSION}.tar.gz | tar -xvzf - && \
 ln -fs /opt/SaltGUI-${SALTGUI_VERSION} /srv/saltgui && \
 systemctl enable salt-master && \

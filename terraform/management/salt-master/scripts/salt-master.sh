@@ -44,6 +44,25 @@ if getent passwd ${SALT_USER} > /dev/null 2>&1; then
 else 
   useradd -m -s/bin/bash -p $(openssl passwd -1 ${SALT_USER}) ${SALT_USER}
 fi && \
+cat << EOF > /etc/salt/master.d/saltgui.conf
+external_auth:
+  pam:
+    salt:
+      - .*
+      - '@runner'
+      - '@wheel'
+      - '@jobs'
+
+rest_cherrypy:
+    port: 3333
+    host: 0.0.0.0
+    disable_ssl: true
+    app: /srv/saltgui/index.html
+    static: /saltgui/static
+    static_path: /static
+EOF && \
+cd /opt && curl -L https://github.com/erwindon/SaltGUI/archive/${SALTGUI_VERSION}.tar.gz | tar -xvzf - && \
+ln -fs /opt/SaltGUI-${SALTGUI_VERSION} /srv/saltgui && \
 systemctl enable salt-master && \
 systemctl enable salt-minion && \
 systemctl enable salt-api && \

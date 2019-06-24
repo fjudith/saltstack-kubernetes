@@ -29,19 +29,20 @@ resource "null_resource" "wireguard" {
     inline = [
       "apt-get install -yq libmnl-dev libelf-dev pkg-config software-properties-common build-essential",
       "add-apt-repository -y ppa:wireguard/wireguard",
-      "apt-get update",
+      "apt-get update -yq",
+      "apt-get install -yq wireguard"
     ]
   }
 
-  provisioner "remote-exec" {
-    script = "${path.module}/scripts/install-kernel-headers.sh"
-  }
+  # provisioner "remote-exec" {
+  #   script = "${path.module}/scripts/install-kernel-headers.sh"
+  # }
 
-  provisioner "remote-exec" {
-    inline = [
-      "DEBIAN_FRONTEND=noninteractive apt-get install -yq wireguard-dkms wireguard-tools",
-    ]
-  }
+  # provisioner "remote-exec" {
+  #   inline = [
+  #     "DEBIAN_FRONTEND=noninteractive apt-get install -yq wireguard-dkms wireguard-tools",
+  #   ]
+  # }
 
   provisioner "file" {
     content     = "${element(data.template_file.interface-conf.*.rendered, count.index)}"

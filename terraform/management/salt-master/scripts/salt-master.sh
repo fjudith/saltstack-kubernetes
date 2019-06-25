@@ -43,7 +43,8 @@ if getent passwd ${SALT_USER} > /dev/null 2>&1; then
   echo "user \"${SALT_USER}\" already exists" ; 
 else 
   useradd -m -s/bin/bash -p $(openssl passwd -1 ${SALT_USER}) ${SALT_USER}
-fi && \
+fi
+
 cat << EOF > /etc/salt/master.d/saltgui.conf
 external_auth:
   pam:
@@ -61,7 +62,7 @@ rest_cherrypy:
     static: /saltgui/static
     static_path: /static
 EOF
-&& \
+
 cd /opt && curl -L https://github.com/erwindon/SaltGUI/archive/${SALTGUI_VERSION}.tar.gz | tar -xvzf - && \
 ln -fs /opt/SaltGUI-${SALTGUI_VERSION} /srv/saltgui && \
 systemctl enable salt-master && \

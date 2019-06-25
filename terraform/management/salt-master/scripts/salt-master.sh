@@ -59,12 +59,12 @@ rest_cherrypy:
     host: 0.0.0.0
     disable_ssl: true
     app: /srv/saltgui/index.html
-    static: /saltgui/static
+    static: /srv/saltgui/static
     static_path: /static
 EOF
 
 cd /opt && curl -L https://github.com/erwindon/SaltGUI/archive/${SALTGUI_VERSION}.tar.gz | tar -xvzf - && \
-ln -fs /opt/SaltGUI-${SALTGUI_VERSION} /srv/saltgui && \
+ln -fs /opt/SaltGUI-${SALTGUI_VERSION}/saltgui /srv/saltgui && \
 systemctl enable salt-master && \
 systemctl enable salt-minion && \
 systemctl enable salt-api && \

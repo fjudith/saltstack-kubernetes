@@ -28,13 +28,37 @@ salt '*' saltutil.term_job <job id>
 ## Gource
 
 ```bash
+cat << EOF > gource.cfg
+[display]
+viewport=1280x720
+
+[gource]
+auto-skip-seconds=0.01
+camera-mode=overview
+#default-user-image=person.png
+font-colour=ff7600
+hide=progress
+highlight-colour=ffe980
+dir-colour=d5eaff
+#highlight-dirs=true
+highlight-users=true
+key=true
+seconds-per-day=0.1
+#seconds-per-day=0.01
+stop-at-end=true
+time-scale=1.2
+user-image-dir=.git/avatar/
+#user-scale=8
+user-scale=1
+EOF
+
 FILENAME=$(basename $(pwd)) && \
-gource --start-date '2018-05-22 00:00:00' --auto-skip-seconds 1 --seconds-per-day 1 -1280x720 -o ${FILENAME}.ppm && \
+gource --start-date '2018-05-22 00:00:00' --hide filenames -c 2 --load-config gource.cfg --max-user-speed 100 -r 25 -o ${FILENAME}.ppm && \
 sleep 10 && \
 </dev/null ffmpeg -y \
     -r 60 \
     -f image2pipe -vcodec ppm -i ${FILENAME}.ppm \
-    -filter:v "setpts=0.25*PTS" -vcodec libx264 \
+    -filter:v "setpts=1.25*PTS" -vcodec libx264 \
     -preset slow -pix_fmt yuv420p -crf 1 -threads 0 -bf 0 \
     ${FILENAME}.x264.mp4 && \
     rm -f ${FILENAME}.ppm

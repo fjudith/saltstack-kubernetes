@@ -7,3 +7,8 @@ certs/*.pem
 .vscode
 /.gtm/
 CHANGELOG.md
+gource.cfg
+*.mp4
+fetch_gravatar.pl
+bendy.png
+gravatar.sh

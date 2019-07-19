@@ -111,7 +111,7 @@ kubernetes:
         enabled: True
       weave_scope:
         enabled: True
-        image: docker.io/weaveworks/scope:1.10.2
+        image: docker.io/weaveworks/scope:1.11.2
         ingress_host: scope
       kubeless:
         enabled: True

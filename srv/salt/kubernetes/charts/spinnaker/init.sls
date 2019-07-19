@@ -11,8 +11,15 @@
     - makedirs: True
 
 {% if charts.get('keycloak', {'enabled': False}).enabled %}
-
 {%- set keycloak_password = salt['cmd.shell']("kubectl get secret --namespace keycloak keycloak-http -o jsonpath='{.data.password}' | base64 --decode; echo") -%}
+
+spinnaker-wait-keycloak:
+  http.wait_for_successful_query:
+    - name: "https://{{ charts.keycloak.ingress_host }}.{{ public_domain }}"
+    - wait_for: 180
+    - request_interval: 5
+    - status: 200
+
 
 spinnaker-create-realm:
   file.managed:
@@ -27,6 +34,8 @@ spinnaker-create-realm:
   cmd.script:
     - name: /srv/kubernetes/manifests/spinnaker/kc-config-spinnaker.sh
     - source: salt://kubernetes/charts/spinnaker/oauth/keycloak/scripts/kc-config-spinnaker.sh
+    - require:
+      - http: spinnaker-wait-keycloak
     - cwd: /srv/kubernetes/manifests/spinnaker
     - env:
       - ACTION: "create-realm"
@@ -59,6 +68,8 @@ spinnaker-create-groups:
   cmd.script:
     - name: /srv/kubernetes/manifests/spinnaker/kc-config-spinnaker.sh
     - source: salt://kubernetes/charts/spinnaker/oauth/keycloak/scripts/kc-config-spinnaker.sh
+    - require:
+      - http: spinnaker-wait-keycloak
     - cwd: /srv/kubernetes/manifests/spinnaker
     - env:
       - ACTION: "create-groups"
@@ -85,6 +96,8 @@ spinnaker-create-client-scopes:
   cmd.script:
     - name: /srv/kubernetes/manifests/spinnaker/kc-config-spinnaker.sh
     - source: salt://kubernetes/charts/spinnaker/oauth/keycloak/scripts/kc-config-spinnaker.sh
+    - require:
+      - http: spinnaker-wait-keycloak
     - cwd: /srv/kubernetes/manifests/spinnaker
     - env:
       - ACTION: "create-client-scopes"
@@ -126,6 +139,8 @@ spinnaker-create-client:
   cmd.script:
     - name: /srv/kubernetes/manifests/spinnaker/kc-config-spinnaker.sh
     - source: salt://kubernetes/charts/spinnaker/oauth/keycloak/scripts/kc-config-spinnaker.sh
+    - require:
+      - http: spinnaker-wait-keycloak
     - cwd: /srv/kubernetes/manifests/spinnaker
     - env:
       - ACTION: "create-client"
@@ -178,7 +193,7 @@ spinnaker:
     - watch:
       - file: /srv/kubernetes/manifests/spinnaker/values.yaml
     - name: |
-        helm repo update
+        helm repo update && \
         helm upgrade --install spinnaker --namespace spinnaker \
           --set halyard.spinnakerVersion={{ charts.spinnaker.version }} \
           --set halyard.image.tag={{ charts.spinnaker.halyard_version }} \
@@ -210,3 +225,12 @@ spinnaker-ingress:
       - file:  /srv/kubernetes/manifests/spinnaker/ingress.yaml
     - runas: root
     - name: kubectl apply -f /srv/kubernetes/manifests/spinnaker/ingress.yaml
+
+spinnaker-front50-wait:
+  cmd.run:
+    - require:
+      - cmd: spinnaker
+    - runas: root
+    - name: until kubectl -n spinnaker get pods --selector=cluster=spin-front50 --field-selector=status.phase=Running; do printf 'spin-front50 is not Running' && sleep 5; done
+    - use_vt: True
+    - timeout: 600

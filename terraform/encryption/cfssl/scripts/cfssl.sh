@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-# define location of openssl binary manually since running this
+# define location of openssl binary manually since Cfssl this
 # script under Vagrant fails on some systems without it
 if ! which cfssl cfssl-certinfo cfssljson > /dev/null ; then
     case $(uname -s) in

@@ -193,12 +193,16 @@ kubernetes:
       ingress_host: mail-relay
     spinnaker:
       enabled: True
-      version: 1.14.6
-      halyard_version: 1.20.2
+      version: 1.14.10
+      halyard_version: 1.21.2
       ingress_host: spinnaker
       github:
         enabled: True
-        token: 7b0805adfba328d09cfa7ac377777cb6e270d66f
+        token: 0123456789abcdefghij0123456789abcdefghij
+      oauth:
+        provider: keycloak
+        keycloak:
+          realm: default
     harbor:
       enabled: true
       version: 1.0.1

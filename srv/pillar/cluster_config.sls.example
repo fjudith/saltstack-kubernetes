@@ -17,7 +17,7 @@ kubernetes:
         version: 1.2.6
         source_hash: 3c23bc34c7c0cb2e45fe469f5fcfdb3829aab8e51a425b1efb702f00f215c4c6
       crio:
-        version: 1.14
+        version: 1.15
     cni:
       source: https://github.com/containernetworking/plugins/releases/download/v0.7.5/cni-plugins-amd64-v0.7.5.tgz
       source_hash: 3ca15c0a18ee830520cf3a95408be826cbd255a1535a38e0be9608b25ad8bf64

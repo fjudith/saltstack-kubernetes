@@ -2,7 +2,7 @@
 set -e
 
 export SALT_VERSION=2019.2.0
-export SALTGUI_VERSION=1.16.0
+export SALTGUI_VERSION=1.17
 export DEBIAN_FRONTEND=noninteractive
 export SALT_USER=salt
 
@@ -64,7 +64,8 @@ rest_cherrypy:
 EOF
 
 cd /opt && curl -L https://github.com/erwindon/SaltGUI/archive/${SALTGUI_VERSION}.tar.gz | tar -xvzf - && \
-ln -fs /opt/SaltGUI-${SALTGUI_VERSION}/saltgui /srv/saltgui && \
+rm -vf /srv/saltgui && \
+ln -vfs /opt/SaltGUI-${SALTGUI_VERSION}/saltgui /srv/saltgui && \
 systemctl enable salt-master && \
 systemctl enable salt-minion && \
 systemctl enable salt-api && \

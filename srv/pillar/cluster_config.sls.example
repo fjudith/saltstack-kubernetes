@@ -19,8 +19,8 @@ kubernetes:
       crio:
         version: 1.15
     cni:
-      source: https://github.com/containernetworking/plugins/releases/download/v0.7.5/cni-plugins-amd64-v0.7.5.tgz
-      source_hash: 3ca15c0a18ee830520cf3a95408be826cbd255a1535a38e0be9608b25ad8bf64
+      source: https://github.com/containernetworking/plugins/releases/download/v0.8.2/cni-plugins-amd64-v0.8.2.tgz
+      source_hash: 922b6a3b864a9849cc5bd1672823b1891094260461c2cdd9718778ca8dcaef82
       network: 10.2.0.0/16
       provider: calico
       calico:

@@ -20,7 +20,7 @@ kubernetes:
         version: 1.15
     cni:
       source: https://github.com/containernetworking/plugins/releases/download/v0.8.2/cni-plugins-amd64-v0.8.2.tgz
-      source_hash: 922b6a3b864a9849cc5bd1672823b1891094260461c2cdd9718778ca8dcaef82
+      source_hash: 21283754ffb953329388b5a3c52cef7d656d535292bda2d86fcdda604b482f85
       network: 10.2.0.0/16
       provider: calico
       calico:

@@ -7,7 +7,7 @@ kubernetes:
     cri:
       provider: docker
       crictl_version: 1.15.0
-      runc_version: 1.0.0-rc7
+      runc_version: 1.0.0-rc8
       docker:
         version: 18.09.6
         data_dir: /var/lib/docker

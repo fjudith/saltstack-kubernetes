@@ -19,7 +19,7 @@ cri-tools-archive:
 /usr/local/bin/runc:
   file.managed:
     - source: https://github.com/opencontainers/runc/releases/download/v{{ common.cri.runc_version }}/runc.amd64
-    - source_hash: eaa9c9518cc4b041eea83d8ef83aad0a347af913c65337abe5b94b636183a251
+    - source_hash: 0a9ac20ee52b6084ad161d516cc4e6248c5fd0cdf1fd4a7ac27f5243675632f9
     - user: root
     - group: root
     - mode: 755

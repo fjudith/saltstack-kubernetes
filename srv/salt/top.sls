@@ -25,6 +25,9 @@ base:
     {%- if common.addons.dns.get('coredns', {'enabled': False}).enabled %}
     - kubernetes.addons.coredns
     {%- endif %}
+    {%- if common.addons.get('helm', {'enabled': False}).enabled %}
+    - kubernetes.addons.helm
+    {%- endif %}
     - kubernetes.ingress
     {%- if common.addons.get('kube_prometheus', {'enabled': False}).enabled %}
     - kubernetes.addons.kube-prometheus

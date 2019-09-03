@@ -186,8 +186,6 @@ spinnaker:
     - runas: root
     - only_if: kubectl get storageclass | grep \(default\)
     - unless: helm list | grep spinnaker
-    - env:
-      - HELM_HOME: /srv/helm/home
     - require:
       - cmd: spinnaker-namespace
     - watch:

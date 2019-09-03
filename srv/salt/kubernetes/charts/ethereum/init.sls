@@ -22,8 +22,6 @@ ethereum:
   cmd.run:
     - runas: root
     - unless: helm list | grep ethereum
-    - env:
-      - HELM_HOME: /srv/helm/home
     - name: |
         helm install --name ethereum --namespace ethereum \
             --set geth.account.address="{{ charts.ethereum.address }}" \

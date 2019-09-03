@@ -53,8 +53,6 @@ concourse:
       - file: /srv/kubernetes/manifests/concourse-ingress.yaml
     - runas: root
     - unless: helm list | grep concourse
-    - env:
-      - HELM_HOME: /srv/helm/home
     - name: |
         helm install --name concourse --namespace concourse \
             --set concourse.web.externalUrl=https://{{ charts.concourse.ingress_host }}.{{ public_domain }} \

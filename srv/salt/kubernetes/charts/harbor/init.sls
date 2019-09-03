@@ -33,8 +33,6 @@ harbor:
     - runas: root
     - unless: helm list | grep harbor
     - cwd: /srv/kubernetes/manifests/harbor
-    - env:
-      - HELM_HOME: /srv/helm/home
     - use_vt: true
     - name: |
         helm dependency update

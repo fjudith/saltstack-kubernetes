@@ -35,8 +35,6 @@ keycloak:
     - runas: root
     - unless: helm list | grep keycloak
     - only_if: kubectl get storageclass | grep \(default\)
-    - env:
-      - HELM_HOME: /srv/helm/home
     - name: |
         helm install --name keycloak --namespace keycloak \
             -f /srv/kubernetes/manifests/keycloak/values.yaml \

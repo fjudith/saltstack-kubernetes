@@ -14,8 +14,6 @@ mailhog:
   cmd.run:
     - runas: root
     - unless: helm list | grep mailhog
-    - env:
-      - HELM_HOME: /srv/helm/home
     - name: |
         helm install --name mailhog --namespace mailhog \
             --set env.MH_HOSTNAME=mail.{{ public_domain }} \

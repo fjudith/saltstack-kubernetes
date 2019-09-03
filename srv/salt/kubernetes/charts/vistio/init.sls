@@ -42,8 +42,6 @@ vistio:
     - runas: root
     - unless: helm list | grep vistio
     - cwd: /srv/kubernetes/manifests/vistio
-    - env:
-      - HELM_HOME: /srv/helm/home
     - name: |
         helm install --name vistio --namespace default \
           --values /srv/kubernetes/manifests/vistio-values.yaml \

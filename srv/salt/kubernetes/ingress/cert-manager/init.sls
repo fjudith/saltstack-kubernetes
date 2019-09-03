@@ -7,6 +7,16 @@
     - dir_mode: 750
     - makedirs: True
 
+/srv/kubernetes/manifests/cert-manager/namespace.yaml:
+  file.managed:
+    - require:
+      - file: /srv/kubernetes/manifests/cert-manager
+    - source: salt://kubernetes/ingress/cert-manager/files/namespace.yaml
+    - user: root
+    - template: jinja
+    - group: root
+    - mode: 644
+
 /srv/kubernetes/manifests/cert-manager/cert-manager.yaml:
   file.managed:
     - require:
@@ -31,11 +41,13 @@
 kubernetes-cert-manager-install:
   cmd.run:
     - watch:
-        - file:  /srv/kubernetes/manifests/cert-manager/cert-manager.yaml
+        - file: /srv/kubernetes/manifests/cert-manager/cert-manager.yaml
+        - file: /srv/kubernetes/manifests/cert-manager/namespace.yaml
     - runas: root
     - use_vt: True
     - onlyif: curl --silent 'http://127.0.0.1:8080/healthz/'
     - name: |
+        kubectl apply -f /srv/kubernetes/manifests/cert-manager/namespace.yaml && \
         kubectl apply -f /srv/kubernetes/manifests/cert-manager/cert-manager.yaml && \
         kubectl -n cert-manager delete secret public-dns-secret & \
         kubectl -n cert-manager create secret generic public-dns-secret --from-literal=secret-access-key="{{ common.addons.cert_manager.dns.secret }}"

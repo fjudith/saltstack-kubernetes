@@ -24,11 +24,11 @@ kubernetes:
       network: 10.2.0.0/16
       provider: calico
       calico:
-        node_image: quay.io/calico/node:v3.6.2
-        typha_image: quay.io/calico/typha:v3.6.2
-        cni_image: quay.io/calico/cni:v3.6.2
-        controller_image: quay.io/calico/kube-controllers:v3.6.2
-        version: 3.6.2
+        node_image: quay.io/calico/node:v3.6.5
+        typha_image: quay.io/calico/typha:v3.6.5
+        cni_image: quay.io/calico/cni:v3.6.5
+        controller_image: quay.io/calico/kube-controllers:v3.6.5
+        version: 3.6.5
         ipv4:
           range: 10.2.0.0/16
           nat: true

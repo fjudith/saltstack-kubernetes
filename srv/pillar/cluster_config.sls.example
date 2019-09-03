@@ -9,7 +9,7 @@ kubernetes:
       crictl_version: 1.15.0
       runc_version: 1.0.0-rc8
       docker:
-        version: 18.09.6
+        version: 18.09.8
         data_dir: /var/lib/docker
       rkt:
         version: 1.30.0

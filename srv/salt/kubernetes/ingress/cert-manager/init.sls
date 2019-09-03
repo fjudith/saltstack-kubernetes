@@ -23,7 +23,6 @@
       - file: /srv/kubernetes/manifests/cert-manager
     - source: https://github.com/jetstack/cert-manager/releases/download/v{{ common.addons.cert_manager.version }}/cert-manager.yaml
     - user: root
-    - template: jinja
     - group: root
     - mode: 644
     - skip_verify: true

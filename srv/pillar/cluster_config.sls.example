@@ -103,7 +103,7 @@ kubernetes:
         source_hash: 66431da2425c955e57836837435afafd296ba85a0639b6b566e9a13c6536e680
       cert_manager:
         enabled: True
-        version: 0.8.0
+        version: 0.9.1
         acme_email: user@example.com
         dns:
           provider: cloudflare

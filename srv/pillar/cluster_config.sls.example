@@ -9,7 +9,7 @@ kubernetes:
       crictl_version: 1.15.0
       runc_version: 1.0.0-rc8
       docker:
-        version: 18.09.6
+        version: 18.09.8
         data_dir: /var/lib/docker
       rkt:
         version: 1.30.0
@@ -24,11 +24,11 @@ kubernetes:
       network: 10.2.0.0/16
       provider: calico
       calico:
-        node_image: quay.io/calico/node:v3.6.2
-        typha_image: quay.io/calico/typha:v3.6.2
-        cni_image: quay.io/calico/cni:v3.6.2
-        controller_image: quay.io/calico/kube-controllers:v3.6.2
-        version: 3.6.2
+        node_image: quay.io/calico/node:v3.6.5
+        typha_image: quay.io/calico/typha:v3.6.5
+        cni_image: quay.io/calico/cni:v3.6.5
+        controller_image: quay.io/calico/kube-controllers:v3.6.5
+        version: 3.6.5
         ipv4:
           range: 10.2.0.0/16
           nat: true
@@ -103,7 +103,7 @@ kubernetes:
         source_hash: 66431da2425c955e57836837435afafd296ba85a0639b6b566e9a13c6536e680
       cert_manager:
         enabled: True
-        version: 0.8.0
+        version: 0.9.1
         acme_email: user@example.com
         dns:
           provider: cloudflare

@@ -37,19 +37,41 @@
     - group: root
     - mode: 644
 
-kubernetes-cert-manager-install:
+cert-manager-namespace:
   cmd.run:
     - watch:
-        - file: /srv/kubernetes/manifests/cert-manager/cert-manager.yaml
         - file: /srv/kubernetes/manifests/cert-manager/namespace.yaml
     - runas: root
     - use_vt: True
     - onlyif: curl --silent 'http://127.0.0.1:8080/healthz/'
+    - name: kubectl apply -f /srv/kubernetes/manifests/cert-manager/namespace.yaml
+
+cert-manager-remove-secret:
+  cmd.run:
+    - watch:
+      - cmd: cert-manager-namespace
+    - runas: root
+    - use_vt: True
+    - onlyif: kubectl -n cert-manager get secret public-dns-secret
+    - name: kubectl -n cert-manager delete secret public-dns-secret
+
+cert-manager-create-secret:
+  cmd.run:
+    - watch:
+      - cmd: cert-manager-remove-secret
+    - runas: root
+    - use_vt: True
+    - name: kubectl -n cert-manager create secret generic public-dns-secret --from-literal=secret-access-key="{{ common.addons.cert_manager.dns.secret }}"
+
+cert-manager-install:
+  cmd.run:
+    - watch:
+        - file: /srv/kubernetes/manifests/cert-manager/cert-manager.yaml
+        - cmd: cert-manager-namespace
+    - runas: root
+    - use_vt: True
     - name: |
-        kubectl apply -f /srv/kubernetes/manifests/cert-manager/namespace.yaml && \
-        kubectl apply -f /srv/kubernetes/manifests/cert-manager/cert-manager.yaml && \
-        kubectl -n cert-manager delete secret public-dns-secret & \
-        kubectl -n cert-manager create secret generic public-dns-secret --from-literal=secret-access-key="{{ common.addons.cert_manager.dns.secret }}"
+        kubectl apply -f /srv/kubernetes/manifests/cert-manager/cert-manager.yaml
 
 query-cert-manager-required-api:
   http.wait_for_successful_query:
@@ -59,11 +81,11 @@ query-cert-manager-required-api:
     - request_interval: 5
     - status: 200
 
-kubernetes-cert-manager-config:
+cert-manager-config:
   cmd.run:
     - require:
-      - cmd: kubernetes-cert-manager-install
       - http: query-cert-manager-required-api
+      - cmd: cert-manager-create-secret
     - watch:
         - file: /srv/kubernetes/manifests/cert-manager/clusterissuer.yaml
     - runas: root

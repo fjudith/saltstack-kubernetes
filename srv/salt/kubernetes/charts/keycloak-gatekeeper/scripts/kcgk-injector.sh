@@ -176,21 +176,21 @@ function create-client-kubernetes {
   # Deploy the gateway in the `kube-system` namespace
   helm template /srv/kubernetes/charts/incubator/keycloak-gatekeeper \
     --name kubernetes-dashboard \
-    --namespace kube-system \
+    --namespace kubernetes-dashboard \
     --set discoveryUrl=${URL}/auth/realms/${REALM} \
     --set clientId=kubernetes \
     --set clientSecret=${CLIENT_SECRET} \
     --set redirectionUrl=${REDIRECTURL} \
-    --set upstreamUrl=https://kubernetes-dashboard.kube-system | kubectl apply -n kube-system -f -
+    --set upstreamUrl=https://kubernetes-dashboard.kubernetes-dashboard | kubectl apply -n kubernetes-dashboard -f -
   
   # Bind Keycloak authenticated users with the appropriate Kubernetes role.
   kubectl apply -f ./files/keycloak-kubernetes-rbac.yaml
 
   # Update the ingress to point to the `keycloak-gatekeeper`.
-  kubectl patch ingress -n kube-system kubernetes-dashboard --type json \
+  kubectl patch ingress -n kubernetes-dashboard kubernetes-dashboard --type json \
   --patch='[{"op": "replace", "path": "/spec/rules/0/http/paths/0/backend/serviceName", "value": "kubernetes-dashboard-keycloak-gatekeeper"}]'
 
-  kubectl patch ingress -n kube-system kubernetes-dashboard --type json \
+  kubectl patch ingress -n kubernetes-dashboard kubernetes-dashboard --type json \
   --patch='[{"op": "replace", "path": "/spec/rules/0/http/paths/0/backend/servicePort", "value": 3000}]'
 }
 

@@ -78,7 +78,7 @@ kubernetes:
         enabled: True
       dashboard:
         enabled: True
-        dashboard_image: kubernetesui/dashboard:v2.0.0-beta3
+        dashboard_image: kubernetesui/dashboard:v2.0.0-beta4
         scraper_image: kubernetesui/metrics-scraper:v1.0.1
         ingress_host: kubernetes-dashboard
       traefik:

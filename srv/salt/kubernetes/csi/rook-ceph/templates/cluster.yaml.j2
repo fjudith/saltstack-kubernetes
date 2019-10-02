@@ -81,6 +81,9 @@ spec:
   resources:
 # The requests and limits set here, allow the mgr pod to use half of one CPU core and 1 gigabyte of memory
     mgr:
+      modules:
+        - name: pg_autoscaler
+          enabled: true
       limits:
         cpu: "500m"
         memory: "1024Mi"

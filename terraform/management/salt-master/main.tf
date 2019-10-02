@@ -35,11 +35,7 @@ EOF
   }
 
   provisioner "file" {
-    content = <<EOF
-master: localhost
-timeout: 30
-EOF
-
+    content     = "${element(data.template_file.master-conf.*.rendered, count.index)}"
     destination = "/etc/salt/minion.d/master.conf"
   }
 
@@ -56,5 +52,13 @@ EOF
       "systemctl restart salt-master",
       "systemctl restart salt-master",
     ]
+  }
+}
+
+data "template_file" "master-conf" {
+  count    = "${var.count}"
+  template = "${file("${path.module}/templates/master.conf")}"
+  vars {
+    salt_master_host     = "${var.salt_master_host}"
   }
 }

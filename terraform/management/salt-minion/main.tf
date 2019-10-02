@@ -22,7 +22,7 @@ resource "null_resource" "salt-minion-proxy" {
   }
 
   provisioner "file" {
-    content     = "master: ${var.salt_master_host}"
+    content     = "${element(data.template_file.master-conf.*.rendered, count.index)}"
     destination = "/etc/salt/minion.d/master.conf"
   }
 
@@ -58,7 +58,7 @@ resource "null_resource" "salt-minion-etcd" {
   }
 
   provisioner "file" {
-    content     = "master: ${var.salt_master_host}"
+    content     = "${element(data.template_file.master-conf.*.rendered, count.index)}"
     destination = "/etc/salt/minion.d/master.conf"
   }
 
@@ -94,7 +94,7 @@ resource "null_resource" "salt-minion-master" {
   }
 
   provisioner "file" {
-    content     = "master: ${var.salt_master_host}"
+    content     = "${element(data.template_file.master-conf.*.rendered, count.index)}"
     destination = "/etc/salt/minion.d/master.conf"
   }
 
@@ -131,7 +131,7 @@ resource "null_resource" "salt-minion-node" {
   }
 
   provisioner "file" {
-    content     = "master: ${var.salt_master_host}"
+    content     = "${element(data.template_file.master-conf.*.rendered, count.index)}"
     destination = "/etc/salt/minion.d/master.conf"
   }
 
@@ -145,5 +145,13 @@ resource "null_resource" "salt-minion-node" {
       "systemctl daemon-reload",
       "systemctl restart salt-minion",
     ]
+  }
+}
+
+data "template_file" "master-conf" {
+  count    = "${var.count}"
+  template = "${file("${path.module}/templates/master.conf")}"
+  vars {
+    salt_master_host     = "${var.salt_master_host}"
   }
 }

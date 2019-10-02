@@ -89,11 +89,11 @@ docker.socket:
     - require:
       - group: docker
 
-docker-service-reload-daemon:
-  - module.run:
-    - service.systemctl_reload:
-  - watch: 
-    - file: /etc/systemd/system/docker.service
+service.systemctl_reload:
+  module.run:
+    - service.systemctl_reload: {}
+    - watch: 
+      - file: /etc/systemd/system/docker.service
 
 docker.service:
   service.enabled:

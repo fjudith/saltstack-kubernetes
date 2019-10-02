@@ -167,7 +167,7 @@ kubernetes:
         ingress_host: ceph
       rook_minio:
         enabled: True
-        image: rook/minio:v1.0.4
+        image: rook/minio:v1.1.1
         username: Ch4ng3M3
         password: Ch4ng3M34ls0
         ingress_host: minio

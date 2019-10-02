@@ -90,10 +90,10 @@ docker.socket:
       - group: docker
 
 docker-service-reload-daemon:
-  module.run:
-    - name: service.systemctl_reload
-    - watch: 
-      - file: /etc/systemd/system/docker.service
+  - module.run:
+    - service.systemctl_reload:
+  - watch: 
+    - file: /etc/systemd/system/docker.service
 
 docker.service:
   service.enabled:

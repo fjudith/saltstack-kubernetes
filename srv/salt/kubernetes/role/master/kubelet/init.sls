@@ -73,10 +73,10 @@ kubelet-install:
     - mode: 644
 
 kubelet-service-reload-daemon:
-  module.run:
-    - name: service.systemctl_reload
-    - watch: 
-      - file: /etc/systemd/system/kubelet.service
+  - module.run:
+    - service.systemctl_reload:
+  - watch: 
+    - file: /etc/systemd/system/kubelet.service
 
 kubelet.service:
   service.running:

@@ -196,7 +196,7 @@ kubernetes:
     spinnaker:
       enabled: True
       version: 1.16.3
-      halyard_version: 1.23.2
+      halyard_version: 1.24.0
       ingress_host: spinnaker
       github:
         enabled: True

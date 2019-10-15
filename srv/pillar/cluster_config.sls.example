@@ -195,7 +195,7 @@ kubernetes:
       ingress_host: mail-relay
     spinnaker:
       enabled: True
-      version: 1.16.2
+      version: 1.16.3
       halyard_version: 1.23.2
       ingress_host: spinnaker
       github:

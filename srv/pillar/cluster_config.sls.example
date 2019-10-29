@@ -70,7 +70,7 @@ kubernetes:
         source_hash: 38614a665859c0f01c9c1d84fa9a5027364f936814d1e47839b05327e400bf55
       kube_prometheus:
         enabled: True
-        version: 0.1.0
+        version: 0.2.0
         prometheus_ingress_host: prometheus
         alertmanager_ingress_host: alertmanager
         grafana_ingress_host: grafana

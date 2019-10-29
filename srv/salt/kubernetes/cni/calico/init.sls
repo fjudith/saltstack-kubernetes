@@ -69,11 +69,11 @@
     - group: root
     - mode: 644
 
-/srv/kubernetes/manifests/calico/calico.yaml:
+/srv/kubernetes/manifests/calico/calico-typha.yaml:
     file.managed:
     - watch:
       - file: /srv/kubernetes/manifests/calico
-    - source: salt://kubernetes/cni/calico/templates/calico.yaml.j2
+    - source: salt://kubernetes/cni/calico/templates/calico-typha.yaml.j2
     - user: root
     - template: jinja
     - group: root
@@ -92,8 +92,8 @@ calico-install:
     - require:
       - http: query-calico-required-api
     - watch:
-      - file: /srv/kubernetes/manifests/calico/calico.yaml
+      - file: /srv/kubernetes/manifests/calico/calico-typha.yaml
     - runas: root
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/calico/calico-rbac-kkd.yaml 
-        kubectl apply -f /srv/kubernetes/manifests/calico/calico.yaml
+        kubectl apply -f /srv/kubernetes/manifests/calico/calico-typha.yaml

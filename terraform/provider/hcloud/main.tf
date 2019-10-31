@@ -9,7 +9,7 @@ resource "hcloud_network" "private" {
   }
 }
 
-resource "hcloud_network" "kubernetes" {
+resource "hcloud_network_subnet" "kubernetes" {
   network_id = "${hcloud_network.private.id}"
   type = "server"
   network_zone = "eu-central"

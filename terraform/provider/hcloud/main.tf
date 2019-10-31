@@ -10,7 +10,7 @@ resource "hcloud_network" "private" {
 }
 
 resource "hcloud_network" "kubernetes" {
-  network_id = "${hcloud_network.mynet.id}"
+  network_id = "${hcloud_network.private.id}"
   type = "server"
   network_zone = "eu-central"
   ip_range = "10.0.1.0/24"

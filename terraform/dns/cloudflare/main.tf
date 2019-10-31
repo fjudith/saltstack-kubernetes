@@ -1,4 +1,5 @@
 provider "cloudflare" {
+  version = "~> 1.0"
   email = "${var.email}"
   token = "${var.token}"
 }

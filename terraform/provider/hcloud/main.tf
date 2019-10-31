@@ -530,30 +530,30 @@ provisioner "remote-exec" {
 resource "hcloud_server_network" "proxy01" {
   count = 1
   server_id = "${hcloud_server.proxy01.id}"
-  network_id = "${hcloud_network.private.id}"
+  network_id = "${hcloud_network_subnet.kubernetes.id}"
   ip = "10.0.1.251"
 }
 
 resource "hcloud_server_network" "proxy02" {
   count = 1
   server_id = "${hcloud_server.proxy02.id}"
-  network_id = "${hcloud_network.private.id}"
+  network_id = "${hcloud_network_subnet.kubernetes.id}"
 }
 
 resource "hcloud_server_network" "etcd" {
   count = "${var.etcd_count}"
-  server_id = "${element(hcloud_server.etcd.id, count.index)}"
-  network_id = "${hcloud_network.private.id}"
+  server_id = "${element(hcloud_server.etcd.*.id, count.index)}"
+  network_id = "${hcloud_network_subnet.kubernetes.id}"
 }
 
 resource "hcloud_server_network" "master" {
   count = "${var.master_count}"
-  server_id = "${element(hcloud_server.master.id, count.index)}"
-  network_id = "${hcloud_network.private.id}"
+  server_id = "${element(hcloud_server.master.*.id, count.index)}"
+  network_id = "${hcloud_network_subnet.kubernetes.id}"
 }
 
 resource "hcloud_server_network" "node" {
   count = "${var.node_count}"
-  server_id = "${element(hcloud_server.node.id, count.index)}"
-  network_id = "${hcloud_network.private.id}"
+  server_id = "${element(hcloud_server.node.*.id, count.index)}"
+  network_id = "${hcloud_network_subnet.kubernetes.id}"
 }

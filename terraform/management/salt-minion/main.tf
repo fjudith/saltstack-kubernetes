@@ -149,7 +149,7 @@ resource "null_resource" "salt-minion-node" {
 }
 
 data "template_file" "master-conf" {
-  count    = "${var.count}"
+  count    = "${var.master_count}"
   template = "${file("${path.module}/templates/master.conf")}"
   vars {
     salt_master_host     = "${var.salt_master_host}"

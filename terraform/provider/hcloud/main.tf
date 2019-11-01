@@ -531,7 +531,6 @@ resource "hcloud_server_network" "proxy01" {
   count = 1
   server_id = "${hcloud_server.proxy01.id}"
   network_id = "${hcloud_network.private.id}"
-  ip = "10.0.1.251"
 }
 
 resource "hcloud_server_network" "proxy02" {

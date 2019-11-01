@@ -75,8 +75,8 @@ cert-manager-install:
 
 query-cert-manager-required-api:
   http.wait_for_successful_query:
-    - name: 'http://127.0.0.1:8080/apis/certmanager.k8s.io'
-    - match: certmanager.k8s.io
+    - name: 'http://127.0.0.1:8080/apis/cert-manager.io'
+    - match: cert-manager.io
     - wait_for: 180
     - request_interval: 5
     - status: 200
@@ -90,6 +90,6 @@ cert-manager-config:
         - file: /srv/kubernetes/manifests/cert-manager/clusterissuer.yaml
     - runas: root
     - use_vt: True
-    - onlyif: curl --silent 'http://127.0.0.1:8080/apis/certmanager.k8s.io'
+    - onlyif: curl --silent 'http://127.0.0.1:8080/apis/cert-manager.io'
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/cert-manager/clusterissuer.yaml

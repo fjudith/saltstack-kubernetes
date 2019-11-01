@@ -109,8 +109,8 @@ nginx-ingress-monitoring:
 
 nginx-ingress-cert-manager-required-api:
   http.wait_for_successful_query:
-    - name: 'http://127.0.0.1:8080/apis/certmanager.k8s.io'
-    - match: certmanager.k8s.io
+    - name: 'http://127.0.0.1:8080/apis/cert-manager.io'
+    - match: cert-manager.io
     - wait_for: 180
     - request_interval: 5
     - status: 200

@@ -16,7 +16,7 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: {{ controller }}
     {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
-    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+    cert-manager.io/cluster-issuer: letsencrypt-prod
     kubernetes.io/tls-acme: "true"
     {%- endif %}
 spec:

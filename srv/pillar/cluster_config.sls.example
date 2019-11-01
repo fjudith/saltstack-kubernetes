@@ -34,15 +34,15 @@ kubernetes:
           range: 10.2.0.0/16
           nat: true
           ip_in_ip: always
-          interface: eth0
+          interface: ens10
         ipv6:
           enable: false
           nat: true
-          interface: eth0
+          interface: ens10
           range: fd80:24e2:f998:72d6::/64
       flannel:
-        flannel_image: quay.io/coreos/flannel:v0.10.0-amd64
-        interface: eth0
+        flannel_image: quay.io/coreos/flannel:v0.11.0-amd64
+        interface: ens10
       weave:
         weave_image: weaveworks/weave-kube:2.5.2
         npc_image: weaveworks/weave-npc:2.5.2
@@ -51,7 +51,7 @@ kubernetes:
         node_image: quay.io/calico/node:v3.2.1
         cni_image: quay.io/calico/cni:v3.2.1
         flannel_image: quay.io/coreos/flannel:v0.9.1
-        interface: eth0
+        interface: ens10
       cilium:
         cilium_image: docker.io/cilium/cilium:v1.3.2
     addons:

@@ -71,7 +71,7 @@ cert-manager-install:
     - runas: root
     - use_vt: True
     - name: |
-        kubectl apply -f /srv/kubernetes/manifests/cert-manager/cert-manager.yaml
+        kubectl apply -f /srv/kubernetes/manifests/cert-manager/cert-manager.yaml --validate=false
 
 query-cert-manager-required-api:
   http.wait_for_successful_query:

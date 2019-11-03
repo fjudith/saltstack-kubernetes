@@ -77,8 +77,8 @@ resource "hcloud_server" "proxy01" {
   #   ]
   # }
 
-  provisionner "remote-exec" {
-    inline [
+  provisioner "remote-exec" {
+    inline = [
       "apt-get update -yqq",
       "apt-get install --no-install-recommends -yqq apt-transport-https conntrack ca-certificates squid3 ${join(" ", var.apt_packages)}",
       "echo 'MaxSessions 100' | tee -a  /etc/ssh/sshd_config",
@@ -133,8 +133,8 @@ request_header_access All deny all
 EOF
   }
 
-  provisionner "remote-exec" {
-    inline [
+  provisioner "remote-exec" {
+    inline = [
       "systemctl start squid.service",
       "systemctl is-active squid.service",
       "echo 'http_proxy=http://localhost:3128' | tee -a  /etc/environment",

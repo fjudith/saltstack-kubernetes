@@ -23,6 +23,7 @@ resource "hcloud_server" "proxy01" {
   image       = "${var.image}"
   server_type = "${var.proxy_type}"
   ssh_keys    = ["${var.ssh_keys}"]
+  user_data   = "${file("templates/proxy.user-data")}"
 
   connection {
     type        = "ssh"
@@ -58,31 +59,13 @@ resource "hcloud_server" "proxy01" {
     ]
   }
 
-  # provisioner "remote-exec" {
-  #   inline = [
-  #     "apt-get update -yqq",
-  #     "apt-get install --no-install-recommends -yqq apt-transport-https conntrack ca-certificates tinyproxy ${join(" ", var.apt_packages)}",
-  #     "echo 'MaxSessions 100' | tee -a  /etc/ssh/sshd_config",
-  #     "systemctl reload sshd",
-  #     "systemctl enable tinyproxy",
-  #     "echo 'Allow 127.0.0.1' | tee -a  /etc/tinyproxy.conf",
-  #     "echo 'Allow 192.168.0.0/16' | tee -a  /etc/tinyproxy.conf",
-  #     "echo 'Allow 172.16.0.0/12' | tee -a  /etc/tinyproxy.conf",
-  #     "echo 'Allow 10.0.0.0/8' | tee -a  /etc/tinyproxy.conf",
-  #     "systemctl daemon-reload",
-  #     "systemctl start tinyproxy.service",
-  #     "systemctl is-active tinyproxy.service",
-  #     "echo 'http_proxy=http://localhost:8888' | tee -a  /etc/environment",
-  #     "echo 'https_proxy=http://localhost:8888' | tee -a  /etc/environment",
-  #   ]
-  # }
-
   provisioner "remote-exec" {
     inline = [
       "apt-get update -yqq",
       "apt-get install --no-install-recommends -yqq apt-transport-https conntrack ca-certificates squid3 ${join(" ", var.apt_packages)}",
       "echo 'MaxSessions 100' | tee -a  /etc/ssh/sshd_config",
       "systemctl reload sshd",
+      "systemctl enable squid.service",
     ]
   }
 

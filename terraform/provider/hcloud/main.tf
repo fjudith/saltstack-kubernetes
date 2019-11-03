@@ -83,7 +83,7 @@ resource "hcloud_server" "proxy01" {
       "apt-get install --no-install-recommends -yqq apt-transport-https conntrack ca-certificates squid3 ${join(" ", var.apt_packages)}",
       "echo 'MaxSessions 100' | tee -a  /etc/ssh/sshd_config",
       "systemctl reload sshd",
-      "systemctl enable tinyproxy",
+      "systemctl enable squid",
     ]
   }
 

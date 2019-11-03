@@ -71,6 +71,7 @@ runcmd:
   - systemctl start squid
 
 bootcmd:
+  # Network tuning
   - [cloud-init-per, once, modprobe_ip_conntrack, sh, -c, "modprobe ip_conntrack"]
   - [cloud-init-per, once, increase_local_port_range, sh, -c, "echo '1024 65535' | tee -a /proc/sys/net/ipv4/ip_local_port_range"]
   - [cloud-init-per, once, modprobe_br_netfilter, sh, -c, "modprobe br_netfilter"]
@@ -88,9 +89,11 @@ bootcmd:
   - [cloud-init-per, once, increase_connection_tracking_table_size, sh, -c, "echo 'net.netfilter.nf_conntrack_max=1048576' | tee -a /etc/sysctl.conf"]
   - [cloud-init-per, once, limit_socket_listen_backlog, sh, -c, "echo 'net.core.somaxconn=1048576' | tee -a /etc/sysctl.conf"]
   # - sysctl -p
-  - echo '*    soft nofile 1048576' | tee -a /etc/security/limits.conf
-  - echo '*    hard nofile 1048576' | tee -a /etc/security/limits.conf
-  - echo 'root soft nofile 1048576' | tee -a /etc/security/limits.conf
-  - echo 'root hard nofile 1048576' | tee -a /etc/security/limits.conf
-  - echo 'session required pam_limits.so' | tee -a  /etc/pam.d/common-session
-  - echo 'MaxSessions 100' | tee -a  /etc/ssh/sshd_config
+  # OpenFile limits
+  - [cloud-init-per, once, increase_max_open_file_soft, sh, -c, "echo '*    soft nofile 1048576' | tee -a /etc/security/limits.conf"]
+  - [cloud-init-per, once, increase_max_open_file_hard, sh, -c, "echo '*    hard nofile 1048576' | tee -a /etc/security/limits.conf"]
+  - [cloud-init-per, once, increase_max_open_file_soft_root, sh, -c, "echo 'root soft nofile 1048576' | tee -a /etc/security/limits.conf"]
+  - [cloud-init-per, once, increase_max_open_file_hard_root, sh, -c, "echo 'root hard nofile 1048576' | tee -a /etc/security/limits.conf"]
+  - [cloud-init-per, once, enable_pam_session_limits, sh, -c, "echo 'session required pam_limits.so' | tee -a  /etc/pam.d/common-session"]
+  # SSH tuning
+  - [cloud-init-per, once, increase_ssh_sessions, sh, -c, "echo 'MaxSessions 100' | tee -a  /etc/ssh/sshd_config"]

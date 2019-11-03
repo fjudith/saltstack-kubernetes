@@ -85,6 +85,12 @@ resource "hcloud_server" "proxy02" {
   image       = "${var.image}"
   server_type = "${var.proxy_type}"
   ssh_keys    = ["${var.ssh_keys}"]
+  user_data   = "${file("${format("%s/templates/proxy.user-data", path.module)}")}"
+  labels = {
+    app  = "kubernetes"
+    role = "edge_router"
+    salt = "master"
+  }
 
   connection {
     type                = "ssh"
@@ -107,69 +113,27 @@ resource "hcloud_server" "proxy02" {
       "while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 1; done",
     ]
   }
-
   provisioner "remote-exec" {
     inline = [
-      "modprobe br_netfilter",
-      "echo 'net.ipv4.ip_forward=1' | tee -a /etc/sysctl.conf",
-      "echo 'net.ipv6.conf.all.forwarding=1' | tee -a /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-call-arptables=1' | tee -a /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-call-ip6tables=1' | tee -a /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-call-iptables=1' | tee -a /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-filter-pppoe-tagged=0' | tee -a /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-filter-vlan-tagged=0' | tee -a /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-pass-vlan-input-dev=0' | tee -a /etc/sysctl.conf",
-      "sysctl -p",
-    ]
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "apt-get update -yqq",
-      "apt-get install --no-install-recommends -yqq apt-transport-https conntrack ca-certificates ${join(" ", var.apt_packages)}",
-      "echo 'MaxSessions 100' | tee -a  /etc/ssh/sshd_config",
-      "systemctl reload sshd",
-    ]
-  }
-
-provisioner "remote-exec" {
-    inline = [
-      "echo '*    soft nofile 1048576' | tee -a /etc/security/limits.conf", 
-      "echo '*    hard nofile 1048576' | tee -a /etc/security/limits.conf",
-      "echo 'root soft nofile 1048576' | tee -a /etc/security/limits.conf",
-      "echo 'root hard nofile 1048576' | tee -a /etc/security/limits.conf",
-    ]
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "echo 'session required pam_limits.so' | tee -a  /etc/pam.d/common-session",
-    ]
-  }
-  
-  provisioner "remote-exec" {
-    inline = [
-      "echo 'fs.file-max=2097152' | tee -a /etc/sysctl.conf",
-      "echo 'fs.nr_open=1048576' | tee -a /etc/sysctl.conf",
-      "sysctl -p",
-    ]
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "modprobe ip_conntrack",
-      "echo '1024 65535' | tee -a /proc/sys/net/ipv4/ip_local_port_range",
-      "echo 'net.ipv4.tcp_tw_reuse=1' | tee -a /etc/sysctl.conf",
-      "echo 'net.netfilter.nf_conntrack_max=1048576' | tee -a /etc/sysctl.conf",
-      "echo 'net.nf_conntrack_max=1048576' | tee -a /etc/sysctl.conf",
-      "echo 'net.core.somaxconn=1048576' | tee -a /etc/sysctl.conf",
-      "sysctl -p",
+      "echo 'http_proxy=http://localhost:3128' | tee -a  /etc/environment",
+      "echo 'https_proxy=http://localhost:3128' | tee -a  /etc/environment",
     ]
   }
 
   provisioner "file" {
-    content     = "role: proxy"
-    destination = "/etc/salt/grains"
+    content     = "${file(var.ssh_private_key)}"
+    destination = "~/.ssh/id_rsa"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "chmod 400 ~/.ssh/id_rsa",
+    ]
+  }
+
+  provisioner "file" {
+    content     = "${file(var.ssh_public_key)}"
+    destination = "~/.ssh/id_rsa.pub"
   }
 }
 

@@ -149,6 +149,12 @@ resource "hcloud_server" "etcd" {
   image       = "${var.image}"
   server_type = "${var.etcd_type}"
   ssh_keys    = ["${var.ssh_keys}"]
+  user_data   = "${file("${format("%s/templates/etcd.user-data", path.module)}")}"
+  labels = {
+    app  = "kubernetes"
+    role = "etcd"
+    salt = "minion"
+  }
 
   connection {
     type                = "ssh"
@@ -170,68 +176,6 @@ resource "hcloud_server" "etcd" {
       "while fuser /var/lib/apt/lists/lock >/dev/null 2>&1; do sleep 1; done",
       "while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 1; done",
     ]
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "modprobe br_netfilter",
-      "echo 'net.ipv4.ip_forward=1' | tee -a /etc/sysctl.conf",
-      "echo 'net.ipv6.conf.all.forwarding=1' | tee -a /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-call-arptables=1' | tee -a /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-call-ip6tables=1' | tee -a /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-call-iptables=1' | tee -a /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-filter-pppoe-tagged=0' | tee -a /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-filter-vlan-tagged=0' | tee -a /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-pass-vlan-input-dev=0' | tee -a /etc/sysctl.conf",
-      "sysctl -p",
-    ]
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "apt-get update -yqq",
-      "apt-get install --no-install-recommends -yqq apt-transport-https conntrack ca-certificates ${join(" ", var.apt_packages)}",
-    ]
-  }
-
-provisioner "remote-exec" {
-    inline = [
-      "echo '*    soft nofile 1048576' | tee -a /etc/security/limits.conf", 
-      "echo '*    hard nofile 1048576' | tee -a /etc/security/limits.conf",
-      "echo 'root soft nofile 1048576' | tee -a /etc/security/limits.conf",
-      "echo 'root hard nofile 1048576' | tee -a /etc/security/limits.conf",
-    ]
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "echo 'session required pam_limits.so' | tee -a  /etc/pam.d/common-session",
-    ]
-  }
-  
-  provisioner "remote-exec" {
-    inline = [
-      "echo 'fs.file-max=2097152' | tee -a /etc/sysctl.conf",
-      "echo 'fs.nr_open=1048576' | tee -a /etc/sysctl.conf",
-      "sysctl -p",
-    ]
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "modprobe ip_conntrack",
-      "echo '1024 65535' | tee -a /proc/sys/net/ipv4/ip_local_port_range",
-      "echo 'net.ipv4.tcp_tw_reuse=1' | tee -a /etc/sysctl.conf",
-      "echo 'net.netfilter.nf_conntrack_max=1048576' | tee -a /etc/sysctl.conf",
-      "echo 'net.nf_conntrack_max=1048576' | tee -a /etc/sysctl.conf",
-      "echo 'net.core.somaxconn=1048576' | tee -a /etc/sysctl.conf",
-      "sysctl -p",
-    ]
-  }
-
-  provisioner "file" {
-    content     = "role: etcd"
-    destination = "/etc/salt/grains"
   }
 }
 
@@ -247,6 +191,12 @@ resource "hcloud_server" "master" {
   image       = "${var.image}"
   server_type = "${var.master_type}"
   ssh_keys    = ["${var.ssh_keys}"]
+  user_data   = "${file("${format("%s/templates/master.user-data", path.module)}")}"
+  labels = {
+    app  = "kubernetes"
+    role = "master"
+    salt = "minion"
+  }
 
   connection {
     type                = "ssh"
@@ -268,68 +218,6 @@ resource "hcloud_server" "master" {
       "while fuser /var/lib/apt/lists/lock >/dev/null 2>&1; do sleep 1; done",
       "while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 1; done",
     ]
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "modprobe br_netfilter",
-      "echo 'net.ipv4.ip_forward=1' | tee -a /etc/sysctl.conf",
-      "echo 'net.ipv6.conf.all.forwarding=1' | tee -a /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-call-arptables=1' | tee -a /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-call-ip6tables=1' | tee -a /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-call-iptables=1' | tee -a /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-filter-pppoe-tagged=0' | tee -a /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-filter-vlan-tagged=0' | tee -a /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-pass-vlan-input-dev=0' | tee -a /etc/sysctl.conf",
-      "sysctl -p",
-    ]
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "apt-get update -yqq",
-      "apt-get install --no-install-recommends -yqq apt-transport-https conntrack ca-certificates git ${join(" ", var.apt_packages)}",
-    ]
-  }
-
-provisioner "remote-exec" {
-    inline = [
-      "echo '*    soft nofile 1048576' | tee -a /etc/security/limits.conf", 
-      "echo '*    hard nofile 1048576' | tee -a /etc/security/limits.conf",
-      "echo 'root soft nofile 1048576' | tee -a /etc/security/limits.conf",
-      "echo 'root hard nofile 1048576' | tee -a /etc/security/limits.conf",
-    ]
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "echo 'session required pam_limits.so' | tee -a  /etc/pam.d/common-session",
-    ]
-  }
-  
-  provisioner "remote-exec" {
-    inline = [
-      "echo 'fs.file-max=2097152' | tee -a /etc/sysctl.conf",
-      "echo 'fs.nr_open=1048576' | tee -a /etc/sysctl.conf",
-      "sysctl -p",
-    ]
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "modprobe ip_conntrack",
-      "echo '1024 65535' | tee -a /proc/sys/net/ipv4/ip_local_port_range",
-      "echo 'net.ipv4.tcp_tw_reuse=1' | tee -a /etc/sysctl.conf",
-      "echo 'net.netfilter.nf_conntrack_max=1048576' | tee -a /etc/sysctl.conf",
-      "echo 'net.nf_conntrack_max=1048576' | tee -a /etc/sysctl.conf",
-      "echo 'net.core.somaxconn=1048576' | tee -a /etc/sysctl.conf",
-      "sysctl -p",
-    ]
-  }
-
-  provisioner "file" {
-    content     = "role: master"
-    destination = "/etc/salt/grains"
   }
 }
 
@@ -345,6 +233,12 @@ resource "hcloud_server" "node" {
   image       = "${var.image}"
   server_type = "${var.node_type}"
   ssh_keys    = ["${var.ssh_keys}"]
+  user_data   = "${file("${format("%s/templates/node.user-data", path.module)}")}"
+  labels = {
+    app  = "kubernetes"
+    role = "node"
+    salt = "minion"
+  }
 
   connection {
     type                = "ssh"
@@ -366,67 +260,6 @@ resource "hcloud_server" "node" {
       "while fuser /var/lib/apt/lists/lock >/dev/null 2>&1; do sleep 1; done",
       "while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 1; done",
     ]
-  }
-  provisioner "remote-exec" {
-    inline = [
-      "modprobe br_netfilter",
-      "echo 'net.ipv4.ip_forward=1' | tee -a /etc/sysctl.conf",
-      "echo 'net.ipv6.conf.all.forwarding=1' | tee -a /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-call-arptables=1' | tee -a /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-call-ip6tables=1' | tee -a /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-call-iptables=1' | tee -a /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-filter-pppoe-tagged=0' | tee -a /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-filter-vlan-tagged=0' | tee -a /etc/sysctl.conf",
-      "echo 'net.bridge.bridge-nf-pass-vlan-input-dev=0' | tee -a /etc/sysctl.conf",
-      "sysctl -p",
-    ]
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "apt-get update -yqq",
-      "apt-get install --no-install-recommends -yqq apt-transport-https conntrack ca-certificates ${join(" ", var.apt_packages)}",
-    ]
-  }
-
-provisioner "remote-exec" {
-    inline = [
-      "echo '*    soft nofile 1048576' | tee -a /etc/security/limits.conf", 
-      "echo '*    hard nofile 1048576' | tee -a /etc/security/limits.conf",
-      "echo 'root soft nofile 1048576' | tee -a /etc/security/limits.conf",
-      "echo 'root hard nofile 1048576' | tee -a /etc/security/limits.conf",
-    ]
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "echo 'session required pam_limits.so' | tee -a  /etc/pam.d/common-session",
-    ]
-  }
-  
-  provisioner "remote-exec" {
-    inline = [
-      "echo 'fs.file-max=2097152' | tee -a /etc/sysctl.conf",
-      "echo 'fs.nr_open=1048576' | tee -a /etc/sysctl.conf",
-      "sysctl -p",
-    ]
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "modprobe ip_conntrack",
-      "echo '1024 65535' | tee -a /proc/sys/net/ipv4/ip_local_port_range",
-      "echo 'net.ipv4.tcp_tw_reuse=1' | tee -a /etc/sysctl.conf",
-      "echo 'net.netfilter.nf_conntrack_max=1048576' | tee -a /etc/sysctl.conf",
-      "echo 'net.nf_conntrack_max=1048576' | tee -a /etc/sysctl.conf",
-      "echo 'net.core.somaxconn=1048576' | tee -a /etc/sysctl.conf",
-      "sysctl -p",
-    ]
-  }
-
-  provisioner "file" {
-    content     = "role: node"
-    destination = "/etc/salt/grains"
   }
 }
 

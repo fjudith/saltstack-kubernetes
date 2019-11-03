@@ -1,0 +1,58 @@
+#cloud-config
+# https://cloudinit.readthedocs.io/en/latest/topics/examples.html
+groups:
+  - ubuntu: [root,sys]
+  - cloud-users
+
+user:
+  - default
+  - name: cloud
+    gecos: Magic Cloud User
+    homedir: /home/cloud
+    primary_group: cloud-users
+    lock_passwd: True
+    inactive: False
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    ssh_authorized_keys:
+      - key1
+
+packages:
+  - apt-transport-https
+  - conntrack
+  - ca-certificates
+
+write_files:
+  - path: /etc/salt/grains
+    content: |
+      role: node
+
+runcmd:
+  - systemctl reload sshd
+
+bootcmd:
+  # Network tuning
+  - [cloud-init-per, once, modprobe_ip_conntrack, sh, -c, "modprobe ip_conntrack"]
+  - [cloud-init-per, once, increase_local_port_range, sh, -c, "echo '1024 65535' | tee -a /proc/sys/net/ipv4/ip_local_port_range"]
+  - [cloud-init-per, once, modprobe_br_netfilter, sh, -c, "modprobe br_netfilter"]
+  - [cloud-init-per, once, enable_ipv4_forwarding, sh, -c, "echo 'net.ipv4.ip_forward=1' | tee -a /etc/sysctl.conf"]
+  - [cloud-init-per, once, enable_ipv6_forwarding, sh, -c, "echo 'net.ipv6.conf.all.forwarding=1' | tee -a /etc/sysctl.conf"]
+  - [cloud-init-per, once, pass_bridged_arp_traffic_to_arptables, sh, -c, "echo 'net.bridge.bridge-nf-call-arptables=1' | tee -a /etc/sysctl.conf"]
+  - [cloud-init-per, once, pass_bridged_ipv4_traffic_to_iptables, sh, -c, "echo 'net.bridge.bridge-nf-call-ip6tables=1' | tee -a /etc/sysctl.conf"]
+  - [cloud-init-per, once, pass_bridged_ipv6_traffic_to_ip6tables, sh, -c, "echo 'net.bridge.bridge-nf-call-iptables=1' | tee -a /etc/sysctl.conf"]
+  - [cloud-init-per, once, block_bridged_pppoe-tagged_arp-ip_traffic_to_arptables-iptables, sh, -c, "echo 'net.bridge.bridge-nf-filter-pppoe-tagged=0' | tee -a /etc/sysctl.conf"]
+  - [cloud-init-per, once, block_bridged_vlan-tagged_arp-ip_traffic_to_arptables-iptables, sh, -c, "echo 'net.bridge.bridge-nf-filter-vlan-tagged=0' | tee -a /etc/sysctl.conf"]
+  - [cloud-init-per, once, disable_vlan_interface_lookup, sh, -c, "echo 'net.bridge.bridge-nf-pass-vlan-input-dev=0' | tee -a /etc/sysctl.conf"]
+  - [cloud-init-per, once, increase_max_file-handles, sh, -c, "echo 'fs.file-max=2097152' | tee -a /etc/sysctl.conf"]
+  - [cloud-init-per, once, increase_max_open_file_per_process, sh, -c, "echo 'fs.nr_open=1048576' | tee -a /etc/sysctl.conf"]
+  - [cloud-init-per, once, enable_reuse_time-wait_sockets, sh, -c, "echo 'net.ipv4.tcp_tw_reuse=1' | tee -a /etc/sysctl.conf"]
+  - [cloud-init-per, once, increase_connection_tracking_table_size, sh, -c, "echo 'net.netfilter.nf_conntrack_max=1048576' | tee -a /etc/sysctl.conf"]
+  - [cloud-init-per, once, limit_socket_listen_backlog, sh, -c, "echo 'net.core.somaxconn=1048576' | tee -a /etc/sysctl.conf"]
+  # - sysctl -p
+  # OpenFile limits
+  - [cloud-init-per, once, increase_max_open_file_soft, sh, -c, "echo '*    soft nofile 1048576' | tee -a /etc/security/limits.conf"]
+  - [cloud-init-per, once, increase_max_open_file_hard, sh, -c, "echo '*    hard nofile 1048576' | tee -a /etc/security/limits.conf"]
+  - [cloud-init-per, once, increase_max_open_file_soft_root, sh, -c, "echo 'root soft nofile 1048576' | tee -a /etc/security/limits.conf"]
+  - [cloud-init-per, once, increase_max_open_file_hard_root, sh, -c, "echo 'root hard nofile 1048576' | tee -a /etc/security/limits.conf"]
+  - [cloud-init-per, once, enable_pam_session_limits, sh, -c, "echo 'session required pam_limits.so' | tee -a  /etc/pam.d/common-session"]
+  # SSH tuning
+  - [cloud-init-per, once, increase_ssh_sessions, sh, -c, "echo 'MaxSessions 100' | tee -a  /etc/ssh/sshd_config"]

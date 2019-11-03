@@ -23,7 +23,7 @@ resource "hcloud_server" "proxy01" {
   image       = "${var.image}"
   server_type = "${var.proxy_type}"
   ssh_keys    = ["${var.ssh_keys}"]
-  user_data   = "${file("templates/proxy.user-data")}"
+  user_data   = "${file("${format("%s/templates/proxy.user-data", path.module)}")}"
 
   connection {
     type        = "ssh"

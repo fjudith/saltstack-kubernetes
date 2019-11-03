@@ -53,13 +53,34 @@ etcd-latest-archive:
     - skip_verify: true
     - archive_format: tar
 
-/usr/bin/etcd:
-  file.symlink:
-    - target: /opt/etcd-{{ etcd.version }}-linux-amd64/etcd
+etcd-install:
+  service.dead:
+    - name: etcd.service
+    - watch:
+      - archive: etcd-latest-archive
+    - unless: cmp -s /usr/bin/etcd /opt/etcd-{{ etcd.version }}-linux-amd64/etcd
+  file.copy:
+    - name: /usr/bin/etcd
+    - source: /opt/etcd-{{ etcd.version }}-linux-amd64/etcd
+    - mode: 555
+    - user: root
+    - group: root
+    - force: true
+    - require:
+      - archive: etcd-latest-archive
+    - unless: cmp -s /usr/bin/etcd /opt/etcd-{{ etcd.version }}-linux-amd64/etcd
 
-/usr/bin/etcdctl:
-  file.symlink:
-    - target: /opt/etcd-{{ etcd.version }}-linux-amd64/etcdctl
+etcdctl-install:
+  file.copy:
+    - name: /usr/bin/etcdctl
+    - source: /opt/etcd-{{ etcd.version }}-linux-amd64/etcdctl
+    - mode: 555
+    - user: root
+    - group: root
+    - force: true
+    - require:
+      - archive: etcd-latest-archive
+    - unless: cmp -s /usr/bin/etcdctl /opt/etcd-{{ etcd.version }}-linux-amd64/etcdctl
 
 /etc/systemd/system/etcd-member.service:
   file.managed:

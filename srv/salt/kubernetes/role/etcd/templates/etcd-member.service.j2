@@ -28,9 +28,6 @@ Environment="ETCD_IMAGE_TAG={{ etcd.version }}"
 Environment="ETCD_NAME={{ hostname }}"
 Environment="ETCD_USER=etcd"
 Environment="ETCD_DATA_DIR=/var/lib/etcd"
-Environment="RKT_RUN_ARGS=--uuid-file-save=/var/lib/coreos/etcd-member-wrapper.uuid \
-  --volume etc-etcd-ssl,kind=host,source=/etc/etcd/ssl \
-  --mount volume=etc-etcd-ssl,target=/etc/etcd/ssl"
 
 Environment="ETCD_CERT_FILE=/etc/etcd/ssl/etcd.pem"
 Environment="ETCD_KEY_FILE=/etc/etcd/ssl/etcd-key.pem"
@@ -46,10 +43,7 @@ Environment="ETCD_INITIAL_ADVERTISE_PEER_URLS=https://{{ vars.current_ip }}:2380
 Environment="ETCD_INITIAL_CLUSTER={% for member in etcd.members %}{{ member.name }}=https://{{ member.host }}:2380{% if not loop.last %},{% endif %}{% endfor %}"
 Environment="ETCD_STRICT_RECONFIG_CHECK=true"
 
-ExecStartPre=/usr/bin/mkdir --parents /var/lib/coreos
-ExecStartPre=-/usr/bin/rkt rm --uuid-file=/var/lib/coreos/etcd-member-wrapper.uuid
-ExecStart=/usr/lib/coreos/etcd-wrapper $ETCD_OPTS
-ExecStop=-/usr/bin/rkt stop --uuid-file=/var/lib/coreos/etcd-member-wrapper.uuid
+ExecStart=/usr/bin/etcd
 
 [Install]
 WantedBy=multi-user.target

@@ -58,26 +58,91 @@ resource "hcloud_server" "proxy01" {
     ]
   }
 
-  provisioner "remote-exec" {
-    inline = [
+  # provisioner "remote-exec" {
+  #   inline = [
+  #     "apt-get update -yqq",
+  #     "apt-get install --no-install-recommends -yqq apt-transport-https conntrack ca-certificates tinyproxy ${join(" ", var.apt_packages)}",
+  #     "echo 'MaxSessions 100' | tee -a  /etc/ssh/sshd_config",
+  #     "systemctl reload sshd",
+  #     "systemctl enable tinyproxy",
+  #     "echo 'Allow 127.0.0.1' | tee -a  /etc/tinyproxy.conf",
+  #     "echo 'Allow 192.168.0.0/16' | tee -a  /etc/tinyproxy.conf",
+  #     "echo 'Allow 172.16.0.0/12' | tee -a  /etc/tinyproxy.conf",
+  #     "echo 'Allow 10.0.0.0/8' | tee -a  /etc/tinyproxy.conf",
+  #     "systemctl daemon-reload",
+  #     "systemctl start tinyproxy.service",
+  #     "systemctl is-active tinyproxy.service",
+  #     "echo 'http_proxy=http://localhost:8888' | tee -a  /etc/environment",
+  #     "echo 'https_proxy=http://localhost:8888' | tee -a  /etc/environment",
+  #   ]
+  # }
+
+  provisionner "remote-exec" {
+    inline [
       "apt-get update -yqq",
-      "apt-get install --no-install-recommends -yqq apt-transport-https conntrack ca-certificates tinyproxy ${join(" ", var.apt_packages)}",
+      "apt-get install --no-install-recommends -yqq apt-transport-https conntrack ca-certificates squid3 ${join(" ", var.apt_packages)}",
       "echo 'MaxSessions 100' | tee -a  /etc/ssh/sshd_config",
       "systemctl reload sshd",
       "systemctl enable tinyproxy",
-      "echo 'Allow 127.0.0.1' | tee -a  /etc/tinyproxy.conf",
-      "echo 'Allow 192.168.0.0/16' | tee -a  /etc/tinyproxy.conf",
-      "echo 'Allow 172.16.0.0/12' | tee -a  /etc/tinyproxy.conf",
-      "echo 'Allow 10.0.0.0/8' | tee -a  /etc/tinyproxy.conf",
-      "systemctl daemon-reload",
-      "systemctl start tinyproxy.service",
-      "systemctl is-active tinyproxy.service",
-      "echo 'http_proxy=http://localhost:8888' | tee -a  /etc/environment",
-      "echo 'https_proxy=http://localhost:8888' | tee -a  /etc/environment",
     ]
   }
 
-provisioner "remote-exec" {
+  provisioner "file" {
+    destination = "/etc/squid/squid.conf"
+    content     = <<EOF
+shutdown_lifetime 3 seconds
+
+http_access allow all
+
+http_port 3128
+http_port 3129 transparent
+
+# Anonymous proxy settings
+via off
+forwarded_for off
+
+request_header_access Allow allow all 
+request_header_access Authorization allow all 
+request_header_access WWW-Authenticate allow all 
+request_header_access Proxy-Authorization allow all 
+request_header_access Proxy-Authenticate allow all 
+request_header_access Cache-Control allow all 
+request_header_access Content-Encoding allow all 
+request_header_access Content-Length allow all 
+request_header_access Content-Type allow all 
+request_header_access Date allow all 
+request_header_access Expires allow all 
+request_header_access Host allow all 
+request_header_access If-Modified-Since allow all 
+request_header_access Last-Modified allow all 
+request_header_access Location allow all 
+request_header_access Pragma allow all 
+request_header_access Accept allow all 
+request_header_access Accept-Charset allow all 
+request_header_access Accept-Encoding allow all 
+request_header_access Accept-Language allow all 
+request_header_access Content-Language allow all 
+request_header_access Mime-Version allow all 
+request_header_access Retry-After allow all 
+request_header_access Title allow all 
+request_header_access Connection allow all 
+request_header_access Proxy-Connection allow all 
+request_header_access User-Agent allow all 
+request_header_access Cookie allow all 
+request_header_access All deny all
+EOF
+  }
+
+  provisionner "remote-exec" {
+    inline [
+      "systemctl start squid.service",
+      "systemctl is-active squid.service",
+      "echo 'http_proxy=http://localhost:3128' | tee -a  /etc/environment",
+      "echo 'https_proxy=http://localhost:3128' | tee -a  /etc/environment",
+    ]
+  }
+
+  provisioner "remote-exec" {
     inline = [
       "echo '*    soft nofile 1048576' | tee -a /etc/security/limits.conf", 
       "echo '*    hard nofile 1048576' | tee -a /etc/security/limits.conf",

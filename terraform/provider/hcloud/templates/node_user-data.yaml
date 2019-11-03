@@ -16,6 +16,8 @@ user:
     ssh_authorized_keys:
       - key1
 
+package_upgrade: true
+
 packages:
   - apt-transport-https
   - conntrack

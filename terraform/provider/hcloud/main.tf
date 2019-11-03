@@ -23,7 +23,7 @@ resource "hcloud_server" "proxy01" {
   image       = "${var.image}"
   server_type = "${var.proxy_type}"
   ssh_keys    = ["${var.ssh_keys}"]
-  user_data   = "${file("${format("%s/templates/proxy.user-data", path.module)}")}"
+  user_data   = "${file("${format("%s/templates/proxy_user-data.yaml", path.module)}")}"
   labels = {
     app  = "kubernetes"
     role = "edge_router"
@@ -85,7 +85,7 @@ resource "hcloud_server" "proxy02" {
   image       = "${var.image}"
   server_type = "${var.proxy_type}"
   ssh_keys    = ["${var.ssh_keys}"]
-  user_data   = "${file("${format("%s/templates/proxy.user-data", path.module)}")}"
+  user_data   = "${file("${format("%s/templates/proxy_user-data.yaml", path.module)}")}"
   labels = {
     app  = "kubernetes"
     role = "edge_router"
@@ -149,7 +149,7 @@ resource "hcloud_server" "etcd" {
   image       = "${var.image}"
   server_type = "${var.etcd_type}"
   ssh_keys    = ["${var.ssh_keys}"]
-  user_data   = "${file("${format("%s/templates/etcd.user-data", path.module)}")}"
+  user_data   = "${file("${format("%s/templates/etcd_user-data.yaml", path.module)}")}"
   labels = {
     app  = "kubernetes"
     role = "etcd"
@@ -191,7 +191,7 @@ resource "hcloud_server" "master" {
   image       = "${var.image}"
   server_type = "${var.master_type}"
   ssh_keys    = ["${var.ssh_keys}"]
-  user_data   = "${file("${format("%s/templates/master.user-data", path.module)}")}"
+  user_data   = "${file("${format("%s/templates/master_user-data.yaml", path.module)}")}"
   labels = {
     app  = "kubernetes"
     role = "master"
@@ -233,7 +233,7 @@ resource "hcloud_server" "node" {
   image       = "${var.image}"
   server_type = "${var.node_type}"
   ssh_keys    = ["${var.ssh_keys}"]
-  user_data   = "${file("${format("%s/templates/node.user-data", path.module)}")}"
+  user_data   = "${file("${format("%s/templates/node_user-data.yaml", path.module)}")}"
   labels = {
     app  = "kubernetes"
     role = "node"

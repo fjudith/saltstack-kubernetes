@@ -25,8 +25,8 @@ resource "hcloud_server" "proxy01" {
   ssh_keys    = ["${var.ssh_keys}"]
   user_data   = "${file("${format("%s/templates/proxy.user-data", path.module)}")}"
   labels = {
-    app = "kubernetes"
-    role = "edge router"
+    app  = "kubernetes"
+    role = "edge_router"
     salt = "master"
   }
 

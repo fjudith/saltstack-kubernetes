@@ -31,7 +31,7 @@
   file.managed:
     - require:
       - file: /srv/kubernetes/manifests/cert-manager
-    - source: https://github.com/jetstack/cert-manager/releases/download/v{{ common.addons.cert_manager.version }}/cert-manager-no-webhook.yaml
+    - source: https://github.com/jetstack/cert-manager/releases/download/v{{ common.addons.cert_manager.version }}/cert-manager.yaml
     - user: root
     - group: root
     - mode: 644

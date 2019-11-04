@@ -17,11 +17,21 @@
     - group: root
     - mode: 644
 
+/srv/kubernetes/manifests/cert-manager/00-crds.yaml:
+  file.managed:
+    - require:
+      - file: /srv/kubernetes/manifests/cert-manager
+    - source: https://raw.githubusercontent.com/jetstack/cert-manager/v{{ common.addons.cert_manager.version }}/deploy/manifests/00-crds.yaml
+    - user: root
+    - group: root
+    - mode: 644
+    - skip_verify: true
+
 /srv/kubernetes/manifests/cert-manager/cert-manager.yaml:
   file.managed:
     - require:
       - file: /srv/kubernetes/manifests/cert-manager
-    - source: https://github.com/jetstack/cert-manager/releases/download/v{{ common.addons.cert_manager.version }}/cert-manager.yaml
+    - source: https://github.com/jetstack/cert-manager/releases/download/v{{ common.addons.cert_manager.version }}/cert-manager-no-webhook.yaml
     - user: root
     - group: root
     - mode: 644
@@ -36,6 +46,15 @@
     - template: jinja
     - group: root
     - mode: 644
+
+cert-manager-crds:
+  cmd.run:
+    - watch:
+        - file: /srv/kubernetes/manifests/cert-manager/00-crds.yaml
+    - runas: root
+    - use_vt: True
+    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz/'
+    - name: kubectl apply -f /srv/kubernetes/manifests/cert-manager/00-crds.yaml
 
 cert-manager-namespace:
   cmd.run:
@@ -68,6 +87,7 @@ cert-manager-install:
     - watch:
         - file: /srv/kubernetes/manifests/cert-manager/cert-manager.yaml
         - cmd: cert-manager-namespace
+        - cmd: cert-manager-crds
     - runas: root
     - use_vt: True
     - name: |
@@ -76,12 +96,12 @@ cert-manager-install:
 query-cert-manager-required-api:
   http.wait_for_successful_query:
     - name: 'http://127.0.0.1:8080/apis/cert-manager.io'
-    - match: cert-manager.io
+    - match: APIGroup
     - wait_for: 180
     - request_interval: 5
     - status: 200
 
-cert-manager-config:
+cert-manager-clusterissuer:
   cmd.run:
     - require:
       - http: query-cert-manager-required-api

@@ -4,25 +4,27 @@ apiVersion: cert-manager.io/v1alpha2
 kind: ClusterIssuer
 metadata:
   name: letsencrypt-prod
-  namespace: cert-manager
 spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory
     email: {{ common.addons.cert_manager.acme_email }}
     privateKeySecretRef:
       name: letsencrypt-prod
-    {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
-    http01: {}
-    {%- else %}
-    dns01:
-      providers:
-        - name: {{ common.addons.cert_manager.dns.provider }}
-          cloudflare:
-            email: {{ common.addons.cert_manager.dns.email }}
-            # A secretKeyRef to a cloudflare api key
-            apiKeySecretRef:
-              name: public-dns-secret
-              key: secret-access-key
-    {%- endif %}
-    
+    solvers:
+      {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+      - http01:
+          ingress:
+            class: nginx
+      {%- else %}
+      - selector: {}
+        dns01:
+          providers:
+            - name: {{ common.addons.cert_manager.dns.provider }}
+              cloudflare:
+                email: {{ common.addons.cert_manager.dns.email }}
+                # A secretKeyRef to a cloudflare api key
+                apiKeySecretRef:
+                  name: public-dns-secret
+                  key: secret-access-key
+      {%- endif %}
       

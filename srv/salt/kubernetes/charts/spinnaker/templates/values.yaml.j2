@@ -26,7 +26,7 @@ halyard:
     data:
       config.src: |-
         DECK_URL="https://{{ charts.spinnaker.ingress_host }}.{{ public_domain }}" # Url to access your deck 
-        GATE_URL="https://gate.{{ charts.spinnaker.ingress_host }}.{{ public_domain }}" # URL to access your gate
+        GATE_URL="https://{{ charts.spinnaker.ingress_host }}-gate.{{ public_domain }}" # URL to access your gate
            
   additionalScripts:
     create: true

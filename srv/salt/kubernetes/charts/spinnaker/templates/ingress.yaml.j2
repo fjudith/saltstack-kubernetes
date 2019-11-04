@@ -53,7 +53,7 @@ metadata:
     {%- endif %}
 spec:
   rules:
-  - host: gate.{{ charts.spinnaker.ingress_host }}.{{ public_domain }}
+  - host: {{ charts.spinnaker.ingress_host }}-gate.{{ public_domain }}
     http:
       paths:
       - path: /
@@ -64,6 +64,6 @@ spec:
   tls:
   - secretName: spinnaker-gate-prod-cert
     hosts:
-    - gate.{{ charts.spinnaker.ingress_host }}.{{ public_domain }}
+    - {{ charts.spinnaker.ingress_host }}-gate.{{ public_domain }}
   {%- endif %}
 ---

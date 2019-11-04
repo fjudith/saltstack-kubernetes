@@ -6,7 +6,7 @@
     "clientId": "spinnaker",
     "name": "spinnaker",
     "description": "Spinnaker OIDC client",
-    "rootUrl": "https://gate.{{ charts.spinnaker.ingress_host }}.{{ public_domain }}",
+    "rootUrl": "https://{{ charts.spinnaker.ingress_host }}-gate.{{ public_domain }}",
     "adminUrl": "https://{{ charts.spinnaker.ingress_host }}.{{ public_domain }}",
     "baseUrl": "/login",
     "surrogateAuthRequired": false,
@@ -14,11 +14,11 @@
     "clientAuthenticatorType": "client-secret",
     "redirectUris": [
       "https://{{ charts.spinnaker.ingress_host }}.{{ public_domain }}/*",
-      "https://gate.{{ charts.spinnaker.ingress_host }}.{{ public_domain }}/*"
+      "https://{{ charts.spinnaker.ingress_host }}-gate.{{ public_domain }}/*"
     ],
     "webOrigins": [
       "https://{{ charts.spinnaker.ingress_host }}.{{ public_domain }}/*",
-      "https://gate.{{ charts.spinnaker.ingress_host }}.{{ public_domain }}/*"
+      "https://{{ charts.spinnaker.ingress_host }}-gate.{{ public_domain }}/*"
     ],
     "notBefore": 0,
     "bearerOnly": false,

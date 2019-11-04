@@ -128,7 +128,7 @@ variable "proxy_bit" {
 }
 
 variable "overlay_cidr" {
-  default = "10.2.0.0/16"
+  default = "10.244.0.0/16"
 }
 
 variable "vpn_iprange" {
@@ -167,5 +167,5 @@ variable "docker_interface" {
 
 variable "service_cidr" {
   description = "Kubernetes service ip range"
-  default     = "10.3.0.0/24"
+  default     = "10.96.0.0/12"
 }

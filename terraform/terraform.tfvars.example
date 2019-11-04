@@ -90,6 +90,6 @@ docker_interface = "docker0"
 
 overlay_interface = "flannel.1"
 
-overlay_cidr = "10.2.0.0/16"
+overlay_cidr = "10.244.0.0/16"
 
-service_cidr = "10.3.0.0/24"
+service_cidr = "10.96.0.0/12"

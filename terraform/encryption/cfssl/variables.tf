@@ -18,7 +18,7 @@ variable "ssh_private_key" {
 
 variable "master_cluster_ip" {
   description = "Kubernetes cluster IP"
-  default     = "10.3.0.1"
+  default     = "10.96.0.1"
 }
 
 variable "proxy_private_ips" {

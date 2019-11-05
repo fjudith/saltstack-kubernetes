@@ -34,6 +34,7 @@ ExecStart=/usr/local/bin/kubelet \
   --network-plugin=cni \
   --node-labels="kubernetes.io/role=node,beta.kubernetes.io/fluentd-ds-ready=true{{ node_labels }}" \
   --volume-plugin-dir=/usr/libexec/kubernetes/kubelet-plugins/volume/exec \
+  --register-with-taints=node-role.kubernetes.io/ingress=:NoSchedule \
   --v=2
 
 Restart=always

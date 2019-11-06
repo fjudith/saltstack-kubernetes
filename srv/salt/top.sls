@@ -42,7 +42,6 @@ base:
     - kubernetes.cni
     - kubernetes.cri
     - kubernetes.cri.{{ common.cri.provider }}
-    - kubernetes.cri.rkt
     - kubernetes.role.node.kubelet
     - kubernetes.role.node.kube-proxy
   {% endif %}
@@ -57,7 +56,6 @@ base:
     - kubernetes.cni
     - kubernetes.cri
     - kubernetes.cri.{{ common.cri.provider }}
-    - kubernetes.cri.rkt
     - kubernetes.role.proxy.kubelet
     - kubernetes.role.proxy.kube-proxy
   {% endif %}

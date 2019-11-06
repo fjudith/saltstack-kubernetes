@@ -20,8 +20,6 @@ ExecStart=/usr/local/bin/kubelet \
   --config=/var/lib/kubelet/kubelet-config.yaml \
   {%- if common.cri.provider == "docker" %}
   --container-runtime=docker \
-  {%- elif common.cri.provider == "rkt" %}
-  --container-runtime=rkt \
   {%- elif common.cri.provider == "containerd" %}
   --container-runtime=remote \
   --container-runtime-endpoint=unix:///run/containerd/containerd.sock \

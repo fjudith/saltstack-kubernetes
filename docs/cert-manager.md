@@ -13,6 +13,7 @@ kubernetes:
     addons:
       cert_manager:
         enabled: True
+        version: 0.11.0
         acme_email: username@example.com
         dns:
           provider: cloudflare
@@ -23,7 +24,7 @@ kubernetes:
 To manually deploy Cert-Manager, run the following command line from the **Salt-Master** (i.e. proxy01).
 
 ```bash
-salt -G role:master state.apply kubernetes.addons.cert-manager
+salt -G role:master state.apply kubernetes.ingress.cert-manager
 ```
 ## Troubleshooting
 

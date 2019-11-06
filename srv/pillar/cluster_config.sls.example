@@ -30,6 +30,7 @@ kubernetes:
         controller_image: quay.io/calico/kube-controllers:v3.10.0
         flexvol_image: calico/pod2daemon-flexvol:v3.10.0
         version: 3.10.0
+        mtu: 1430
         ipv4:
           range: 10.244.0.0/16
           nat: true

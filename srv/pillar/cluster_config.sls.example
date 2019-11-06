@@ -197,8 +197,8 @@ kubernetes:
       ingress_host: mail-relay
     spinnaker:
       enabled: True
-      version: 1.16.3
-      halyard_version: 1.24.0
+      version: 1.17.0
+      halyard_version: 1.26.0
       ingress_host: spinnaker
       github:
         enabled: True
@@ -215,7 +215,7 @@ kubernetes:
       database_password: Ch4ng3M34ls0
       ingress:
         enabled: False
-      ingress_host: registry
+      core_ingress_host: registry
       notary_ingress_host: notary
       bucket: harbor
     vistio:

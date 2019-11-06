@@ -272,13 +272,11 @@ Solutions to run containerized applications.
   <tr align='center'>
     <td align='center'>Docker</td>
     <td align='center'>Containerd</td>
-    <td align='center'>RKT</td>
     <td align='center'>Cri-O</td>
   </tr>
   <tr align='center'>
     <td align='center'><img src='media/docker.png' width="50px"></td>
     <td align='center'><img src='media/containerd.png' width="50px"></td>
-    <td align='center'><img src='media/rkt.png' width="50px"></td>
     <td align='center'><img src='media/crio.png' width="50px"></td>
   </tr>
   <tr>

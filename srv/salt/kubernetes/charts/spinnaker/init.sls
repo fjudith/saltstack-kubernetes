@@ -10,6 +10,15 @@
     - dir_mode: 750
     - makedirs: True
 
+/srv/kubernetes/manifests/spinnaker/namespace.yaml:
+  file.managed:
+    - source: salt://kubernetes/charts/spinnaker/files/namespace.yaml
+    - require:
+      - file: /srv/kubernetes/manifests/spinnaker
+    - user: root
+    - group: root
+    - mode: 644
+
 {% if charts.get('keycloak', {'enabled': False}).enabled %}
 {%- set keycloak_password = salt['cmd.shell']("kubectl get secret --namespace keycloak keycloak-http -o jsonpath='{.data.password}' | base64 --decode; echo") -%}
 
@@ -175,12 +184,6 @@ spinnaker-create-client:
     - mode: 755
     - template: jinja
 
-spinnaker-namespace:
-  cmd.run:
-    - unless: kubectl get namespace spinnaker
-    - name: |
-        kubectl create namespace spinnaker
-
 spinnaker:
   cmd.run:
     - runas: root
@@ -189,8 +192,10 @@ spinnaker:
       - cmd: spinnaker-namespace
     - watch:
       - file: /srv/kubernetes/manifests/spinnaker/values.yaml
+      - file: /srv/kubernetes/manifests/spinnaker/namespace.yaml
     - name: |
         helm repo update && \
+        kubectl apply -f /srv/kubernetes/manifests/spinnaker/namespace.yaml && \
         helm upgrade --install spinnaker --namespace spinnaker \
           --set halyard.spinnakerVersion={{ charts.spinnaker.version }} \
           --set halyard.image.tag={{ charts.spinnaker.halyard_version }} \

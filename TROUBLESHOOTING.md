@@ -76,7 +76,7 @@ salt-run state.event pretty=True
 https://github.com/coreos/prometheus-operator/issues/731
 
 
-### Force deletion of stuck namespace
+### Force deletion of a stuck namespace
 
 Start proxy.
 
@@ -90,4 +90,11 @@ kubectl get namespace ${NAMESPACE} -o json > tmp.json && \
 sed -i 's#\"kubernetes\"##g' tmp.json && \
 curl -k -H "Content-Type: application/json" -X PUT --data-binary @tmp.json http://localhost:8001/api/v1/namespaces/${NAMESPACE}/finalize && \
 rm -f tmp.json
+```
+
+### Force deletion of a stuck persistent volume
+
+```bash
+PV_NAME="annoying persistentvolume"
+kubectl patch pv ${PV_NAME}  -p '{"metadata":{"finalizers":null}}'
 ```

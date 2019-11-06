@@ -233,6 +233,10 @@ spinnaker-front50-wait:
     - require:
       - cmd: spinnaker
     - runas: root
-    - name: until kubectl -n spinnaker get pods --selector=cluster=spin-front50 --field-selector=status.phase=Running; do printf 'spin-front50 is not Running' && sleep 5; done
+    - name: | 
+        until kubectl -n spinnaker get pods --selector=cluster=spin-front50 --field-selector=status.phase=Running 
+        do 
+          printf 'spin-front50 is not Running' && sleep 5
+        done
     - use_vt: True
     - timeout: 600

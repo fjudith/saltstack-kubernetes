@@ -48,11 +48,6 @@ kubernetes:
         weave_image: weaveworks/weave-kube:2.5.2
         npc_image: weaveworks/weave-npc:2.5.2
         password: 1234567890abcdefghij
-      canal:
-        node_image: quay.io/calico/node:v3.2.1
-        cni_image: quay.io/calico/cni:v3.2.1
-        flannel_image: quay.io/coreos/flannel:v0.9.1
-        interface: ens10
       cilium:
         cilium_image: docker.io/cilium/cilium:v1.3.2
     addons:

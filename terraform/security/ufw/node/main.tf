@@ -29,7 +29,7 @@ EOF
 
   provisioner "remote-exec" {
     inline = [
-      "sudo ufw --force enable &"
+      "sudo ufw --force enable"
     ]
   }
 

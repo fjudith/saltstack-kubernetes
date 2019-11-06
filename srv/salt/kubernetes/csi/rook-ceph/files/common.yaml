@@ -81,9 +81,6 @@ spec:
               properties:
                 hostNetwork:
                   type: boolean
-                provider:
-                  type: string
-                selectors: {}
             storage:
               properties:
                 disruptionManagement:
@@ -293,6 +290,7 @@ spec:
                 annotations: {}
                 placement: {}
                 resources: {}
+
 # OLM: END CEPH NFS CRD
 # OLM: BEGIN CEPH OBJECT STORE CRD
 ---
@@ -369,9 +367,6 @@ spec:
     listKind: CephObjectStoreUserList
     plural: cephobjectstoreusers
     singular: cephobjectstoreuser
-    shortNames:
-    - rcou
-    - objectuser
   scope: Namespaced
   version: v1
 # OLM: END CEPH OBJECT STORE USERS CRD

@@ -69,7 +69,7 @@ kubernetes:
         enabled: true
         tiller_image: gcr.io/kubernetes-helm/tiller:v2.16.0
         version: 2.16.0
-        source_hash: c4d3eadeb46230430304511166a404cb412ff0dc7ff0999e5b50d18a465c565f
+        source_hash: 2d9124f582a33b269f48215a00922b3dcf7a03f265499886ba956fbc03ff9892
       kube_prometheus:
         enabled: True
         version: 0.2.0

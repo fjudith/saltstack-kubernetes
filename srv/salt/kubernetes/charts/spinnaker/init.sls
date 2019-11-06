@@ -185,7 +185,6 @@ spinnaker:
   cmd.run:
     - runas: root
     - only_if: kubectl get storageclass | grep \(default\)
-    - unless: helm list | grep spinnaker
     - require:
       - cmd: spinnaker-namespace
     - watch:

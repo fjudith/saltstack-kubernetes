@@ -1,5 +1,7 @@
 {%- from "kubernetes/map.jinja" import common with context -%}
 
+# Warning: This is a file generated from the base underscore template file: coredns.yaml.base
+
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -27,6 +29,12 @@ rules:
   verbs:
   - list
   - watch
+- apiGroups:
+  - ""
+  resources:
+  - nodes
+  verbs:
+  - get
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -58,20 +66,22 @@ data:
     .:53 {
         errors
         health
+        ready
         kubernetes {{ common.addons.dns.domain }} in-addr.arpa ip6.arpa {
             pods insecure
             upstream
             fallthrough in-addr.arpa ip6.arpa
+            ttl 30
         }
         prometheus :9153
-        proxy . 1.1.1.1 1.0.0.1
+        forward . /etc/resolv.conf
         cache 30
         loop
         reload
         loadbalance
     }
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: coredns
@@ -98,14 +108,15 @@ spec:
       labels:
         k8s-app: kube-dns
       annotations:
-        seccomp.security.alpha.kubernetes.io/pod: 'docker/default'
+        seccomp.security.alpha.kubernetes.io/pod: 'runtime/default'
     spec:
+      priorityClassName: system-cluster-critical
       serviceAccountName: coredns
       tolerations:
-        - key: node-role.kubernetes.io/master
-          effect: NoSchedule
         - key: "CriticalAddonsOnly"
           operator: "Exists"
+      nodeSelector:
+        beta.kubernetes.io/os: linux
       containers:
       - name: coredns
         image: {{ common.addons.dns.coredns.image }}
@@ -140,6 +151,11 @@ spec:
           timeoutSeconds: 5
           successThreshold: 1
           failureThreshold: 5
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8181
+            scheme: HTTP
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
@@ -180,6 +196,9 @@ spec:
     protocol: UDP
   - name: dns-tcp
     port: 53
+    protocol: TCP
+  - name: metrics
+    port: 9153
     protocol: TCP
 ---
 apiVersion: v1

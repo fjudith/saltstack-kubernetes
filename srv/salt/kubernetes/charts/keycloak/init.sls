@@ -1,6 +1,7 @@
 {%- set public_domain = pillar['public-domain'] -%}
 {%- from "kubernetes/map.jinja" import common with context -%}
 {%- from "kubernetes/map.jinja" import charts with context -%}
+{%- from "kubernetes/map.jinja" import master with context -%}
 
 /srv/kubernetes/manifests/keycloak:
   file.directory:
@@ -33,13 +34,17 @@ keycloak:
     - watch:
       - file: /srv/kubernetes/manifests/keycloak/values.yaml
     - runas: root
-    - unless: helm list | grep keycloak
+    # - unless: helm list | grep keycloak
     - only_if: kubectl get storageclass | grep \(default\)
     - name: |
-        helm install --name keycloak --namespace keycloak \
+        helm repo add codecentric https://codecentric.github.io/helm-charts && \
+        helm repo update && \
+        helm upgrade --install keycloak --namespace keycloak \
+            --set keycloak.image.tag={{ charts.keycloak.version }} \
+            {%- if master.storage.get('rook_ceph', {'enabled': False}).enabled %}
             -f /srv/kubernetes/manifests/keycloak/values.yaml \
-            --set image.tag={{ charts.keycloak.version }} \
-            "stable/keycloak"
+            {%- endif %}
+            "codecentric/keycloak"
 
 keycloak-ingress:
     cmd.run:

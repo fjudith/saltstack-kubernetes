@@ -60,9 +60,9 @@ kubernetes:
           image: coredns/coredns:1.6.5
       helm:
         enabled: true
-        tiller_image: gcr.io/kubernetes-helm/tiller:v2.16.0
-        version: 2.16.0
-        source_hash: 2d9124f582a33b269f48215a00922b3dcf7a03f265499886ba956fbc03ff9892
+        tiller_image: gcr.io/kubernetes-helm/tiller:v2.15.2
+        version: 2.15.2
+        source_hash: a9d2db920bd4b3d824729bbe1ff3fa57ad27760487581af6e5d3156d1b3c2511
       kube_prometheus:
         enabled: True
         version: 0.2.0
@@ -175,8 +175,9 @@ kubernetes:
     concourse:
       enabled: true
       db_password: V3ry1ns3sur3P4ssw0rd
+      db_size: 8Gi
       version: 5.7.0
-      source_hash: 7b0805adfba328d09cfa7ac377777cb6e270d66f
+      source_hash: 5897cdd75f7ca2b0edace95eb088ec5585575d28
       ingress_host: concourse
       oauth:
         provider: keycloak

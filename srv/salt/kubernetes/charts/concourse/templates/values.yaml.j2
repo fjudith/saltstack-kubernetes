@@ -1,0 +1,59 @@
+{%- set public_domain = pillar['public-domain'] -%}
+{%- from "kubernetes/map.jinja" import master with context -%}
+{%- from "kubernetes/map.jinja" import charts with context -%}
+
+imageTag: "{{ charts.concourse.version }}"
+
+rbac:
+  create: True
+
+postgresql:
+  enable: True
+  password: {{ charts.concourse.db_password }}
+  {%- if master.storage.get('rook_ceph', {'enabled': False}).enabled %}
+  persistence:
+    enabled: True
+    size: {{ charts.concourse.db_size }}
+  {%- endif %}
+
+concourse:
+  worker:
+    driver: detect
+
+  web:
+    externalUrl: https://{{ charts.concourse.ingress_host }}.{{ public_domain }}
+    prometheus:
+      enabled: True
+      bindIp: "0.0.0.0"
+      bindPort: 9391
+
+    {% if charts.get('keycloak', {'enabled': False}).enabled %}
+    {%- set keycloak_url = 'https://' + charts.get('keycloak', {}).get('ingress_host') + '.' + pillar['public-domain'] -%}
+    {%- set keycloak_password = salt['cmd.shell']("kubectl get secret --namespace keycloak keycloak-http -o jsonpath='{.data.password}' | base64 --decode; echo") -%}
+    {%- set client_secret     = salt['cmd.shell']('/srv/kubernetes/manifests/concourse/kc-clientsecret-concourse.sh' + ' ' + 'keycloak' + ' ' + keycloak_password + ' ' + keycloak_url + ' ' + charts.concourse.oauth.keycloak.realm) -%}
+    {%- set realm = charts.concourse.oauth.get('keycloak', {}).get('realm') -%}
+
+    auth:
+      mainTeam:
+        oauth:
+          user: admin
+          group: concourse-admins
+      oauth:
+        enabled: True
+        displayname: oauth
+        authUrl: {{ keycloak_url }}/auth/realms/{{ realm }}/protocol/openid-connect/auth  
+        tokenUrl: {{ keycloak_url }}/auth/realms/{{ realm }}/protocol/openid-connect/token
+        userinfoUrl: {{ keycloak_url }}/auth/realms/{{ realm }}/protocol/openid-connect/userinfo
+        # scope:
+        # groupsKey: groups
+        # useCaCert:
+        # skipSslValidation:
+        userIdKey: preferred_username
+        userNameKey: preferred_username
+    localAuth:
+      enabled: False
+secrets:
+  create: True
+  oauthClientId: concourse
+  oauthClientSecret: {{ client_secret }}
+  {% endif %}

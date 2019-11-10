@@ -40,7 +40,7 @@ concourse:
           group: concourse-admins
       oauth:
         enabled: True
-        displayname: oauth
+        displayname: {{ charts.concourse.oauth.provider }}
         authUrl: {{ keycloak_url }}/auth/realms/{{ realm }}/protocol/openid-connect/auth  
         tokenUrl: {{ keycloak_url }}/auth/realms/{{ realm }}/protocol/openid-connect/token
         userinfoUrl: {{ keycloak_url }}/auth/realms/{{ realm }}/protocol/openid-connect/userinfo

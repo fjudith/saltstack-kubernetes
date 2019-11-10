@@ -170,6 +170,18 @@ function create-client {
   fi
 
   if ! http GET \
+    "${URL}/auth/admin/realms/${REALM}/clients/${CID}/protocol-mappers/models" \
+    "Authorization: Bearer ${TOKEN}" | jq -M -e '.[] | select(.name=="userid")'
+  then
+    http --pretty=none POST \
+      "${URL}/auth/admin/realms/${REALM}/clients/${CID}/protocol-mappers/models" \
+      'Content-Type: application/json' \
+      "Authorization: Bearer ${TOKEN}" < userid-protocolmapper.json
+  else
+    echo "Username protocolmapper already exists"
+  fi
+
+  if ! http GET \
     "${URL}/auth/admin/realms/${REALM}/clients/${CID}/default-client-scopes" \
     "Authorization: Bearer ${TOKEN}" | jq -M -e ".[] | select(.id==\"${CSID}\")"
   then

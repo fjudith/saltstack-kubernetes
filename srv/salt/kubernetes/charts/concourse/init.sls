@@ -133,6 +133,14 @@ concourse-create-client-scopes:
     - template: jinja
     - mode: 644
 
+/srv/kubernetes/manifests/concourse/userid-protocolmapper.json:
+  file.managed:
+    - source: salt://kubernetes/charts/concourse/oauth/keycloak/files/userid-protocolmapper.json
+    - user: root
+    - group: root
+    - template: jinja
+    - mode: 644
+
 concourse-create-client:
   file.managed:
     - name: /srv/kubernetes/manifests/concourse/client.json

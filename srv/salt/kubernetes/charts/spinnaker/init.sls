@@ -184,6 +184,14 @@ spinnaker-create-client:
     - mode: 755
     - template: jinja
 
+spinnaker-namespace:
+  cmd.run:
+    - runas: root
+    - watch:
+      - file: /srv/kubernetes/manifests/spinnaker/namespace.yaml
+    - name: |
+        kubectl apply -f /srv/kubernetes/manifests/spinnaker/namespace.yaml
+
 spinnaker:
   cmd.run:
     - runas: root
@@ -192,11 +200,9 @@ spinnaker:
       - cmd: spinnaker-namespace
     - watch:
       - file: /srv/kubernetes/manifests/spinnaker/values.yaml
-      - file: /srv/kubernetes/manifests/spinnaker/namespace.yaml
     - name: |
         helm repo update && \
-        kubectl apply -f /srv/kubernetes/manifests/spinnaker/namespace.yaml && \
-        helm upgrade --install spinnaker --namespace spinnaker \
+        helm install --name  spinnaker --namespace spinnaker \
           --set halyard.spinnakerVersion={{ charts.spinnaker.version }} \
           --set halyard.image.tag={{ charts.spinnaker.halyard_version }} \
           {%- if master.storage.get('rook_minio', {'enabled': False}).enabled %}

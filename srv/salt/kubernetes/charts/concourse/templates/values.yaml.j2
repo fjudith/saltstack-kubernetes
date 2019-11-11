@@ -18,9 +18,12 @@ postgresql:
 
 concourse:
   worker:
-    driver: detect
+    replicas: 2
+    baggageclaim:
+      driver: detect
 
   web:
+    replicas: 1
     externalUrl: https://{{ charts.concourse.ingress_host }}.{{ public_domain }}
     prometheus:
       enabled: True

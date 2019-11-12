@@ -205,7 +205,7 @@ kubernetes:
           realm: default
     harbor:
       enabled: true
-      version: 1.2.1
+      version: 1.2.2
       admin_password: Ch4ng3M3
       secretkey: 2Ds7hlY9VHyKAcNd
       database_password: Ch4ng3M34ls0

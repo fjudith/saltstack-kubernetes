@@ -53,7 +53,7 @@ function create-groups {
         'Content-Type: application/json' \
         "Authorization: Bearer ${TOKEN}" < ${PWD}/admins-group.json
     else
-      echo "concourse admins group already exists"
+      echo "Concourse admins group already exists"
     fi
 
     if ! http GET \
@@ -65,7 +65,7 @@ function create-groups {
         'Content-Type: application/json' \
         "Authorization: Bearer ${TOKEN}" < ${PWD}/users-group.json
     else
-      echo "concourse users group already exists"
+      echo "Concourse users group already exists"
     fi
 }
 
@@ -120,7 +120,7 @@ function create-client {
       'Content-Type: application/json' \
       "Authorization: Bearer ${TOKEN}" < client.json
   else
-    echo "concourse client already exists"
+    echo "Concourse client already exists"
   fi
 
   CSID=$(http GET \
@@ -137,7 +137,7 @@ function create-client {
       'Content-Type: application/json' \
       "Authorization: Bearer ${TOKEN}" < protocolmapper.json
   else
-    echo "concourse protocolmapper already exists"
+    echo "Concourse protocolmapper already exists"
   fi
 
   CID=$(http GET \

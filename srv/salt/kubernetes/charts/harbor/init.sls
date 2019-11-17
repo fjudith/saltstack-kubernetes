@@ -1,77 +1,252 @@
 {%- set public_domain = pillar['public-domain'] -%}
-{%- from "kubernetes/map.jinja" import common with context -%}
-{%- from "kubernetes/map.jinja" import master with context -%}
 {%- from "kubernetes/map.jinja" import charts with context -%}
 
-harbor-repo:
-  git.latest:
-    - name: https://github.com/goharbor/harbor-helm
-    - target: /srv/kubernetes/manifests/harbor
-    - force_reset: True
-    - rev: v{{ charts.harbor.version }}
-
-/srv/kubernetes/manifests/harbor-ingress.yaml:
-    file.managed:
-    - source: salt://kubernetes/charts/harbor/templates/ingress.yaml.j2
+/srv/kubernetes/manifests/harbor:
+  file.directory:
     - user: root
+    - group: root
+    - dir_mode: 750
+    - makedirs: True
+
+{% if charts.get('keycloak', {'enabled': False}).enabled %}
+{%- set keycloak_password = salt['cmd.shell']("kubectl get secret --namespace keycloak keycloak-http -o jsonpath='{.data.password}' | base64 --decode; echo") -%}
+
+harbor-wait-keycloak:
+  http.wait_for_successful_query:
+    - name: "https://{{ charts.keycloak.ingress_host }}.{{ public_domain }}"
+    - wait_for: 180
+    - request_interval: 5
+    - status: 200
+
+
+harbor-create-realm:
+  file.managed:
+    - name: /srv/kubernetes/manifests/harbor/realms.json
+    - source: salt://kubernetes/charts/harbor/oauth/keycloak/templates/realms.json.j2
+    - require:
+      - file: /srv/kubernetes/manifests/harbor
+    - user: root
+    - group: root
     - template: jinja
+    - mode: 644
+  cmd.script:
+    - name: /srv/kubernetes/manifests/harbor/kc-config-harbor.sh
+    - source: salt://kubernetes/charts/harbor/oauth/keycloak/scripts/kc-config-harbor.sh
+    - require:
+      - http: harbor-wait-keycloak
+    - cwd: /srv/kubernetes/manifests/harbor
+    - env:
+      - ACTION: "create-realm"
+      - USERNAME: "keycloak"
+      - PASSWORD: "{{ keycloak_password }}"
+      - URL: "https://{{ charts.keycloak.ingress_host }}.{{ public_domain }}"
+      - REALM: "{{ charts.harbor.oauth.keycloak.realm }}"
+    - user: root
     - group: root
     - mode: 644
 
-harbor-namespace:
-  cmd.run:
-    - unless: kubectl get namespace harbor
-    - name: |
-        kubectl create namespace harbor
-
-harbor:
-  cmd.run:
-    - watch:
-        - git: harbor-repo
+/srv/kubernetes/manifests/harbor/admins-group.json:
+  file.managed:
+    - source: salt://kubernetes/charts/harbor/oauth/keycloak/files/admins-group.json
     - require:
-      - cmd: harbor-namespace
-    - runas: root
-    - unless: helm list | grep harbor
+      - file: /srv/kubernetes/manifests/harbor
+    - user: root
+    - group: root
+    - mode: 644
+
+harbor-create-groups:
+  file.managed:
+    - name: /srv/kubernetes/manifests/harbor/users-group.json
+    - source: salt://kubernetes/charts/harbor/oauth/keycloak/files/users-group.json
+    - require:
+      - file: /srv/kubernetes/manifests/harbor
+    - user: root
+    - group: root
+    - mode: 644
+  cmd.script:
+    - name: /srv/kubernetes/manifests/harbor/kc-config-harbor.sh
+    - source: salt://kubernetes/charts/harbor/oauth/keycloak/scripts/kc-config-harbor.sh
+    - require:
+      - http: harbor-wait-keycloak
     - cwd: /srv/kubernetes/manifests/harbor
+    - env:
+      - ACTION: "create-groups"
+      - USERNAME: "keycloak"
+      - PASSWORD: "{{ keycloak_password }}"
+      - URL: "https://{{ charts.keycloak.ingress_host }}.{{ public_domain }}"
+      - REALM: "{{ charts.harbor.oauth.keycloak.realm }}"
+    - watch:
+      - file: /srv/kubernetes/manifests/harbor/admins-group.json
+      - file: /srv/kubernetes/manifests/harbor/users-group.json
+    - user: root
+    - group: root
+    - mode: 644
+
+harbor-create-client-scopes:
+  file.managed:
+    - name: /srv/kubernetes/manifests/harbor/client-scopes.json
+    - source: salt://kubernetes/charts/harbor/oauth/keycloak/files/client-scopes.json
+    - require:
+      - file: /srv/kubernetes/manifests/harbor
+    - user: root
+    - group: root
+    - mode: 644
+  cmd.script:
+    - name: /srv/kubernetes/manifests/harbor/kc-config-harbor.sh
+    - source: salt://kubernetes/charts/harbor/oauth/keycloak/scripts/kc-config-harbor.sh
+    - require:
+      - http: harbor-wait-keycloak
+    - cwd: /srv/kubernetes/manifests/harbor
+    - env:
+      - ACTION: "create-client-scopes"
+      - USERNAME: "keycloak"
+      - PASSWORD: "{{ keycloak_password }}"
+      - URL: "https://{{ charts.keycloak.ingress_host }}.{{ public_domain }}"
+      - REALM: "{{ charts.harbor.oauth.keycloak.realm }}"
+    - watch:
+      - file: /srv/kubernetes/manifests/harbor/client-scopes.json
+    - user: root
+    - group: root
+    - mode: 644
+
+/srv/kubernetes/manifests/harbor/protocolmapper.json:
+  file.managed:
+    - source: salt://kubernetes/charts/harbor/oauth/keycloak/files/protocolmapper.json
+    - user: root
+    - group: root
+    - mode: 644
+
+/srv/kubernetes/manifests/harbor/groups-protocolmapper.json:
+  file.managed:
+    - source: salt://kubernetes/charts/harbor/oauth/keycloak/files/groups-protocolmapper.json
+    - user: root
+    - group: root
+    - template: jinja
+    - mode: 644
+
+harbor-create-client:
+  file.managed:
+    - name: /srv/kubernetes/manifests/harbor/client.json
+    - source: salt://kubernetes/charts/harbor/oauth/keycloak/templates/client.json.j2
+    - require:
+      - file: /srv/kubernetes/manifests/harbor
+    - user: root
+    - group: root
+    - template: jinja
+    - mode: 644
+  cmd.script:
+    - name: /srv/kubernetes/manifests/harbor/kc-config-harbor.sh
+    - source: salt://kubernetes/charts/harbor/oauth/keycloak/scripts/kc-config-harbor.sh
+    - require:
+      - http: harbor-wait-keycloak
+    - cwd: /srv/kubernetes/manifests/harbor
+    - env:
+      - ACTION: "create-client"
+      - USERNAME: "keycloak"
+      - PASSWORD: "{{ keycloak_password }}"
+      - URL: "https://{{ charts.keycloak.ingress_host }}.{{ public_domain }}"
+      - REALM: "{{ charts.harbor.oauth.keycloak.realm }}"
+    - watch:
+      - file: /srv/kubernetes/manifests/harbor/protocolmapper.json
+      - file: /srv/kubernetes/manifests/harbor/groups-protocolmapper.json
+      - file: /srv/kubernetes/manifests/harbor/client.json
+    - user: root
+    - group: root
+    - mode: 644
+
+/srv/kubernetes/manifests/harbor/kc-clientsecret-harbor.sh:
+  file.managed:
+    - source: salt://kubernetes/charts/harbor/oauth/keycloak/scripts/kc-clientsecret-harbor.sh
+    - user: root
+    - group: root
+    - template: jinja
+    - mode: 744
+{% endif %}
+
+/srv/kubernetes/manifests/harbor/namespace.yaml:
+    file.managed:
+    - require:
+      - file: /srv/kubernetes/manifests/harbor
+    - source: salt://kubernetes/charts/harbor/files/namespace.yaml
+    - user: root
+    - group: root
+    - mode: 644
+
+/srv/kubernetes/manifests/harbor/values.yaml:
+    file.managed:
+    - require:
+      - file: /srv/kubernetes/manifests/harbor
+    - source: salt://kubernetes/charts/harbor/templates/values.yaml.j2
+    - template: jinja
+    - user: root
+    - group: root
+    - mode: 644
+
+/srv/kubernetes/manifests/harbor/object-store.yaml:
+    file.managed:
+    - require:
+      - file: /srv/kubernetes/manifests/harbor
+    - source: salt://kubernetes/charts/harbor/templates/object-store.yaml.j2
+    - template: jinja
+    - user: root
+    - group: root
+    - mode: 644
+
+/srv/kubernetes/manifests/harbor/ingress.yaml:
+    file.managed:
+    - require:
+      - file: /srv/kubernetes/manifests/harbor
+    - source: salt://kubernetes/charts/harbor/templates/ingress.yaml.j2
+    - template: jinja
+    - user: root
+    - group: root
+    - mode: 644
+
+harbor-repo:
+  cmd.run:
+    - runas: root
     - use_vt: true
     - name: |
-        helm dependency update
-        helm template . \
-          --name harbor \
-          --namespace harbor \
-          --set export.type=clusterIP \
-          --set expose.ingress.hosts.core={{ charts.harbor.core_ingress_host }}.{{ public_domain }} \
-          --set expose.ingress.hosts.notary={{ charts.harbor.notary_ingress_host }}.{{ public_domain }} \
-          --set externalURL=https://{{ charts.harbor.core_ingress_host }}.{{ public_domain }} \
-          {%- if master.storage.get('rook_ceph', {'enabled': False}).enabled %}
-          --set persistence.enabled=true \
-          --set persistence.persistentVolumeClaim.registry.storageClass=rook-ceph-block \
-          --set persistence.persistentVolumeClaim.chartmuseum.storageClass=rook-ceph-block \
-          --set persistence.persistentVolumeClaim.jobservice.storageClass=rook-ceph-block \
-          --set persistence.persistentVolumeClaim.database.storageClass=rook-ceph-block \
-          --set persistence.persistentVolumeClaim.redis.storageClass=rook-ceph-block \
-          --set chartmuseum.volumes.data.storageClass=rook-ceph-block \
-          --set redis.master.persistence.storageClass=rook-ceph-block \
-          {%- else -%}
-          --set persistence.enabled=false \
-          {%- endif %}
-          {%- if master.storage.get('rook_minio', {'enabled': False}).enabled %}
-          --set imageChartStorage.disableredirect=true \
-          --set imageChartStorage.type=s3 \
-          --set imageChartStorage.s3.bucket={{ charts.harbor.bucket }} \
-          --set imageChartStorage.s3.accesskey={{ master.storage.rook_minio.username }} \
-          --set imageChartStorage.s3.secretkey={{ master.storage.rook_minio.password }} \
-          --set imageChartStorage.s3.regionendpoint=https://{{ master.storage.rook_minio.ingress_host }}.{{ public_domain }} \
-          {%- endif %}
-          --set database.internal.password={{ charts.harbor.database_password }} \
-          --set harborAdminPassword={{ charts.harbor.admin_password }} \
-          --set secretKey={{ charts.harbor.secretkey }} | kubectl apply --namespace harbor --validate=false -f -
+        helm repo add harbor https://helm.goharbor.io
 
-harbor-ingress:
+harbor-namespace:
+  cmd.run:
+    - runas: root
+    - watch:
+      - file: /srv/kubernetes/manifests/harbor/namespace.yaml
+    - name: |
+        kubectl apply -f /srv/kubernetes/manifests/harbor/namespace.yaml
+
+harbor-minio:
+  cmd.run:
+    - runas: root
+    - watch:
+      - file: /srv/kubernetes/manifests/harbor/object-store.yaml
+    - name: |
+        kubectl apply -f /srv/kubernetes/manifests/harbor/object-store.yaml
+
+harbor-minio-ingress:
     cmd.run:
       - require:
         - cmd: harbor
       - watch:
-        - file: /srv/kubernetes/manifests/harbor-ingress.yaml
+        - file: /srv/kubernetes/manifests/harbor/ingress.yaml
       - runas: root
-      - name: kubectl apply -f /srv/kubernetes/manifests/harbor-ingress.yaml
+      - name: kubectl apply -f /srv/kubernetes/manifests/harbor/ingress.yaml
+
+harbor:
+  cmd.run:
+    - watch:
+        - cmd: harbor-repo
+    - require:
+      - cmd: harbor-namespace
+    - runas: root
+    - cwd: /srv/kubernetes/manifests/harbor
+    - use_vt: true
+    - name: |
+        helm dependency update
+        helm upgrade --install harbor \
+          --namespace harbor \
+          --values /srv/kubernetes/manifests/harbor/values.yaml \
+          harbor/harbor
+

@@ -1,19 +1,21 @@
 {%- set public_domain = pillar['public-domain'] -%}
-{%- from "kubernetes/map.jinja" import common with context -%}
+{%- from "kubernetes/map.jinja" import charts with context -%}
 
 {
-    "id": "alertmanager",
-    "clientId": "alertmanager",
-    "rootUrl": "https://alertmanager.{{ public_domain }}",
-    "adminUrl": "https://alertmanager.{{ public_domain }}",
+    "id": "harbor",
+    "clientId": "harbor",
+    "name": "harbor",
+    "description": "Harbor OIDC client",
+    "rootUrl": "https://{{ charts.harbor.core_ingress_host }}.{{ public_domain }}",
+    "adminUrl": "https://{{ charts.harbor.core_ingress_host }}.{{ public_domain }}",
     "surrogateAuthRequired": false,
     "enabled": true,
     "clientAuthenticatorType": "client-secret",
     "redirectUris": [
-      "https://alertmanager.{{ public_domain }}/oauth/callback/*"
+      "https://{{ charts.harbor.core_ingress_host }}.{{ public_domain }}/c/oidc/callback/*"
     ],
     "webOrigins": [
-      "https://alertmanager.{{ public_domain }}"
+      "https://{{ charts.harbor.core_ingress_host }}.{{ public_domain }}"
     ],
     "notBefore": 0,
     "bearerOnly": false,

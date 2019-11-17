@@ -209,11 +209,16 @@ kubernetes:
       admin_password: Ch4ng3M3
       secretkey: 2Ds7hlY9VHyKAcNd
       database_password: Ch4ng3M34ls0
-      ingress:
-        enabled: False
-      core_ingress_host: registry
+      core_ingress_host: harbor
       notary_ingress_host: notary
-      bucket: harbor
+      s3:
+        accesskey: harbor
+        secretkey: Ch4ng3M34ls0
+        bucket: harbor
+      oauth:
+        provider: keycloak
+        keycloak:
+          realm: default
     vistio:
       enabled: true
       version: 0.1.3
@@ -232,6 +237,10 @@ kubernetes:
       groups:
         - "kubernetes-admins,cluster-admin"
         - "kubernetes-users,view"
+    proxyinjector:
+      enabled: True
+      version: 0.0.21
+      image: keycloak/keycloak-gatekeeper:6.0.1
 tinyproxy:
   User: tinyproxy
   Group: tinyproxy

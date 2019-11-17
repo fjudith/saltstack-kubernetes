@@ -1,0 +1,74 @@
+{%- from "kubernetes/map.jinja" import charts with context -%}
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: harbor-minio-access-keys
+  namespace: harbor
+type: Opaque
+data:
+  username: {{ charts.harbor.s3.accesskey | base64_encode }}
+  password: {{ charts.harbor.s3.secretkey | base64_encode }}
+---
+apiVersion: minio.rook.io/v1alpha1
+kind: ObjectStore
+metadata:
+  name: harbor-minio
+  namespace: harbor
+spec:
+  scope:
+    nodeCount: 4
+    # You can have multiple PersistentVolumeClaims in the volumeClaimTemplates list.
+    # Be aware though that all PersistentVolumeClaim Templates will be used for each intance (see nodeCount).
+    volumeClaimTemplates:
+    - metadata:
+        name: harbor-minio-data1
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        # Set the storage class that will be used, otherwise Kubernetes' default storage class will be used.
+        #storageClassName: "my-storage-class"
+        resources:
+          requests:
+            storage: "8Gi"
+    #- metadata:
+    #    name: rook-minio-data2
+    #  spec:
+    #    accessModes: [ "ReadWriteOnce" ]
+    #    # Uncomment and specify your StorageClass, otherwise
+    #    # the cluster admin defined default StorageClass will be used.
+    #    #storageClassName: "your-cluster-storageclass"
+    #    resources:
+    #      requests:
+    #        storage: "8Gi"
+  # A key value list of annotations
+  annotations:
+  #  key: value
+  placement:
+    tolerations:
+    nodeAffinity:
+      all:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: role
+              operator: In
+              values:
+              - storage-node
+    podAffinity:
+    podAnyAffinity:
+  credentials:
+    name: harbor-minio-access-keys
+    namespace: harbor
+  clusterDomain:
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: harbor-minio
+  namespace: harbor
+spec:
+  type: ClusterIP
+  ports:
+    - port: 9000
+  selector:
+    app: minio

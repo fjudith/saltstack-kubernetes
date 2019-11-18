@@ -1,0 +1,35 @@
+{%- from "kubernetes/map.jinja" import charts with context -%}
+
+kubernetes:
+  host: https://kubernetes.default
+
+proxyinjector:
+  mount: "configmap"
+  tolerations: {}
+  labels:
+    provider: stakater
+    group: com.stakater.platform
+    version: v{{ charts.proxyinjector.version }}
+  image:
+    name: stakater/proxyinjector
+    tag: "v{{ charts.proxyinjector.version }}"
+    pullPolicy: IfNotPresent
+  watchGlobally: true
+  configFilePath: /etc/ProxyInjector
+  data:
+    config.yml: |-
+      proxyconfig:
+        gatekeeper-image : "{{ charts.proxyinjector.image }}"
+        enable-default-deny: true
+        secure-cookie: false
+        verbose: true
+        enable-logging: true
+        cors-origins:
+        - '*'
+        cors-methods:
+        - GET
+        - POST
+        resources:
+        - uri: '/*'
+        scopes:
+        - 'good-service'

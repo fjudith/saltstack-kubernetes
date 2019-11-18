@@ -40,10 +40,16 @@ halyard:
       01-configure_github.sh: |-
         TOKEN_FILE=/opt/halyard/additionalSecrets/github.token
         ARTIFACT_ACCOUNT_NAME=github-artifact-account
-        
+
+        if $HAL_COMMAND config artifact github account get ${ARTIFACT_ACCOUNT_NAME}; then
+          PROVIDER_COMMAND='edit'
+        else
+          PROVIDER_COMMAND='add'
+        fi
+
         $HAL_COMMAND config features edit --artifacts true
         $HAL_COMMAND config artifact github enable
-        $HAL_COMMAND config artifact github account add ${ARTIFACT_ACCOUNT_NAME} --token-file ${TOKEN_FILE}
+        $HAL_COMMAND config artifact github account ${PROVIDER_COMMAND} ${ARTIFACT_ACCOUNT_NAME} --token-file ${TOKEN_FILE}
       
       {% if charts.get('keycloak', {'enabled': False}).enabled %}
       {%- set keycloak_url = 'https://' + charts.get('keycloak', {}).get('ingress_host') + '.' + pillar['public-domain'] -%}
@@ -77,10 +83,16 @@ halyard:
       04-configure_canary.sh: |-
         # Configure kayenta microservice for Prometheus
         TOKEN_FILE=/opt/halyard/additionalSecrets/prometheus.token
-        ARTIFACT_ACCOUNT_NAME=prometheus-metrics-account
+        CANARY_ACCOUNT_NAME=prometheus-metrics-account
+
+        if $HAL_COMMAND config canary prometheus account get ${CANARY_ACCOUNT_NAME}; then
+          PROVIDER_COMMAND='edit'
+        else
+          PROVIDER_COMMAND='add'
+        fi
 
         $HAL_COMMAND config canary edit --default-metrics-store prometheus
-        $HAL_COMMAND config canary prometheus account add ${ARTIFACT_ACCOUNT_NAME} --base-url https://prometheus-k8s.monitoring:9090
+        $HAL_COMMAND config canary prometheus account ${PROVIDER_COMMAND} ${CANARY_ACCOUNT_NAME} --base-url https://prometheus-k8s.monitoring:9090
         $HAL_COMMAND config canary enable
       {% endif %}
 minio:

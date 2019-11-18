@@ -1,5 +1,6 @@
 {%- set public_domain = pillar['public-domain'] -%}
 {%- from "kubernetes/map.jinja" import master with context -%}
+{%- from "kubernetes/map.jinja" import common with context -%}
 {%- from "kubernetes/map.jinja" import charts with context -%}
 
 halyard:
@@ -70,7 +71,18 @@ halyard:
         $HAL_COMMAND config security authn oauth2 edit --user-info-uri "{{ keycloak_url}}/auth/realms/{{ realm }}/protocol/openid-connect/userinfo"
         $HAL_COMMAND config security authn oauth2 enable
       {% endif %}
+      {% if common.addons.get('kube_prometheus', {'enabled': False}).enabled %}
+      03-configure_prometheus.sh: |-
+        $HAL_COMMAND config metric-stores prometheus enable
+      04-configure_canary.sh: |-
+        # Configure kayenta microservice for Prometheus
+        TOKEN_FILE=/opt/halyard/additionalSecrets/prometheus.token
+        ARTIFACT_ACCOUNT_NAME=prometheus-metrics-account
 
+        $HAL_COMMAND config canary edit --default-metrics-store prometheus
+        $HAL_COMMAND config canary prometheus account add ${ARTIFACT_ACCOUNT_NAME} --base-url https://prometheus-k8s.monitoring:9090
+        $HAL_COMMAND config canary enable
+      {% endif %}
 minio:
   enabled: false
 

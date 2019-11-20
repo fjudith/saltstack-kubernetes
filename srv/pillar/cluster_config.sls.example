@@ -60,9 +60,9 @@ kubernetes:
           image: coredns/coredns:1.6.5
       helm:
         enabled: true
-        tiller_image: gcr.io/kubernetes-helm/tiller:v2.15.2
-        version: 2.15.2
-        source_hash: a9d2db920bd4b3d824729bbe1ff3fa57ad27760487581af6e5d3156d1b3c2511
+        # tiller_image: gcr.io/kubernetes-helm/tiller:v3.0.0
+        version: 3.0.0
+        source_hash: 10e1fdcca263062b1d7b2cb93a924be1ef3dd6c381263d8151dd1a20a3d8c0dc
       kube_prometheus:
         enabled: True
         version: 0.2.0

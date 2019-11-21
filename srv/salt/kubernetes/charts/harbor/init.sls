@@ -182,16 +182,6 @@ harbor-create-client:
     - group: root
     - mode: 644
 
-/srv/kubernetes/manifests/harbor/object-store.yaml:
-    file.managed:
-    - require:
-      - file: /srv/kubernetes/manifests/harbor
-    - source: salt://kubernetes/charts/harbor/templates/object-store.yaml.j2
-    - template: jinja
-    - user: root
-    - group: root
-    - mode: 644
-
 /srv/kubernetes/manifests/harbor/ingress.yaml:
     file.managed:
     - require:
@@ -216,6 +206,16 @@ harbor-namespace:
       - file: /srv/kubernetes/manifests/harbor/namespace.yaml
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/harbor/namespace.yaml
+
+/srv/kubernetes/manifests/harbor/object-store.yaml:
+    file.managed:
+    - require:
+      - file: /srv/kubernetes/manifests/harbor
+    - source: salt://kubernetes/charts/harbor/templates/object-store.yaml.j2
+    - template: jinja
+    - user: root
+    - group: root
+    - mode: 644
 
 harbor-minio:
   cmd.run:

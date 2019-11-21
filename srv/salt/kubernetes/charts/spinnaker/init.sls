@@ -240,7 +240,7 @@ spinnaker:
       - file: /srv/kubernetes/manifests/spinnaker/values.yaml
     - name: |
         helm repo update && \
-        helm upgrade --install --force spinnaker --namespace spinnaker \
+        helm install spinnaker --namespace spinnaker \
           --set halyard.spinnakerVersion={{ charts.spinnaker.version }} \
           --set halyard.image.tag={{ charts.spinnaker.halyard_version }} \
           {%- if master.storage.get('rook_minio', {'enabled': False}).enabled %}

@@ -192,29 +192,25 @@ spinnaker-namespace:
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/spinnaker/namespace.yaml
 
-spinnaker:
+{% if master.storage.get('rook_minio', {'enabled': False}).enabled %}
+/srv/kubernetes/manifests/spinnaker/object-store.yaml:
+    file.managed:
+    - require:
+      - file: /srv/kubernetes/manifests/spinnaker
+    - source: salt://kubernetes/charts/spinnaker/templates/object-store.yaml.j2
+    - template: jinja
+    - user: root
+    - group: root
+    - mode: 644
+
+spinnaker-minio:
   cmd.run:
     - runas: root
-    - only_if: kubectl get storageclass | grep \(default\)
-    - require:
-      - cmd: spinnaker-namespace
     - watch:
-      - file: /srv/kubernetes/manifests/spinnaker/values.yaml
+      - file: /srv/kubernetes/manifests/spinnaker/object-store.yaml
     - name: |
-        helm repo update && \
-        helm upgrade --install  spinnaker --namespace spinnaker \
-          --set halyard.spinnakerVersion={{ charts.spinnaker.version }} \
-          --set halyard.image.tag={{ charts.spinnaker.halyard_version }} \
-          {%- if master.storage.get('rook_minio', {'enabled': False}).enabled %}
-          --values /srv/kubernetes/manifests/spinnaker/values.yaml \
-          {%- else -%}
-          --set minio.enabled=true \
-          --set minio.persistence.enabled=true \
-          {%- endif %}
-          --set redis.enabled=true \
-          --set redis.cluster.enabled=true \
-          --set redis.master.persistence.enabled=true \
-          "stable/spinnaker" --timeout 600
+        kubectl apply -f /srv/kubernetes/manifests/spinnaker/object-store.yaml
+{% endif %}
 
 spinnaker-ingress:
   file.managed:
@@ -233,6 +229,30 @@ spinnaker-ingress:
       - file:  /srv/kubernetes/manifests/spinnaker/ingress.yaml
     - runas: root
     - name: kubectl apply -f /srv/kubernetes/manifests/spinnaker/ingress.yaml
+
+spinnaker:
+  cmd.run:
+    - runas: root
+    - only_if: kubectl get storageclass | grep \(default\)
+    - require:
+      - cmd: spinnaker-namespace
+    - watch:
+      - file: /srv/kubernetes/manifests/spinnaker/values.yaml
+    - name: |
+        helm repo update && \
+        helm upgrade --install --force spinnaker --namespace spinnaker \
+          --set halyard.spinnakerVersion={{ charts.spinnaker.version }} \
+          --set halyard.image.tag={{ charts.spinnaker.halyard_version }} \
+          {%- if master.storage.get('rook_minio', {'enabled': False}).enabled %}
+          --values /srv/kubernetes/manifests/spinnaker/values.yaml \
+          {%- else -%}
+          --set minio.enabled=true \
+          --set minio.persistence.enabled=true \
+          {%- endif %}
+          --set redis.enabled=true \
+          --set redis.cluster.enabled=true \
+          --set redis.master.persistence.enabled=true \
+          "stable/spinnaker"
 
 spinnaker-front50-wait:
   cmd.run:

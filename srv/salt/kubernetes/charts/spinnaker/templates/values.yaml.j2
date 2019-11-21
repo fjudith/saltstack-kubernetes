@@ -1,5 +1,4 @@
 {%- set public_domain = pillar['public-domain'] -%}
-{%- from "kubernetes/map.jinja" import master with context -%}
 {%- from "kubernetes/map.jinja" import common with context -%}
 {%- from "kubernetes/map.jinja" import charts with context -%}
 
@@ -101,20 +100,20 @@ minio:
 s3:
   enabled: true
   bucket: spinnaker
-  endpoint: http://my-store.rook-minio.svc.cluster.local:9000
-  accessKey: {{ master.storage.rook_minio.username }}
-  secretKey: {{ master.storage.rook_minio.password }}
+  endpoint: http://spinnaker-minio:9000
+  accessKey: {{ charts.spinnaker.s3.accesskey }}
+  secretKey: {{ charts.spinnaker.s3.secretkey }}
 
 dockerRegistries:
 - name: dockerhub
   address: index.docker.io
   repositories:
-    - library/alpine
-    - library/ubuntu
-    - library/centos
-    - library/nginx
-    - fjudith/spinnaker-sample-app
-    - fjudith/draw.io
+   - library/alpine
+   - library/ubuntu
+   - library/centos
+   - library/nginx
+   - fjudith/spinnaker-sample-app
+   - fjudith/draw.io
 {% if charts.get('harbor', {'enabled': False}).enabled %}
 - name: harbor
   address: {{ charts.harbor.core_ingress_host }}.{{ public_domain }}

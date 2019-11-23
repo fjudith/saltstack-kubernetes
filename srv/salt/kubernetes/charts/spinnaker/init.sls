@@ -224,7 +224,7 @@ spinnaker-ingress:
     - mode: 644
   cmd.run:
     - require:
-      - cmd: spinnaker
+      - cmd: spinnaker-namespace
     - watch:
       - file:  /srv/kubernetes/manifests/spinnaker/ingress.yaml
     - runas: root
@@ -252,7 +252,7 @@ spinnaker:
           --set redis.enabled=true \
           --set redis.cluster.enabled=true \
           --set redis.master.persistence.enabled=true \
-          "stable/spinnaker"
+          "stable/spinnaker" --timeout 10m
 
 spinnaker-front50-wait:
   cmd.run:

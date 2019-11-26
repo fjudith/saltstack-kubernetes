@@ -75,18 +75,6 @@ module "wireguard" {
   connections  = "${module.provider.private_ips}"
 }
 
-# module "zerotier" {
-#   source = "./security/zerotier"
-
-#   count            = "${var.etcd_count + var.master_count + var.node_count + 1}"
-#   bastion_host     = "${module.provider.bastion_host}"
-#   bit              = "${var.proxy_bit}"
-#   zerotier_api_key = "${var.zerotier_api_key}"
-#   zerotier_cidr    = "${var.zerotier_cidr}"
-
-#   connections = "${module.provider.private_ips}"
-# }
-
 module "salt-master" {
   source = "./management/salt-master"
 
@@ -113,80 +101,80 @@ module "salt-master" {
 #   node_private_ips   = "${module.wireguard.node_vpn_ips}"
 # }
 
-module "firewall-proxy" {
-  source = "./security/ufw/proxy"
+# module "firewall-proxy" {
+#   source = "./security/ufw/proxy"
 
-  count                = "${var.proxy_count}"
-  bastion_host         = "${module.provider.bastion_host}"
-  private_interface    = "${module.provider.private_network_interface}"
-  vpn_interface        = "${module.wireguard.vpn_interface}"
-  vpn_port             = "${module.wireguard.vpn_port}"
-  docker_interface     = "${var.docker_interface}"
-  kubernetes_interface = "${var.overlay_interface}"
-  overlay_cidr         = "${var.overlay_cidr}"
-  connections          = "${module.provider.proxy_private_ips}"
-}
+#   count                = "${var.proxy_count}"
+#   bastion_host         = "${module.provider.bastion_host}"
+#   private_interface    = "${module.provider.private_network_interface}"
+#   vpn_interface        = "${module.wireguard.vpn_interface}"
+#   vpn_port             = "${module.wireguard.vpn_port}"
+#   docker_interface     = "${var.docker_interface}"
+#   kubernetes_interface = "${var.overlay_interface}"
+#   overlay_cidr         = "${var.overlay_cidr}"
+#   connections          = "${module.provider.proxy_private_ips}"
+# }
 
-module "firewall-etcd" {
-  source = "./security/ufw/etcd"
+# module "firewall-etcd" {
+#   source = "./security/ufw/etcd"
 
-  count             = "${var.etcd_count}"
-  bastion_host      = "${module.provider.bastion_host}"
-  private_interface = "${module.provider.private_network_interface}"
-  vpn_interface     = "${module.wireguard.vpn_interface}"
-  vpn_port          = "${module.wireguard.vpn_port}"
-  docker_interface  = "${var.docker_interface}"
-  overlay_cidr      = "${var.overlay_cidr}"
-  connections       = "${module.provider.etcd_private_ips}"
-}
+#   count             = "${var.etcd_count}"
+#   bastion_host      = "${module.provider.bastion_host}"
+#   private_interface = "${module.provider.private_network_interface}"
+#   vpn_interface     = "${module.wireguard.vpn_interface}"
+#   vpn_port          = "${module.wireguard.vpn_port}"
+#   docker_interface  = "${var.docker_interface}"
+#   overlay_cidr      = "${var.overlay_cidr}"
+#   connections       = "${module.provider.etcd_private_ips}"
+# }
 
-module "firewall-master" {
-  source = "./security/ufw/master"
+# module "firewall-master" {
+#   source = "./security/ufw/master"
 
-  count                = "${var.master_count}"
-  bastion_host         = "${module.provider.bastion_host}"
-  private_interface    = "${module.provider.private_network_interface}"
-  vpn_interface        = "${module.wireguard.vpn_interface}"
-  vpn_port             = "${module.wireguard.vpn_port}"
-  docker_interface     = "${var.docker_interface}"
-  kubernetes_interface = "${var.overlay_interface}"
-  overlay_cidr         = "${var.overlay_cidr}"
-  connections          = "${module.provider.master_private_ips}"
-}
+#   count                = "${var.master_count}"
+#   bastion_host         = "${module.provider.bastion_host}"
+#   private_interface    = "${module.provider.private_network_interface}"
+#   vpn_interface        = "${module.wireguard.vpn_interface}"
+#   vpn_port             = "${module.wireguard.vpn_port}"
+#   docker_interface     = "${var.docker_interface}"
+#   kubernetes_interface = "${var.overlay_interface}"
+#   overlay_cidr         = "${var.overlay_cidr}"
+#   connections          = "${module.provider.master_private_ips}"
+# }
 
-module "firewall-node" {
-  source = "./security/ufw/node"
+# module "firewall-node" {
+#   source = "./security/ufw/node"
 
-  count                = "${var.node_count}"
-  bastion_host         = "${module.provider.bastion_host}"
-  private_interface    = "${module.provider.private_network_interface}"
-  vpn_interface        = "${module.wireguard.vpn_interface}"
-  vpn_port             = "${module.wireguard.vpn_port}"
-  docker_interface     = "${var.docker_interface}"
-  kubernetes_interface = "${var.overlay_interface}"
-  overlay_cidr         = "${var.overlay_cidr}"
-  connections          = "${module.provider.node_private_ips}"
-}
+#   count                = "${var.node_count}"
+#   bastion_host         = "${module.provider.bastion_host}"
+#   private_interface    = "${module.provider.private_network_interface}"
+#   vpn_interface        = "${module.wireguard.vpn_interface}"
+#   vpn_port             = "${module.wireguard.vpn_port}"
+#   docker_interface     = "${var.docker_interface}"
+#   kubernetes_interface = "${var.overlay_interface}"
+#   overlay_cidr         = "${var.overlay_cidr}"
+#   connections          = "${module.provider.node_private_ips}"
+# }
 
-module "encryption" {
-  source = "./encryption/cfssl"
+# module "encryption" {
+#   source = "./encryption/cfssl"
 
-  bastion_host       = "${module.provider.bastion_host}"
-  proxy_count        = "${var.proxy_count}"
-  proxy_private_ips  = "${module.wireguard.proxy_vpn_ips}"
-  proxy_hostnames    = "${module.provider.proxy_hostnames}"
-  etcd_count         = "${var.etcd_count}"
-  etcd_private_ips   = "${module.wireguard.etcd_vpn_ips}"
-  etcd_hostnames     = "${module.provider.etcd_hostnames}"
-  master_count       = "${var.master_count}"
-  master_private_ips = "${module.wireguard.master_vpn_ips}"
-  master_hostnames   = "${module.provider.master_hostnames}"
-  node_count         = "${var.node_count}"
-  node_private_ips   = "${module.wireguard.node_vpn_ips}"
-  node_hostnames     = "${module.provider.node_hostnames}"
-  cluster_public_dns = "${var.cluster_public_dns}"
-  domain             = "${var.domain}"
-}
+#   bastion_host       = "${module.provider.bastion_host}"
+#   proxy_count        = "${var.proxy_count}"
+#   proxy_private_ips  = "${module.wireguard.proxy_vpn_ips}"
+#   proxy_hostnames    = "${module.provider.proxy_hostnames}"
+#   etcd_count         = "${var.etcd_count}"
+#   etcd_private_ips   = "${module.wireguard.etcd_vpn_ips}"
+#   etcd_hostnames     = "${module.provider.etcd_hostnames}"
+#   master_count       = "${var.master_count}"
+#   master_private_ips = "${module.wireguard.master_vpn_ips}"
+#   master_hostnames   = "${module.provider.master_hostnames}"
+#   node_count         = "${var.node_count}"
+#   node_private_ips   = "${module.wireguard.node_vpn_ips}"
+#   node_hostnames     = "${module.provider.node_hostnames}"
+#   cluster_public_dns = "${var.cluster_public_dns}"
+#   domain             = "${var.domain}"
+# }
 
 # module "default-route-vpn" {
 #   source = "./routing"

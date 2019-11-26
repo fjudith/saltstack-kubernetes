@@ -130,5 +130,10 @@ salt_minion:
 
 runcmd:
   - [systemctl, reload, sshd]
-  - [/usr/sbin/ufw, allow, '22/tcp']
+  - [/usr/sbin/ufw, allow, ssh]
+  - [/usr/sbin/ufw, allow, flannel-vxlan]
+  - [/usr/sbin/ufw, allow, calico-bgp]
+  - [/usr/sbin/ufw, allow, weave]
+  - [/usr/sbin/ufw, allow, cilium-vxlan]
+  - [/usr/sbin/ufw, allow, cilium-geneve]
   - [/usr/sbin/ufw, --force, enable]

@@ -198,6 +198,8 @@ salt_minion:
 
 
 runcmd:
-  - [systemctl, reload, sshd]
-  - [systemctl, enable, squid]
-  - [systemctl, start, squid]
+  - [/bin/systemctl, reload, sshd]
+  - [/bin/systemctl, enable, squid]
+  - [/bin/systemctl, start, squid]
+  - [/usr/sbin/ufw, allow, '22/tcp']
+  - [/usr/sbin/ufw, --force, enable]

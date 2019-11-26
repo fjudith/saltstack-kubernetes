@@ -22,7 +22,7 @@ apt:
   sources:
     wireguard.list: 
       source: "deb http://ppa.launchpad.net/wireguard/wireguard/ubuntu bionic main"
-      keyid: "4096R"
+      keyid: "e1b39b6ef6ddb96564797591ae33835f504a1a25"
 
 packages:
   - apt-transport-https

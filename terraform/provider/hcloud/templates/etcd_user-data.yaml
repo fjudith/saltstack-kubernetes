@@ -22,13 +22,14 @@ apt:
   sources:
     wireguard.list: 
       source: "deb http://ppa.launchpad.net/wireguard/wireguard/ubuntu bionic main"
-      keyid: "4096R"
+      keyid: "e1b39b6ef6ddb96564797591ae33835f504a1a25"
 
 packages:
   - apt-transport-https
   - conntrack
   - ca-certificates
   - ufw
+  - git
   - wireguard
 
 write_files:
@@ -83,6 +84,16 @@ bootcmd:
   - [cloud-init-per, once, enable_pam_session_limits, sh, -c, "echo 'session required pam_limits.so' | tee -a  /etc/pam.d/common-session"]
   # SSH tuning
   - [cloud-init-per, once, increase_ssh_sessions, sh, -c, "echo 'MaxSessions 100' | tee -a  /etc/ssh/sshd_config"]
+
+salt_minion:
+  pkg_name: 'salt-minion'
+  service_name: 'salt-minion'
+  config_dir: '/etc/salt'
+  conf:
+    master: proxy01
+  grains:
+    role:
+       - etcd
 
 runcmd:
   - [systemctl, reload, sshd]

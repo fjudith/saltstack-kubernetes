@@ -105,9 +105,6 @@ write_files:
       description=Weave Net monitoring
       ports=6781,6782/tcp
 
-runcmd:
-  - systemctl reload sshd
-
 bootcmd:
   # Network tuning
   - [cloud-init-per, once, modprobe_ip_conntrack, sh, -c, "modprobe ip_conntrack"]
@@ -135,3 +132,6 @@ bootcmd:
   - [cloud-init-per, once, enable_pam_session_limits, sh, -c, "echo 'session required pam_limits.so' | tee -a  /etc/pam.d/common-session"]
   # SSH tuning
   - [cloud-init-per, once, increase_ssh_sessions, sh, -c, "echo 'MaxSessions 100' | tee -a  /etc/ssh/sshd_config"]
+
+runcmd:
+  - [systemctl, reload, sshd]

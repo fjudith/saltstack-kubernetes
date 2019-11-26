@@ -49,12 +49,12 @@ resource "hcloud_server" "proxy01" {
     ]
   }
 
-  provisioner "remote-exec" {
-    inline = [
-      "echo 'http_proxy=http://localhost:3128' | tee -a  /etc/environment",
-      "echo 'https_proxy=http://localhost:3128' | tee -a  /etc/environment",
-    ]
-  }
+  # provisioner "remote-exec" {
+  #   inline = [
+  #     "echo 'http_proxy=http://localhost:3128' | tee -a  /etc/environment",
+  #     "echo 'https_proxy=http://localhost:3128' | tee -a  /etc/environment",
+  #   ]
+  # }
 
   provisioner "file" {
     content     = "${file(var.ssh_private_key)}"
@@ -113,12 +113,12 @@ resource "hcloud_server" "proxy02" {
       "while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 1; done",
     ]
   }
-  provisioner "remote-exec" {
-    inline = [
-      "echo 'http_proxy=http://localhost:3128' | tee -a  /etc/environment",
-      "echo 'https_proxy=http://localhost:3128' | tee -a  /etc/environment",
-    ]
-  }
+  # provisioner "remote-exec" {
+  #   inline = [
+  #     "echo 'http_proxy=http://localhost:3128' | tee -a  /etc/environment",
+  #     "echo 'https_proxy=http://localhost:3128' | tee -a  /etc/environment",
+  #   ]
+  # }
 
   provisioner "file" {
     content     = "${file(var.ssh_private_key)}"

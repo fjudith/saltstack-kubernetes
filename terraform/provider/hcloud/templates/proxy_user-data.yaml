@@ -28,6 +28,12 @@ packages:
   - apt-transport-https
   - conntrack
   - ca-certificates
+  - libdbi-perl
+  - libecap3
+  - libltdl7
+  - squid-common 
+  - squid-langpack
+  - ssl-cert
   - squid
   - ufw
   - wireguard

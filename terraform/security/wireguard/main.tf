@@ -27,9 +27,20 @@ resource "null_resource" "wireguard" {
 
   provisioner "remote-exec" {
     inline = [
-      "sudo add-apt-repository -y ppa:wireguard/wireguard",
-      "sudo apt-get update -yqq",
-      "sudo apt-get install -yqq wireguard",
+      # "apt-get install -yqq libmnl-dev libelf-dev pkg-config software-properties-common build-essential",
+      "add-apt-repository -y ppa:wireguard/wireguard",
+      "apt-get update -yqq",
+      "apt-get install -yqq wireguard",
+    ]
+  }
+
+  # provisioner "remote-exec" {
+  #   script = "${path.module}/scripts/install-kernel-headers.sh"
+  # }
+
+  provisioner "remote-exec" {
+    inline = [
+      "DEBIAN_FRONTEND=noninteractive apt-get install -yqq wireguard-dkms wireguard-tools",
     ]
   }
 

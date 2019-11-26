@@ -41,7 +41,8 @@ resource "hcloud_server" "proxy01" {
 
   provisioner "remote-exec" {
   inline = [
-    "cloud-init status --long --wait"
+      "cloud-init status --long --wait",
+    ]
   }
 
   # provisioner "remote-exec" {

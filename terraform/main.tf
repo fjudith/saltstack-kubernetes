@@ -96,22 +96,22 @@ module "salt-master" {
   connections      = "${module.provider.salt_syndic}"
 }
 
-module "salt-minion" {
-  source = "./management/salt-minion"
+# module "salt-minion" {
+#   source = "./management/salt-minion"
 
-  bastion_host       = "${module.provider.bastion_host}"
-  salt_master_host   = "${module.wireguard.proxy_vpn_ips[0]}"
-  http_proxy_host    = "${module.wireguard.proxy_vpn_ips[0]}"
-  http_proxy_port    = 8888
-  proxy_count        = "${var.proxy_count}"
-  proxy_private_ips  = "${module.wireguard.proxy_vpn_ips}"
-  etcd_count         = "${var.etcd_count}"
-  etcd_private_ips   = "${module.wireguard.etcd_vpn_ips}"
-  master_count       = "${var.master_count}"
-  master_private_ips = "${module.wireguard.master_vpn_ips}"
-  node_count         = "${var.node_count}"
-  node_private_ips   = "${module.wireguard.node_vpn_ips}"
-}
+#   bastion_host       = "${module.provider.bastion_host}"
+#   salt_master_host   = "${module.wireguard.proxy_vpn_ips[0]}"
+#   http_proxy_host    = "${module.wireguard.proxy_vpn_ips[0]}"
+#   http_proxy_port    = 8888
+#   proxy_count        = "${var.proxy_count}"
+#   proxy_private_ips  = "${module.wireguard.proxy_vpn_ips}"
+#   etcd_count         = "${var.etcd_count}"
+#   etcd_private_ips   = "${module.wireguard.etcd_vpn_ips}"
+#   master_count       = "${var.master_count}"
+#   master_private_ips = "${module.wireguard.master_vpn_ips}"
+#   node_count         = "${var.node_count}"
+#   node_private_ips   = "${module.wireguard.node_vpn_ips}"
+# }
 
 module "firewall-proxy" {
   source = "./security/ufw/proxy"

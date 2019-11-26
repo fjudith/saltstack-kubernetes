@@ -40,21 +40,10 @@ resource "hcloud_server" "proxy01" {
   }
 
   provisioner "remote-exec" {
-  inline = [
+    inline = [
       "cloud-init status --long --wait",
     ]
   }
-
-  # provisioner "remote-exec" {
-  #   inline = [
-  #     "while [ ! -f /var/lib/cloud/instance/boot-finished ]; do echo 'waiting for boot-finished'; sleep 5; done;",
-  #     "while [ ! -f /var/lib/apt/lists/lock ]; do sleep 1; done",
-  #     "while [ ! -f /var/lib/dpkg/lock ]; do sleep 1; done",
-  #     "while fuser /var/lib/apt/lists/lock >/dev/null 2>&1; do sleep 1; done",
-  #     "while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 1; done",
-  #     "while fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do sleep 1; done",
-  #   ]
-  # }
 
   # provisioner "remote-exec" {
   #   inline = [
@@ -113,14 +102,10 @@ resource "hcloud_server" "proxy02" {
 
   provisioner "remote-exec" {
     inline = [
-      "while [ ! -f /var/lib/cloud/instance/boot-finished ]; do echo 'waiting for boot-finished'; sleep 5; done;",
-      "while [ ! -f /var/lib/apt/lists/lock ]; do sleep 1; done",
-      "while [ ! -f /var/lib/dpkg/lock ]; do sleep 1; done",
-      "while fuser /var/lib/apt/lists/lock >/dev/null 2>&1; do sleep 1; done",
-      "while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 1; done",
-      "while fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do sleep 1; done",
+      "cloud-init status --long --wait",
     ]
   }
+
   # provisioner "remote-exec" {
   #   inline = [
   #     "echo 'http_proxy=http://localhost:3128' | tee -a  /etc/environment",
@@ -178,12 +163,7 @@ resource "hcloud_server" "etcd" {
 
   provisioner "remote-exec" {
     inline = [
-      "while [ ! -f /var/lib/cloud/instance/boot-finished ]; do echo 'waiting for boot-finished'; sleep 5; done;",
-      "while [ ! -f /var/lib/apt/lists/lock ]; do sleep 1; done",
-      "while [ ! -f /var/lib/dpkg/lock ]; do sleep 1; done",
-      "while fuser /var/lib/apt/lists/lock >/dev/null 2>&1; do sleep 1; done",
-      "while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 1; done",
-      "while fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do sleep 1; done",
+        "cloud-init status --long --wait",
     ]
   }
 }
@@ -221,12 +201,7 @@ resource "hcloud_server" "master" {
 
   provisioner "remote-exec" {
     inline = [
-      "while [ ! -f /var/lib/cloud/instance/boot-finished ]; do echo 'waiting for boot-finished'; sleep 5; done;",
-      "while [ ! -f /var/lib/apt/lists/lock ]; do sleep 1; done",
-      "while [ ! -f /var/lib/dpkg/lock ]; do sleep 1; done",
-      "while fuser /var/lib/apt/lists/lock >/dev/null 2>&1; do sleep 1; done",
-      "while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 1; done",
-      "while fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do sleep 1; done",
+      "cloud-init status --long --wait",
     ]
   }
 }
@@ -264,12 +239,7 @@ resource "hcloud_server" "node" {
 
   provisioner "remote-exec" {
     inline = [
-      "while [ ! -f /var/lib/cloud/instance/boot-finished ]; do echo 'waiting for boot-finished'; sleep 5; done;",
-      "while [ ! -f /var/lib/apt/lists/lock ]; do sleep 1; done",
-      "while [ ! -f /var/lib/dpkg/lock ]; do sleep 1; done",
-      "while fuser /var/lib/apt/lists/lock >/dev/null 2>&1; do sleep 1; done",
-      "while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 1; done",
-      "while fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do sleep 1; done",
+      "cloud-init status --long --wait",
     ]
   }
 }

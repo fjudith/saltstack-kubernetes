@@ -6,6 +6,11 @@ title=salt
 description=fast and powerful configuration management and remote execution
 ports=4505,4506/tcp
 
+[salt-gui]
+title=SaltGUI
+description=A web interface for managing SaltStack based infrastructure.
+ports=3333/tcp
+
 # https://kubernetes.io/docs/setup/independent/install-kubeadm/
 [kube-apiserver]
 title=kube-apiserver

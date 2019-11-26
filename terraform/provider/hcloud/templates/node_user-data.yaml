@@ -18,15 +18,76 @@ user:
 
 package_upgrade: true
 
+apt:
+  sources:
+    wireguard.list: 
+      source: "deb http://ppa.launchpad.net/wireguard/wireguard/ubuntu bionic main"
+      keyid: "4096R"
+
 packages:
   - apt-transport-https
   - conntrack
   - ca-certificates
+  - ufw
+  - wireguard
 
 write_files:
   - path: /etc/salt/grains
     content: |
       role: node
+  - path: /etc/ufw/application.d/node.ufw
+    content: |
+      # Install into /etc/ufw/applications.d/ and run 'ufw app update'
+
+      # https://docs.saltstack.com/en/latest/topics/tutorials/firewall.html
+      [salt]
+      title=salt
+      description=fast and powerful configuration management and remote execution
+      ports=4505,4506/tcp
+
+      # https://docs.projectcalico.org/master/getting-started/kubernetes/requirement
+      [calico-bgp]
+      title=calico
+      description=Cloud native connectivity and network policy
+      ports=179/tcp
+
+      [calico-typha-agent]
+      title=calico typha
+      description="Calico's datastore fan-out daemon"
+      ports=5479/tcp
+
+      # https://docs.cilium.io/en/stable/install/system_requirements/
+      [cilium-vxlan]
+      title=Cilium VXLAN
+      description=Cillium VXLAN overlay mode 
+      ports=8472/udp
+
+      [cilium-geneve]
+      title=Cilium Geneve
+      description=Cillium Geneve overlay mode 
+      ports=6081/udp
+
+      [cilium-health]
+      title=Cilium health
+      description=Cillium monitoring
+      ports=4240/tcp
+
+      # https://github.com/coreos/flannel/blob/master/Documentation/backends.md
+      [flannel-vxlan]
+      title=flannel
+      description=Flannel is a network fabric for containers, designed for Kubernetes
+      ports=8472,4789/udp
+
+      # https://www.weave.works/docs/net/latest/faq/
+      [weave]
+      title=weave
+      description=Weave Net communications
+      ports=6783/tcp|6783,6784/udp
+
+      [weave-metrics]
+      title=weave-metrics
+      description=Weave Net monitoring
+      ports=6781,6782/tcp
 
 runcmd:
   - systemctl reload sshd

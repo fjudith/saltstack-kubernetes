@@ -18,15 +18,43 @@ user:
 
 package_upgrade: true
 
+apt:
+  sources:
+    wireguard.list: 
+      source: "deb http://ppa.launchpad.net/wireguard/wireguard/ubuntu bionic main"
+      keyid: "4096R"
+
 packages:
   - apt-transport-https
   - conntrack
   - ca-certificates
+  - ufw
+  - wireguard
 
 write_files:
   - path: /etc/salt/grains
     content: |
       role: etcd
+  - path: /etc/ufw/applications.d/etcd.ufw
+    content: |
+      # Install into /etc/ufw/applications.d/ and run 'ufw app update'
+
+      # https://docs.saltstack.com/en/latest/topics/tutorials/firewall.html
+      [salt]
+      title=salt
+      description=fast and powerful configuration management and remote execution
+      ports=4505,4506/tcp
+
+      # https://docs.projectcalico.org/master/getting-started/kubernetes/requirements
+      [etcd]
+      title=Etcd
+      description=Etcd client request
+      ports=2379/tcp
+
+      [etcd-peer]
+      title=Etcd cluster
+      description=Etcd cluster peering
+      ports=2380/tcp
 
 runcmd:
   - systemctl reload sshd

@@ -28,7 +28,7 @@ packages:
   - apt-transport-https
   - conntrack
   - ca-certificates
-  - squid3
+  - squid
   - ufw
   - wireguard
 
@@ -155,9 +155,9 @@ write_files:
       ports=8888/tcp
 
 runcmd:
-  - systemctl reload sshd
-  - systemctl enable squid
-  - systemctl start squid
+  - [systemctl, reload, sshd]
+  - [systemctl, enable, squid]
+  - [systemctl, start, squid]
 
 bootcmd:
   # Network tuning

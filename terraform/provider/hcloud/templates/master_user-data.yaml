@@ -36,7 +36,7 @@ write_files:
   - path: /etc/salt/grains
     content: |
       role: master
-  - path: /etc/ufw/application.d/master.ufw
+  - path: /etc/ufw/applications.d/master.ufw
     content: |
       # Install into /etc/ufw/applications.d/ and run 'ufw app update'
 
@@ -146,3 +146,5 @@ salt_minion:
 
 runcmd:
   - [systemctl, reload, sshd]
+  - [/usr/sbin/ufw, allow, '22/tcp']
+  - [/usr/sbin/ufw, --force, enable]

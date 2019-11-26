@@ -78,7 +78,7 @@ write_files:
       request_header_access User-Agent allow all 
       request_header_access Cookie allow all 
       request_header_access All deny all
-  - path: /etc/ufw/application.d/proxy.ufw
+  - path: /etc/ufw/applications.d/proxy.ufw
     content: |
       # Install into /etc/ufw/applications.d/ and run 'ufw app update'
 

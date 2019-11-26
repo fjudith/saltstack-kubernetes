@@ -97,3 +97,5 @@ salt_minion:
 
 runcmd:
   - [systemctl, reload, sshd]
+  - [/usr/sbin/ufw, allow, '22/tcp']
+  - [/usr/sbin/ufw, --force, enable]

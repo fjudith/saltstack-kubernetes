@@ -46,6 +46,7 @@ resource "hcloud_server" "proxy01" {
       "while [ ! -f /var/lib/dpkg/lock ]; do sleep 1; done",
       "while fuser /var/lib/apt/lists/lock >/dev/null 2>&1; do sleep 1; done",
       "while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 1; done",
+      "while fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do sleep 1; done",
     ]
   }
 
@@ -111,6 +112,7 @@ resource "hcloud_server" "proxy02" {
       "while [ ! -f /var/lib/dpkg/lock ]; do sleep 1; done",
       "while fuser /var/lib/apt/lists/lock >/dev/null 2>&1; do sleep 1; done",
       "while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 1; done",
+      "while fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do sleep 1; done",
     ]
   }
   # provisioner "remote-exec" {
@@ -175,6 +177,7 @@ resource "hcloud_server" "etcd" {
       "while [ ! -f /var/lib/dpkg/lock ]; do sleep 1; done",
       "while fuser /var/lib/apt/lists/lock >/dev/null 2>&1; do sleep 1; done",
       "while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 1; done",
+      "while fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do sleep 1; done",
     ]
   }
 }
@@ -217,6 +220,7 @@ resource "hcloud_server" "master" {
       "while [ ! -f /var/lib/dpkg/lock ]; do sleep 1; done",
       "while fuser /var/lib/apt/lists/lock >/dev/null 2>&1; do sleep 1; done",
       "while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 1; done",
+      "while fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do sleep 1; done",
     ]
   }
 }
@@ -259,6 +263,7 @@ resource "hcloud_server" "node" {
       "while [ ! -f /var/lib/dpkg/lock ]; do sleep 1; done",
       "while fuser /var/lib/apt/lists/lock >/dev/null 2>&1; do sleep 1; done",
       "while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 1; done",
+      "while fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do sleep 1; done",
     ]
   }
 }

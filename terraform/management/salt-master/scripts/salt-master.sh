@@ -37,8 +37,10 @@ sudo apt-get install --no-install-recommends -yq \
   salt-syndic=${SALT_VERSION}* \
   salt-cloud=${SALT_VERSION}* \
   salt-api=${SALT_VERSION}* \
-  reclass && \
-echo "add a user for the frontend ${SALT_USER}:${SALT_USER}" && \
+  reclass
+
+
+echo "add a user for the frontend ${SALT_USER}:${SALT_USER}"
 if sudo getent passwd ${SALT_USER} > /dev/null 2>&1; then 
   echo "user \"${SALT_USER}\" already exists" ; 
 else 

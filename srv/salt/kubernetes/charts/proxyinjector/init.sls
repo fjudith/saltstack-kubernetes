@@ -26,7 +26,7 @@ proxyinjector-repo:
     - mode: 755
     - template: jinja
 
-proxyinjector-repo:
+proxyinjector-install:
   cmd.run:
     - watch:
       - file: /srv/kubernetes/manifests/proxyinjector/values.yaml

@@ -20,9 +20,9 @@ user:
     gecos: Saltstack user
     groups: salt
     lock_passwd: True
-    passwd:
+    # openssl passwd -6 <text>
+    passwd: $6$rE0lkoq4kCK.gW3T$gLBR8SPUAqn0pUHTMxGYLHeWMqe.9hHARYcBwFJ0RmovHQ95TvPF6yWHnJNUEfKN/Wx4plRUnEEWwsVZJRySq0
     shell: /bin/bash
-    
 
 package_upgrade: true
 

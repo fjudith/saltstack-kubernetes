@@ -293,8 +293,8 @@ salt_minion:
 
 
 runcmd:
-  - [/usr/bin/curl, -L, https://github.com/erwindon/SaltGUI/archive/1.17.0.tar.gz, |, tar, -C, /opt, -xvzf, -]
-  - [/bin/ln, -vfs, /opt/SaltGUI-1.17.0/saltgui, /srv/saltgui]
+  - [/usr/bin/curl, -L, 'https://github.com/erwindon/SaltGUI/archive/1.17.0.tar.gz', |, tar, -C, /opt, -xvzf, -]
+  - [/bin/ln, -vfs, '/opt/SaltGUI-1.17.0/saltgui', '/srv/saltgui']
   - [/bin/systemctl, enable, salt-master]
   - [/bin/systemctl, enable, salt-minion]
   - [/bin/systemctl, enable, salt-api]

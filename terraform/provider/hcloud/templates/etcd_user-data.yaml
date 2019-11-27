@@ -168,5 +168,6 @@ runcmd:
   - [systemctl, reload, sshd]
   - [/usr/sbin/ufw, default, allow, FORWARD]
   - [/usr/sbin/ufw, allow, in, on, ${VPN_INTERFACE}]
+  - [/usr/sbin/ufw, allow, in, on, ${PRIVATE_INTERFACE}, to, any, port, ${VPN_PORT}]
   - [/usr/sbin/ufw, allow, ssh]
-  # - [/usr/sbin/ufw, --force, enable]
+  - [/usr/sbin/ufw, --force, enable]

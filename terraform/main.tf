@@ -75,14 +75,14 @@ module "wireguard" {
   connections  = "${module.provider.private_ips}"
 }
 
-module "salt-master" {
-  source = "./management/salt-master"
+# module "salt-master" {
+#   source = "./management/salt-master"
 
-  count            = 1
-  bastion_host     = "${module.provider.bastion_host}"
-  salt_master_host = "${var.saltmaster_host}"
-  connections      = "${module.provider.salt_syndic}"
-}
+#   count            = 1
+#   bastion_host     = "${module.provider.bastion_host}"
+#   salt_master_host = "${var.saltmaster_host}"
+#   connections      = "${module.provider.salt_syndic}"
+# }
 
 # module "salt-minion" {
 #   source = "./management/salt-minion"

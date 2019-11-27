@@ -3,6 +3,7 @@
 groups:
   - ubuntu: [root,sys]
   - cloud-users
+  - salt
 
 user:
   - default
@@ -15,6 +16,12 @@ user:
     sudo: ALL=(ALL) NOPASSWD:ALL
     ssh_authorized_keys:
       - key1
+  - name: salt
+    gecos: Saltstack user
+    groups: salt
+    lock_passwd: True
+    passwd:
+    shell: /bin/bash
 
 package_upgrade: true
 
@@ -57,7 +64,7 @@ apt:
         MA==
         =dtMN
         -----END PGP PUBLIC KEY BLOCK-----
-        
+
 packages:
   - apt-transport-https
   - conntrack
@@ -65,6 +72,31 @@ packages:
   - ufw
   - git
   - wireguard
+  # Saltstack
+  - lsb-release
+  - debconf-utils
+  - dmidecode
+  - python3-augeas
+  - python3-boto
+  - python3-boto3
+  - python3-botocore
+  - python3-cherrypy3
+  - python3-croniter
+  - python3-git
+  - python3-pip
+  - python3-ioflo
+  - python3-raet
+  - python3-setuptools
+  - python3-timelib
+  - python3-netaddr
+  - python3-pyinotify
+  - python3-ws4py
+  - salt-minion
+  - salt-ssh
+  - reclass
+  - curl
+  - net-tools
+  - gnupg2
 
 write_files:
   - path: /etc/salt/grains

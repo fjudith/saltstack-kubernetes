@@ -3,6 +3,7 @@
 groups:
   - ubuntu: [root,sys]
   - cloud-users
+  - salt
 
 user:
   - default
@@ -15,6 +16,13 @@ user:
     sudo: ALL=(ALL) NOPASSWD:ALL
     ssh_authorized_keys:
       - key1
+  - name: salt
+    gecos: Saltstack user
+    groups: salt
+    lock_passwd: True
+    passwd:
+    shell: /bin/bash
+    
 
 package_upgrade: true
 
@@ -98,8 +106,9 @@ packages:
   - salt-cloud
   - salt-api
   - reclass
-
-
+  - curl
+  - net-tools
+  - gnupg2
 
 write_files:
   - path: /etc/squid/squid.conf
@@ -219,6 +228,23 @@ write_files:
       title=tinyproxy
       description=Tinyproxy listen port
       ports=8888/tcp
+  - path: /etc/salt/master.d/saltgui.conf
+    content: |
+      external_auth:
+        pam:
+          salt:
+            - .*
+            - '@runner'
+            - '@wheel'
+            - '@jobs'
+
+      rest_cherrypy:
+          port: 3333
+          host: 0.0.0.0
+          disable_ssl: true
+          app: /srv/saltgui/index.html
+          static: /srv/saltgui/static
+          static_path: /static
 
 bootcmd:
   # Network tuning

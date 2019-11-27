@@ -157,7 +157,7 @@ salt_minion:
   service_name: 'salt-minion'
   config_dir: '/etc/salt'
   conf:
-    master: proxy01
+    master: ${SALT_MASTER_HOST}
     use_superseded:
       - module.run
   grains:
@@ -165,9 +165,11 @@ salt_minion:
        - etcd
 
 runcmd:
+  # Enable SSHd
   - [systemctl, reload, sshd]
+  # Enable UFW
   - [/usr/sbin/ufw, default, allow, FORWARD]
-  - [/usr/sbin/ufw, allow, in, on, ${VPN_INTERFACE}]
-  - [/usr/sbin/ufw, allow, in, on, ${PRIVATE_INTERFACE}, to, any, port, ${VPN_PORT}]
+  - [/usr/sbin/ufw, allow, in, 'on', ${VPN_INTERFACE}]
+  - [/usr/sbin/ufw, allow, in, 'on', ${PRIVATE_INTERFACE}, to, any, port, ${VPN_PORT}]
   - [/usr/sbin/ufw, allow, ssh]
   - [/usr/sbin/ufw, --force, enable]

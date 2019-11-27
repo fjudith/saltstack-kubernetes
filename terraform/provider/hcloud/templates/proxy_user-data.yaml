@@ -306,12 +306,15 @@ runcmd:
   - [/bin/systemctl, restart, salt-master]
   - [/binsystemctl, restart, salt-minion]
   - [/bin/systemctl, restart, salt-api]
+  # Reload SSHd
   - [/bin/systemctl, reload, sshd]
+  # Start Squid
   - [/bin/systemctl, enable, squid]
   - [/bin/systemctl, start, squid]
+  # Enable UFW
   - [/usr/sbin/ufw, default, allow, FORWARD]
-  - [/usr/sbin/ufw, allow, in, on, ${VPN_INTERFACE}]
-  - [/usr/sbin/ufw, allow, in, on, ${PRIVATE_INTERFACE}, to, any, port, ${VPN_PORT}]
+  - [/usr/sbin/ufw, allow, in, 'on', ${VPN_INTERFACE}]
+  - [/usr/sbin/ufw, allow, in, 'on', ${PRIVATE_INTERFACE}, to, any, port, ${VPN_PORT}]
   - [/usr/sbin/ufw, allow, ssh]
   - [/usr/sbin/ufw, allow, http]
   - [/usr/sbin/ufw, allow, https]

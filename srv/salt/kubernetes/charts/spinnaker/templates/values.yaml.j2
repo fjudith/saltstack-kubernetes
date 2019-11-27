@@ -27,7 +27,7 @@ halyard:
       config.src: |-
         DECK_URL="https://{{ charts.spinnaker.ingress_host }}.{{ public_domain }}" # Url to access your deck 
         GATE_URL="https://{{ charts.spinnaker.ingress_host }}-gate.{{ public_domain }}" # URL to access your gate
-           
+      
   additionalScripts:
     create: true
     data:
@@ -93,6 +93,23 @@ halyard:
         $HAL_COMMAND config canary edit --default-metrics-store prometheus
         $HAL_COMMAND config canary prometheus account ${PROVIDER_COMMAND} ${CANARY_ACCOUNT_NAME} --base-url https://prometheus-k8s.monitoring:9090
         $HAL_COMMAND config canary enable
+      {% endif %}
+      {% if charts.get('concourse', {'enabled': False}).enabled %}
+      05-configure_concouse.sh: |-
+        # Configure Kubernetes cluster internal Concourse instance
+        USERNAME={{ charts.spinnaker.concourse.username }}
+        PASSWORD={{ charts.spinnaker.concourse.password }}
+        INSTANCE=internal
+        URL='http://concourse-web.concourse:8080'
+
+        if $HAL_COMMAND config ci concourse master get ${INSTANCE}; then
+          PROVIDER_COMMAND='edit'
+        else
+          PROVIDER_COMMAND='add'
+        fi
+
+        $HAL_COMMAND config ci concourse master ${PROVIDER_COMMAND} ${INSTANCE} --url ${URL} --username ${USERNAME} --password ${PASSWORD}
+        $HAL_COMMAND config ci concourse enable
       {% endif %}
 minio:
   enabled: false

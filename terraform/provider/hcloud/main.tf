@@ -23,7 +23,7 @@ resource "hcloud_server" "proxy01" {
   image       = "${var.image}"
   server_type = "${var.proxy_type}"
   ssh_keys    = ["${var.ssh_keys}"]
-  user_data   = "${file("${format("%s/templates/proxy_user-data.yaml", path.module)}")}"
+  user_data   = "${data.template_file.cloud-init_proxy01.rendered}"
   labels = {
     app  = "kubernetes"
     role = "edge_router"
@@ -272,4 +272,62 @@ resource "hcloud_server_network" "node" {
   count = "${var.node_count}"
   server_id = "${element(hcloud_server.node.*.id, count.index)}"
   network_id = "${hcloud_network.private.id}"
+}
+
+data "template_file" "proxy01_cloud-init" {
+  template = "${file("${path.module}/templates/proxy_user-data.yaml")}"
+  vars {
+    SALT_MASTER_HOST     = "${element(hcloud_server.proxy01.0.name, count.index)}"
+    VPN_INTERFACE        = "${var.vpn_interface}"
+    VPN_IP_RANGE         = "${var.vpn_iprange}"
+    VPN_PORT             = "${var.vpn_port}"
+    PRIVATE_INTERFACE    = "eth0"
+  }
+}
+
+data "template_file" "proxy02_cloud-init" {
+  template = "${file("${path.module}/templates/proxy_user-data.yaml")}"
+  vars {
+    SALT_MASTER_HOST     = "${element(hcloud_server.proxy01.0.name, count.index)}"
+    VPN_INTERFACE        = "${var.vpn_interface}"
+    VPN_IP_RANGE         = "${var.vpn_iprange}"
+    VPN_PORT             = "${var.vpn_port}"
+    PRIVATE_INTERFACE    = "eth0"
+  }
+}
+
+data "template_file" "etcd_cloud-init" {
+  count    = 1
+  template = "${file("${path.module}/templates/etcd_user-data.yaml")}"
+  vars {
+    SALT_MASTER_HOST     = "${element(hcloud_server.proxy01.0.name, count.index)}"
+    VPN_INTERFACE        = "${var.vpn_interface}"
+    VPN_IP_RANGE         = "${var.vpn_iprange}"
+    VPN_PORT             = "${var.vpn_port}"
+    PRIVATE_INTERFACE    = "eth0"
+  }
+}
+
+data "template_file" "master_cloud-init" {
+  count    = 1
+  template = "${file("${path.module}/templates/master_user-data.yaml")}"
+  vars {
+    SALT_MASTER_HOST     = "${element(hcloud_server.proxy01.0.name, count.index)}"
+    VPN_INTERFACE        = "${var.vpn_interface}"
+    VPN_IP_RANGE         = "${var.vpn_iprange}"
+    VPN_PORT             = "${var.vpn_port}"
+    PRIVATE_INTERFACE    = "eth0"
+  }
+}
+
+data "template_file" "node_cloud-init" {
+  count    = 1
+  template = "${file("${path.module}/templates/node_user-data.yaml")}"
+  vars {
+    SALT_MASTER_HOST     = "${element(hcloud_server.proxy01.0.name, count.index)}"
+    VPN_INTERFACE        = "${var.vpn_interface}"
+    VPN_IP_RANGE         = "${var.vpn_iprange}"
+    VPN_PORT             = "${var.vpn_port}"
+    PRIVATE_INTERFACE    = "eth0"
+  }
 }

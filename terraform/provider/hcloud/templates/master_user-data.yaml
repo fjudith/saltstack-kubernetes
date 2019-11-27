@@ -206,6 +206,8 @@ salt_minion:
   config_dir: '/etc/salt'
   conf:
     master: proxy01
+    use_superseded:
+      - module.run
   grains:
     role:
        - master
@@ -213,7 +215,7 @@ salt_minion:
 runcmd:
   - [systemctl, reload, sshd]
   - [/usr/sbin/ufw, default, allow, FORWARD]
-  - [/usr/sbin/ufw, allow, in, on, wg0]
+  - [/usr/sbin/ufw, allow, in, on, ${VPN_INTERFACE}]
   - [/usr/sbin/ufw, allow, ssh]
   - [/usr/sbin/ufw, allow, flannel-vxlan]
   - [/usr/sbin/ufw, allow, calico-bgp]

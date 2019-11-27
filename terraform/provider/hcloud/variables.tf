@@ -74,3 +74,21 @@ variable "ssh_bastion_host" {
 provider "hcloud" {
   token = "${var.token}"
 }
+
+variable "vpn_interface" {
+  default = "wg0"
+}
+
+variable "vpn_iprange" {
+  description = "Wireguard MeshVPN IPv4 subnet CIDR"
+  default     = "172.17.4.0/24"
+}
+
+variable "vpn_ipv6range" {
+  description = "Wireguard MeshVPN IPv6 subnet"
+  default     = "fd86:ea04:1115::/64"
+}
+
+variable "vpn_port" {
+  default = "51820"
+}

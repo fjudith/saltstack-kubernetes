@@ -228,6 +228,10 @@ write_files:
       title=tinyproxy
       description=Tinyproxy listen port
       ports=8888/tcp
+  - path: /etc/salt/master.d/auto-accept.conf
+    content: |
+      open_mode: True
+      auto_accept: True
   - path: /etc/salt/master.d/saltgui.conf
     content: |
       external_auth:
@@ -279,18 +283,31 @@ salt_minion:
   service_name: 'salt-minion'
   config_dir: '/etc/salt'
   conf:
-    master: localhost
+    master: ${SALT_MASTER_HOST}
+    timeout: 30
+    use_superseded:
+      - module.run
   grains:
     role:
        - proxy
 
 
 runcmd:
+  - [/usr/bin/curl, -L, https://github.com/erwindon/SaltGUI/archive/1.17.0.tar.gz, |, tar, -C, /opt, -xvzf, -]
+  - [/bin/ln, -vfs, /opt/SaltGUI-1.17.0/saltgui, /srv/saltgui]
+  - [/bin/systemctl, enable, salt-master]
+  - [/bin/systemctl, enable, salt-minion]
+  - [/bin/systemctl, enable, salt-api]
+  - [/bin/systemctl, daemon-reload]
+  - [/bin/systemctl, restart, salt-master]
+  - [/binsystemctl, restart, salt-minion]
+  - [/bin/systemctl, restart, salt-api]
   - [/bin/systemctl, reload, sshd]
   - [/bin/systemctl, enable, squid]
   - [/bin/systemctl, start, squid]
   - [/usr/sbin/ufw, default, allow, FORWARD]
-  - [/usr/sbin/ufw, allow, in, on, wg0]
+  - [/usr/sbin/ufw, allow, in, on, ${VPN_INTERFACE}]
+  - [/usr/sbin/ufw, allow, in, on, ${PRIVATE_INTERFACE}, to, any, port, ${VPN_PORT}]
   - [/usr/sbin/ufw, allow, ssh]
   - [/usr/sbin/ufw, allow, http]
   - [/usr/sbin/ufw, allow, https]
@@ -302,4 +319,4 @@ runcmd:
   - [/usr/sbin/ufw, allow, cilium-vxlan]
   - [/usr/sbin/ufw, allow, cilium-geneve]
   - [/usr/sbin/ufw, allow, salt-gui]
-  # - [/usr/sbin/ufw, --force, enable]
+  - [/usr/sbin/ufw, --force, enable]

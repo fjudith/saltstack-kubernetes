@@ -28,24 +28,6 @@
   file.symlink:
     - target: /bin/bash
 
-/usr/lib/coreos/etcd-wrapper:
-  file.managed:
-    - source: salt://kubernetes/role/etcd/scripts/etcd-wrapper
-    - user: root
-    - template: jinja
-    - group: root
-    - mode: 755
-
-{# /etc/etcd/etcd-key.pem:
-  file.symlink:
-    - target: /var/lib/etcd/ssl/etcd-key.pem
-/etc/etcd/etcd.pem:
-  file.symlink:
-    - target: /var/lib/etcd/ssl/etcd.pem
-/etc/etcd/ca.pem:
-  file.symlink:
-    - target: /var/lib/etcd/ssl/ca.pem #}
-
 etcd-latest-archive:
   archive.extracted:
     - name: /opt/

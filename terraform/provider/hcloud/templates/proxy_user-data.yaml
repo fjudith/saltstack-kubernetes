@@ -201,6 +201,8 @@ runcmd:
   - [/bin/systemctl, reload, sshd]
   - [/bin/systemctl, enable, squid]
   - [/bin/systemctl, start, squid]
+  - [/usr/sbin/ufw, default, allow, FORWARD]
+  - [/usr/sbin/ufw, allow, in, on, wg0]
   - [/usr/sbin/ufw, allow, ssh]
   - [/usr/sbin/ufw, allow, http]
   - [/usr/sbin/ufw, allow, https]

@@ -100,4 +100,4 @@ runcmd:
   - [/usr/sbin/ufw, default, allow, FORWARD]
   - [/usr/sbin/ufw, allow, in, on, wg0]
   - [/usr/sbin/ufw, allow, ssh]
-  - [/usr/sbin/ufw, --force, enable]
+  # - [/usr/sbin/ufw, --force, enable]

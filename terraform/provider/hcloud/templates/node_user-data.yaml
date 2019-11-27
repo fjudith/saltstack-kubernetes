@@ -138,4 +138,4 @@ runcmd:
   - [/usr/sbin/ufw, allow, weave]
   - [/usr/sbin/ufw, allow, cilium-vxlan]
   - [/usr/sbin/ufw, allow, cilium-geneve]
-  - [/usr/sbin/ufw, --force, enable]
+  # - [/usr/sbin/ufw, --force, enable]

@@ -90,7 +90,7 @@ module "salt-master" {
 #   bastion_host       = "${module.provider.bastion_host}"
 #   salt_master_host   = "${module.wireguard.proxy_vpn_ips[0]}"
 #   http_proxy_host    = "${module.wireguard.proxy_vpn_ips[0]}"
-#   http_proxy_port    = 8888
+#   http_proxy_port    = 3128
 #   proxy_count        = "${var.proxy_count}"
 #   proxy_private_ips  = "${module.wireguard.proxy_vpn_ips}"
 #   etcd_count         = "${var.etcd_count}"
@@ -156,25 +156,25 @@ module "salt-master" {
 #   connections          = "${module.provider.node_private_ips}"
 # }
 
-# module "encryption" {
-#   source = "./encryption/cfssl"
+module "encryption" {
+  source = "./encryption/cfssl"
 
-#   bastion_host       = "${module.provider.bastion_host}"
-#   proxy_count        = "${var.proxy_count}"
-#   proxy_private_ips  = "${module.wireguard.proxy_vpn_ips}"
-#   proxy_hostnames    = "${module.provider.proxy_hostnames}"
-#   etcd_count         = "${var.etcd_count}"
-#   etcd_private_ips   = "${module.wireguard.etcd_vpn_ips}"
-#   etcd_hostnames     = "${module.provider.etcd_hostnames}"
-#   master_count       = "${var.master_count}"
-#   master_private_ips = "${module.wireguard.master_vpn_ips}"
-#   master_hostnames   = "${module.provider.master_hostnames}"
-#   node_count         = "${var.node_count}"
-#   node_private_ips   = "${module.wireguard.node_vpn_ips}"
-#   node_hostnames     = "${module.provider.node_hostnames}"
-#   cluster_public_dns = "${var.cluster_public_dns}"
-#   domain             = "${var.domain}"
-# }
+  bastion_host       = "${module.provider.bastion_host}"
+  proxy_count        = "${var.proxy_count}"
+  proxy_private_ips  = "${module.wireguard.proxy_vpn_ips}"
+  proxy_hostnames    = "${module.provider.proxy_hostnames}"
+  etcd_count         = "${var.etcd_count}"
+  etcd_private_ips   = "${module.wireguard.etcd_vpn_ips}"
+  etcd_hostnames     = "${module.provider.etcd_hostnames}"
+  master_count       = "${var.master_count}"
+  master_private_ips = "${module.wireguard.master_vpn_ips}"
+  master_hostnames   = "${module.provider.master_hostnames}"
+  node_count         = "${var.node_count}"
+  node_private_ips   = "${module.wireguard.node_vpn_ips}"
+  node_hostnames     = "${module.provider.node_hostnames}"
+  cluster_public_dns = "${var.cluster_public_dns}"
+  domain             = "${var.domain}"
+}
 
 # module "default-route-vpn" {
 #   source = "./routing"

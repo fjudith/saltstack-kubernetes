@@ -277,7 +277,7 @@ resource "hcloud_server_network" "node" {
 data "template_file" "proxy01_cloud-init" {
   template = "${file("${path.module}/templates/proxy_user-data.yaml")}"
   vars {
-    SALT_MASTER_HOST     = "${element(hcloud_server.proxy01.0.name, count.index)}"
+    SALT_MASTER_HOST     = "localhost"
     VPN_INTERFACE        = "${var.vpn_interface}"
     VPN_IP_RANGE         = "${var.vpn_iprange}"
     VPN_PORT             = "${var.vpn_port}"

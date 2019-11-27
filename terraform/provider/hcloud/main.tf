@@ -288,7 +288,7 @@ data "template_file" "proxy01_cloud-init" {
 data "template_file" "proxy02_cloud-init" {
   template = "${file("${path.module}/templates/proxy_user-data.yaml")}"
   vars {
-    SALT_MASTER_HOST     = "${element(hcloud_server.proxy01.0.name, count.index)}"
+    SALT_MASTER_HOST     = "${hcloud_server.proxy01.0.name}"
     VPN_INTERFACE        = "${var.vpn_interface}"
     VPN_IP_RANGE         = "${var.vpn_iprange}"
     VPN_PORT             = "${var.vpn_port}"
@@ -300,7 +300,7 @@ data "template_file" "etcd_cloud-init" {
   count    = 1
   template = "${file("${path.module}/templates/etcd_user-data.yaml")}"
   vars {
-    SALT_MASTER_HOST     = "${element(hcloud_server.proxy01.0.name, count.index)}"
+    SALT_MASTER_HOST     = "${hcloud_server.proxy01.0.name}"
     VPN_INTERFACE        = "${var.vpn_interface}"
     VPN_IP_RANGE         = "${var.vpn_iprange}"
     VPN_PORT             = "${var.vpn_port}"
@@ -312,7 +312,7 @@ data "template_file" "master_cloud-init" {
   count    = 1
   template = "${file("${path.module}/templates/master_user-data.yaml")}"
   vars {
-    SALT_MASTER_HOST     = "${element(hcloud_server.proxy01.0.name, count.index)}"
+    SALT_MASTER_HOST     = "${hcloud_server.proxy01.0.name}"
     VPN_INTERFACE        = "${var.vpn_interface}"
     VPN_IP_RANGE         = "${var.vpn_iprange}"
     VPN_PORT             = "${var.vpn_port}"
@@ -324,7 +324,7 @@ data "template_file" "node_cloud-init" {
   count    = 1
   template = "${file("${path.module}/templates/node_user-data.yaml")}"
   vars {
-    SALT_MASTER_HOST     = "${element(hcloud_server.proxy01.0.name, count.index)}"
+    SALT_MASTER_HOST     = "${hcloud_server.proxy01.0.name}"
     VPN_INTERFACE        = "${var.vpn_interface}"
     VPN_IP_RANGE         = "${var.vpn_iprange}"
     VPN_PORT             = "${var.vpn_port}"

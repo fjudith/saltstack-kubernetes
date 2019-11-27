@@ -54,9 +54,12 @@ concourse:
         userIdKey: userid
         userNameKey: username
     localAuth:
-      enabled: False
+      enabled: True
 secrets:
   create: True
   oauthClientId: concourse
   oauthClientSecret: {{ client_secret }}
+  localUsers: {{ charts.concourse.username }}:{{ charts.concourse.password }}{% if charts.get('spinnaker', {'enabled': False}).enabled -%}
+,{{ charts.spinnaker.concourse.username }}:{{ charts.spinnaker.concourse.password }}
+{% endif -%}
   {% endif %}

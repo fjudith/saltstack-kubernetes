@@ -293,8 +293,12 @@ salt_minion:
 
 
 runcmd:
-  - [/usr/bin/curl, -L, 'https://github.com/erwindon/SaltGUI/archive/1.17.0.tar.gz', |, tar, -C, /opt, -xvzf, -]
+  # Install SaltGUI
+  - [/usr/bin/curl, -o, "/opt/saltgui.tar.gz", -L, 'https://github.com/erwindon/SaltGUI/archive/1.17.0.tar.gz']
+  - [/bin/tar, -xvzf, "/opt/saltgui.tar.gz"]
   - [/bin/ln, -vfs, '/opt/SaltGUI-1.17.0/saltgui', '/srv/saltgui']
+  - [/bin/rm, -f, "/opt/saltgui.tar.gz"]
+  # Start Saltstack
   - [/bin/systemctl, enable, salt-master]
   - [/bin/systemctl, enable, salt-minion]
   - [/bin/systemctl, enable, salt-api]

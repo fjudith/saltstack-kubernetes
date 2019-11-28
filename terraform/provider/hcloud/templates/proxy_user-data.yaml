@@ -5,7 +5,7 @@ groups:
   - cloud-users
   - salt
 
-user:
+users:
   - default
   - name: cloud
     gecos: Magic Cloud User
@@ -295,7 +295,7 @@ salt_minion:
 runcmd:
   # Install SaltGUI
   - [/usr/bin/curl, -o, "/opt/saltgui.tar.gz", -L, 'https://github.com/erwindon/SaltGUI/archive/1.17.0.tar.gz']
-  - [/bin/tar, -xvzf, "/opt/saltgui.tar.gz"]
+  - [/bin/tar, -xvzf, "/opt/saltgui.tar.gz", -C, '/opt/']
   - [/bin/ln, -vfs, '/opt/SaltGUI-1.17.0/saltgui', '/srv/saltgui']
   - [/bin/rm, -f, "/opt/saltgui.tar.gz"]
   # Start Saltstack

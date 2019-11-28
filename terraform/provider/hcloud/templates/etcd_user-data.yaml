@@ -5,7 +5,7 @@ groups:
   - cloud-users
   - salt
 
-user:
+users:
   - default
   - name: cloud
     gecos: Magic Cloud User

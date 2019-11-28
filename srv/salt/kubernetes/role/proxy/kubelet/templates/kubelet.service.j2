@@ -1,12 +1,6 @@
 {%- from "kubernetes/map.jinja" import common with context -%}
 {%- from "kubernetes/map.jinja" import master with context -%}
 {%- set hostname = salt['grains.get']('fqdn') -%}
-{%- set role = salt['grains.get']('role') -%}
-{% if role == "proxy" %}
-  {%- set node_labels = ",node-role.kubernetes.io/ingress=true" -%}
-{% else %}
-  {%- set node_labels = ",role=storage-node" -%}
-{% endif %}
 
 [Unit]
 Description=Kubernetes Kubelet
@@ -30,7 +24,7 @@ ExecStart=/usr/local/bin/kubelet \
   --hostname-override={{ hostname }} \
   --kubeconfig=/etc/kubernetes/kubelet.kubeconfig \
   --network-plugin=cni \
-  --node-labels="kubernetes.io/role=node,beta.kubernetes.io/fluentd-ds-ready=true{{ node_labels }}" \
+  --node-labels="kubernetes.io/role=node,beta.kubernetes.io/fluentd-ds-ready=true,node-role.kubernetes.io/ingress=true" \
   --volume-plugin-dir=/usr/libexec/kubernetes/kubelet-plugins/volume/exec \
   --register-with-taints=node-role.kubernetes.io/ingress=:NoSchedule \
   --v=2

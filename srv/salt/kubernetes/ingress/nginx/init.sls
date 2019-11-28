@@ -61,10 +61,27 @@
     - group: root
     - mode: 644
 
+nginx-ingress-namespace:
+  file.managed:
+    - name: /srv/kubernetes/manifests/nginx/namespace.yaml
+    - source: salt://kubernetes/ingress/nginx/files/namespace.yaml
+    - require:
+      - file: /srv/kubernetes/manifests/nginx
+    - user: root
+    - group: root
+    - mode: 644
+  cmd.run:
+    - runas: root
+    - watch:
+      - file: /srv/kubernetes/manifests/nginx/namespace.yaml
+    - name: |
+        kubectl apply -f /srv/kubernetes/manifests/nginx/namespace.yaml
+
 nginx-ingress-install:
   cmd.run:
     - watch:
       - file: /srv/kubernetes/manifests/nginx/values.yaml
+      - cmd: nginx-ingress-namespace
     - name: |
         helm repo update && \
         helm upgrade --install \

@@ -54,3 +54,10 @@ keycloak-ingress:
         - file: /srv/kubernetes/manifests/keycloak/keycloak-ingress.yaml
       - runas: root
       - name: kubectl apply -f /srv/kubernetes/manifests/keycloak/keycloak-ingress.yaml
+
+keycloak-wait-public-url:
+  http.wait_for_successful_query:
+    - name: "https://{{ charts.keycloak.ingress_host }}.{{ public_domain }}/auth/realms/master/"
+    - wait_for: 180
+    - request_interval: 5
+    - status: 200

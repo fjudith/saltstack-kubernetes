@@ -11,14 +11,15 @@
     - makedirs: True
 
 {% if charts.get('keycloak', {'enabled': False}).enabled %}
-{%- set keycloak_password = salt['cmd.shell']("kubectl get secret --namespace keycloak keycloak-http -o jsonpath='{.data.password}' | base64 --decode; echo") -%}
 
 concourse-wait-keycloak:
   http.wait_for_successful_query:
-    - name: "https://{{ charts.keycloak.ingress_host }}.{{ public_domain }}"
+    - name: "https://{{ charts.keycloak.ingress_host }}.{{ public_domain }}/auth/realms/{{ charts.concourse.oauth.keycloak.realm }}"
     - wait_for: 180
     - request_interval: 5
     - status: 200
+
+{%- set keycloak_password = salt['cmd.shell']("kubectl get secret --namespace keycloak keycloak-http -o jsonpath='{.data.password}' | base64 --decode; echo") -%}
 
 concourse-create-realm:
   file.managed:

@@ -13,9 +13,9 @@
 mailhog:
   cmd.run:
     - runas: root
-    - unless: helm list | grep mailhog
+    # - unless: helm list | grep mailhog
     - name: |
-        helm install --name mailhog --namespace mailhog \
+        helm upgrade --install mailhog --namespace mailhog \
             --set env.MH_HOSTNAME=mail.{{ public_domain }} \
             "stable/mailhog"
 

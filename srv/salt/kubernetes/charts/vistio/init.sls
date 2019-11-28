@@ -43,7 +43,7 @@ vistio:
     - unless: helm list | grep vistio
     - cwd: /srv/kubernetes/manifests/vistio
     - name: |
-        helm install --name vistio --namespace default \
+        helm upgrade --install vistio --namespace default \
           --values /srv/kubernetes/manifests/vistio-values.yaml \
           --set web.env.updateURL=https://{{ charts.vistio.ingress_host }}-api.{{ public_domain }}/graph \
           {%- if master.storage.get('rook_ceph', {'enabled': False}).enabled %}

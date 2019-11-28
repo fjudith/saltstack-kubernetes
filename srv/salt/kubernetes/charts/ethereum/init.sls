@@ -23,7 +23,7 @@ ethereum:
     - runas: root
     - unless: helm list | grep ethereum
     - name: |
-        helm install --name ethereum --namespace ethereum \
+        helm upgrade --install ethereum --namespace ethereum \
             --set geth.account.address="{{ charts.ethereum.address }}" \
             --set geth.account.privateKey="{{ charts.ethereum.private_key }}" \
             --set geth.account.secret="{{ charts.ethereum.secret }}" \

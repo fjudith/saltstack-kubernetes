@@ -15,13 +15,13 @@ users:
     sudo: ALL=(ALL) NOPASSWD:ALL
     ssh_authorized_keys:
       - key1
-  # - name: salt
-  #   gecos: Saltstack user
-  #   # groups: salt
-  #   lock_passwd: True
-  #   # openssl passwd -6 <text>
-  #   passwd: $6$rE0lkoq4kCK.gW3T$gLBR8SPUAqn0pUHTMxGYLHeWMqe.9hHARYcBwFJ0RmovHQ95TvPF6yWHnJNUEfKN/Wx4plRUnEEWwsVZJRySq0
-  #   shell: /bin/bash
+  - name: sysops
+    gecos: Sysops user
+    # groups: salt
+    lock_passwd: True
+    # openssl passwd -6 <text>
+    passwd: $6$rE0lkoq4kCK.gW3T$gLBR8SPUAqn0pUHTMxGYLHeWMqe.9hHARYcBwFJ0RmovHQ95TvPF6yWHnJNUEfKN/Wx4plRUnEEWwsVZJRySq0
+    shell: /bin/bash
 
 package_upgrade: true
 

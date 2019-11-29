@@ -3,7 +3,6 @@
 groups:
   - ubuntu: [root,sys]
   - cloud-users
-  - salt
 
 users:
   - default

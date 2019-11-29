@@ -27,8 +27,6 @@ concourse-namespace:
         kubectl apply -f /srv/kubernetes/manifests/concourse/namespace.yaml
 
 {% if charts.get('keycloak', {'enabled': False}).enabled %}
-# {%- set keycloak_password = salt['cmd.shell']("kubectl get secret --namespace keycloak keycloak-http -o jsonpath='{.data.password}' | base64 --decode; echo") -%}
-{%- set keycloak_password = {{ charts.keycloak.password }} -%}
 
 concourse-wait-keycloak:
   http.wait_for_successful_query:
@@ -56,7 +54,7 @@ concourse-create-realm:
     - env:
       - ACTION: "create-realm"
       - USERNAME: "keycloak"
-      - PASSWORD: "{{ keycloak_password }}"
+      - PASSWORD: "{{ charts.keycloak.password }}"
       - URL: "https://{{ charts.keycloak.ingress_host }}.{{ public_domain }}"
       - REALM: "{{ charts.concourse.oauth.keycloak.realm }}"
     - user: root
@@ -90,7 +88,7 @@ concourse-create-groups:
     - env:
       - ACTION: "create-groups"
       - USERNAME: "keycloak"
-      - PASSWORD: "{{ keycloak_password }}"
+      - PASSWORD: "{{ charts.keycloak.password }}"
       - URL: "https://{{ charts.keycloak.ingress_host }}.{{ public_domain }}"
       - REALM: "{{ charts.concourse.oauth.keycloak.realm }}"
     - watch:
@@ -118,7 +116,7 @@ concourse-create-client-scopes:
     - env:
       - ACTION: "create-client-scopes"
       - USERNAME: "keycloak"
-      - PASSWORD: "{{ keycloak_password }}"
+      - PASSWORD: "{{ charts.keycloak.password }}"
       - URL: "https://{{ charts.keycloak.ingress_host }}.{{ public_domain }}"
       - REALM: "{{ charts.concourse.oauth.keycloak.realm }}"
     - watch:
@@ -177,7 +175,7 @@ concourse-create-client:
     - env:
       - ACTION: "create-client"
       - USERNAME: "keycloak"
-      - PASSWORD: "{{ keycloak_password }}"
+      - PASSWORD: "{{ charts.keycloak.password }}"
       - URL: "https://{{ charts.keycloak.ingress_host }}.{{ public_domain }}"
       - REALM: "{{ charts.concourse.oauth.keycloak.realm }}"
     - watch:

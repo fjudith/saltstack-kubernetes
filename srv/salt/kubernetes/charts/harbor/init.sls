@@ -9,8 +9,6 @@
     - makedirs: True
 
 {% if charts.get('keycloak', {'enabled': False}).enabled %}
-# {%- set keycloak_password = salt['cmd.shell']("kubectl get secret --namespace keycloak keycloak-http -o jsonpath='{.data.password}' | base64 --decode; echo") -%}
-{%- set keycloak_password = {{ charts.keycloak.password }} -%}
 
 harbor-wait-keycloak:
   http.wait_for_successful_query:
@@ -38,7 +36,7 @@ harbor-create-realm:
     - env:
       - ACTION: "create-realm"
       - USERNAME: "keycloak"
-      - PASSWORD: "{{ keycloak_password }}"
+      - PASSWORD: "{{ charts.keycloak.password }}"
       - URL: "https://{{ charts.keycloak.ingress_host }}.{{ public_domain }}"
       - REALM: "{{ charts.harbor.oauth.keycloak.realm }}"
     - user: root
@@ -72,7 +70,7 @@ harbor-create-groups:
     - env:
       - ACTION: "create-groups"
       - USERNAME: "keycloak"
-      - PASSWORD: "{{ keycloak_password }}"
+      - PASSWORD: "{{ charts.keycloak.password }}"
       - URL: "https://{{ charts.keycloak.ingress_host }}.{{ public_domain }}"
       - REALM: "{{ charts.harbor.oauth.keycloak.realm }}"
     - watch:
@@ -100,7 +98,7 @@ harbor-create-client-scopes:
     - env:
       - ACTION: "create-client-scopes"
       - USERNAME: "keycloak"
-      - PASSWORD: "{{ keycloak_password }}"
+      - PASSWORD: "{{ charts.keycloak.password }}"
       - URL: "https://{{ charts.keycloak.ingress_host }}.{{ public_domain }}"
       - REALM: "{{ charts.harbor.oauth.keycloak.realm }}"
     - watch:
@@ -143,7 +141,7 @@ harbor-create-client:
     - env:
       - ACTION: "create-client"
       - USERNAME: "keycloak"
-      - PASSWORD: "{{ keycloak_password }}"
+      - PASSWORD: "{{ charts.keycloak.password }}"
       - URL: "https://{{ charts.keycloak.ingress_host }}.{{ public_domain }}"
       - REALM: "{{ charts.harbor.oauth.keycloak.realm }}"
     - watch:
@@ -161,6 +159,7 @@ harbor-create-client:
     - group: root
     - template: jinja
     - mode: 744
+
 {% endif %}
 
 harbor-namespace:
@@ -197,7 +196,7 @@ harbor-repo:
         helm repo add harbor https://helm.goharbor.io
 
 harbor-minio:
-    file.managed:
+  file.managed:
     - require:
       - file: /srv/kubernetes/manifests/harbor
     - name: /srv/kubernetes/manifests/harbor/object-store.yaml
@@ -246,4 +245,3 @@ harbor:
           --namespace harbor \
           --values /srv/kubernetes/manifests/harbor/values.yaml \
           harbor/harbor
-

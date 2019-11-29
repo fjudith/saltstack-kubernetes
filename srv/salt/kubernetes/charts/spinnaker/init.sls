@@ -20,8 +20,6 @@
     - mode: 644
 
 {% if charts.get('keycloak', {'enabled': False}).enabled %}
-# {%- set keycloak_password = salt['cmd.shell']("kubectl get secret --namespace keycloak keycloak-http -o jsonpath='{.data.password}' | base64 --decode; echo") -%}
-{%- set keycloak_password = {{ charts.keycloak.password }} -%}
 
 spinnaker-wait-keycloak:
   http.wait_for_successful_query:
@@ -49,7 +47,7 @@ spinnaker-create-realm:
     - env:
       - ACTION: "create-realm"
       - USERNAME: "keycloak"
-      - PASSWORD: "{{ keycloak_password }}"
+      - PASSWORD: "{{ charts.keycloak.password }}"
       - URL: "https://{{ charts.keycloak.ingress_host }}.{{ public_domain }}"
       - REALM: "{{ charts.spinnaker.oauth.keycloak.realm }}"
     - user: root
@@ -83,7 +81,7 @@ spinnaker-create-groups:
     - env:
       - ACTION: "create-groups"
       - USERNAME: "keycloak"
-      - PASSWORD: "{{ keycloak_password }}"
+      - PASSWORD: "{{ charts.keycloak.password }}"
       - URL: "https://{{ charts.keycloak.ingress_host }}.{{ public_domain }}"
       - REALM: "{{ charts.spinnaker.oauth.keycloak.realm }}"
     - watch:
@@ -111,7 +109,7 @@ spinnaker-create-client-scopes:
     - env:
       - ACTION: "create-client-scopes"
       - USERNAME: "keycloak"
-      - PASSWORD: "{{ keycloak_password }}"
+      - PASSWORD: "{{ charts.keycloak.password }}"
       - URL: "https://{{ charts.keycloak.ingress_host }}.{{ public_domain }}"
       - REALM: "{{ charts.spinnaker.oauth.keycloak.realm }}"
     - watch:
@@ -154,7 +152,7 @@ spinnaker-create-client:
     - env:
       - ACTION: "create-client"
       - USERNAME: "keycloak"
-      - PASSWORD: "{{ keycloak_password }}"
+      - PASSWORD: "{{ charts.keycloak.password }}"
       - URL: "https://{{ charts.keycloak.ingress_host }}.{{ public_domain }}"
       - REALM: "{{ charts.spinnaker.oauth.keycloak.realm }}"
     - watch:

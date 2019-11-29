@@ -10,7 +10,24 @@
     - dir_mode: 750
     - makedirs: True
 
+concourse-namespace:
+  file.managed:
+    - require:
+      - file: /srv/kubernetes/manifests/concourse
+    - name: /srv/kubernetes/manifests/concourse/namespace.yaml
+    - source: salt://kubernetes/charts/concourse/files/namespace.yaml
+    - user: root
+    - group: root
+    - mode: 644
+  cmd.run:
+    - runas: root
+    - watch:
+      - file: /srv/kubernetes/manifests/concourse/namespace.yaml
+    - name: |
+        kubectl apply -f /srv/kubernetes/manifests/concourse/namespace.yaml
+
 {% if charts.get('keycloak', {'enabled': False}).enabled %}
+{%- set keycloak_password = salt['cmd.shell']("kubectl get secret --namespace keycloak keycloak-http -o jsonpath='{.data.password}' | base64 --decode; echo") -%}
 
 concourse-wait-keycloak:
   http.wait_for_successful_query:
@@ -18,8 +35,6 @@ concourse-wait-keycloak:
     - wait_for: 180
     - request_interval: 5
     - status: 200
-
-{%- set keycloak_password = salt['cmd.shell']("kubectl get secret --namespace keycloak keycloak-http -o jsonpath='{.data.password}' | base64 --decode; echo") -%}
 
 concourse-create-realm:
   file.managed:
@@ -212,19 +227,11 @@ concourse-create-client:
     - dir_mode: 750
     - makedirs: True
 
-/srv/kubernetes/manifests/concourse-ingress.yaml:
-  file.managed:
-    - source: salt://kubernetes/charts/concourse/templates/ingress.yaml.j2
-    - user: root
-    - template: jinja
-    - group: root
-    - mode: 644
-
 concourse:
   cmd.run:
     - watch:
       - file: /srv/kubernetes/manifests/concourse
-      - file: /srv/kubernetes/manifests/concourse-ingress.yaml
+      - cmd: concourse-namespace
     - runas: root
     - name: |
         helm upgrade --install concourse --namespace concourse \
@@ -239,9 +246,17 @@ concourse:
             "stable/concourse"
             
 concourse-ingress:
-    cmd.run:
-      - require:
-        - cmd: concourse
-      - runas: root
-      - name: kubectl apply -f /srv/kubernetes/manifests/concourse-ingress.yaml
+  file.managed:
+    - name: /srv/kubernetes/manifests/concourse-ingress.yaml
+    - source: salt://kubernetes/charts/concourse/templates/ingress.yaml.j2
+    - user: root
+    - template: jinja
+    - group: root
+    - mode: 644
+  cmd.run:
+    - watch:
+      - file: /srv/kubernetes/manifests/concourse-ingress.yaml
+      - cmd: concourse-namespace
+    - runas: root
+    - name: kubectl apply -f /srv/kubernetes/manifests/concourse-ingress.yaml
     

@@ -178,8 +178,8 @@ kubernetes:
       password: C0nC0urs3
       db_password: V3ry1ns3sur3P4ssw0rd
       db_size: 8Gi
-      version: 5.7.0
-      source_hash: 5897cdd75f7ca2b0edace95eb088ec5585575d28
+      version: 5.7.1
+      source_hash: ca942b23bb09c434fcdfd7358a7997972ff6c1f5
       ingress_host: concourse
       oauth:
         provider: keycloak
@@ -188,6 +188,7 @@ kubernetes:
     keycloak:
       enabled: True
       version: 7.0.1
+      password: V3ry1ns3sur3P4ssw0rd
       db_size: 8Gi
       ingress_host: keycloak
     mailhog:

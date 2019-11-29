@@ -9,6 +9,7 @@
     - makedirs: True
 
 {% if charts.get('keycloak', {'enabled': False}).enabled %}
+{%- set keycloak_password = salt['cmd.shell']("kubectl get secret --namespace keycloak keycloak-http -o jsonpath='{.data.password}' | base64 --decode; echo") -%}
 
 harbor-wait-keycloak:
   http.wait_for_successful_query:
@@ -16,8 +17,6 @@ harbor-wait-keycloak:
     - wait_for: 180
     - request_interval: 5
     - status: 200
-
-{%- set keycloak_password = salt['cmd.shell']("kubectl get secret --namespace keycloak keycloak-http -o jsonpath='{.data.password}' | base64 --decode; echo") -%}
 
 harbor-create-realm:
   file.managed:
@@ -163,14 +162,21 @@ harbor-create-client:
     - mode: 744
 {% endif %}
 
-/srv/kubernetes/manifests/harbor/namespace.yaml:
-    file.managed:
+harbor-namespace:
+  file.managed:
     - require:
       - file: /srv/kubernetes/manifests/harbor
+    - name: /srv/kubernetes/manifests/harbor/namespace.yaml
     - source: salt://kubernetes/charts/harbor/files/namespace.yaml
     - user: root
     - group: root
     - mode: 644
+  cmd.run:
+    - runas: root
+    - watch:
+      - file: /srv/kubernetes/manifests/harbor/namespace.yaml
+    - name: |
+        kubectl apply -f /srv/kubernetes/manifests/harbor/namespace.yaml
 
 /srv/kubernetes/manifests/harbor/values.yaml:
     file.managed:
@@ -182,30 +188,12 @@ harbor-create-client:
     - group: root
     - mode: 644
 
-/srv/kubernetes/manifests/harbor/ingress.yaml:
-    file.managed:
-    - require:
-      - file: /srv/kubernetes/manifests/harbor
-    - source: salt://kubernetes/charts/harbor/templates/ingress.yaml.j2
-    - template: jinja
-    - user: root
-    - group: root
-    - mode: 644
-
 harbor-repo:
   cmd.run:
     - runas: root
     - use_vt: true
     - name: |
         helm repo add harbor https://helm.goharbor.io
-
-harbor-namespace:
-  cmd.run:
-    - runas: root
-    - watch:
-      - file: /srv/kubernetes/manifests/harbor/namespace.yaml
-    - name: |
-        kubectl apply -f /srv/kubernetes/manifests/harbor/namespace.yaml
 
 /srv/kubernetes/manifests/harbor/object-store.yaml:
     file.managed:
@@ -226,13 +214,22 @@ harbor-minio:
         kubectl apply -f /srv/kubernetes/manifests/harbor/object-store.yaml
 
 harbor-minio-ingress:
-    cmd.run:
-      - require:
-        - cmd: harbor
-      - watch:
-        - file: /srv/kubernetes/manifests/harbor/ingress.yaml
-      - runas: root
-      - name: kubectl apply -f /srv/kubernetes/manifests/harbor/ingress.yaml
+  file.managed:
+    - require:
+      - file: /srv/kubernetes/manifests/harbor
+    - name: /srv/kubernetes/manifests/harbor/ingress.yaml
+    - source: salt://kubernetes/charts/harbor/templates/ingress.yaml.j2
+    - template: jinja
+    - user: root
+    - group: root
+    - mode: 644
+  cmd.run:
+    - require:
+      - cmd: harbor
+    - watch:
+      - file: /srv/kubernetes/manifests/harbor/ingress.yaml
+    - runas: root
+    - name: kubectl apply -f /srv/kubernetes/manifests/harbor/ingress.yaml
 
 harbor:
   cmd.run:

@@ -174,14 +174,14 @@ function create-client-kubernetes {
   "Authorization: Bearer ${TOKEN}" | jq -M -e -r .credentials.secret)
 
   # Deploy the gateway in the `kube-system` namespace
-  helm template /srv/kubernetes/charts/incubator/keycloak-gatekeeper \
-    --name kubernetes-dashboard \
+  helm upgrade --install kubernetes-dashboard \
     --namespace kubernetes-dashboard \
     --set discoveryUrl=${URL}/auth/realms/${REALM} \
     --set clientId=kubernetes \
     --set clientSecret=${CLIENT_SECRET} \
     --set redirectionUrl=${REDIRECTURL} \
-    --set upstreamUrl=https://kubernetes-dashboard.kubernetes-dashboard | kubectl apply -n kubernetes-dashboard -f -
+    --set upstreamUrl=https://kubernetes-dashboard.kubernetes-dashboard \
+    /srv/kubernetes/charts/incubator/keycloak-gatekeeper
   
   # Bind Keycloak authenticated users with the appropriate Kubernetes role.
   kubectl apply -f ./files/keycloak-kubernetes-rbac.yaml
@@ -273,14 +273,14 @@ function create-client-weave-scope {
   "Authorization: Bearer ${TOKEN}" | jq -M -e -r .credentials.secret)
 
   # Deploy the gateway in the `kube-system` namespace
-  helm template /srv/kubernetes/charts/incubator/keycloak-gatekeeper \
-    --name weave-scope-app \
+  helm upgrade --install weave-scope-app \
     --namespace weave \
     --set discoveryUrl=${URL}/auth/realms/${REALM} \
     --set clientId=weave-scope \
     --set clientSecret=${CLIENT_SECRET} \
     --set redirectionUrl=${REDIRECTURL} \
-    --set upstreamUrl=http://weave-scope-app.weave | kubectl apply -n weave -f -
+    --set upstreamUrl=http://weave-scope-app.weave \
+    /srv/kubernetes/charts/incubator/keycloak-gatekeeper
 
   # Update the ingress to point to the `keycloak-gatekeeper`.
   kubectl patch ingress -n weave weave-scope --type json \
@@ -369,14 +369,15 @@ function create-client-alertmanager {
   "Authorization: Bearer ${TOKEN}" | jq -M -e -r .credentials.secret)
 
   # Deploy the gateway in the `kube-system` namespace
-  helm template /srv/kubernetes/charts/incubator/keycloak-gatekeeper \
-    --name alertmanager \
+  
+  helm upgrade --install alertmanager \
     --namespace monitoring \
     --set discoveryUrl=${URL}/auth/realms/${REALM} \
     --set clientId=alertmanager \
     --set clientSecret=${CLIENT_SECRET} \
     --set redirectionUrl=${REDIRECTURL} \
-    --set upstreamUrl=http://alertmanager-main.monitoring:9093 | kubectl apply -n monitoring -f -
+    --set upstreamUrl=http://alertmanager-main.monitoring:9093 \
+    /srv/kubernetes/charts/incubator/keycloak-gatekeeper
 
   # Update the ingress to point to the `keycloak-gatekeeper`.
   kubectl patch ingress -n monitoring alertmanager --type json \
@@ -465,14 +466,15 @@ function create-client-prometheus {
   "Authorization: Bearer ${TOKEN}" | jq -M -e -r .credentials.secret)
 
   # Deploy the gateway in the `kube-system` namespace
-  helm template /srv/kubernetes/charts/incubator/keycloak-gatekeeper \
-    --name prometheus \
+  
+  helm upgrade --install prometheus \
     --namespace monitoring \
     --set discoveryUrl=${URL}/auth/realms/${REALM} \
     --set clientId=prometheus \
     --set clientSecret=${CLIENT_SECRET} \
     --set redirectionUrl=${REDIRECTURL} \
-    --set upstreamUrl=http://prometheus-k8s.monitoring:9090 | kubectl apply -n monitoring -f -
+    --set upstreamUrl=http://prometheus-k8s.monitoring:9090 \
+    /srv/kubernetes/charts/incubator/keycloak-gatekeeper
 
   # Update the ingress to point to the `keycloak-gatekeeper`.
   kubectl patch ingress -n monitoring prometheus --type json \
@@ -561,14 +563,14 @@ function create-client-rook-ceph {
   "Authorization: Bearer ${TOKEN}" | jq -M -e -r .credentials.secret)
 
   # Deploy the gateway in the `kube-system` namespace
-  helm template /srv/kubernetes/charts/incubator/keycloak-gatekeeper \
-    --name rook-ceph-mgr-dashboard \
+  helm upgrade --install rook-ceph-mgr-dashboard \
     --namespace rook-ceph \
     --set discoveryUrl=${URL}/auth/realms/${REALM} \
     --set clientId=rook-ceph \
     --set clientSecret=${CLIENT_SECRET} \
     --set redirectionUrl=${REDIRECTURL} \
-    --set upstreamUrl=https://rook-ceph-mgr-dashboard.rook-ceph:8443 | kubectl apply -n rook-ceph -f -
+    --set upstreamUrl=https://rook-ceph-mgr-dashboard.rook-ceph:8443 \
+    /srv/kubernetes/charts/incubator/keycloak-gatekeeper
 
   # Update the ingress to point to the `keycloak-gatekeeper`.
   kubectl patch ingress -n rook-ceph rook-ceph-mgr-dashboard --type json \

@@ -69,7 +69,7 @@ istio-cni:
       - git: istio-cni-repo
     - name: |
         helm template deployments/kubernetes/install/helm/istio-cni \
-          --name istio-cni \
+          istio-cni \
           --namespace kube-system | kubectl apply -f -
 
 istio-init:
@@ -81,7 +81,7 @@ istio-init:
       - archive: /srv/kubernetes/manifests/istio
     - name: |       
         helm template install/kubernetes/helm/istio-init \
-          --name istio-init \
+          istio-init \
           --namespace istio-system | kubectl apply -f -
 
 istio:
@@ -92,7 +92,7 @@ istio:
       - archive: /srv/kubernetes/manifests/istio
     - name: |       
         helm template install/kubernetes/helm/istio \
-          --name istio \
+          istio \
           --namespace istio-system \
           -f install/kubernetes/helm/istio/values-istio-demo.yaml \
           --set tracing.enabled=true \

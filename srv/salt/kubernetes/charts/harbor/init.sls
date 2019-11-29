@@ -195,17 +195,16 @@ harbor-repo:
     - name: |
         helm repo add harbor https://helm.goharbor.io
 
-/srv/kubernetes/manifests/harbor/object-store.yaml:
+harbor-minio:
     file.managed:
     - require:
       - file: /srv/kubernetes/manifests/harbor
+    - name: /srv/kubernetes/manifests/harbor/object-store.yaml
     - source: salt://kubernetes/charts/harbor/templates/object-store.yaml.j2
     - template: jinja
     - user: root
     - group: root
     - mode: 644
-
-harbor-minio:
   cmd.run:
     - runas: root
     - watch:

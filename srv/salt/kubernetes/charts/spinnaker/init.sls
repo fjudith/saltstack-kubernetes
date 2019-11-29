@@ -20,7 +20,8 @@
     - mode: 644
 
 {% if charts.get('keycloak', {'enabled': False}).enabled %}
-{%- set keycloak_password = salt['cmd.shell']("kubectl get secret --namespace keycloak keycloak-http -o jsonpath='{.data.password}' | base64 --decode; echo") -%}
+# {%- set keycloak_password = salt['cmd.shell']("kubectl get secret --namespace keycloak keycloak-http -o jsonpath='{.data.password}' | base64 --decode; echo") -%}
+{%- set keycloak_password = {{ charts.keycloak.password }} -%}
 
 spinnaker-wait-keycloak:
   http.wait_for_successful_query:

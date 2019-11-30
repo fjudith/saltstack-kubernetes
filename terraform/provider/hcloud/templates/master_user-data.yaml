@@ -208,6 +208,11 @@ salt_minion:
     master: ${SALT_MASTER_HOST}
     use_superseded:
       - module.run
+    mine_functions:
+      test.ping: []
+      network.ipaddrs:
+        interface: wg0
+      network.get_hostname: []
   grains:
     role:
        - master

@@ -286,6 +286,11 @@ salt_minion:
     timeout: 30
     use_superseded:
       - module.run
+    mine_functions:
+      test.ping: []
+      network.ipaddrs:
+        interface: wg0
+      network.get_hostname: []
   grains:
     role:
        - proxy

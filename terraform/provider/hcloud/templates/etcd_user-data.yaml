@@ -164,6 +164,7 @@ salt_minion:
       network.ip_addrs:
         interface: wg0
       network.get_hostname: []
+    mine_interval: 5
   grains:
     role:
        - etcd

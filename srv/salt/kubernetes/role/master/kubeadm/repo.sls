@@ -1,4 +1,8 @@
-{%- from "kubernetes/role/master/kubeadm/map.jinja" import kubeadm with context %}
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{%- from tpldir ~ "/map.jinja" import kubeadm with context %}
 
 {% set repoState = 'absent' %}
 {% if kubeadm.enabled %}

@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # vim: ft=jinja
 
-{%- from "kubernetes/role/master/kubeadm/map.jinja" import kubeadm with context %}
+{#- Get the `tplroot` from `tpldir` #}
+{%- from tpldir ~ "/map.jinja" import kubeadm with context %}
 
 include:
   - kubernetes.role.master.kubeadm.osprep

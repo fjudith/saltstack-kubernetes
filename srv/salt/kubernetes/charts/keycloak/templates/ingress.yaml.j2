@@ -22,7 +22,7 @@ metadata:
     {%- endif %}
 spec:
   rules:
-  - host: {{ charts.keycloak.ingress_host }}.{{ public_domain }}
+  - host: {{ charts.keycloak.ingressHost }}.{{ public_domain }}
     http:
       paths:
       - path: /
@@ -33,6 +33,6 @@ spec:
   tls:
   - secretName: keycloak-prod-cert
     hosts:
-    - {{ charts.keycloak.ingress_host }}.{{ public_domain }}
+    - {{ charts.keycloak.ingressHost }}.{{ public_domain }}
   {%- endif %}
 ---

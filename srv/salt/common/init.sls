@@ -1,15 +1,8 @@
 
 
+{%- from "kubernetes/role/master/kubeadm/map.jinja" import common with context -%}
 {%- from "kubernetes/map.jinja" import common with context -%}
 {%- from "kubernetes/map.jinja" import master with context -%}
-
-/usr/bin/kubectl:
-  file.managed:
-    - source: https://storage.googleapis.com/kubernetes-release/release/{{ common.version }}/bin/linux/amd64/kubectl
-    - skip_verify: true
-    - show_changes: False
-    - group: root
-    - mode: 755
 
 azure-cli:
   pkgrepo.managed:

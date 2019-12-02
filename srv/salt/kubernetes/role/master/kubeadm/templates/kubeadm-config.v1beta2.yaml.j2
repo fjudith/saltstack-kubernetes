@@ -1,0 +1,175 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{%- set hostname = salt['grains.get']('fqdn') -%}
+{%- set public_domain = pillar['public-domain'] -%}
+{%- set clusterHost = pillar['cluster-host'] -%}
+{%- set controlPlaneInterface = pillar['controlPlaneInterface'] -%}
+{%- set localIpAddress = salt['network.ip_addrs'](controlPlaneInterface) -%}
+{%- from "kubernetes/role/master/kubeadm/map.jinja" import kubeadm with context %}
+{%- from "kubernetes/map.jinja" import charts with context -%}
+
+{%- set apiserverCount = [] -%}
+{%- for hostname in salt['mine.get'](tgt='role:master', fun='network.get_hostname', tgt_type='grain') -%}
+  {%- do apiserverCount.append(hostname) -%}
+{%- endfor -%}
+
+{%- if apiserverCount|length == 1 -%}
+  {%- set controlPlaneAddress = localIpAddress  -%}
+{%- else-%}
+  {%- set controlPlaneAddress = clusterHost ~ '.' ~ public_domain -%}
+{% endif %}
+
+apiVersion: kubeadm.k8s.io/v1beta2
+kind: InitConfiguration
+bootstrapTokens:
+- token: "{{ kubeadm.token }}"
+  description: "kubeadm bootstrap token"
+  ttl: "24h"
+- token: "{{ kubeadm.nodeToken }}"
+  description: "Node bootstrap token"
+  usages:
+  - authentication
+  - signing
+  groups:
+  - system:bootstrappers:kubeadm:default-node-token
+
+nodeRegistration:
+  name: "{{ hostname }}"
+  criSocket: "{{ kubeadm.criSocket }}"
+  {%- if "master" in grains.get('role', []) %}
+  taints:
+  - key: "node-role.kubernetes.io/master"
+    effect: "NoSchedule"
+  {%- else %}
+  taints: []
+  {%- endif %}
+  kubeletExtraArgs:
+    cgroup-driver: "{{ kubeadm.cgroupDriver }}"
+  ignorePreflightErrors:
+  {% for item in kubeadm.ignorePreflightErrors %}
+      - {{ item }}
+  {% endfor %}
+localAPIEndpoint:
+  advertiseAddress: "{{ localIpAddress[0] }}"
+  bindPort: {{ kubeadm.bindPort }}
+certificateKey: "{{ kubeadm.certificateKey }}"
+---
+apiVersion: kubeadm.k8s.io/v1beta2
+kind: ClusterConfiguration
+etcd:
+  {%- if kubeadm.etcd.local %}
+  # one of local or external
+  local:
+    imageRepository: "{{ kubeadm.etcd.imageRepository }}"
+    imageTag: "{{ kubeadm.etcd.imageTag }}"
+    dataDir: "{{ kubeadm.etcd.datadir }}"
+    extraArgs:
+      {# listen-client-urls: "https://{{ localIpAddress[0] }}:{{ kubeadm.etcd.port }}" #}
+    serverCertSANs:
+      {%- for hostname in salt['mine.get'](tgt='role:master', fun='network.get_hostname', tgt_type='grain') %}
+      - "{{ hostname }}"
+      {%- endfor %}
+      {%- for server, addrs in salt['mine.get'](tgt='role:master', fun='network.ip_addrs', tgt_type='grain').items() %}
+      - "{{ addrs[0] }}"
+      {%- endfor %}
+    peerCertSANs:
+      {%- for hostname in salt['mine.get'](tgt='role:master', fun='network.get_hostname', tgt_type='grain') %}
+      - "{{ hostname }}"
+      {%- endfor %}
+      {%- for server, addrs in salt['mine.get'](tgt='role:master', fun='network.ip_addrs', tgt_type='grain').items() %}
+      - "{{ addrs[0] }}"
+      {%- endfor %}
+  {%- else -%}
+  external:
+    endpoints:
+      {%- for server, addrs in salt['mine.get'](tgt='role:etcd', fun='network.ip_addrs', tgt_type='grain').items() %}
+      - "{{ addrs[0] }}:{{ kubeadm.etcd.port }}"
+      {%- endfor %}
+    caFile: "/etcd/kubernetes/pki/etcd/etcd-ca.crt"
+    certFile: "/etcd/kubernetes/pki/etcd/etcd.crt"
+    keyFile: "/etcd/kubernetes/pki/etcd/etcd.key"
+  {%- endif %}
+networking:
+  serviceSubnet: "{{ kubeadm.networking.serviceSubnet }}"
+  podSubnet: "{{ kubeadm.networking.podSubnet }}"
+  dnsDomain: "{{ kubeadm.networking.dnsDomain }}"
+kubernetesVersion: "{{ kubeadm.kubernetesVersion }}"
+controlPlaneEndpoint: "{{ controlPlaneAddress ~ ':' ~ kubeadm.bindPort }}"
+apiServer:
+  extraArgs:
+    apiserver-count: "{{ apiserverCount|length }}"
+    {%- if charts.get('keycloak', {'enabled': False}).enabled %}
+    oidc-client-id: "kubernetes"
+    oidc-groups-claim: "groups"
+    oidc-issuer-url: "https://{{ charts.keycloak.ingressHost }}.{{ public_domain }}/auth/realms/default"
+    oidc-username-prefix: ""
+    oidc-groups-prefix: "kubernetes-"
+    {%- endif %}
+    {%- for argument, value in (kubeadm.apiServer.extraArgs).items() %}
+    {{ argument }}: "{{ value }}"
+    {%- endfor %}
+    audit-log-path: /var/log/audit/kube-apiserver-audit.log
+    encryption-provider-config: /etc/kubernetes/pki/encryption-config.yaml
+  extraVolumes:
+  - name: "audit-policy"
+    hostPath: "/etc/kubernetes/audit-policy/kube-apiserver-audit-policy.yaml"
+    mountPath: "/etc/kubernetes/audit-policy/kube-apiserver-audit-policy.yaml"
+    readOnly: true
+  - name: "audit-log"
+    hostPath: "/var/log/kubernetes/audit"
+    mountPath: "/var/log/kubernetes/audit"
+    readOnly: false
+  certSANs:
+    {%- if apiserverCount|length > 1 %}
+    - "{{ controlPlaneAddress }}"
+    {%- endif %}
+    {%- for hostname in salt['mine.get'](tgt='role:master', fun='network.get_hostname', tgt_type='grain') %}
+    - "{{ hostname }}"
+    {%- endfor %}
+    {%- for server, addrs in salt['mine.get'](tgt='role:master', fun='network.ip_addrs', tgt_type='grain').items() %}
+    - "{{ addrs[0] }}"
+    {%- endfor %}
+    - "localhost"
+    - "127.0.0.1"
+  timeoutForControlPlane: {{ kubeadm.apiServer.timeoutForControlPlane }}
+controllerManager:
+  extraArgs:
+    {%- for argument, value in (kubeadm.controllerManager.extraArgs).items() %}
+    {{ argument }}: "{{ value }}"
+    {%- endfor %}
+  {# extraVolumes:
+  - name: "some-volume"
+    hostPath: "/etc/some-path"
+    mountPath: "/etc/some-pod-path"
+    readOnly: false
+    pathType: File #}
+scheduler:
+  extraArgs:
+    {%- for argument, value in (kubeadm.scheduler.extraArgs).items() %}
+    {{ argument }}: "{{ value }}"
+    {%- endfor %}
+{# extraVolumes:
+- name: "some-volume"
+  hostPath: "/etc/some-path"
+  mountPath: "/etc/some-pod-path"
+  readOnly: false
+  pathType: File #}
+certificatesDir: "{{ kubeadm.certificatesDir }}"
+imageRepository: "{{ kubeadm.imageRepository }}"
+useHyperKubeImage: {{ kubeadm.useHyperKubeImage }}
+clusterName: "{{ kubeadm.clusterName }}"
+dns:
+  type: {{ kubeadm.dns.type | regex_replace('/coredns$','') }}
+  imageRepository: {{ kubeadm.dns.imageRepository }}
+  imageTag: {{ kubeadm.dns.imageTag }}
+---
+apiVersion: kubelet.config.k8s.io/v1beta1
+kind: KubeletConfiguration
+clusterDNS:
+  - "{{ kubeadm.clusterDNSIP }}"
+---
+apiVersion: kubeproxy.config.k8s.io/v1alpha1
+kind: KubeProxyConfiguration
+# kube-proxy specific options here
+---

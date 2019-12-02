@@ -67,7 +67,7 @@ ExecStart=/usr/local/bin/kube-apiserver \
     {%- if charts.get('keycloak', {'enabled': False}).enabled %}
     --oidc-client-id=kubernetes \
     --oidc-groups-claim=groups \
-    --oidc-issuer-url=https://{{ charts.keycloak.ingress_host }}.{{ public_domain }}/auth/realms/default \
+    --oidc-issuer-url=https://{{ charts.keycloak.ingressHost }}.{{ public_domain }}/auth/realms/default \
     {%- endif %}
     --v=2
 Restart=on-failure

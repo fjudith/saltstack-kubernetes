@@ -74,7 +74,7 @@ keycloak-ingress:
 
 keycloak-wait-public-url:
   http.wait_for_successful_query:
-    - name: "https://{{ charts.keycloak.ingress_host }}.{{ public_domain }}/auth/realms/master/"
+    - name: "https://{{ charts.keycloak.ingressHost }}.{{ public_domain }}/auth/realms/master/"
     - wait_for: 180
     - request_interval: 5
     - status: 200

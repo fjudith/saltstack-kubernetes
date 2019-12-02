@@ -1,0 +1,39 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{%- set hostname = salt['grains.get']('fqdn') -%}
+{%- set public_domain = pillar['public-domain'] -%}
+{%- set clusterHost = pillar['cluster-host'] -%}
+{%- set controlPlaneInterface = pillar['controlPlaneInterface'] -%}
+{%- set localIpAddress = salt['network.ip_addrs'](controlPlaneInterface) -%}
+{%- from "kubernetes/role/master/kubeadm/map.jinja" import kubeadm with context %}
+{%- from "kubernetes/map.jinja" import charts with context -%}
+
+{%- set apiserverCount = [] -%}
+{%- for hostname in salt['mine.get'](tgt='role:master', fun='network.get_hostname', tgt_type='grain')-%}
+  {%- do apiserverCount.append(hostname) -%}
+{%- endfor -%}
+
+{%- if apiserverCount|length == 1 -%}
+  {%- set controlPlaneAddress = localIpAddress  -%}
+{%- else-%}
+  {%- set controlPlaneAddress = clusterHost ~ '.' ~ public_domain -%}
+{% endif %}
+
+apiVersion: kubeadm.k8s.io/v1beta2
+kind: JoinConfiguration
+discovery:
+  bootstrapToken:
+    apiServerEndpoint: "{{ controlPlaneAddress ~ ':' ~ kubeadm.bindPort }}"
+    token: "{{ kubeadm.token }}"
+    unsafeSkipCAVerification: True
+  timeout: "{{ kubeadm.apiServer.timeoutForControlPlane }}"
+  tlsBootstrapToken: "{{ kubeadm.token }}"
+controlPlane:
+  localAPIEndpoint:
+    advertiseAddress: "{{ localIpAddress[0] }}"
+    bindPort: {{ kubeadm.bindPort }}
+  certificateKey: "{{ kubeadm.certificateKey }}"
+nodeRegistration:
+  name: "{{ hostname }}"
+  criSocket: "{{ kubeadm.criSocket }}"

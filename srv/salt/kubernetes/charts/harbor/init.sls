@@ -12,7 +12,7 @@
 
 harbor-wait-keycloak:
   http.wait_for_successful_query:
-    - name: "https://{{ charts.keycloak.ingress_host }}.{{ public_domain }}/auth/realms/{{ charts.harbor.oauth.keycloak.realm }}/"
+    - name: "https://{{ charts.keycloak.ingressHost }}.{{ public_domain }}/auth/realms/{{ charts.harbor.oauth.keycloak.realm }}/"
     - wait_for: 180
     - request_interval: 5
     - status: 200
@@ -37,7 +37,7 @@ harbor-create-realm:
       - ACTION: "create-realm"
       - USERNAME: "keycloak"
       - PASSWORD: "{{ charts.keycloak.password }}"
-      - URL: "https://{{ charts.keycloak.ingress_host }}.{{ public_domain }}"
+      - URL: "https://{{ charts.keycloak.ingressHost }}.{{ public_domain }}"
       - REALM: "{{ charts.harbor.oauth.keycloak.realm }}"
     - user: root
     - group: root
@@ -71,7 +71,7 @@ harbor-create-groups:
       - ACTION: "create-groups"
       - USERNAME: "keycloak"
       - PASSWORD: "{{ charts.keycloak.password }}"
-      - URL: "https://{{ charts.keycloak.ingress_host }}.{{ public_domain }}"
+      - URL: "https://{{ charts.keycloak.ingressHost }}.{{ public_domain }}"
       - REALM: "{{ charts.harbor.oauth.keycloak.realm }}"
     - watch:
       - file: /srv/kubernetes/manifests/harbor/admins-group.json
@@ -99,7 +99,7 @@ harbor-create-client-scopes:
       - ACTION: "create-client-scopes"
       - USERNAME: "keycloak"
       - PASSWORD: "{{ charts.keycloak.password }}"
-      - URL: "https://{{ charts.keycloak.ingress_host }}.{{ public_domain }}"
+      - URL: "https://{{ charts.keycloak.ingressHost }}.{{ public_domain }}"
       - REALM: "{{ charts.harbor.oauth.keycloak.realm }}"
     - watch:
       - file: /srv/kubernetes/manifests/harbor/client-scopes.json
@@ -142,7 +142,7 @@ harbor-create-client:
       - ACTION: "create-client"
       - USERNAME: "keycloak"
       - PASSWORD: "{{ charts.keycloak.password }}"
-      - URL: "https://{{ charts.keycloak.ingress_host }}.{{ public_domain }}"
+      - URL: "https://{{ charts.keycloak.ingressHost }}.{{ public_domain }}"
       - REALM: "{{ charts.harbor.oauth.keycloak.realm }}"
     - watch:
       - file: /srv/kubernetes/manifests/harbor/protocolmapper.json

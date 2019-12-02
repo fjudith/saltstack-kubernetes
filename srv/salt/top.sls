@@ -50,7 +50,6 @@ base:
     - haproxy
     - common
     - kubernetes.cri.docker
-    - kubernetes.role.master.kubeadm
   {% endif %}
   {% if "node" in grains.get('role', []) %}
     - common

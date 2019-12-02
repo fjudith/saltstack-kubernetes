@@ -159,15 +159,15 @@ salt_minion:
     master: ${SALT_MASTER_HOST}
     use_superseded:
       - module.run
+    mine_functions:
+      test.ping: []
+      network.ip_addrs:
+        interface: wg0
+      network.get_hostname: []
+    mine_interval: 5
   grains:
     role:
        - etcd
-  mine_functions:
-    test.ping: []
-    network.ip_addrs:
-      interface: wg0
-    network.get_hostname: []
-  mine_interval: 5
 
 runcmd:
   # Enable SSHd

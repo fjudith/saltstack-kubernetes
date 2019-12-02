@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
 
 {%- from "kubernetes/role/master/kubeadm/map.jinja" import kubeadm with context %}
 

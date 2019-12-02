@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 # vim: ft=jinja
 
-{#- Get the `tplroot` from `tpldir` #}
-{%- from tpldir ~ "/map.jinja" import kubeadm with context %}
+{%- from "kubernetes/role/master/kubeadm/map.jinja" import kubeadm with context %}
 
 include:
   - kubernetes.role.master.kubeadm.osprep
@@ -10,6 +9,16 @@ include:
   - kubernetes.role.master.kubeadm.install
   - kubernetes.role.master.kubeadm.audit-policy
   - kubernetes.role.master.kubeadm.encryption
+
+kubeadm-reset:
+  cmd.run:
+    - only_if: ls /etc/kubernetes/manifests/kube-apiserver.yaml
+    - require:
+      - pkg: kubeadm
+    - timeout: 600
+    - name: |
+        /usr/bin/kubeadm reset -f --cert-dir /etc/kubernetes/pki      
+
 
 kubeadm-join:
   file.managed:
@@ -22,6 +31,7 @@ kubeadm-join:
   cmd.run:
     - watch: 
       - file: /root/kubeadm-controlplane.yaml
+      - cmd: kubeadm-reset
     - require:
       - pkg: kubelet
       - pkg: kubectl

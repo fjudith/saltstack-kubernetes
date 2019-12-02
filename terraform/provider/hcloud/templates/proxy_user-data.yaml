@@ -289,7 +289,11 @@ salt_minion:
   grains:
     role:
        - proxy
-
+  mine_functions:
+    test.ping: []
+    network.ip_addrs:
+      interface: wg0
+    network.get_hostname: []
 
 runcmd:
   # Install SaltGUI

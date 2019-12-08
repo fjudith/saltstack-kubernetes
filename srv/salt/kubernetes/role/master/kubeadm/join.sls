@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # vim: ft=jinja
 
+{%- set localIpAddress = salt['network.ip_addrs'](pillar['controlPlaneInterface']) -%}
 {%- from "kubernetes/role/master/kubeadm/map.jinja" import kubeadm with context %}
 
 include:
@@ -15,7 +16,7 @@ kubeadm-reset:
     - only_if: ls /etc/kubernetes/manifests/kube-apiserver.yaml
     - require:
       - pkg: kubeadm
-    - timeout: 600
+    - timeout: 300
     - name: |
         /usr/bin/kubeadm reset -f --cert-dir /etc/kubernetes/pki      
 
@@ -36,9 +37,9 @@ kubeadm-join:
       - pkg: kubelet
       - pkg: kubectl
       - pkg: kubeadm
-    - timeout: 600
+    - timeout: 300
     - name: |
-        /usr/bin/kubeadm join --config /root/kubeadm-controlplane.yaml --ignore-preflight-errors=all
+        /usr/bin/kubeadm join --config /root/kubeadm-controlplane.yaml --ignore-preflight-errors=all --v=5
 
 /root/.kube:
   file.directory:
@@ -51,7 +52,7 @@ kubeadm-join:
     - require:
       - file: /root/.kube
     - watch:
-      - cmd: kubeadm-init
+      - cmd: kubeadm-join
     - target: /etc/kubernetes/admin.conf
     - user: root
     - group: root

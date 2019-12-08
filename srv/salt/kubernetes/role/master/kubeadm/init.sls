@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # vim: ft=jinja
 
+{%- set localIpAddress = salt['network.ip_addrs'](pillar['controlPlaneInterface']) -%}
 {%- from "kubernetes/role/master/kubeadm/map.jinja" import kubeadm with context %}
 
 include:
@@ -25,9 +26,11 @@ kubeadm-init:
       - pkg: kubelet
       - pkg: kubectl
       - pkg: kubeadm
-    - timout: 600
+    - timeout: 300
     - name: |
-        /usr/bin/kubeadm init --config /root/kubeadm-config.yaml --ignore-preflight-errors=all --upload-certs
+        /usr/bin/kubeadm init --config /root/kubeadm-config.yaml --ignore-preflight-errors=all --upload-certs --v=5
+    - require_in:
+      - sls: kubernetes.role.master.kubeadm.join
 
 /root/.kube:
   file.directory:

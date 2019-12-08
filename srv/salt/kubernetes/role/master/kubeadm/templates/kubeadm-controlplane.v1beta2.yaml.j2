@@ -24,16 +24,16 @@ apiVersion: kubeadm.k8s.io/v1beta2
 kind: JoinConfiguration
 discovery:
   bootstrapToken:
-    apiServerEndpoint: "{{ controlPlaneAddress ~ ':' ~ kubeadm.bindPort }}"
-    token: "{{ kubeadm.token }}"
-    unsafeSkipCAVerification: True
-  timeout: "{{ kubeadm.apiServer.timeoutForControlPlane }}"
-  tlsBootstrapToken: "{{ kubeadm.token }}"
+    apiServerEndpoint: {{ controlPlaneAddress ~ ':' ~ kubeadm.bindPort }}
+    token: {{ kubeadm.token }}
+    unsafeSkipCAVerification: true
+  timeout: {{ kubeadm.apiServer.timeoutForControlPlane }}
+  tlsBootstrapToken: {{ kubeadm.token }}
 controlPlane:
   localAPIEndpoint:
-    advertiseAddress: "{{ localIpAddress[0] }}"
+    advertiseAddress: {{ localIpAddress[0] }}
     bindPort: {{ kubeadm.bindPort }}
-  certificateKey: "{{ kubeadm.certificateKey }}"
+  certificateKey: {{ kubeadm.certificateKey }}
 nodeRegistration:
-  name: "{{ hostname }}"
-  criSocket: "{{ kubeadm.criSocket }}"
+  name: {{ hostname }}
+  criSocket: {{ kubeadm.criSocket }}

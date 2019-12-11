@@ -231,6 +231,9 @@ write_files:
     content: |
       open_mode: True
       auto_accept: True
+  - path: /etc/salt/master.d/enable-minionfs
+    content: |
+      file_recv: True
   - path: /etc/salt/master.d/saltgui.conf
     content: |
       external_auth:
@@ -295,7 +298,6 @@ salt_minion:
   grains:
     role:
        - proxy
-
 
 runcmd:
   # Install SaltGUI

@@ -78,3 +78,14 @@ keycloak-wait-public-url:
     - wait_for: 180
     - request_interval: 5
     - status: 200
+    - require_in:
+      - sls: kubernetes.charts.keycloak-gatekeeper
+      {%- if master.storage.get('concourse', {'enabled': False}).enabled %}
+      - sls: kubernetes.charts.concourse
+      {%- endif %}
+      {%- if master.storage.get('harbor', {'enabled': False}).enabled %}
+      - sls: kubernetes.charts.harbor
+      {%- endif %}
+      {%- if master.storage.get('concourse', {'enabled': False}).enabled %}
+      - sls: kubernetes.charts.spinnaker
+      {%- endif %}

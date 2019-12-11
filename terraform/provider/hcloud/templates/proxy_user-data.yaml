@@ -234,6 +234,15 @@ write_files:
   - path: /etc/salt/master.d/enable-minionfs
     content: |
       file_recv: True
+      fileserver_backend:
+        - roots
+        - minionfs
+      minionfs_mountpoint: salt://minionfs
+      minionfs_whitelist:
+        - master*
+        - node*
+        - proxy*
+        - edge_router*
   - path: /etc/salt/master.d/saltgui.conf
     content: |
       external_auth:

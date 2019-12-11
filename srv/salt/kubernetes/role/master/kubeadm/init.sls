@@ -14,7 +14,7 @@ include:
 kubeadm-init:
   file.managed:
     - name: /root/kubeadm-config.yaml
-    - source: salt://kubernetes/role/master/kubeadm/templates/kubeadm-config.v1beta2.yaml.j2
+    - source: salt://kubernetes/role/master/kubeadm/templates/kubeadm-config.{{ kubeadm.apiVersion }}.yaml.j2
     - user: root
     - template: jinja
     - group: root

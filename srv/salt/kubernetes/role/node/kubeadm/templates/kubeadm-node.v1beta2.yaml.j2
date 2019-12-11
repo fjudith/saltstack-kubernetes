@@ -16,13 +16,25 @@ apiVersion: kubeadm.k8s.io/v1beta2
 caCertPath: {{ kubeadm.caCertPath }}
 discovery:
   bootstrapToken:
-    apiServerEndpoint: kube-apiserver:6443
-    token: abcdef.0123456789abcdef
+    apiServerEndpoint: {{ controlPlaneAddress }} ~ ':' ~ {{ kubeadm.bindPort }}
+    token: {{ kubeadm.token }}
     unsafeSkipCAVerification: true
-  timeout: 5m0s
-  tlsBootstrapToken: abcdef.0123456789abcdef
+  timeout: {{ kubeadm.timeout }}
+  tlsBootstrapToken: {{ kubeadm.nodeToken }}
 kind: JoinConfiguration
 nodeRegistration:
-  criSocket: /var/run/dockershim.sock
-  name: master01
+  criSocket: {{ kubeadm.criSocket }}
+  name: {{ hostname }}
   taints: null
+  labels:
+    - key: node-role.kubernetes.io/node
+      value: true
+    {%- if common.addons.get('fluentd-elasticsearch', {'enabled': False}).enabled %}
+    - key: beta.kubernetes.io/fluentd-ds-ready
+      value: true
+    {%- endif %}
+    {%- if master.storage.get('rook_ceph', {'enabled': False}).enabled %}
+    - key: role
+      value: storage-node
+    {%- endif %}
+    

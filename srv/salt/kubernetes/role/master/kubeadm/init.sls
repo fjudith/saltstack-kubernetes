@@ -49,3 +49,7 @@ kubeadm-init:
     - group: root
     - mode: 444
     - force: true
+
+ca-certificate-hash:
+    cmd
+        

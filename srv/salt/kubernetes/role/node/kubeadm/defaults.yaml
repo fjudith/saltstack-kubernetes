@@ -1,0 +1,11 @@
+kubeadm:
+  enabled: true
+  kubernetesVersion: 1.16.0
+  apiVersion: v1beta2
+  token: "abcdef.0123456789abcdef"
+  nodeToken: "123456.abcdefghij123456"
+  criSocket: "/var/run/dockershim.sock"
+  cgroupDriver: "systemd"
+  ignorePreflightErrors: []
+  bindPort: 6443
+  caCertPath: "/etc/kubernetes/pki/ca.crt"

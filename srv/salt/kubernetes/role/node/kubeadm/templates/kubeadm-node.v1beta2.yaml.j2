@@ -1,0 +1,28 @@
+{%- set hostname = salt['grains.get']('fqdn') -%}
+{%- set public_domain = pillar['public-domain'] -%}
+{%- set clusterHost = pillar['cluster-host'] -%}
+{%- set controlPlaneInterface = pillar['controlPlaneInterface'] -%}
+{%- set localIpAddress = salt['network.ip_addrs'](controlPlaneInterface) -%}
+{%- from "kubernetes/role/node/kubeadm/map.jinja" import kubeadm with context %}
+{%- from "kubernetes/map.jinja" import charts with context -%}
+
+{%- if apiserverCount|length == 1 -%}
+  {%- set controlPlaneAddress = "master01"  -%}
+{%- else-%}
+  {%- set controlPlaneAddress = clusterHost ~ '.' ~ public_domain -%}
+{% endif %}
+
+apiVersion: kubeadm.k8s.io/v1beta2
+caCertPath: {{ kubeadm.caCertPath }}
+discovery:
+  bootstrapToken:
+    apiServerEndpoint: kube-apiserver:6443
+    token: abcdef.0123456789abcdef
+    unsafeSkipCAVerification: true
+  timeout: 5m0s
+  tlsBootstrapToken: abcdef.0123456789abcdef
+kind: JoinConfiguration
+nodeRegistration:
+  criSocket: /var/run/dockershim.sock
+  name: master01
+  taints: null

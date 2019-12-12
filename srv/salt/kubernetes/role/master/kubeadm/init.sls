@@ -50,6 +50,9 @@ kubeadm-init:
     - mode: 444
     - force: true
 
-ca-certificate-hash:
-    cmd
-        
+kubeadm-ca-certificate:
+  module.run:
+    - cp.push:
+      - /etc/kubernete/pki/ca.crt
+    - watch:
+      - cmd: kubeadm-init 

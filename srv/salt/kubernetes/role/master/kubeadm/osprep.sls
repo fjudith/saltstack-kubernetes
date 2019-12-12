@@ -64,11 +64,3 @@ net.bridge.bridge-nf-pass-vlan-input-dev:
 /usr/bin/bash:
   file.symlink:
     - target: /bin/bash
-
-/etc/kubernetes/ssl/node.pem:
-  file.symlink:
-    - target: /etc/kubernetes/ssl/master.pem
-
-/etc/kubernetes/ssl/node-key.pem:
-  file.symlink:
-    - target: /etc/kubernetes/ssl/master-key.pem

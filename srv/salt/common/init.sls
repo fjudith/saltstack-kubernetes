@@ -26,3 +26,13 @@ httpie:
 jq:
   pkg.latest:
     - refresh: true
+
+python-m2crypto:
+  pkg.latest:
+    - refres: true
+    - reload_modules: true
+
+python3-m2crypto:
+  pkg.latest:
+    - refres: true
+    - reload_modules: true

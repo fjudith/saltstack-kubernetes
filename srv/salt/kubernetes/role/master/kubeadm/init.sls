@@ -50,9 +50,11 @@ kubeadm-init:
     - mode: 444
     - force: true
 
-kubeadm-ca-certificate:
+mine.send:
   module.run:
-    - cp.push:
-      - /etc/kubernete/pki/ca.crt
+    - func: x509.get_pem_entries
+    - kwargs:
+        glob_path: /etc/kubernetes/pki/ca.crt
     - watch:
-      - cmd: kubeadm-init 
+      - cmd: kubeadm-init
+    

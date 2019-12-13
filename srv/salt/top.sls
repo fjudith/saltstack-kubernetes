@@ -40,6 +40,19 @@ base:
     - kubernetes.cri.docker
     - kubernetes.role.master.kubeadm.init
     - kubernetes.cni.{{ common.cni.provider }}
+    {%- if common.addons.dns.get('coredns', {'enabled': False}).enabled %}
+    - kubernetes.addons.coredns
+    {%- endif %}
+    {%- if common.addons.get('helm', {'enabled': False}).enabled %}
+    - kubernetes.addons.helm
+    {%- endif %}
+    - kubernetes.ingress
+    {%- if common.addons.get('kube_prometheus', {'enabled': False}).enabled %}
+    - kubernetes.addons.kube-prometheus
+    {%- endif %}
+    - kubernetes.csi
+    - kubernetes.addons
+    - kubernetes.charts
   {% endif %}
   {% if "master" in grains.get('role', []) and not 'master01' in grains.get('fqdn', [])|lower %}
     - common
@@ -50,10 +63,12 @@ base:
     - haproxy
     - common
     - kubernetes.cri.docker
+    - kubernetes.role.proxy.kubeadm
   {% endif %}
   {% if "node" in grains.get('role', []) %}
     - common
     - kubernetes.cri.docker
+    - kubernetes.role.node.kubeadm
   {% endif %}
   
   

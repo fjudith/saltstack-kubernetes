@@ -3,38 +3,44 @@
 {%- set clusterHost = pillar['cluster-host'] -%}
 {%- set controlPlaneInterface = pillar['controlPlaneInterface'] -%}
 {%- set localIpAddress = salt['network.ip_addrs'](controlPlaneInterface) -%}
-{%- from "kubernetes/role/node/kubeadm/map.jinja" import kubeadm with context %}
+{%- from "kubernetes/role/node/kubeadm/map.jinja" import kubeadm with context -%}
+{%- from "kubernetes/map.jinja" import common with context -%}
+{%- from "kubernetes/map.jinja" import master with context -%}
 {%- from "kubernetes/map.jinja" import charts with context -%}
 
-{%- if apiserverCount|length == 1 -%}
+{%- set apiserver = [] -%}
+{%- for hostname in salt['mine.get'](tgt='role:master', fun='network.get_hostname', tgt_type='grain') -%}
+  {%- do apiserver.append(hostname) -%}
+{%- endfor -%}
+
+{%- if apiserver|length == 1 -%}
   {%- set controlPlaneAddress = "master01"  -%}
 {%- else-%}
   {%- set controlPlaneAddress = clusterHost ~ '.' ~ public_domain -%}
 {% endif %}
 
+{%- set nodeLabels = "node.kubernetes.io/role=node" -%}
+{%- if master.storage.get('rook_ceph', {'enabled': False}).enabled -%}
+  {%- set nodeLabels = nodeLabels + ',' + "role=storage-node" -%}
+{%- endif -%}
+
 apiVersion: kubeadm.k8s.io/v1beta2
 caCertPath: {{ kubeadm.caCertPath }}
 discovery:
   bootstrapToken:
-    apiServerEndpoint: {{ controlPlaneAddress }} ~ ':' ~ {{ kubeadm.bindPort }}
+    apiServerEndpoint: {{ controlPlaneAddress ~ ':' ~ kubeadm.bindPort }}
     token: {{ kubeadm.token }}
     unsafeSkipCAVerification: true
   timeout: {{ kubeadm.timeout }}
   tlsBootstrapToken: {{ kubeadm.nodeToken }}
 kind: JoinConfiguration
 nodeRegistration:
-  criSocket: {{ kubeadm.criSocket }}
   name: {{ hostname }}
-  taints: null
-  labels:
-    - key: node-role.kubernetes.io/node
-      value: true
-    {%- if common.addons.get('fluentd-elasticsearch', {'enabled': False}).enabled %}
-    - key: beta.kubernetes.io/fluentd-ds-ready
-      value: true
-    {%- endif %}
-    {%- if master.storage.get('rook_ceph', {'enabled': False}).enabled %}
-    - key: role
-      value: storage-node
-    {%- endif %}
+  criSocket: {{ kubeadm.criSocket }}
+  taints: []
+  kubeletExtraArgs:
+    node-labels: "{{ nodeLabels }}"
+    {%- for argument, value in (kubeadm.kubeletExtraArgs).items() %}
+    {{ argument }}: "{{ value }}"
+    {% endfor %}
     

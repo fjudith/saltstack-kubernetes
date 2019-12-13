@@ -11,15 +11,13 @@ conntrack:
 
 nfs-common:
   pkg.latest
+
 {% endif %} 
 
 open-iscsi:
   pkg.latest
 
 xfsprogs:
-  pkg.latest
-
-conntrack:
   pkg.latest
 
 vm.max_map_count:
@@ -89,14 +87,6 @@ net.bridge.bridge-nf-pass-vlan-input-dev:
 /usr/bin/bash:
   file.symlink:
     - target: /bin/bash
-
-/etc/kubernetes/ssl/node.pem:
-  file.symlink:
-    - target: /etc/kubernetes/ssl/master.pem
-
-/etc/kubernetes/ssl/node-key.pem:
-  file.symlink:
-    - target: /etc/kubernetes/ssl/master-key.pem
 
 {% if common.cni.calico.ipv6.enable == true %}
 net.ipv6.conf.all.forwarding:

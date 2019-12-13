@@ -2,21 +2,22 @@
 # vim: ft=jinja
 
 {%- set localIpAddress = salt['network.ip_addrs'](pillar['controlPlaneInterface']) -%}
-{%- from "kubernetes/role/proxy/kubeadm/map.jinja" import kubeadm with context %}
+{%- from "kubernetes/role/node/kubeadm/map.jinja" import kubeadm with context %}
 
 include:
-  - kubernetes.role.master.kubeadm.osprep
-  - kubernetes.role.master.kubeadm.repo
-  - kubernetes.role.master.kubeadm.install
+  - kubernetes.role.node.kubeadm.osprep
+  - kubernetes.role.node.kubeadm.repo
+  - kubernetes.role.node.kubeadm.install
 
-/srv/kubernetes/pki/ca.crt:
-  file.managed:
-    - name: salt://minionfs/ca.crt
-    - user: root
-    - group: root
-    - mode: 644
+kubernetes-ca:
+  file.directory:
+    - name: /etc/kubernetes/pki
+  x509.pem_managed:
+    - name: /etc/kubernetes/pki/ca.crt
+    - text: {{ salt['mine.get'](tgt='master01', fun='x509.get_pem_entries', tgt_type='glob')['master01']['/etc/kubernetes/pki/ca.crt']|replace('\n', '') }}
+    - backup: True
 
-kubeadm-join:
+kubeadm-register-node:
   file.managed:
     - name: /root/kubeadm-join-node.yaml
     - source: salt://kubernetes/role/node/kubeadm/templates/kubeadm-node.{{ kubeadm.apiVersion }}.yaml.j2
@@ -24,13 +25,14 @@ kubeadm-join:
     - template: jinja
     - group: root
     - mode: 644
+    - watch:
+      - x509: /etc/kubernetes/pki/ca.crt
   cmd.run:
-    - watch: 
-      - file: /root/kubeadm-join-node.yaml
     - require:
       - pkg: kubelet
       - pkg: kubectl
       - pkg: kubeadm
     - timeout: 300
     - name: |
-        /usr/bin/kubeadm --config /root/kubeadm-join-node.yaml --ignore-preflight-errors=all --v=5
+        /usr/bin/kubeadm join --config /root/kubeadm-join-node.yaml --ignore-preflight-errors=all --v=5 
+   

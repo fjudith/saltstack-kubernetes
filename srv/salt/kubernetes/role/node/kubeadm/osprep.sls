@@ -11,6 +11,7 @@ conntrack:
 
 nfs-common:
   pkg.latest
+
 {% endif %} 
 
 open-iscsi:

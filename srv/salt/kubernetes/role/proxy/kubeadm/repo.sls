@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # vim: ft=jinja
 
-{%- from "kubernetes/role/proxy/kubeadm/map.jinja" import kubeadm with context %}
+{%- from "kubernetes/role/node/kubeadm/map.jinja" import kubeadm with context %}
 
 {% set repoState = 'absent' %}
 {% if kubeadm.enabled %}

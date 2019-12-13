@@ -10,3 +10,5 @@ kubeadm:
   bindPort: 6443
   caCertPath: "/etc/kubernetes/pki/ca.crt"
   timeout: '5m0s'
+  kubeletExtraArgs:
+    cgroup-driver: systemd

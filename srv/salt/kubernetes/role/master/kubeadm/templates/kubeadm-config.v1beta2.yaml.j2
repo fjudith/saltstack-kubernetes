@@ -45,7 +45,9 @@ nodeRegistration:
   taints: []
   {%- endif %}
   kubeletExtraArgs:
-    cgroup-driver: {{ kubeadm.cgroupDriver }}
+    {%- for argument, value in (kubeadm.kubeletExtraArgs).items() %}
+    {{ argument }}: "{{ value }}"
+    {%- endfor %}
 localAPIEndpoint:
   advertiseAddress: {{ localIpAddress[0] }}
   bindPort: {{ kubeadm.bindPort }}

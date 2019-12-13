@@ -7,7 +7,7 @@ addon-kube-prometheus:
     - force_reset: True
     - rev: v{{ common.addons.kube_prometheus.version }}
 
-/srv/kubernetes/manifests/kube-prometheus-ingress.yaml:
+/srv/kubernetes/manifests/kube-prometheus/manifests/ingress.yaml:
     file.managed:
     - source: salt://kubernetes/addons/kube-prometheus/templates/ingress.yaml.j2
     - user: root
@@ -17,7 +17,7 @@ addon-kube-prometheus:
     - watch:
       - git: addon-kube-prometheus
 
-/srv/kubernetes/manifests/grafana-deployment.yaml:
+/srv/kubernetes/manifests/kube-prometheus/manifests/grafana-deployment.yaml:
     file.managed:
     - source: salt://kubernetes/addons/kube-prometheus/templates/grafana-deployment.yaml.j2
     - user: root
@@ -31,8 +31,8 @@ kubernetes-kube-prometheus-install:
   cmd.run:
     - watch:
         - git:  addon-kube-prometheus
-        - file: /srv/kubernetes/manifests/kube-prometheus-ingress.yaml
-        - file: /srv/kubernetes/manifests/grafana-deployment.yaml
+        - file: /srv/kubernetes/manifests/kube-prometheus/manifests/ingress.yaml
+        - file: /srv/kubernetes/manifests/kube-prometheus/manifests/grafana-deployment.yaml
     - runas: root
     - use_vt: True
     - name: |
@@ -43,22 +43,22 @@ kubernetes-kube-prometheus-grafana:
   cmd.run:
     - watch:
         - cmd: kubernetes-kube-prometheus-install
-        - file: /srv/kubernetes/manifests/grafana-deployment.yaml
+        - file: /srv/kubernetes/manifests/kube-prometheus/manifests/grafana-deployment.yaml
     - runas: root
     - use_vt: True
     - name: |
-        kubectl apply -f /srv/kubernetes/manifests/grafana-deployment.yaml
+        kubectl apply -f /srv/kubernetes/manifests/kube-prometheus/manifests/grafana-deployment.yaml
     - onlyif: curl --silent 'http://127.0.0.1:8080/healthz'
 
 kubernetes-kube-prometheus-ingress:
   cmd.run:
     - watch:
         - cmd: kubernetes-kube-prometheus-install
-        - file: /srv/kubernetes/manifests/kube-prometheus-ingress.yaml
+        - file: /srv/kubernetes/manifests/kube-prometheus/manifests/ingress.yaml
     - runas: root
     - use_vt: True
     - name: |
-        kubectl apply -f /srv/kubernetes/manifests/kube-prometheus-ingress.yaml
+        kubectl apply -f /srv/kubernetes/manifests/kube-prometheus/manifests/ingress.yaml
     - onlyif: curl --silent 'http://127.0.0.1:8080/healthz'
 
 query-kube-prometheus-required-api:

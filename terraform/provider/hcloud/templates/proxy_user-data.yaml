@@ -98,6 +98,7 @@ packages:
   - python3-netaddr
   - python3-pyinotify
   - python3-ws4py
+  - python3-m2crypto
   - salt-master
   - salt-minion
   - salt-ssh

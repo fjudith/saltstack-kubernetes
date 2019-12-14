@@ -112,8 +112,4 @@ cert-manager-clusterissuer:
     - use_vt: True
     - onlyif: curl --silent 'http://127.0.0.1:8080/apis/cert-manager.io'
     - name: |
-        until [ "$(kubectl get apiservice v1beta1.webhook.certmanager.k8s.io -o jsonpath='{.status.conditions[?(@.type=="Available")].status}')" == "True" ];
-        do echo "Waiting for v1beta1.webhook.certmanager.k8s.io..." && sleep 1
-        done
-        
         kubectl apply -f /srv/kubernetes/manifests/cert-manager/clusterissuer.yaml

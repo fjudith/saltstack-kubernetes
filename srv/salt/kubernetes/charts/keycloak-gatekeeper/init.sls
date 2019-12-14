@@ -73,7 +73,7 @@ keycloak-create-realm:
     - runas: root
     - use_vt: true
     - name: |
-        ./kcgk-injector.sh create-realm keycloak {{ keycloak_password }} https://{{ charts.keycloak.ingressHost }}.{{ public_domain }} {{ charts.keycloak_gatekeeper.realm }}
+        ./kcgk-injector.sh create-realm keycloak {{ keycloak_password }} https://{{ charts.keycloak.ingress_host }}.{{ public_domain }} {{ charts.keycloak_gatekeeper.realm }}
 
 keycloak-create-groups:
   cmd.run:
@@ -85,7 +85,7 @@ keycloak-create-groups:
     - runas: root
     - use_vt: true
     - name: |
-        ./kcgk-injector.sh create-groups keycloak {{ keycloak_password }} https://{{ charts.keycloak.ingressHost }}.{{ public_domain }} {{ charts.keycloak_gatekeeper.realm }}
+        ./kcgk-injector.sh create-groups keycloak {{ keycloak_password }} https://{{ charts.keycloak.ingress_host }}.{{ public_domain }} {{ charts.keycloak_gatekeeper.realm }}
 
 keycloak-create-client-scopes:
   cmd.run:
@@ -96,7 +96,7 @@ keycloak-create-client-scopes:
     - runas: root
     - use_vt: true
     - name: |
-        ./kcgk-injector.sh create-client-scopes keycloak {{ keycloak_password }} https://{{ charts.keycloak.ingressHost }}.{{ public_domain }} {{ charts.keycloak_gatekeeper.realm }}
+        ./kcgk-injector.sh create-client-scopes keycloak {{ keycloak_password }} https://{{ charts.keycloak.ingress_host }}.{{ public_domain }} {{ charts.keycloak_gatekeeper.realm }}
 
 {% if common.addons.get('dashboard', {'enabled': False}).enabled %}
 /srv/kubernetes/manifests/keycloak-gatekeeper/files:
@@ -153,7 +153,7 @@ keycloak-kubernetes-dashboard:
     - runas: root
     - use_vt: true
     - name: |
-        ./kcgk-injector.sh create-client-kubernetes keycloak {{ keycloak_password }} https://{{ charts.keycloak.ingressHost }}.{{ public_domain }} {{ charts.keycloak_gatekeeper.realm }} https://kubernetes-dashboard.{{ public_domain }}
+        ./kcgk-injector.sh create-client-kubernetes keycloak {{ keycloak_password }} https://{{ charts.keycloak.ingress_host }}.{{ public_domain }} {{ charts.keycloak_gatekeeper.realm }} https://kubernetes-dashboard.{{ public_domain }}
 {% endif %}
 
 {% if common.addons.get('weave_scope', {'enabled': False}).enabled %}
@@ -183,7 +183,7 @@ keycloak-weave-scope:
     - runas: root
     - use_vt: true
     - name: |
-        ./kcgk-injector.sh create-client-weave-scope keycloak {{ keycloak_password }} https://{{ charts.keycloak.ingressHost }}.{{ public_domain }} {{ charts.keycloak_gatekeeper.realm }} https://scope.{{ public_domain }}
+        ./kcgk-injector.sh create-client-weave-scope keycloak {{ keycloak_password }} https://{{ charts.keycloak.ingress_host }}.{{ public_domain }} {{ charts.keycloak_gatekeeper.realm }} https://scope.{{ public_domain }}
 {% endif %}
 
 {% if common.addons.get('kube_prometheus', {'enabled': False}).enabled %}
@@ -213,7 +213,7 @@ keycloak-alertmanager:
     - runas: root
     - use_vt: true
     - name: |
-        ./kcgk-injector.sh create-client-alertmanager keycloak {{ keycloak_password }} https://{{ charts.keycloak.ingressHost }}.{{ public_domain }} {{ charts.keycloak_gatekeeper.realm }} https://alertmanager.{{ public_domain }}
+        ./kcgk-injector.sh create-client-alertmanager keycloak {{ keycloak_password }} https://{{ charts.keycloak.ingress_host }}.{{ public_domain }} {{ charts.keycloak_gatekeeper.realm }} https://alertmanager.{{ public_domain }}
 
 /srv/kubernetes/manifests/keycloak-gatekeeper/prometheus.json:
   file.managed:
@@ -241,7 +241,7 @@ keycloak-prometheus:
     - runas: root
     - use_vt: true
     - name: |
-        ./kcgk-injector.sh create-client-prometheus keycloak {{ keycloak_password }} https://{{ charts.keycloak.ingressHost }}.{{ public_domain }} {{ charts.keycloak_gatekeeper.realm }} https://prometheus.{{ public_domain }}
+        ./kcgk-injector.sh create-client-prometheus keycloak {{ keycloak_password }} https://{{ charts.keycloak.ingress_host }}.{{ public_domain }} {{ charts.keycloak_gatekeeper.realm }} https://prometheus.{{ public_domain }}
 
 {% endif %}
 
@@ -272,5 +272,5 @@ keycloak-rook-ceph:
     - runas: root
     - use_vt: true
     - name: |
-        ./kcgk-injector.sh create-client-rook-ceph keycloak {{ keycloak_password }} https://{{ charts.keycloak.ingressHost }}.{{ public_domain }} {{ charts.keycloak_gatekeeper.realm }} https://ceph.{{ public_domain }}
+        ./kcgk-injector.sh create-client-rook-ceph keycloak {{ keycloak_password }} https://{{ charts.keycloak.ingress_host }}.{{ public_domain }} {{ charts.keycloak_gatekeeper.realm }} https://ceph.{{ public_domain }}
 {% endif %}

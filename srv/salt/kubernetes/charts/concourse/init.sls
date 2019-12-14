@@ -30,7 +30,7 @@ concourse-namespace:
 
 concourse-wait-keycloak:
   http.wait_for_successful_query:
-    - name: "https://{{ charts.keycloak.ingressHost }}.{{ public_domain }}/auth/realms/{{ charts.concourse.oauth.keycloak.realm }}"
+    - name: "https://{{ charts.keycloak.ingress_host }}.{{ public_domain }}/auth/realms/{{ charts.concourse.oauth.keycloak.realm }}"
     - wait_for: 180
     - request_interval: 5
     - status: 200
@@ -55,7 +55,7 @@ concourse-create-realm:
       - ACTION: "create-realm"
       - USERNAME: "keycloak"
       - PASSWORD: "{{ charts.keycloak.password }}"
-      - URL: "https://{{ charts.keycloak.ingressHost }}.{{ public_domain }}"
+      - URL: "https://{{ charts.keycloak.ingress_host }}.{{ public_domain }}"
       - REALM: "{{ charts.concourse.oauth.keycloak.realm }}"
     - user: root
     - group: root
@@ -89,7 +89,7 @@ concourse-create-groups:
       - ACTION: "create-groups"
       - USERNAME: "keycloak"
       - PASSWORD: "{{ charts.keycloak.password }}"
-      - URL: "https://{{ charts.keycloak.ingressHost }}.{{ public_domain }}"
+      - URL: "https://{{ charts.keycloak.ingress_host }}.{{ public_domain }}"
       - REALM: "{{ charts.concourse.oauth.keycloak.realm }}"
     - watch:
       - file: /srv/kubernetes/manifests/concourse/admins-group.json
@@ -117,7 +117,7 @@ concourse-create-client-scopes:
       - ACTION: "create-client-scopes"
       - USERNAME: "keycloak"
       - PASSWORD: "{{ charts.keycloak.password }}"
-      - URL: "https://{{ charts.keycloak.ingressHost }}.{{ public_domain }}"
+      - URL: "https://{{ charts.keycloak.ingress_host }}.{{ public_domain }}"
       - REALM: "{{ charts.concourse.oauth.keycloak.realm }}"
     - watch:
       - file: /srv/kubernetes/manifests/concourse/client-scopes.json
@@ -176,7 +176,7 @@ concourse-create-client:
       - ACTION: "create-client"
       - USERNAME: "keycloak"
       - PASSWORD: "{{ charts.keycloak.password }}"
-      - URL: "https://{{ charts.keycloak.ingressHost }}.{{ public_domain }}"
+      - URL: "https://{{ charts.keycloak.ingress_host }}.{{ public_domain }}"
       - REALM: "{{ charts.concourse.oauth.keycloak.realm }}"
     - watch:
       - file: /srv/kubernetes/manifests/concourse/protocolmapper.json

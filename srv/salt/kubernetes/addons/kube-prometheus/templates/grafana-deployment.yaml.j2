@@ -1,7 +1,7 @@
 {%- from "kubernetes/map.jinja" import common with context -%}
 {%- from "kubernetes/map.jinja" import master with context -%}
 
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
@@ -19,7 +19,7 @@ spec:
         app: grafana
     spec:
       containers:
-      - image: grafana/grafana:6.2.2
+      - image: grafana/grafana:6.4.3
         name: grafana
         ports:
         - containerPort: 3000
@@ -48,6 +48,9 @@ spec:
         - mountPath: /grafana-dashboard-definitions/0/apiserver
           name: grafana-dashboard-apiserver
           readOnly: false
+        - mountPath: /grafana-dashboard-definitions/0/cluster-total
+          name: grafana-dashboard-cluster-total
+          readOnly: false
         - mountPath: /grafana-dashboard-definitions/0/controller-manager
           name: grafana-dashboard-controller-manager
           readOnly: false
@@ -56,6 +59,9 @@ spec:
           readOnly: false
         - mountPath: /grafana-dashboard-definitions/0/k8s-resources-namespace
           name: grafana-dashboard-k8s-resources-namespace
+          readOnly: false
+        - mountPath: /grafana-dashboard-definitions/0/k8s-resources-node
+          name: grafana-dashboard-k8s-resources-node
           readOnly: false
         - mountPath: /grafana-dashboard-definitions/0/k8s-resources-pod
           name: grafana-dashboard-k8s-resources-pod
@@ -69,6 +75,12 @@ spec:
         - mountPath: /grafana-dashboard-definitions/0/kubelet
           name: grafana-dashboard-kubelet
           readOnly: false
+        - mountPath: /grafana-dashboard-definitions/0/namespace-by-pod
+          name: grafana-dashboard-namespace-by-pod
+          readOnly: false
+        - mountPath: /grafana-dashboard-definitions/0/namespace-by-workload
+          name: grafana-dashboard-namespace-by-workload
+          readOnly: false
         - mountPath: /grafana-dashboard-definitions/0/node-cluster-rsrc-use
           name: grafana-dashboard-node-cluster-rsrc-use
           readOnly: false
@@ -80,6 +92,9 @@ spec:
           readOnly: false
         - mountPath: /grafana-dashboard-definitions/0/persistentvolumesusage
           name: grafana-dashboard-persistentvolumesusage
+          readOnly: false
+        - mountPath: /grafana-dashboard-definitions/0/pod-total
+          name: grafana-dashboard-pod-total
           readOnly: false
         - mountPath: /grafana-dashboard-definitions/0/pods
           name: grafana-dashboard-pods
@@ -99,7 +114,10 @@ spec:
         - mountPath: /grafana-dashboard-definitions/0/statefulset
           name: grafana-dashboard-statefulset
           readOnly: false
-        {%- if master.storage.get('rook_ceph', {'enabled': False}).enabled %}
+        - mountPath: /grafana-dashboard-definitions/0/workload-total
+          name: grafana-dashboard-workload-total
+          readOnly: false
+          {%- if master.storage.get('rook_ceph', {'enabled': False}).enabled %}
         - mountPath: /grafana-dashboard-definitions/0/rook
           name: grafana-dashboard-rook
           readOnly: false
@@ -133,6 +151,9 @@ spec:
           name: grafana-dashboard-apiserver
         name: grafana-dashboard-apiserver
       - configMap:
+          name: grafana-dashboard-cluster-total
+        name: grafana-dashboard-cluster-total
+      - configMap:
           name: grafana-dashboard-controller-manager
         name: grafana-dashboard-controller-manager
       - configMap:
@@ -141,6 +162,9 @@ spec:
       - configMap:
           name: grafana-dashboard-k8s-resources-namespace
         name: grafana-dashboard-k8s-resources-namespace
+      - configMap:
+          name: grafana-dashboard-k8s-resources-node
+        name: grafana-dashboard-k8s-resources-node
       - configMap:
           name: grafana-dashboard-k8s-resources-pod
         name: grafana-dashboard-k8s-resources-pod
@@ -154,6 +178,12 @@ spec:
           name: grafana-dashboard-kubelet
         name: grafana-dashboard-kubelet
       - configMap:
+          name: grafana-dashboard-namespace-by-pod
+        name: grafana-dashboard-namespace-by-pod
+      - configMap:
+          name: grafana-dashboard-namespace-by-workload
+        name: grafana-dashboard-namespace-by-workload
+      - configMap:
           name: grafana-dashboard-node-cluster-rsrc-use
         name: grafana-dashboard-node-cluster-rsrc-use
       - configMap:
@@ -165,6 +195,9 @@ spec:
       - configMap:
           name: grafana-dashboard-persistentvolumesusage
         name: grafana-dashboard-persistentvolumesusage
+      - configMap:
+          name: grafana-dashboard-pod-total
+        name: grafana-dashboard-pod-total
       - configMap:
           name: grafana-dashboard-pods
         name: grafana-dashboard-pods
@@ -183,6 +216,9 @@ spec:
       - configMap:
           name: grafana-dashboard-statefulset
         name: grafana-dashboard-statefulset
+      - configMap:
+          name: grafana-dashboard-workload-total
+        name: grafana-dashboard-workload-total
       {%- if master.storage.get('rook_ceph', {'enabled': False}).enabled %}
       - configMap:
           name: grafana-dashboard-rook

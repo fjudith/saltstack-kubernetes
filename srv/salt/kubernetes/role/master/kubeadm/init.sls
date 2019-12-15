@@ -50,16 +50,16 @@ kubeadm-init:
     - mode: 444
     - force: true
 
-mine.send:
+send-ca-certificate:
   module.run:
-    - func: x509.get_pem_entries
-    - kwargs:
-        glob_path: /etc/kubernetes/pki/ca.crt
-    - func: file.read
-    - kwargs:
-        path: /etc/kubernetes/admin.conf
-    - watch:
-      - cmd: kubeadm-init
-    
+    - mine.send:
+      - func: x509.get_pem_entries 
+      - glob_path: /etc/kubernetes/pki/ca.crt
 
-    
+send-kubeconfig:
+  module.run:
+    - mine.send:
+      - func: file.read
+      - path: /etc/kubernetes/admin.conf
+    {# - watch:
+      - cmd: kubeadm-init #}

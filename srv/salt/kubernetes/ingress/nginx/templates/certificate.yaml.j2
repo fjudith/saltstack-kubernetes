@@ -7,13 +7,6 @@ metadata:
   name: nginx-ingress-certs
   namespace: ingress-nginx
 spec:
-  acme:
-    config:
-    - dns01:
-        provider: {{ common.addons.cert_manager.dns.provider }}
-      domains:
-      - '*.{{ public_domain }}'
-      - {{ public_domain }}
   commonName: '*.{{ public_domain }}'
   dnsNames:
   - {{ public_domain }}

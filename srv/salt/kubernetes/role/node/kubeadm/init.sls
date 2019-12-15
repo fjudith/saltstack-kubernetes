@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # vim: ft=jinja
 
+{%- set hostname = salt['grains.get']('fqdn') -%}
 {%- set localIpAddress = salt['network.ip_addrs'](pillar['controlPlaneInterface']) -%}
 {%- from "kubernetes/role/node/kubeadm/map.jinja" import kubeadm with context %}
 
@@ -34,5 +35,17 @@ kubeadm-register-node:
       - pkg: kubeadm
     - timeout: 300
     - name: |
-        /usr/bin/kubeadm join --config /root/kubeadm-join-node.yaml --ignore-preflight-errors=all --v=5 
-   
+        /usr/bin/kubeadm join --config /root/kubeadm-join-node.yaml --ignore-preflight-errors=all --v=5
+
+kubectl-label-node:
+  file.managed:
+    - name: /root/.kube/config
+    - contents: |
+        {{ salt['mine.get'](tgt='master01', fun='file.read', tgt_type='glob') }}
+        {# {%- for item in salt['mine.get'](tgt='master01', fun='file.read', tgt_type='glob')['master01'] %}
+        {{ item }}
+        {%- endfor %} #}
+    - makedirs: true
+  cmd.run:
+    - name: |
+        kubectl label node {{ hostname }} node-role.kubernetes.io/node=true --overwrite

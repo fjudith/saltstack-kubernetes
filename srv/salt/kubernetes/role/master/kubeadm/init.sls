@@ -55,6 +55,11 @@ mine.send:
     - func: x509.get_pem_entries
     - kwargs:
         glob_path: /etc/kubernetes/pki/ca.crt
+    - func: file.read
+    - kwargs:
+        path: /etc/kubernetes/admin.conf
     - watch:
       - cmd: kubeadm-init
+    
+
     

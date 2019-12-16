@@ -238,6 +238,11 @@ spinnaker:
       - file: /srv/kubernetes/manifests/spinnaker/values.yaml
     - name: |
         helm repo update && \
+        helm upgrade --install redis --namespace spinnaker \
+          --set redis.cluster.enabled=true \
+          --set redis.master.persistence.enabled=true \
+          --version=9.5.0 \
+          "stable/redis"
         helm upgrade --install spinnaker --namespace spinnaker \
           --set halyard.spinnakerVersion={{ charts.spinnaker.version }} \
           --set halyard.image.tag={{ charts.spinnaker.halyard_version }} \
@@ -247,9 +252,6 @@ spinnaker:
           --set minio.enabled=true \
           --set minio.persistence.enabled=true \
           {%- endif %}
-          --set redis.enabled=true \
-          --set redis.cluster.enabled=true \
-          --set redis.master.persistence.enabled=true \
           "stable/spinnaker" --timeout 10m
 
 spinnaker-front50-wait:

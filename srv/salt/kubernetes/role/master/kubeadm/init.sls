@@ -55,11 +55,13 @@ send-ca-certificate:
     - mine.send:
       - func: x509.get_pem_entries 
       - glob_path: /etc/kubernetes/pki/ca.crt
+    - watch:
+      - cmd: kubeadm-init
 
 send-kubeconfig:
   module.run:
     - mine.send:
       - func: file.read
       - path: /etc/kubernetes/admin.conf
-    {# - watch:
-      - cmd: kubeadm-init #}
+    - watch:
+      - cmd: kubeadm-init

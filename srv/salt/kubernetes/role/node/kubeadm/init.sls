@@ -39,13 +39,14 @@ kubeadm-register-node:
 
 kubectl-label-node:
   file.managed:
+    - watch:
+      - cmd: kubeadm-register-node
     - name: /root/.kube/config
-    - contents: |
-        {{ salt['mine.get'](tgt='master01', fun='file.read', tgt_type='glob') }}
-        {# {%- for item in salt['mine.get'](tgt='master01', fun='file.read', tgt_type='glob')['master01'] %}
-        {{ item }}
-        {%- endfor %} #}
+    - contents: {{ salt['mine.get'](tgt='master01', fun='file.read', tgt_type='compound').values()|list|yaml }}
     - makedirs: true
   cmd.run:
+    - watch:
+      - file: /root/.kube/config
     - name: |
         kubectl label node {{ hostname }} node-role.kubernetes.io/node=true --overwrite
+        kubectl label node {{ hostname }} role=storage-node --overwrite

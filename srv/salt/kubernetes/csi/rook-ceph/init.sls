@@ -73,6 +73,15 @@
     - group: root
     - mode: 644
 
+/srv/kubernetes/manifests/rook-ceph/filesystem-storageclass.yaml:
+  file.managed:
+    - require:
+      - file: /srv/kubernetes/manifests/rook-ceph
+    - source: salt://kubernetes/csi/rook-ceph/files/filesystem-storageclass.yaml
+    - user: root
+    - group: root
+    - mode: 644
+
 /srv/kubernetes/manifests/rook-ceph/toolbox.yaml:
   file.managed:
     - require:
@@ -214,6 +223,7 @@ rook-ceph-cluster-install:
       - file: /srv/kubernetes/manifests/rook-ceph/object.yaml
       - file: /srv/kubernetes/manifests/rook-ceph/filesystem.yaml
       - file: /srv/kubernetes/manifests/rook-ceph/storageclass.yaml
+      - file: /srv/kubernetes/manifests/rook-ceph/filesystem-storageclass.yaml
       - file: /srv/kubernetes/manifests/rook-ceph/rook-ceph-ingress.yaml
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/rook-ceph/cluster.yaml
@@ -221,6 +231,7 @@ rook-ceph-cluster-install:
         kubectl apply -f /srv/kubernetes/manifests/rook-ceph/object.yaml
         kubectl apply -f /srv/kubernetes/manifests/rook-ceph/filesystem.yaml
         kubectl apply -f /srv/kubernetes/manifests/rook-ceph/storageclass.yaml
+        kubectl apply -f /srv/kubernetes/manifests/rook-ceph/filesystem-storageclass.yaml
         kubectl apply -f /srv/kubernetes/manifests/rook-ceph/rook-ceph-ingress.yaml
 
 rook-ceph-cluster-wait:

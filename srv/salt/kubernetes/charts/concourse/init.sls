@@ -26,6 +26,27 @@ concourse-namespace:
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/concourse/namespace.yaml
 
+concourse-fetch-charts:
+  cmd.run:
+    - runas: root
+    - require:
+      - file: /srv/kubernetes/manifests/concourse
+    - cwd: /srv/kubernetes/manifests/concourse
+    - name: |
+        helm repo add concourse https://concourse-charts.storage.googleapis.com/
+        helm fetch --untar concourse/concourse
+  file.absent:
+    - name: /srv/kubernetes/manifests/concourse/concourse/requirements.lock
+
+/srv/kubernetes/manifests/concourse/concourse/requirements.yaml:
+  file.managed:
+    - watch:
+      - cmd: concourse-fetch-charts
+    - source: salt://kubernetes/charts/concourse/files/requirements.yaml
+    - user: root
+    - group: root
+    - mode: 644
+
 {% if charts.get('keycloak', {'enabled': False}).enabled %}
 
 concourse-wait-keycloak:
@@ -228,10 +249,13 @@ concourse-create-client:
 
 concourse:
   cmd.run:
-    - watch:
-      - file: /srv/kubernetes/manifests/concourse
-      - cmd: concourse-namespace
     - runas: root
+    - watch:
+      - file: /srv/kubernetes/manifests/concourse/values.yaml
+      - file: /srv/kubernetes/manifests/concourse/concourse/requirements.yaml
+      - cmd: concourse-namespace
+      - cmd: concourse-fetch-charts
+    - cwd: /srv/kubernetes/manifests/concourse/concourse
     - name: |
         helm upgrade --install concourse --namespace concourse \
             --set concourse.web.externalUrl=https://{{ charts.concourse.ingress_host }}.{{ public_domain }} \
@@ -242,7 +266,7 @@ concourse:
             {%- if master.storage.get('rook_ceph', {'enabled': False}).enabled %}
             --values /srv/kubernetes/manifests/concourse/values.yaml \
             {%- endif %}
-            "stable/concourse"
+            "./" --wait --timeout 5m
             
 concourse-ingress:
   file.managed:

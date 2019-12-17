@@ -35,16 +35,38 @@ keycloak-namespace:
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/keycloak/namespace.yaml
 
+keycloak-fetch-charts:
+  cmd.run:
+    - runas: root
+    - require:
+      - file: /srv/kubernetes/manifests/keycloak
+    - cwd: /srv/kubernetes/manifests/keycloak
+    - name: |
+        helm repo add codecentric https://codecentric.github.io/helm-charts
+        helm fetch --untar codecentric/keycloak
+  file.absent:
+    - name: /srv/kubernetes/manifests/keycloak/keycloak/requirements.lock
+
+/srv/kubernetes/manifests/keycloak/keycloak/requirements.yaml:
+  file.managed:
+    - watch:
+      - cmd: keycloak-fetch-charts
+    - source: salt://kubernetes/charts/keycloak/files/requirements.yaml
+    - user: root
+    - group: root
+    - mode: 644
+
 keycloak:
   cmd.run:
+    - runas: root
     - watch:
       - file: /srv/kubernetes/manifests/keycloak/values.yaml
+      - file: /srv/kubernetes/manifests/keycloak/keycloak/requirements.yaml
       - cmd: keycloak-namespace
-    - runas: root
-    # - unless: helm list | grep keycloak
+      - cmd: keycloak-fetch-charts
     - only_if: kubectl get storageclass | grep \(default\)
+    - cwd: /srv/kubernetes/manifests/keycloak/keycloak
     - name: |
-        helm repo add codecentric https://codecentric.github.io/helm-charts && \
         helm repo update && \
         helm upgrade --install keycloak --namespace keycloak \
             --set keycloak.image.tag={{ charts.keycloak.version }} \
@@ -52,7 +74,7 @@ keycloak:
             {%- if master.storage.get('rook_ceph', {'enabled': False}).enabled %}
             -f /srv/kubernetes/manifests/keycloak/values.yaml \
             {%- endif %}
-            "codecentric/keycloak"
+            "./" --wait --timeout 5m
 
 keycloak-ingress:
   file.managed:
@@ -80,12 +102,12 @@ keycloak-wait-public-url:
     - status: 200
     - require_in:
       - sls: kubernetes.charts.keycloak-gatekeeper
-      {%- if master.storage.get('concourse', {'enabled': False}).enabled %}
-      - sls: kubernetes.charts.concourse
+      {%- if master.storage.get('keycloak', {'enabled': False}).enabled %}
+      - sls: kubernetes.charts.keycloak
       {%- endif %}
       {%- if master.storage.get('harbor', {'enabled': False}).enabled %}
       - sls: kubernetes.charts.harbor
       {%- endif %}
-      {%- if master.storage.get('concourse', {'enabled': False}).enabled %}
+      {%- if master.storage.get('keycloak', {'enabled': False}).enabled %}
       - sls: kubernetes.charts.spinnaker
       {%- endif %}

@@ -111,7 +111,9 @@ halyard:
         $HAL_COMMAND config ci concourse master ${PROVIDER_COMMAND} ${INSTANCE} --url ${URL} --username ${USERNAME} --password ${PASSWORD}
         $HAL_COMMAND config ci concourse enable
       {% endif %}
+
 minio:
+  {%- if master.storage.get('rook_minio', {'enabled': False}).enabled %}
   enabled: false
 
 s3:
@@ -119,7 +121,13 @@ s3:
   bucket: spinnaker
   endpoint: http://spinnaker-minio:9000
   accessKey: {{ charts.spinnaker.s3.accesskey }}
-  secretKey: {{ charts.spinnaker.s3.secretkey }}
+  secretKey: {{ charts.spinnaker.s3.secretkey }}        
+  {%- else -%}
+  enabled: true
+  persistence:
+    enabled: true
+  {%- endif %}
+
 
 dockerRegistries:
 - name: dockerhub
@@ -141,7 +149,14 @@ dockerRegistries:
 spinnakerFeatureFlags: []
 
 redis:
-  enabled: false
-  external:
-    host: "redis-headless"
-    port: 6379
+  enabled: true
+  cluster:
+    enabled: true
+  master:
+    persistence:
+      enabled: true
+    disableCommands: []
+  slave:
+    disableCommands: []
+  sentinel:
+    enabled: false

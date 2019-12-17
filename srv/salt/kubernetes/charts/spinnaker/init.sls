@@ -19,6 +19,26 @@
     - group: root
     - mode: 644
 
+spinnaker-fetch-charts:
+  cmd.run:
+    - runas: root
+    - require:
+      - file: /srv/kubernetes/manifests/spinnaker
+    - cwd: /srv/kubernetes/manifests/spinnaker
+    - name: |
+        helm fetch --untar stable/spinnaker
+  file.absent:
+    - name: /srv/kubernetes/manifests/spinnaker/spinnaker/requirements.lock
+
+/srv/kubernetes/manifests/spinnaker/spinnaker/requirements.yaml:
+  file.managed:
+    - watch:
+      - cmd: spinnaker-fetch-charts
+    - source: salt://kubernetes/charts/spinnaker/files/requirements.yaml
+    - user: root
+    - group: root
+    - mode: 644
+
 {% if charts.get('keycloak', {'enabled': False}).enabled %}
 
 spinnaker-wait-keycloak:
@@ -191,17 +211,16 @@ spinnaker-namespace:
         kubectl apply -f /srv/kubernetes/manifests/spinnaker/namespace.yaml
 
 {% if master.storage.get('rook_minio', {'enabled': False}).enabled %}
-/srv/kubernetes/manifests/spinnaker/object-store.yaml:
-    file.managed:
+spinnaker-minio:
+  file.managed:
     - require:
       - file: /srv/kubernetes/manifests/spinnaker
+    - name: /srv/kubernetes/manifests/spinnaker/object-store.yaml
     - source: salt://kubernetes/charts/spinnaker/templates/object-store.yaml.j2
     - template: jinja
     - user: root
     - group: root
     - mode: 644
-
-spinnaker-minio:
   cmd.run:
     - runas: root
     - watch:
@@ -232,27 +251,21 @@ spinnaker:
   cmd.run:
     - runas: root
     - only_if: kubectl get storageclass | grep \(default\)
+    - cwd: /srv/kubernetes/manifests/spinnaker/spinnaker
     - require:
       - cmd: spinnaker-namespace
     - watch:
       - file: /srv/kubernetes/manifests/spinnaker/values.yaml
+      - file: /srv/kubernetes/manifests/spinnaker/spinnaker/requirements.yaml
+      - cmd: spinnaker-fetch-charts
     - name: |
-        helm repo update && \
-        helm upgrade --install redis --namespace spinnaker \
-          --set redis.cluster.enabled=true \
-          --set redis.master.persistence.enabled=true \
-          --version=9.5.0 \
-          "stable/redis"
+        helm dependency update && \
+        helm dependency build . && \
         helm upgrade --install spinnaker --namespace spinnaker \
           --set halyard.spinnakerVersion={{ charts.spinnaker.version }} \
           --set halyard.image.tag={{ charts.spinnaker.halyard_version }} \
-          {%- if master.storage.get('rook_minio', {'enabled': False}).enabled %}
           --values /srv/kubernetes/manifests/spinnaker/values.yaml \
-          {%- else -%}
-          --set minio.enabled=true \
-          --set minio.persistence.enabled=true \
-          {%- endif %}
-          "stable/spinnaker" --timeout 10m
+          "./" --timeout 10m 
 
 spinnaker-front50-wait:
   cmd.run:

@@ -8,6 +8,40 @@
     - dir_mode: 750
     - makedirs: True
 
+harbor-namespace:
+  file.managed:
+    - require:
+      - file: /srv/kubernetes/manifests/harbor
+    - name: /srv/kubernetes/manifests/harbor/namespace.yaml
+    - source: salt://kubernetes/charts/harbor/files/namespace.yaml
+    - user: root
+    - group: root
+    - mode: 644
+  cmd.run:
+    - runas: root
+    - watch:
+      - file: /srv/kubernetes/manifests/harbor/namespace.yaml
+    - name: |
+        kubectl apply -f /srv/kubernetes/manifests/harbor/namespace.yaml
+
+harbor-fetch-charts:
+  cmd.run:
+    - runas: root
+    - require:
+      - file: /srv/kubernetes/manifests/harbor
+    - cwd: /srv/kubernetes/manifests/harbor
+    - name: |
+        helm repo add harbor https://helm.goharbor.io
+        helm fetch --untar harbor/harbor
+
+
+/srv/kubernetes/manifests/harbor/harbor/templates/nginx/deployment.yaml:
+  file.managed:
+    - source: salt://kubernetes/charts/harbor/files/nginx-deployment.yaml
+    - user: root
+    - group: root
+    - mode: 644
+
 {% if charts.get('keycloak', {'enabled': False}).enabled %}
 
 harbor-wait-keycloak:
@@ -162,22 +196,6 @@ harbor-create-client:
 
 {% endif %}
 
-harbor-namespace:
-  file.managed:
-    - require:
-      - file: /srv/kubernetes/manifests/harbor
-    - name: /srv/kubernetes/manifests/harbor/namespace.yaml
-    - source: salt://kubernetes/charts/harbor/files/namespace.yaml
-    - user: root
-    - group: root
-    - mode: 644
-  cmd.run:
-    - runas: root
-    - watch:
-      - file: /srv/kubernetes/manifests/harbor/namespace.yaml
-    - name: |
-        kubectl apply -f /srv/kubernetes/manifests/harbor/namespace.yaml
-
 /srv/kubernetes/manifests/harbor/values.yaml:
     file.managed:
     - require:
@@ -187,13 +205,6 @@ harbor-namespace:
     - user: root
     - group: root
     - mode: 644
-
-harbor-repo:
-  cmd.run:
-    - runas: root
-    - use_vt: true
-    - name: |
-        helm repo add harbor https://helm.goharbor.io
 
 harbor-minio:
   file.managed:
@@ -232,16 +243,18 @@ harbor-minio-ingress:
 
 harbor:
   cmd.run:
-    - watch:
-        - cmd: harbor-repo
-    - require:
-      - cmd: harbor-namespace
     - runas: root
-    - cwd: /srv/kubernetes/manifests/harbor
+    - require:
+      - file: /srv/kubernetes/manifests/harbor
+    - watch:
+        - cmd: harbor-namespace
+        - cmd: harbor-fetch-charts
+        - file: /srv/kubernetes/manifests/harbor/values.yaml
+    - cwd: /srv/kubernetes/manifests/harbor/harbor
     - use_vt: true
     - name: |
         helm dependency update
         helm upgrade --install harbor \
           --namespace harbor \
           --values /srv/kubernetes/manifests/harbor/values.yaml \
-          harbor/harbor
+          "./" --wait --timeout 5m

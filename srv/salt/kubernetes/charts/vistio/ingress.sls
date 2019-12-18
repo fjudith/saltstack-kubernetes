@@ -1,6 +1,6 @@
 vistio-ingress:
   file.managed:
-    - name: /srv/kubernetes/manifests/vistio-ingress.yaml:
+    - name: /srv/kubernetes/manifests/vistio-ingress.yaml
     - source: salt://kubernetes/charts/vistio/templates/ingress.yaml.j2
     - user: root
     - template: jinja

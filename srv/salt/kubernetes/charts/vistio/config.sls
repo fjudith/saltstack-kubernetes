@@ -1,8 +1,9 @@
 {%- from "kubernetes/map.jinja" import common with context -%}
+{%- from "kubernetes/map.jinja" import charts with context -%}
 
 vistio-addon:
   git.latest:
-    - name: https://github.com/nmnellis/vistio
+    - name: https://github.com/fjudith/vistio
     - target: /srv/kubernetes/manifests/vistio
     - force_reset: True
     - rev: v{{ charts.vistio.version }}

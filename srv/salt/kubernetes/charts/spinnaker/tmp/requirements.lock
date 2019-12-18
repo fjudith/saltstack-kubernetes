@@ -1,0 +1,9 @@
+dependencies:
+- name: redis
+  repository: https://kubernetes-charts.storage.googleapis.com/
+  version: 9.4.3
+- name: minio
+  repository: https://kubernetes-charts.storage.googleapis.com/
+  version: 2.5.17
+digest: sha256:45d10a49a332ff277746697802c66aa03904784e90535e55e6752464c5a21183
+generated: "2019-10-31T13:16:06.41563674+01:00"

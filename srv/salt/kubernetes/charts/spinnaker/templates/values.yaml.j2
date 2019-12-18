@@ -1,8 +1,12 @@
 {%- set public_domain = pillar['public-domain'] -%}
 {%- from "kubernetes/map.jinja" import common with context -%}
+{%- from "kubernetes/map.jinja" import master with context -%}
 {%- from "kubernetes/map.jinja" import charts with context -%}
 
 halyard:
+  image:
+    tag: {{ charts.spinnaker.halyard_version }}
+  spinnakerVersion: {{ charts.spinnaker.version }}
   additionalProfileConfigMaps:
     data:
       front50-local.yml: |-
@@ -146,7 +150,8 @@ dockerRegistries:
   password: {{ charts.harbor.admin_password }}
 {% endif %}
 
-spinnakerFeatureFlags: []
+spinnakerFeatureFlags:
+  - artifacts
 
 redis:
   enabled: true

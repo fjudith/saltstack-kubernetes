@@ -1,0 +1,61 @@
+{%- set public_domain = pillar['public-domain'] -%}
+{%- from "kubernetes/map.jinja" import charts with context -%}
+
+{
+    "id": "demo",
+    "clientId": "demo",
+    "name": "demo",
+    "description": "Stakater ProxyInjector Demo OIDC client",
+    "rootUrl": "https://{{ charts.proxyinjector.ingress_host }}.{{ public_domain }}",
+    "adminUrl": "https://{{ charts.proxyinjector.ingress_host }}.{{ public_domain }}",
+    "baseUrl": "/login",
+    "surrogateAuthRequired": false,
+    "enabled": true,
+    "clientAuthenticatorType": "client-secret",
+    "redirectUris": [
+      "https://{{ charts.proxyinjector.ingress_host }}.{{ public_domain }}/oauth/callback/*"
+    ],
+    "webOrigins": [
+      "https://{{ charts.proxyinjector.ingress_host }}.{{ public_domain }}"
+    ],
+    "notBefore": 0,
+    "bearerOnly": false,
+    "consentRequired": false,
+    "standardFlowEnabled": true,
+    "implicitFlowEnabled": false,
+    "directAccessGrantsEnabled": true,
+    "serviceAccountsEnabled": false,
+    "publicClient": false,
+    "frontchannelLogout": false,
+    "protocol": "openid-connect",
+    "attributes": {
+      "saml.assertion.signature": "false",
+      "saml.force.post.binding": "false",
+      "saml.multivalued.roles": "false",
+      "saml.encrypt": "false",
+      "saml.server.signature": "false",
+      "saml.server.signature.keyinfo.ext": "false",
+      "exclude.session.state.from.auth.response": "false",
+      "saml_force_name_id_format": "false",
+      "saml.client.signature": "false",
+      "tls.client.certificate.bound.access.tokens": "false",
+      "saml.authnstatement": "false",
+      "display.on.consent.screen": "false",
+      "saml.onetimeuse.condition": "false"
+    },
+    "authenticationFlowBindingOverrides": {},
+    "fullScopeAllowed": true,
+    "nodeReRegistrationTimeout": -1,
+    "defaultClientScopes": [
+      "web-origins",
+      "role_list",
+      "profile",
+      "roles",
+      "email"
+    ],
+    "optionalClientScopes": [
+      "address",
+      "phone",
+      "offline_access"
+    ]
+  }

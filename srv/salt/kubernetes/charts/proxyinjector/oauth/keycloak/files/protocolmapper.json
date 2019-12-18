@@ -1,0 +1,11 @@
+{
+  "name": "audience-demo",
+  "protocol": "openid-connect",
+  "protocolMapper": "oidc-audience-mapper",
+  "consentRequired": false,
+  "config": {
+    "included.client.audience": "demo",
+    "id.token.claim": "false",
+    "access.token.claim": "true"
+  }
+}

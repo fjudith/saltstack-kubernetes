@@ -4,6 +4,7 @@
 query-spinnaker-deck:
   http.wait_for_successful_query:
     - watch:
+      - cmd: spinnaker
       - cmd: spinnaker-ingress
     - name: https://{{ charts.spinnaker.ingress_host }}.{{ public_domain }}
     # - match: DaemonSet
@@ -14,6 +15,7 @@ query-spinnaker-deck:
 query-spinnaker-gate:
   http.wait_for_successful_query:
     - watch:
+      - cmd: spinnaker
       - cmd: spinnaker-ingress
     - name: https://{{ charts.spinnaker.ingress_host }}-gate.{{ public_domain }}
     # - match: DaemonSet
@@ -24,12 +26,13 @@ query-spinnaker-gate:
 query-spinnaker-minio:
   http.wait_for_successful_query:
     - watch:
+      - cmd: spinnaker
       - cmd: spinnaker-ingress
-    - name: https://{{ charts.spinnaker.ingress_host }}-minio.{{ public_domain }}
+    - name: https://{{ charts.spinnaker.ingress_host }}-minio.{{ public_domain }}/minio/login
     # - match: DaemonSet
     - wait_for: 120
     - request_interval: 5
-    - status: 200
+    - status: 403
 
 spinnaker-front50-wait:
   cmd.run:

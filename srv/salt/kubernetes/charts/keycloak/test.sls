@@ -3,7 +3,7 @@
 {%- from "kubernetes/map.jinja" import master with context -%}
 
 
-keycloak-wait-public-url:
+query-keycloak:
   http.wait_for_successful_query:
     - name: "https://{{ charts.keycloak.ingress_host }}.{{ public_domain }}/auth/realms/master/"
     - wait_for: 180

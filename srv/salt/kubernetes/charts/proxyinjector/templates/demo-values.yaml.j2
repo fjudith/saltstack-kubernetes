@@ -1,0 +1,25 @@
+{%- set public_domain = pillar['public-domain'] -%}
+{%- from "kubernetes/map.jinja" import charts with context -%}
+
+containerPort: 8080
+namespace: kubehttpbin
+numReplicas: 3
+dockerTag: devel
+dockerOrg: arschles
+dockerPullPolicy: Always
+annotations:
+  {% if charts.get('keycloak', {'enabled': False}).enabled -%}
+  {%- set keycloak_url = 'https://' + charts.get('keycloak', {}).get('ingress_host') + '.' + pillar['public-domain'] -%}
+  {%- set keycloak_password = salt['cmd.shell']("kubectl get secret --namespace keycloak keycloak-http -o jsonpath='{.data.password}' | base64 --decode; echo") -%}
+  {%- set client_secret     = salt['cmd.shell']('/srv/kubernetes/manifests/spinnaker/kc-clientsecret-spinnaker.sh' + ' ' + 'keycloak' + ' ' + keycloak_password + ' ' + keycloak_url + ' ' + charts.spinnaker.oauth.keycloak.realm) -%}
+  {%- set realm = charts.spinnaker.oauth.get('keycloak', {}).get('realm') -%}    
+  authproxy.stakater.com/enabled: "true"
+  authproxy.stakater.com/source-service-name: "kubehttpbin"
+  authproxy.stakater.com/target-port: "80"
+  authproxy.stakater.com/ressources: "uri=/*"
+  authproxy.stakater.com/listen: "80"
+  authproxy.stakater.com/upstream-url: "https://{{ charts.proxyinjector.ingress_host }}.{{ public_domain }}"
+  authproxy.stakater.com/client-id: "demo"
+  authproxy.stakater.com/client-secret: "{{ client_secret }}"
+  authproxy.stakater.com/gatekeeper-image: "{{ charts.proxyinjector.image }}"
+  {% endif %}

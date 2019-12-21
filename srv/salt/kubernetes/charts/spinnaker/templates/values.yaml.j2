@@ -1,8 +1,12 @@
 {%- set public_domain = pillar['public-domain'] -%}
 {%- from "kubernetes/map.jinja" import common with context -%}
+{%- from "kubernetes/map.jinja" import master with context -%}
 {%- from "kubernetes/map.jinja" import charts with context -%}
 
 halyard:
+  image:
+    tag: {{ charts.spinnaker.halyard_version }}
+  spinnakerVersion: {{ charts.spinnaker.version }}
   additionalProfileConfigMaps:
     data:
       front50-local.yml: |-
@@ -111,7 +115,9 @@ halyard:
         $HAL_COMMAND config ci concourse master ${PROVIDER_COMMAND} ${INSTANCE} --url ${URL} --username ${USERNAME} --password ${PASSWORD}
         $HAL_COMMAND config ci concourse enable
       {% endif %}
+
 minio:
+  {%- if master.storage.get('rook_minio', {'enabled': False}).enabled %}
   enabled: false
 
 s3:
@@ -119,7 +125,13 @@ s3:
   bucket: spinnaker
   endpoint: http://spinnaker-minio:9000
   accessKey: {{ charts.spinnaker.s3.accesskey }}
-  secretKey: {{ charts.spinnaker.s3.secretkey }}
+  secretKey: {{ charts.spinnaker.s3.secretkey }}        
+  {%- else -%}
+  enabled: true
+  persistence:
+    enabled: true
+  {%- endif %}
+
 
 dockerRegistries:
 - name: dockerhub
@@ -138,4 +150,18 @@ dockerRegistries:
   password: {{ charts.harbor.admin_password }}
 {% endif %}
 
-spinnakerFeatureFlags: []
+spinnakerFeatureFlags:
+  - artifacts
+
+redis:
+  enabled: true
+  cluster:
+    enabled: true
+  master:
+    persistence:
+      enabled: true
+    disableCommands: []
+  slave:
+    disableCommands: []
+  sentinel:
+    enabled: false

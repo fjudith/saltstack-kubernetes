@@ -2,24 +2,43 @@
 
 base:
   '*':
+  {# 'role:proxy':
+    - match: grain
+    - haproxy
+    - common
+    - kubernetes.cri.docker
+  'role:etcd':
+    - match: grain
+    - common
+    - kubernetes.cri.docker
+  'master01'
+    - match: hostname
+    - common
+    - kubernetes.cri.docker
+    - kubernetes.role.master.kubeadm
+  'role:master':
+    - match: grain
+    - common
+    - kubernetes.cri.docker
+  'role:node':
+    - match: grain
+    - common
+    - kubernetes.cri.docker #}
+
+  {% if "proxy" in grains.get('role', []) %}
+    - haproxy
+    - common
+    - kubernetes.cri.docker
+  {% endif %}
   {% if "etcd" in grains.get('role', []) %}
     - common
-    - certs
     - kubernetes.cri.docker
     - kubernetes.role.etcd
   {% endif %}
-  {% if "master" in grains.get('role', []) %}
+  {%- if 'master01' in grains.get('fqdn', [])|lower %}
     - common
-    - certs
-    - kubernetes.role.master
-    - kubernetes.cni
-    - kubernetes.cri
-    - kubernetes.cri.{{ common.cri.provider }}
-    - kubernetes.role.master.kubelet
-    - kubernetes.role.master.kube-proxy
-    - kubernetes.role.master.kube-apiserver
-    - kubernetes.role.master.kube-controller-manager
-    - kubernetes.role.master.kube-scheduler
+    - kubernetes.cri.docker
+    - kubernetes.role.master.kubeadm.init
     - kubernetes.cni.{{ common.cni.provider }}
     {%- if common.addons.dns.get('coredns', {'enabled': False}).enabled %}
     - kubernetes.addons.coredns
@@ -35,27 +54,21 @@ base:
     - kubernetes.addons
     - kubernetes.charts
   {% endif %}
-  {% if "node" in grains.get('role', []) %}
+  {% if "master" in grains.get('role', []) and not 'master01' in grains.get('fqdn', [])|lower %}
     - common
-    - certs
-    - kubernetes.role.node
-    - kubernetes.cni
-    - kubernetes.cri
-    - kubernetes.cri.{{ common.cri.provider }}
-    - kubernetes.role.node.kubelet
-    - kubernetes.role.node.kube-proxy
+    - kubernetes.cri.docker
+    - kubernetes.role.master.kubeadm.join
   {% endif %}
   {% if "proxy" in grains.get('role', []) %}
-    - common
-    - certs
-    - kubernetes.role.proxy
-    - tinyproxy
-    - keepalived
     - haproxy
-    - kubernetes.role.node
-    - kubernetes.cni
-    - kubernetes.cri
-    - kubernetes.cri.{{ common.cri.provider }}
-    - kubernetes.role.proxy.kubelet
-    - kubernetes.role.proxy.kube-proxy
+    - common
+    - kubernetes.cri.docker
+    - kubernetes.role.proxy.kubeadm
   {% endif %}
+  {% if "node" in grains.get('role', []) %}
+    - common
+    - kubernetes.cri.docker
+    - kubernetes.role.node.kubeadm
+  {% endif %}
+  
+  

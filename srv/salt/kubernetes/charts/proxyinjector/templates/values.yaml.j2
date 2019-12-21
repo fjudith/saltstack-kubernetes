@@ -4,7 +4,7 @@ kubernetes:
   host: https://kubernetes.default
 
 proxyinjector:
-  mount: "configmap"
+  mount: "secret"
   tolerations: {}
   labels:
     provider: stakater
@@ -32,4 +32,4 @@ proxyinjector:
         resources:
         - uri: '/*'
         scopes:
-        - 'good-service'
+        - 'allowed-service'

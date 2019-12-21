@@ -7,47 +7,16 @@
     - dir_mode: 750
     - makedirs: True
 
-/srv/kubernetes/manifests/cert-manager/namespace.yaml:
+cert-manager-crds:
   file.managed:
     - require:
       - file: /srv/kubernetes/manifests/cert-manager
-    - source: salt://kubernetes/ingress/cert-manager/files/namespace.yaml
-    - user: root
-    - template: jinja
-    - group: root
-    - mode: 644
-
-/srv/kubernetes/manifests/cert-manager/00-crds.yaml:
-  file.managed:
-    - require:
-      - file: /srv/kubernetes/manifests/cert-manager
+    - name: /srv/kubernetes/manifests/cert-manager/00-crds.yaml
     - source: https://raw.githubusercontent.com/jetstack/cert-manager/v{{ common.addons.cert_manager.version }}/deploy/manifests/00-crds.yaml
     - user: root
     - group: root
     - mode: 644
     - skip_verify: true
-
-/srv/kubernetes/manifests/cert-manager/cert-manager.yaml:
-  file.managed:
-    - require:
-      - file: /srv/kubernetes/manifests/cert-manager
-    - source: https://github.com/jetstack/cert-manager/releases/download/v{{ common.addons.cert_manager.version }}/cert-manager.yaml
-    - user: root
-    - group: root
-    - mode: 644
-    - skip_verify: true
-
-/srv/kubernetes/manifests/cert-manager/clusterissuer.yaml:
-  file.managed:
-    - require:
-      - file: /srv/kubernetes/manifests/cert-manager
-    - source: salt://kubernetes/ingress/cert-manager/templates/{{ common.addons.cert_manager.dns.provider }}-clusterissuer.yaml.jinja
-    - user: root
-    - template: jinja
-    - group: root
-    - mode: 644
-
-cert-manager-crds:
   cmd.run:
     - watch:
         - file: /srv/kubernetes/manifests/cert-manager/00-crds.yaml
@@ -57,6 +26,15 @@ cert-manager-crds:
     - name: kubectl apply -f /srv/kubernetes/manifests/cert-manager/00-crds.yaml
 
 cert-manager-namespace:
+  file.managed:
+    - require:
+      - file: /srv/kubernetes/manifests/cert-manager
+    - name: /srv/kubernetes/manifests/cert-manager/namespace.yaml
+    - source: salt://kubernetes/ingress/cert-manager/files/namespace.yaml
+    - user: root
+    - template: jinja
+    - group: root
+    - mode: 644
   cmd.run:
     - watch:
         - file: /srv/kubernetes/manifests/cert-manager/namespace.yaml
@@ -85,13 +63,17 @@ cert-manager-create-secret:
 cert-manager-install:
   cmd.run:
     - watch:
-        - file: /srv/kubernetes/manifests/cert-manager/cert-manager.yaml
         - cmd: cert-manager-namespace
         - cmd: cert-manager-crds
     - runas: root
     - use_vt: True
     - name: |
-        kubectl apply -f /srv/kubernetes/manifests/cert-manager/cert-manager.yaml --validate=false
+        helm repo add jetstack https://charts.jetstack.io && \
+        helm repo update && \
+        helm upgrade --install cert-manager \
+        --namespace cert-manager \
+        --version v{{ common.addons.cert_manager.version }} \
+        jetstack/cert-manager
 
 query-cert-manager-required-api:
   http.wait_for_successful_query:
@@ -102,6 +84,15 @@ query-cert-manager-required-api:
     - status: 200
 
 cert-manager-clusterissuer:
+  file.managed:
+    - require:
+      - file: /srv/kubernetes/manifests/cert-manager
+    - name: /srv/kubernetes/manifests/cert-manager/clusterissuer.yaml
+    - source: salt://kubernetes/ingress/cert-manager/templates/{{ common.addons.cert_manager.dns.provider }}-clusterissuer.yaml.jinja
+    - user: root
+    - template: jinja
+    - group: root
+    - mode: 644
   cmd.run:
     - require:
       - http: query-cert-manager-required-api
@@ -112,8 +103,4 @@ cert-manager-clusterissuer:
     - use_vt: True
     - onlyif: curl --silent 'http://127.0.0.1:8080/apis/cert-manager.io'
     - name: |
-        until [ "$(kubectl get apiservice v1beta1.webhook.certmanager.k8s.io -o jsonpath='{.status.conditions[?(@.type=="Available")].status}')" == "True" ];
-        do echo "Waiting for v1beta1.webhook.certmanager.k8s.io..." && sleep 1
-        done
-        
         kubectl apply -f /srv/kubernetes/manifests/cert-manager/clusterissuer.yaml

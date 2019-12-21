@@ -1,0 +1,62 @@
+kubeadm:
+  enabled: true
+  kubernetesVersion: 1.16.0
+  apiVersion: v1beta2
+  token: "abcdef.0123456789abcdef"
+  nodeToken: "123456.abcdefghij123456"
+  criSocket: "/var/run/dockershim.sock"
+  ignorePreflightErrors: []
+  bindPort: 6443
+  encryptionKey: vjJjjlJ05TEm4iPJBGs+Pj/HAU7v/rw8NHZoBJ6fvVA=
+  certificateKey: "a7917e43ba7314a797bf7fa4de0154aca4582f7633867548606841e38e13e66c"
+  etcd:
+    local: true
+    imageRepository: "k8s.gcr.io"
+    imageTag: 3.3.15
+    datadir: "/var/lib/etcd"
+    port: 2379
+    serverCertSANs: []
+    peerCertSANs: []
+    extraArgs:
+      metrics: "basic"
+      election-timeout: "5000"
+      heartbeat-interval: "250"
+      auto-compaction-retention: "8"
+      snapshot-count: "10000"
+
+  networking:
+    serviceSubnet: "10.96.0.0/12"
+    podSubnet: "10.244.0.0/16"
+    dnsDomain: "cluster.local"
+  clusterDNSIP: "10.96.0.10"
+  apiServer:
+    extraArgs:
+      authorization-mode: "Node,RBAC"
+      anonymous-auth: "true"
+      audit-log-maxage: 30
+      audit-log-maxbackup: 3
+      audit-log-maxsize: 100
+      insecure-bind-address: "127.0.0.1"
+      insecure-port: "8080"
+    timeoutForControlPlane: "5m0s"
+    certSANs: []
+  controllerManager:
+    extraArgs:
+      terminated-pod-gc-threshold: "12500"
+      node-monitor-grace-period: "40s"
+      node-monitor-period: "5s"
+      pod-eviction-timeout: "5m0s"
+      node-cidr-mask-size: "24"
+  scheduler:
+    extraArgs:
+      leader-elect: "true"
+  certificatesDir: "/etc/kubernetes/pki"
+  imageRepository: "k8s.gcr.io"
+  useHyperKubeImage: false
+  clusterName: "kubernetes-cluster"
+  dns:
+    type: CoreDNS
+    imageRepository: k8s.gcr.io
+    imageTag: 1.6.2
+  kubeletExtraArgs:
+    cgroup-driver: systemd

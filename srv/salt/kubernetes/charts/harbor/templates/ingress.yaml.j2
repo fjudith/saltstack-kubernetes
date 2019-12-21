@@ -69,7 +69,7 @@ metadata:
     {%- endif %}
 spec:
   rules:
-  - host: notary.{{ public_domain }}
+  - host: {{ charts.harbor.notary_ingress_host }}.{{ public_domain }}
     http:
       paths:
       - path: /

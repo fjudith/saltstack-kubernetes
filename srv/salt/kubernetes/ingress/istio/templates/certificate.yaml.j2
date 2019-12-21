@@ -7,13 +7,6 @@ metadata:
   name: istio-ingressgateway-certs
   namespace: istio-system
 spec:
-  acme:
-    config:
-    - dns01:
-        provider: {{ common.addons.cert_manager.dns.provider }}
-      domains:
-      - '*.{{ public_domain }}'
-      - {{ public_domain }}
   commonName: '*.{{ public_domain }}'
   dnsNames:
   - {{ public_domain }}

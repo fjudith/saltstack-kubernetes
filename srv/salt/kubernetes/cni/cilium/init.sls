@@ -45,7 +45,7 @@ cilium-etcd-cert:
 
 query-cilium-required-api:
   http.wait_for_successful_query:
-    - name: 'http://127.0.0.1:8080/apis/extensions/v1beta1'
+    - name: 'http://127.0.0.1:8080/apis/apps/v1'
     - match: DaemonSet
     - wait_for: 180
     - request_interval: 5

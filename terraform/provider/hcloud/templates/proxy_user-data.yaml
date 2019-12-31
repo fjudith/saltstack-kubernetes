@@ -261,6 +261,30 @@ write_files:
           app: /srv/saltgui/index.html
           static: /srv/saltgui/static
           static_path: /static
+  - path: /etc/salt/master.d/nodegroups.conf
+    content: |
+      #################################################
+      # Using nodegroups to enable an additionnal
+      # orchestration layer to avoid state state
+      # evaluation to happen to early
+      # https://docs.saltstack.com/en/latest/topics/targeting/index.html
+      # https://docs.saltstack.com/en/latest/topics/targeting/compound.html
+      # https://docs.saltstack.com/en/latest/topics/targeting/nodegroups.html
+      #################################################
+      nodegroups:
+        kubeadm_init: 
+          - 'L@master01'
+        kubeadm_join_master: 
+          - 'G@role:master'
+          - 'and'
+          - 'not'
+          - 'L@master01'
+        kubeadm_join_proxy: 
+          - 'G@role:proxy'
+        kubeadm_join_node: 
+          - 'G@role:node'
+        kubernetes_apps:
+          - 'L@master01'
 
 bootcmd:
   # Network tuning

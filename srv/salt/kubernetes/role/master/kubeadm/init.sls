@@ -31,6 +31,8 @@ kubeadm-init:
         /usr/bin/kubeadm init --config /root/kubeadm-config.yaml --ignore-preflight-errors=all --upload-certs --v=5
     - require_in:
       - sls: kubernetes.role.master.kubeadm.join
+      - sls: kubernetes.role.node.kubeadm.join
+      - sls: kubernetes.role.proxy.kubeadm.join
 
 /root/.kube:
   file.directory:

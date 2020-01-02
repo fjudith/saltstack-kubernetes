@@ -171,18 +171,18 @@ kubernetes:
     storage:
       rook_ceph:
         enabled: True
-        image: rook/ceph:v1.1.6
+        image: rook/ceph:v1.1.8
         ceph_image: ceph/ceph:v14.2.4-20190917
         ingress_host: ceph
       rook_minio:
         enabled: True
-        image: rook/minio:v1.1.6
+        image: rook/minio:v1.1.8
         username: Ch4ng3M3
         password: Ch4ng3M34ls0
         ingress_host: minio
       rook_edgefs:
         enabled: False
-        image: rook/edgefs:1.1.6
+        image: rook/edgefs:1.1.8
         edgefs_image: edgefs/edgefs:1.2.86
         ingress_host: edgefs
   charts:

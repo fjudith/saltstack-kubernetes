@@ -136,6 +136,7 @@ kubernetes:
         ingress_host: httpbin
       metallb:
         enabled: True
+        verison: 0.8.3
   etcd:
     host: 127.0.0.1
     members:

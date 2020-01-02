@@ -17,6 +17,6 @@ control_plane1_kubeadm_init:
     - tgt: 'master01'
     - sls: kubernetes.role.master.kubeadm.init
     - queue: True
-- require:
+    - require:
       - salt: control_plane1_common_state
       - salt: control_plane1_docker_state

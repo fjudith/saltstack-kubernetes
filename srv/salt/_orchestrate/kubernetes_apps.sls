@@ -36,15 +36,6 @@ helm_state:
       - state: metrics-server_state
 {% endif %}
 
-ingress_state:
-  salt.state:
-    - tgt: 'master01'
-    - sls: kubernetes.ingress
-    - queue: True
-    - require:
-      - state: cni_state
-      - state: metrics-server_state
-
 kube-prometheus_state:
   salt.state:
     - tgt: 'master01'
@@ -54,6 +45,16 @@ kube-prometheus_state:
       - state: cni_state
       - state: metrics-server_state
 
+ingress_state:
+  salt.state:
+    - tgt: 'master01'
+    - sls: kubernetes.ingress
+    - queue: True
+    - require:
+      - state: cni_state
+      - state: metrics-server_state
+      - state: kube-prometheus_state
+
 csi_state:
   salt.state:
     - tgt: 'master01'
@@ -62,6 +63,8 @@ csi_state:
     - require:
       - state: cni_state
       - state: metrics-server_state
+      - state: kube-prometheus_state
+
 
 addons_state:
   salt.state:
@@ -71,6 +74,8 @@ addons_state:
     - require:
       - state: cni_state
       - state: metrics-server_state
+      - state: kube-prometheus_state
+      - state: csi_state
 
 {% if common.addons.get('helm', {'enabled': False}).enabled %}
 charts_state:
@@ -81,5 +86,7 @@ charts_state:
     - require:
       - state: cni_state
       - state: metrics-server_state
+      - state: kube-prometheus_state
+      - state: csi_state
 {% endif %}
     

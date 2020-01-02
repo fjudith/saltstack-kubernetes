@@ -13,7 +13,7 @@ metrics-server_state:
     - sls: kubernetes.addons.metrics-server
     - queue: True
     - require:
-      - state: cni_state
+      - salt: cni_state
 
 {% if common.addons.dns.get('coredns', {'enabled': False}).enabled %}
 coredns_state:
@@ -22,7 +22,7 @@ coredns_state:
     - sls: kubernetes.addons.coredns
     - queue: True
     - require:
-      - state: cni_state
+      - salt: cni_state
 {% endif %}
 
 {% if common.addons.get('helm', {'enabled': False}).enabled %}
@@ -32,8 +32,8 @@ helm_state:
     - sls: kubernetes.addons.helm
     - queue: True
     - require:
-      - state: cni_state
-      - state: metrics-server_state
+      - salt: cni_state
+      - salt: metrics-server_state
 {% endif %}
 
 kube-prometheus_state:
@@ -42,8 +42,8 @@ kube-prometheus_state:
     - sls: kubernetes.addons.kube-prometheus
     - queue: True
     - require:
-      - state: cni_state
-      - state: metrics-server_state
+      - salt: cni_state
+      - salt: metrics-server_state
 
 ingress_state:
   salt.state:
@@ -51,9 +51,9 @@ ingress_state:
     - sls: kubernetes.ingress
     - queue: True
     - require:
-      - state: cni_state
-      - state: metrics-server_state
-      - state: kube-prometheus_state
+      - salt: cni_state
+      - salt: metrics-server_state
+      - salt: kube-prometheus_state
 
 csi_state:
   salt.state:
@@ -61,9 +61,9 @@ csi_state:
     - sls: kubernetes.csi
     - queue: True
     - require:
-      - state: cni_state
-      - state: metrics-server_state
-      - state: kube-prometheus_state
+      - salt: cni_state
+      - salt: metrics-server_state
+      - salt: kube-prometheus_state
 
 
 addons_state:
@@ -72,10 +72,10 @@ addons_state:
     - sls: kubernetes.addons
     - queue: True
     - require:
-      - state: cni_state
-      - state: metrics-server_state
-      - state: kube-prometheus_state
-      - state: csi_state
+      - salt: cni_state
+      - salt: metrics-server_state
+      - salt: kube-prometheus_state
+      - salt: csi_state
 
 {% if common.addons.get('helm', {'enabled': False}).enabled %}
 charts_state:
@@ -84,9 +84,9 @@ charts_state:
     - sls: kubernetes.charts
     - queue: True
     - require:
-      - state: cni_state
-      - state: metrics-server_state
-      - state: kube-prometheus_state
-      - state: csi_state
+      - salt: cni_state
+      - salt: metrics-server_state
+      - salt: kube-prometheus_state
+      - salt: csi_state
 {% endif %}
     

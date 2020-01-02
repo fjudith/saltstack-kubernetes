@@ -1,15 +1,26 @@
+cluster-host: kubernetes
 public-domain: example.com
+
+controlPlaneInterface: wg0
+
+kubeadm:
+  kubernetesVersion: 1.16.3
+  # kubeadm token generate
+  token: ockpvc.dsmk8rtibt1gr72y
+  nodeToken: 4bidtp.y7q8hlsvfro0ech1
+  # kubeadm alpha certs certificate-key
+  certificateKey: 127a3baac30e6891987e6e20774da9f3334500c1e61cc688604513c116ce1831
 
 kubernetes:
   common:
-    image: gcr.io/google_containers/hyperkube:v1.15.5
-    version: v1.15.5
+    image: gcr.io/google_containers/hyperkube:v1.16.3
+    version: v1.16.3
     cri:
       provider: docker
       crictl_version: 1.15.0
       runc_version: 1.0.0-rc8
       docker:
-        version: 18.09.8
+        version: 18.06.3
         data_dir: /var/lib/docker
       containerd:
         version: 1.2.6
@@ -60,17 +71,19 @@ kubernetes:
           image: coredns/coredns:1.6.5
       helm:
         enabled: true
-        # tiller_image: gcr.io/kubernetes-helm/tiller:v3.0.0
-        version: 3.0.0
+        version: 3.0.1
         source_hash: 10e1fdcca263062b1d7b2cb93a924be1ef3dd6c381263d8151dd1a20a3d8c0dc
       kube_prometheus:
         enabled: True
-        version: 0.2.0
+        version: 0.3.0
         prometheus_ingress_host: prometheus
         alertmanager_ingress_host: alertmanager
         grafana_ingress_host: grafana
       heapster-influxdb:
-        enabled: True
+        enabled: False
+      metrics_server:
+        enabled: true
+        image: k8s.gcr.io/metrics-server-amd64:v0.3.6
       dashboard:
         enabled: True
         dashboard_image: kubernetesui/dashboard:v2.0.0-beta5
@@ -87,7 +100,7 @@ kubernetes:
         enabled: true
       istio:
         enabled: True
-        version: 1.3.4
+        version: 1.4.2
         tracing: jaeger
         prometheus_ingress_host: istio-prometheus
         tracing_ingress_host: istio-tracing
@@ -95,10 +108,10 @@ kubernetes:
         grafana_ingress_host: istio-grafana
         kiali_ingress_host: istio-kiali
         bookinfo_ingress_host: bookinfo
-        source_hash: fb9df09f492440190a28873e9164b8e17303a3825e3f732024af48a3a5cd665c
+        source_hash: 8d2adfa1524a89d0263b7feadf6541b6427a8aecf8aa930f0e5eeb796661dd7b
       cert_manager:
         enabled: True
-        version: 0.11.0
+        version: 0.12.0
         acme_email: user@example.com
         dns:
           provider: cloudflare
@@ -108,11 +121,11 @@ kubernetes:
         enabled: True
       weave_scope:
         enabled: True
-        image: docker.io/weaveworks/scope:1.11.6
+        image: docker.io/weaveworks/scope:1.12.0
         ingress_host: scope
       kubeless:
         enabled: True
-        version: 1.0.4
+        version: 1.0.5
         ui_version: master
         ingress_host: kubeless
       knative:
@@ -185,6 +198,10 @@ kubernetes:
         provider: keycloak
         keycloak:
           realm: default
+      s3:
+        accesskey: concourse
+        secretkey: C0nc0ur53P4ssw0rd
+        bucket: concourse
     keycloak:
       enabled: True
       version: 7.0.1
@@ -193,11 +210,11 @@ kubernetes:
       ingress_host: keycloak
     mailhog:
       enabled: True
-      ingress_host: mail-relay
+      ingress_host: mailhog
     spinnaker:
       enabled: True
-      version: 1.17.2
-      halyard_version: 1.28.0
+      version: 1.17.5
+      halyard_version: 1.26.0
       ingress_host: spinnaker
       github:
         enabled: True
@@ -215,7 +232,7 @@ kubernetes:
         password: 1nt3gr4t1on
     harbor:
       enabled: true
-      version: 1.2.2
+      version: 1.2.3
       admin_password: Ch4ng3M3
       secretkey: 2Ds7hlY9VHyKAcNd
       database_password: Ch4ng3M34ls0
@@ -231,7 +248,7 @@ kubernetes:
           realm: default
     vistio:
       enabled: true
-      version: 0.1.3
+      version: 0.2.1
       ingress_host: vistio
     ethereum:
       enabled: true
@@ -249,8 +266,13 @@ kubernetes:
         - "kubernetes-users,view"
     proxyinjector:
       enabled: True
-      version: 0.0.21
+      version: 0.0.22
       image: keycloak/keycloak-gatekeeper:6.0.1
+      ingress_host: demo
+      oauth:
+        provider: keycloak
+        keycloak:
+          realm: default
 tinyproxy:
   User: tinyproxy
   Group: tinyproxy

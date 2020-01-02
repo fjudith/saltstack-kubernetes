@@ -26,7 +26,7 @@ base:
     - match: nodegroup
     - kubernetes.cri.docker
     - kubernetes.role.node.kubeadm
-  'kubernetes_apps'
+  'kubernetes_apps':
     - match: nodegroup
     - kubernetes.cni.{{ common.cni.provider }}
     - kubernetes.addons.metrics-server

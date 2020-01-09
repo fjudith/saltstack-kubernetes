@@ -128,6 +128,9 @@ kubernetes:
         version: 1.0.5
         ui_version: master
         ingress_host: kubeless
+      nats_operator:
+        enabled: True
+        image: connecteverything/nats-operator:0.6.0
       knative:
         enabled: False
         version: 0.1.1
@@ -267,8 +270,8 @@ kubernetes:
         - "kubernetes-users,view"
     proxyinjector:
       enabled: True
-      version: 0.0.22
-      image: keycloak/keycloak-gatekeeper:6.0.1
+      version: 0.0.23
+      image: keycloak/keycloak-gatekeeper:7.0.1
       ingress_host: demo
       oauth:
         provider: keycloak

@@ -69,14 +69,14 @@ spec:
     namespace: rook-minio
   clusterDomain:
 ---
-apiVersion: v1
-kind: Service
-metadata:
-  name: minio-my-store
-  namespace: rook-minio
-spec:
-  type: NodePort
-  ports:
-    - port: 9000
-  selector:
-    app: minio
+# apiVersion: v1
+# kind: Service
+# metadata:
+#  name: minio-my-store
+#  namespace: rook-minio
+# spec:
+#  type: NodePort
+#  ports:
+#    - port: 9000
+#  selector:
+#    app: minio

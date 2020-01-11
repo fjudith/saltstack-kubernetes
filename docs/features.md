@@ -4,27 +4,6 @@
 Project is designed to allow you compose the Kubernetes infrastructure that fits your needs.
 Refer to the [pillar example](../srv/pillar/cluster_config.sls.example) to learn how to enable/disable and customize features.
 
-## Identity & Access Management
-
-<table>
-  <tr align='center'>
-    <th align='center'>Identity & Access Management server</th>
-    <th align='center'>Autentication proxy</th>
-  </tr>
-  <tr align='center'>
-    <td align='center'><a ref='https://github.com/keycloak/keycloak'>keycloak<a></td>
-    <td align='center'><a ref='https://github.com/keycloak/keycloak-gatekeeper'>keycloak-gatekeeper<a></td>
-  </tr>
-  <tr align='center'>
-    <td align='center'><img src='media/keycloak.png' width="50px"></td>
-    <td align='center'><img src='media/keycloak.png' width="50px"></td>
-  </tr>
-  <tr>
-    <td align='center'>Single Sign-on service</td>
-    <td align='center'>Provide Authn and Authz to services that do not support OIDC/SAML</td>
-  </tr>
-</table>
-
 ## Website
 
 Kubernetes applications demonstration and troubleshooting.
@@ -48,6 +27,50 @@ Kubernetes applications demonstration and troubleshooting.
   </tr>
 </table>
 
+## Key Management
+
+<table>
+  <tr align='center'>
+    <th align='center'>Identity & Access Management server</th>
+    <th align='center'>Autentication proxy</th>
+    <th align='center'>Autentication proxy sidecar injector</th>
+  </tr>
+  <tr align='center'>
+    <td align='center'><a ref='https://github.com/keycloak/keycloak'>keycloak<a></td>
+    <td align='center'><a ref='https://github.com/keycloak/keycloak-gatekeeper'>keycloak-gatekeeper<a></td>
+    <td align='center'><a ref='https://github.com/stakater/ProxyInjector'>proxyinjector<a></td>
+  </tr>
+  <tr align='center'>
+    <td align='center'><img src='media/keycloak.png' width="50px"></td>
+    <td align='center'><img src='media/keycloak.png' width="50px"></td>
+    <td align='center'><img src='media/proxyinjector.png' width="50px"></td>
+  </tr>
+  <tr>
+    <td align='center'>Single Sign-on service</td>
+    <td align='center'>Provide Authn and Authz to services that do not support OIDC/SAML</td>
+    <td align='center'>Injects Keycloak Gatekeeper as sidecar to annotated deployments</td>
+  </tr>
+</table>
+
+## Streaming & messaging
+
+Solutions for Function as a Service.
+
+<table>
+  <tr align='center'>
+    <th align='center' colspan=2>Messaging</th>
+  </tr>
+  <tr align='center'>
+    <td align='center'><a ref='https://nats.io'>NATS<a></td>
+  </tr>
+  <tr align='center'>
+    <td align='center'><img src='media/nats.png' width="50px"></td>
+  </tr>
+  <tr>
+    <td align='center'>High speed non-persistent messaging</td>
+  </tr>
+</table>
+
 ## Serverless
 
 Solutions for Function as a Service.
@@ -63,11 +86,11 @@ Solutions for Function as a Service.
     <td align='center'><img src='media/kubeless.png' width="50px"></td>
   </tr>
   <tr>
-    <td align='center'>Python, Node, Java, Go, Ruby, .Net core, Berlina</td>
+    <td align='center'>Python, Node, Java, Go, Ruby, .Net core, Berlina</p> <b>Trigger support:</b> NATS, Kafka, Cronjob, Kinesis and HTTP</td>
   </tr>
 </table>
 
-## CI/CD
+## Continuous delivery
 
 Solutions for software factory.
 
@@ -141,7 +164,7 @@ Solutions for monitoring, logging and tracing.
   </tr>
 </table>
 
-## Inbound internet access
+## Ingress
 
 Solutions to access hosted applications and cluster services.
 
@@ -170,7 +193,7 @@ Solutions to access hosted applications and cluster services.
   </tr>
 </table>
 
-## Persistent storage
+## Distributed database & storage
 
 Solutions to provide storage persistence to stateful applications.
 
@@ -280,10 +303,9 @@ Solutions to run containerized applications.
     <td align='center'><img src='media/crio.png' width="50px"></td>
   </tr>
   <tr>
-    <td align='center'>Network library</td>
-    <td align='center'>L2 vxlan without security policy</td>
-    <td align='center'>L3 BGP with security policy (iptables)</td>
-    <td align='center'>L2 vxlan with security policy (iptables)</td>
+    <td align='center'></td>
+    <td align='center'></td>
+    <td align='center'></td>
   </tr>
 </table>
 
@@ -312,7 +334,7 @@ Solutions to control and protect the cluster exchange on the Web.
     <td align='center'>Simplified iptables administration</td>
     <td align='center'>Stateful network firewall</td>
     <td align='center'>Outboud web filtering</td>
-    <td align='center'>Inbound web protection</td>
+    <td align='center'>DDOS web protection</td>
   </tr>
 </table>
 
@@ -341,7 +363,7 @@ Cloud infrastructure providers.
   </tr>
 </table>
 
-## DNS provider
+## Domain Name Service provider
 
 Managed DNS services.
 

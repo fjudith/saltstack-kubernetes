@@ -111,7 +111,37 @@ kubectl -n kubeless logs -l function=test
 
 ### Push events to Slack
 
-> A Slack [API Token](https://api.slack.com/custom-integrations/legacy-tokens) and Channel is required to run this demonstration.
+#### Setup Slack
+
+Create a new [Slack app](https://api.slack.com/apps/new) with the following specifications.
+
+* **App Name**: Python Test
+* **Development Slack Workspace**: _Select the appropriate workspace_
+
+Click on the **Create App** button.
+
+In the left panel, select **Bot Users** then click on the **Add a Bot User** button.
+Full-fill the **Bot User** as described below:
+
+* **Display Name**: `bot`
+* **Default username**: `bot`
+* **Always Show My Bot as Online**: _Off_
+
+Click on the **Add Bot User** button.
+
+In the left panel, select **Install App** then click on the **Install app** button.
+Click on the **Allow** button.
+Backup both the **Oauth Access Token** and **Bot User OAuth Access Token**. This last one will be used as value to the `SLACK_TOKEN` environment variable commummed by the python script.
+
+Execute the following command to test the message publishing to Slack.
+
+```bash
+export SLACK_TOKEN= #Bot User Oauth Access Token
+export SLACK_CHANNEL=general
+python3 slack.py -m "Hello world!"
+```
+
+#### Deploy the Slack function
 
 Execute the following command to create a function that forward events to [Slack](https://slack.com).
 

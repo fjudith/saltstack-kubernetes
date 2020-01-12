@@ -34,7 +34,7 @@ pip3 install kubernetes asyncio-nats-client
 Execute the following command to return events related to all pods locally.
 
 ```bash
-python3 srv/salt/kubernetes/addons/kubeless/demo/print-k8s-events.py
+python3 print-k8s-events.py
 ```
 
 ```text
@@ -55,7 +55,7 @@ kubectl --namespace nats-io port-forward svc/nats-cluster 4222:4222
 Execute the following command to push Kubernetes events to a NATS queue.
 
 ```bash
-python3 srv/salt/kubernetes/addons/kubeless/demo/publish-k8s-events.py --nats-address 'localhost:4222'
+python3 publish-k8s-events.py --nats-address 'localhost:4222'
 ```
 
 ```text
@@ -70,7 +70,7 @@ python3 srv/salt/kubernetes/addons/kubeless/demo/publish-k8s-events.py --nats-ad
 Execute the following command to deploy a pod that push Kubernetes events to the NATS cluster
 
 ```bash
-kubectl apply -f srv/salt/kubernetes/addons/kubeless/demo/publish-k8s-events-deployment.yaml
+kubectl apply -f publish-k8s-events-deployment.yaml
 
 # Display logs of the pod
 kubectl -n kubeless logs -l app=kubeless-nats-events
@@ -86,7 +86,7 @@ kubectl -n kubeless logs -l app=kubeless-nats-events
 Execute the following command to check that events are effectively published.
 
 ```bash
-kubeless function deploy test --runtime python3.6 --handler check-k8s-events.dump --from-file srv/salt/kubernetes/addons/kubeless/demo/check-k8s-events.py --namespace kubeless
+kubeless function deploy test --runtime python3.6 --handler check-k8s-events.dump --from-file check-k8s-events.py --namespace kubeless
 
 # Check that the function is deployed
 kubeless function ls -n kubeless
@@ -118,7 +118,7 @@ Execute the following command to create a function that forward events to [Slack
 ```bash
 export SLACK_TOKEN=
 export SLACK_CHANNEL=
-kubeless function deploy slack --runtime python3.6 --handler slack-k8s-events.slack_message --from-file srv/salt/kubernetes/addons/kubeless/demo/slack-k8s-events.py --namespace kubeless --env SLACK_TOKEN=$SLACK_TOKEN --env SLACK_CHANNEL=$SLACK_CHANNEL --dependencies srv/salt/kubernetes/addons/kubeless/demo/requirements.txt
+kubeless function deploy slack --runtime python3.6 --handler slack-k8s-events.slack_message --from-file slack-k8s-events.py --namespace kubeless --env SLACK_TOKEN=$SLACK_TOKEN --env SLACK_CHANNEL=$SLACK_CHANNEL --dependencies requirements.txt
 
 # Read the pod logs from the kubeless function previously created
 kubectl -n kubeless logs -l function=slack

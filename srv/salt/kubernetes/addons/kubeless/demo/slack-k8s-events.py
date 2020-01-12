@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from slackclient import SlackClient
+import slack
 import os
 import json
 import jsonpickle
@@ -18,10 +18,11 @@ def slack_message(event, context):
             print(msg)
             return msg
         else:
-            sc = SlackClient(slack_token)
-            sc.api_call(
+            client = slack.WebClient(slack_token, timeout=30)
+            client.chat_PostMessage(
                 "chat.postMessage",
                 channel=slack_channel,
+                username="bot",
                 attachments=[ 
                     { 
                         "title": event['data']['type']+" Pod event", 

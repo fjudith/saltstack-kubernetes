@@ -138,7 +138,7 @@ Execute the following command to test the message publishing to Slack.
 ```bash
 export SLACK_TOKEN= #Bot User Oauth Access Token
 export SLACK_CHANNEL=general
-python3 slack.py -m "Hello world!"
+python3 slack-client.py -m "Hello world!"
 ```
 
 #### Deploy the Slack function
@@ -156,6 +156,7 @@ kubectl -n kubeless logs -l function=slack
 
 ## Reference
 
-* http://leebriggs.co.uk/blog/2018/10/16/using-kubeless-for-kubernetes-events.html
-* https://www.alibabacloud.com/blog/kubeless-a-deep-dive-into-serverless-kubernetes-frameworks-1_594901
-* https://github.com/nats-io/asyncio-nats-examples
+* <http://leebriggs.co.uk/blog/2018/10/16/using-kubeless-for-kubernetes-events.html>
+* <https://www.alibabacloud.com/blog/kubeless-a-deep-dive-into-serverless-kubernetes-frameworks-1_594901>
+* <https://github.com/nats-io/asyncio-nats-examples>
+* <https://slack.dev/python-slackclient/auth.html>

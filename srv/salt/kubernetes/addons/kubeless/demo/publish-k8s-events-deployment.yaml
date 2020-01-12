@@ -48,7 +48,6 @@ spec:
       - command:
         - ./main.py
         - --in-cluster
-        - --output-events
         env:
         - name: NATS_ADDRESS
           value: nats-cluster.nats-io

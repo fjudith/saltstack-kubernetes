@@ -17,7 +17,7 @@ pyasn1==0.4.4
 pycparser==2.19
 pyjwt==1.6.4
 python-dateutil==2.7.3
-pyyaml==5.1
+pyyaml==5.3
 requests-oauthlib==1.0.0
 requests==2.20.0
 rsa==4.0

@@ -44,13 +44,13 @@ The solution design carries the following requirements:
   <tr>
     <td><ul><li><b>hetzner</b></li><li>scaleway</li></ul></td>
     <td><ul><li><b>cloudflare</b></li></ul></td>
-    <td><ul><li>1.10.6</li><li>1.11.3</li><li>1.12.4</li><li>1.13.3</li><li><b>1.13.4</b></li><li>1.14.3<li><b>1.15.5</b></li></li></ul></td>
+    <td><ul><li>1.10.6</li><li>1.11.3</li><li>1.12.4</li><li>1.13.3</li><li>1.13.4</li><li>1.14.3<li>1.15.5</li><li><b>1.16.3</b></li></ul></td>
     <td><ul><li><b>docker 18.09.8</b></li><li>containerd 1.2.6</li><li>cri-o 1.15</li></ul></td>
     <td><ul><li><b>cni 0.7.5</b></li><li>calico 3.10.0</li><li>canal 3.2.1 (flannel 0.9.1)</li><li>flannel 0.1.0</li><li>weave 2.5.1</li><li>Cillium 1.30.0</li></ul></td>
   </tr>
 </table>
 
-* **Default**
+* Default: **bold**
 
 ---
 

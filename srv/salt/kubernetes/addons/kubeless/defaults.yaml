@@ -1,0 +1,10 @@
+kubeless:
+  version: 1.0.5
+  ui_version: master
+  ingress_host: kubeless
+  nats_trigger_image: docker.io/kubeless/nats-trigger-controller:v1.0.0
+  nats_url: nats://nats-cluster.nats-io:4222
+  kafka_trigger_image: docker.io/kubeless/kafka-trigger-controller:v1.0.2
+  kafka_image: docker.io/bitnami/kafka:1.1.0-r0
+  kinesis_trigger_image: docker.io/kubeless/kinesis-trigger-controller:v1.0.0
+  zookeeper_image: docker.io/bitnami/zookeeper:3.4.10-r12

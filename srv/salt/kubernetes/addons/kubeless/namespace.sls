@@ -3,11 +3,13 @@ kubeless-namespace:
     - require:
       - file: /srv/kubernetes/manifests/kubeless
     - name: /srv/kubernetes/manifests/kubeless/namespace.yaml
-    - source: salt://kubernetes/addons/kubeless/files/namespace.yaml
+    - source: salt://{{ tpldir }}/files/namespace.yaml
     - user: root
     - template: jinja
     - group: root
     - mode: 644
+    - context:
+      tpldir: {{ tpldir }}
   cmd.run:
     - watch:
         - file: /srv/kubernetes/manifests/kubeless/namespace.yaml

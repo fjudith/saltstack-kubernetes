@@ -71,4 +71,17 @@
     - mode: 644
     - context:
       tpldir: {{ tpldir }}
+
+/srv/kubernetes/manifests/kubeless/test.py:
+  file.managed:
+    - require:
+      - file: /srv/kubernetes/manifests/kubeless
+    - source: salt://{{ tpldir }}/demo/pubsub-functions/test.py
+    - template: jinja
+    - skip_verify: true
+    - user: root
+    - group: root
+    - mode: 644
+    - context:
+      tpldir: {{ tpldir }}
 {% endif %}

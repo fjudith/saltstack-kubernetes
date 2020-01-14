@@ -150,6 +150,8 @@ export SLACK_TOKEN=
 export SLACK_CHANNEL=
 kubeless function deploy slack --runtime python3.6 --handler slack.slack_message --from-file functions/slack.py --namespace kubeless --env SLACK_TOKEN=$SLACK_TOKEN --env SLACK_CHANNEL=$SLACK_CHANNEL --dependencies functions/requirements.txt
 
+kubeless trigger nats create slack --function-selector created-by=kubeless,function=slack --trigger-topic k8s_events --namespace kubeless
+
 # Read the pod logs from the kubeless function previously created
 kubectl -n kubeless logs -l function=slack
 ```

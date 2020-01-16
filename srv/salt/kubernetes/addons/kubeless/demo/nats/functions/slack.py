@@ -19,10 +19,8 @@ def slack_message(event, context):
             return msg
         else:
             client = slack.WebClient(slack_token, timeout=30)
-            client.chat_PostMessage(
-                "chat.postMessage",
+            client.chat_postMessage(
                 channel=slack_channel,
-                username="bot",
                 attachments=[ 
                     { 
                         "title": event['data']['type']+" Pod event", 

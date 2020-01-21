@@ -1,0 +1,7 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{% import_yaml tpldir ~ "/defaults.yaml" or {} as defaults %}
+
+{#- Merge in salt pillar #}
+{% set nats_operator = salt['pillar.get']('kubernetes:common:addons:nats_operator', default=defaults['nats_operator'], merge=True) %}

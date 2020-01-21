@@ -1,8 +1,0 @@
-apiVersion: "streaming.nats.io/v1alpha1"
-kind: "NatsStreamingCluster"
-metadata:
-  name: "stan-cluster"
-spec:
-  size: 3
-  natsSvc: "nats-cluster"
-  image: "docker.io/amd64/nats-streaming:0.16.2-linux"

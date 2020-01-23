@@ -7,7 +7,6 @@ query-proxyinjector-demo:
       - cmd: proxyinjector-demo
       - cmd: proxyinjector-demo-ingress
     - name: https://{{ charts.proxyinjector.ingress_host }}.{{ public_domain }}
-    # - match: DaemonSet
     - wait_for: 200
     - request_interval: 5
     - status: 200

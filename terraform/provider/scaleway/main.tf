@@ -91,7 +91,7 @@ provisioner "remote-exec" {
       "echo 'session required pam_limits.so' | tee -a  /etc/pam.d/common-session",
     ]
   }
-  
+
   provisioner "remote-exec" {
     inline = [
       "echo 'fs.file-max=2097152' | tee -a /etc/sysctl.conf",
@@ -214,7 +214,7 @@ resource "scaleway_server" "proxy02" {
       "echo 'session required pam_limits.so' | tee -a  /etc/pam.d/common-session",
     ]
   }
-  
+
   provisioner "remote-exec" {
     inline = [
       "echo 'fs.file-max=2097152' | tee -a /etc/sysctl.conf",
@@ -314,7 +314,7 @@ provisioner "remote-exec" {
       "echo 'session required pam_limits.so' | tee -a  /etc/pam.d/common-session",
     ]
   }
-  
+
   provisioner "remote-exec" {
     inline = [
       "echo 'fs.file-max=2097152' | tee -a /etc/sysctl.conf",
@@ -414,7 +414,7 @@ provisioner "remote-exec" {
       "echo 'session required pam_limits.so' | tee -a  /etc/pam.d/common-session",
     ]
   }
-  
+
   provisioner "remote-exec" {
     inline = [
       "echo 'fs.file-max=2097152' | tee -a /etc/sysctl.conf",
@@ -517,7 +517,7 @@ provisioner "remote-exec" {
       "echo 'session required pam_limits.so' | tee -a  /etc/pam.d/common-session",
     ]
   }
-  
+
   provisioner "remote-exec" {
     inline = [
       "echo 'fs.file-max=2097152' | tee -a /etc/sysctl.conf",

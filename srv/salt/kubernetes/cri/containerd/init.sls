@@ -27,7 +27,7 @@ containerd-install:
     - group: root
     - mode: 555
     - unless: cmp -s /usr/local/bin/containerd /tmp/containerd-v{{ common.cri.containerd.version }}/bin/containerd
-    
+
 /etc/systemd/system/containerd.service:
   file.managed:
     - source: salt://kubernetes/cri/containerd/files/containerd.service

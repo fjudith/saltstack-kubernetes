@@ -43,4 +43,3 @@ nodeRegistration:
     {%- for argument, value in (kubeadm.kubeletExtraArgs).items() %}
     {{ argument }}: "{{ value }}"
     {% endfor %}
-    

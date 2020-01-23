@@ -1,6 +1,6 @@
 conntrack:
   pkg.latest
-  
+
 bridge-utils:
   pkg.latest
 

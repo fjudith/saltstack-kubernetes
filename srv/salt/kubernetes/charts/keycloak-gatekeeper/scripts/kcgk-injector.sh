@@ -182,7 +182,7 @@ function create-client-kubernetes {
     --set redirectionUrl=${REDIRECTURL} \
     --set upstreamUrl=https://kubernetes-dashboard.kubernetes-dashboard \
     /srv/kubernetes/charts/incubator/keycloak-gatekeeper
-  
+
   # Bind Keycloak authenticated users with the appropriate Kubernetes role.
   kubectl apply -f ./files/keycloak-kubernetes-rbac.yaml
 
@@ -285,7 +285,7 @@ function create-client-weave-scope {
   # Update the ingress to point to the `keycloak-gatekeeper`.
   kubectl patch ingress -n weave weave-scope --type json \
   --patch='[{"op": "replace", "path": "/spec/rules/0/http/paths/0/backend/serviceName", "value": "weave-scope-app-keycloak-gatekeeper"}]'
-  
+
   kubectl patch ingress -n weave weave-scope --type json \
   --patch='[{"op": "replace", "path": "/spec/rules/0/http/paths/0/backend/servicePort", "value": 3000}]'
 }
@@ -369,7 +369,7 @@ function create-client-alertmanager {
   "Authorization: Bearer ${TOKEN}" | jq -M -e -r .credentials.secret)
 
   # Deploy the gateway in the `kube-system` namespace
-  
+
   helm upgrade --install alertmanager \
     --namespace monitoring \
     --set discoveryUrl=${URL}/auth/realms/${REALM} \
@@ -382,7 +382,7 @@ function create-client-alertmanager {
   # Update the ingress to point to the `keycloak-gatekeeper`.
   kubectl patch ingress -n monitoring alertmanager --type json \
   --patch='[{"op": "replace", "path": "/spec/rules/0/http/paths/0/backend/serviceName", "value": "alertmanager-keycloak-gatekeeper"}]'
-  
+
   kubectl patch ingress -n monitoring alertmanager --type json \
   --patch='[{"op": "replace", "path": "/spec/rules/0/http/paths/0/backend/servicePort", "value": 3000}]'
 }
@@ -466,7 +466,7 @@ function create-client-prometheus {
   "Authorization: Bearer ${TOKEN}" | jq -M -e -r .credentials.secret)
 
   # Deploy the gateway in the `kube-system` namespace
-  
+
   helm upgrade --install prometheus \
     --namespace monitoring \
     --set discoveryUrl=${URL}/auth/realms/${REALM} \
@@ -479,7 +479,7 @@ function create-client-prometheus {
   # Update the ingress to point to the `keycloak-gatekeeper`.
   kubectl patch ingress -n monitoring prometheus --type json \
   --patch='[{"op": "replace", "path": "/spec/rules/0/http/paths/0/backend/serviceName", "value": "prometheus-keycloak-gatekeeper"}]'
-  
+
   kubectl patch ingress -n monitoring prometheus --type json \
   --patch='[{"op": "replace", "path": "/spec/rules/0/http/paths/0/backend/servicePort", "value": 3000}]'
 }
@@ -575,7 +575,7 @@ function create-client-rook-ceph {
   # Update the ingress to point to the `keycloak-gatekeeper`.
   kubectl patch ingress -n rook-ceph rook-ceph-mgr-dashboard --type json \
   --patch='[{"op": "replace", "path": "/spec/rules/0/http/paths/0/backend/serviceName", "value": "rook-ceph-mgr-dashboard-keycloak-gatekeeper"}]'
-  
+
   kubectl patch ingress -n rook-ceph rook-ceph-mgr-dashboard --type json \
   --patch='[{"op": "replace", "path": "/spec/rules/0/http/paths/0/backend/servicePort", "value": 3000}]'
 }

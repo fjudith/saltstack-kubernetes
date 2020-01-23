@@ -237,7 +237,7 @@ function write-ssl-etcd {
 
     # Extracting the IP address from the CN (i.e node-xxx.xxx.xxx.xxx)
     IP_ADDRESS=$(printf ${CN} | awk -F '-' '{print $2}')
-    
+
     # Write cfssl JSON template
     local TEMPLATE=$OUTDIR/${CERTBASE}-csr.json
     echo "local TEMPLATE: $TEMPLATE"
@@ -268,7 +268,7 @@ EOF
     CAFILE="$OUTDIR/../etcd-ca.pem"
     CAKEYFILE="$OUTDIR/../etcd-ca-key.pem"
     CACONFIG=$OUTDIR/../etcd-ca-config.json
-    
+
     cfssl gencert -ca=$CAFILE \
     -ca-key=$CAKEYFILE \
     -config=$CACONFIG \
@@ -305,7 +305,7 @@ EOF
     CAFILE="$OUTDIR/ca.pem"
     CAKEYFILE="$OUTDIR/ca-key.pem"
     CACONFIG=$OUTDIR/ca-config.json
-    
+
     cfssl gencert -ca=$CAFILE \
     -ca-key=$CAKEYFILE \
     -config=$CACONFIG \
@@ -357,7 +357,7 @@ EOF
     CAFILE="$OUTDIR/../ca.pem"
     CAKEYFILE="$OUTDIR/../ca-key.pem"
     CACONFIG=$OUTDIR/../ca-config.json
-    
+
     cfssl gencert -ca=$CAFILE \
     -ca-key=$CAKEYFILE \
     -config=$CACONFIG \
@@ -372,7 +372,7 @@ function write-ssl-node {
 
     # Extracting the IP address from the CN (i.e node-xxx.xxx.xxx.xxx)
     IP_ADDRESS=$(printf ${CN} | awk -F '-' '{print $2}')
-    
+
     # Write cfssl JSON template
     local TEMPLATE=$OUTDIR/${CERTBASE}-csr.json
     echo "local TEMPLATE: $TEMPLATE"
@@ -404,7 +404,7 @@ EOF
     CAFILE="$OUTDIR/../ca.pem"
     CAKEYFILE="$OUTDIR/../ca-key.pem"
     CACONFIG=$OUTDIR/../ca-config.json
-    
+
     cfssl gencert -ca=$CAFILE \
     -ca-key=$CAKEYFILE \
     -config=$CACONFIG \
@@ -441,7 +441,7 @@ EOF
     CAFILE="$OUTDIR/../ca.pem"
     CAKEYFILE="$OUTDIR/../ca-key.pem"
     CACONFIG=$OUTDIR/../ca-config.json
-    
+
     cfssl gencert -ca=$CAFILE \
     -ca-key=$CAKEYFILE \
     -config=$CACONFIG \
@@ -493,7 +493,7 @@ EOF
     CAFILE="$OUTDIR/../ca.pem"
     CAKEYFILE="$OUTDIR/../ca-key.pem"
     CACONFIG=$OUTDIR/../ca-config.json
-    
+
     cfssl gencert -ca=$CAFILE \
     -ca-key=$CAKEYFILE \
     -config=$CACONFIG \
@@ -530,7 +530,7 @@ EOF
     CAFILE="$OUTDIR/ca.pem"
     CAKEYFILE="$OUTDIR/ca-key.pem"
     CACONFIG=$OUTDIR/ca-config.json
-    
+
     cfssl gencert -ca=$CAFILE \
     -ca-key=$CAKEYFILE \
     -config=$CACONFIG \
@@ -577,7 +577,7 @@ EOF
     CAFILE="$OUTDIR/../ca.pem"
     CAKEYFILE="$OUTDIR/../ca-key.pem"
     CACONFIG=$OUTDIR/../ca-config.json
-    
+
     cfssl gencert -ca=$CAFILE \
     -ca-key=$CAKEYFILE \
     -config=$CACONFIG \
@@ -614,7 +614,7 @@ EOF
     CAFILE="$OUTDIR/ca.pem"
     CAKEYFILE="$OUTDIR/ca-key.pem"
     CACONFIG=$OUTDIR/ca-config.json
-    
+
     cfssl gencert -ca=$CAFILE \
     -ca-key=$CAKEYFILE \
     -config=$CACONFIG \
@@ -651,7 +651,7 @@ EOF
     CAFILE="$OUTDIR/ca.pem"
     CAKEYFILE="$OUTDIR/ca-key.pem"
     CACONFIG=$OUTDIR/ca-config.json
-    
+
     cfssl gencert -ca=$CAFILE \
     -ca-key=$CAKEYFILE \
     -config=$CACONFIG \
@@ -687,7 +687,7 @@ EOF
     CAFILE="$OUTDIR/ca.pem"
     CAKEYFILE="$OUTDIR/ca-key.pem"
     CACONFIG=$OUTDIR/ca-config.json
-    
+
     cfssl gencert -ca=$CAFILE \
     -ca-key=$CAKEYFILE \
     -config=$CACONFIG \
@@ -724,7 +724,7 @@ EOF
     CAFILE="$OUTDIR/../kube-aggregator-ca.pem"
     CAKEYFILE="$OUTDIR/../kube-aggregator-ca-key.pem"
     CACONFIG=$OUTDIR/../kube-aggregator-ca-config.json
-    
+
     cfssl gencert -ca=$CAFILE \
     -ca-key=$CAKEYFILE \
     -config=$CACONFIG \
@@ -776,7 +776,7 @@ EOF
     CAFILE="$OUTDIR/../etcd-ca.pem"
     CAKEYFILE="$OUTDIR/../etcd-ca-key.pem"
     CACONFIG=$OUTDIR/../etcd-ca-config.json
-    
+
     cfssl gencert -ca=$CAFILE \
     -ca-key=$CAKEYFILE \
     -config=$CACONFIG \

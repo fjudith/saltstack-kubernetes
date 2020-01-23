@@ -10,7 +10,6 @@ query-kgk-kubernetes-dashboard:
     - watch:
       - cmd: keycloak-kubernetes-dashboard
     - name: https://{{ common.addons.dashboard.ingress_host }}.{{ public_domain }}
-    # - match: DaemonSet
     - wait_for: 120
     - request_interval: 5
     - status: 200
@@ -22,7 +21,6 @@ query-kgk-weave-scope:
     - watch:
       - cmd: keycloak-weave-scope
     - name: https://{{ common.addons.weave_scope.ingress_host }}.{{ public_domain }}
-    # - match: DaemonSet
     - wait_for: 120
     - request_interval: 5
     - status: 200
@@ -34,7 +32,6 @@ query-kgk-weave-scope:
     - watch:
       - cmd: keycloak-grafana
     - name: https://{{ common.addons.kube_prometheus.grafana_ingress_host }}.{{ public_domain }}
-    # - match: DaemonSet
     - wait_for: 120
     - request_interval: 5
     - status: 200 #}
@@ -44,7 +41,6 @@ query-kgk-prometheus:
     - watch:
       - cmd: keycloak-prometheus
     - name: https://{{ common.addons.kube_prometheus.prometheus_ingress_host }}.{{ public_domain }}
-    # - match: DaemonSet
     - wait_for: 120
     - request_interval: 5
     - status: 200
@@ -54,7 +50,6 @@ query-kgk-alertmanager:
     - watch:
       - cmd: keycloak-alertmanager
     - name: https://{{ common.addons.kube_prometheus.alertmanager_ingress_host }}.{{ public_domain }}
-    # - match: DaemonSet
     - wait_for: 120
     - request_interval: 5
     - status: 200
@@ -66,7 +61,6 @@ query-kgk-rook-ceph:
     - watch:
       - cmd: keycloak-rook-ceph
     - name: https://{{ master.storage.rook_ceph.ingress_host }}.{{ public_domain }}
-    # - match: DaemonSet
     - wait_for: 120
     - request_interval: 5
     - status: 200

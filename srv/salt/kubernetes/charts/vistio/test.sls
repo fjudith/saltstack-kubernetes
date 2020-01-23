@@ -7,7 +7,6 @@ query-vitio-ui:
       - cmd: vistio
       - cmd: vistio-ingress
     - name: https://{{ charts.vistio.ingress_host }}.{{ public_domain }}
-    # - match: DaemonSet
     - wait_for: 120
     - request_interval: 5
     - status: 200
@@ -18,7 +17,6 @@ query-vistio-api:
       - cmd: vistio
       - cmd: vistio-ingress
     - name: https://{{ charts.vistio.ingress_host }}-api.{{ public_domain }}
-    # - match: DaemonSet
     - wait_for: 120
     - request_interval: 5
     - status: 200

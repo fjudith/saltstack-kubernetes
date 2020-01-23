@@ -32,7 +32,7 @@ ethereum:
             --set ethstats.image.tag=latest \
             --set geth.image.tag=v{{ charts.ethereum.version }} \
             "stable/ethereum"
-  
+
 ethereum-ingress:
     cmd.run:
       - require:

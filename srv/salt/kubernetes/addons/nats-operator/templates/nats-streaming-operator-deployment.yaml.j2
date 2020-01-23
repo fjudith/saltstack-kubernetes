@@ -19,6 +19,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nats-streaming-operator
+  namespace: nats-io
 spec:
   replicas: 1
   selector:

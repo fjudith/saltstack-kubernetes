@@ -89,4 +89,3 @@ charts_state:
       - salt: kube-prometheus_state
       - salt: csi_state
 {% endif %}
-    

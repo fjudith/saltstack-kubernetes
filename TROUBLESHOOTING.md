@@ -81,7 +81,7 @@ https://github.com/coreos/prometheus-operator/issues/731
 Start proxy.
 
 ```bash
-kubctl proxy
+kubectl proxy
 ```
 
 ```bash

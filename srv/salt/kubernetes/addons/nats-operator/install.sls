@@ -16,7 +16,6 @@ query-nats-api:
     - watch:
       - cmd: nats-operator
     - name: http://127.0.0.1:8080/apis/nats.io/v1alpha2
-
     - wait_for: 120
     - request_interval: 5
     - status: 200
@@ -50,7 +49,6 @@ query-nats-streaming-api:
     - watch:
       - cmd: nats-streaming-operator
     - name: http://127.0.0.1:8080/apis/streaming.nats.io/v1alpha1
-
     - wait_for: 120
     - request_interval: 5
     - status: 200

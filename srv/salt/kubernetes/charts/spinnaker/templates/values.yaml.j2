@@ -62,7 +62,7 @@ halyard:
       02-configure_oauth2.sh: |-
         source /opt/halyard/additionalConfigMaps/config.src
         
-        $HAL_COMMAND config security authn oauth2 edit --access-token-uri "{{ keycloak_url}}/auth/realms/{{ realm }}/protocol/openid-connect/token"
+        $HAL_COMMAND config security authn oauth2 edit --access-token-uri "{{ keycloak_url }}/auth/realms/{{ realm }}/protocol/openid-connect/token"
         # $HAL_COMMAND config security authn oauth2 edit --client-authentication-scheme
         $HAL_COMMAND config security authn oauth2 edit --client-id "spinnaker"
         $HAL_COMMAND config security authn oauth2 edit --client-secret "{{ client_secret }}"
@@ -71,13 +71,13 @@ halyard:
         # $HAL_COMMAND config security authn oauth2 edit --pre-established-redirect-uri "${DECK_URL}/gate/login"
         $HAL_COMMAND config security authn oauth2 edit --provider other
         # $HAL_COMMAND config security authn oauth2 edit --scope
-        $HAL_COMMAND config security authn oauth2 edit --user-authorization-uri "{{ keycloak_url}}/auth/realms/{{ realm }}/protocol/openid-connect/auth"
+        $HAL_COMMAND config security authn oauth2 edit --user-authorization-uri "{{ keycloak_url }}/auth/realms/{{ realm }}/protocol/openid-connect/auth"
         $HAL_COMMAND config security authn oauth2 edit --user-info-mapping-email "email"
         $HAL_COMMAND config security authn oauth2 edit --user-info-mapping-first-name "firstName"
         $HAL_COMMAND config security authn oauth2 edit --user-info-mapping-last-name "lastName"
         $HAL_COMMAND config security authn oauth2 edit --user-info-mapping-username "username"
         # $HAL_COMMAND config security authn oauth2 edit --user-info-requirements  
-        $HAL_COMMAND config security authn oauth2 edit --user-info-uri "{{ keycloak_url}}/auth/realms/{{ realm }}/protocol/openid-connect/userinfo"
+        $HAL_COMMAND config security authn oauth2 edit --user-info-uri "{{ keycloak_url }}/auth/realms/{{ realm }}/protocol/openid-connect/userinfo"
         $HAL_COMMAND config security authn oauth2 enable
       {% endif %}
       {% if common.addons.get('kube_prometheus', {'enabled': False}).enabled %}

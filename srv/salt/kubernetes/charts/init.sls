@@ -23,3 +23,6 @@ include:
 {%- if charts.get('spinnaker', {'enabled': False}).enabled %}
   - kubernetes.charts.spinnaker
 {%- endif -%}
+{%- if charts.get('openfaas', {'enabled': False}).enabled %}
+  - kubernetes.charts.openfaas
+{%- endif -%}

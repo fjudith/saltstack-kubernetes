@@ -2,7 +2,7 @@
 # vim: ft=jinja
 
 {#- Get the `tplroot` from `tpldir` #}
-{% from tpldir ~ "/map.jinja" import kubeless with context %}
+{% from tpldir ~ "/map.jinja" import nats_operator with context %}
 
 /srv/kubernetes/manifests/nats-operator:
   file.directory:

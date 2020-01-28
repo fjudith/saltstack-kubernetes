@@ -1,0 +1,7 @@
+{
+    "name": "openfaas-admins",
+    "attributes": {},
+    "realmRoles": [],
+    "clientRoles": {},
+    "subGroups": []
+}

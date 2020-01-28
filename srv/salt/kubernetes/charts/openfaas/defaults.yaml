@@ -1,0 +1,10 @@
+openfaas:
+  client_version: 0.11.7
+  client_source_hash: 5a317febb7a13be535f7db9b727f9ce9737a61d3718ac8e8c82713717cd73fc7
+  ingress_host: openfaas
+  username: admin
+  password: V3ry1ns3cur3
+  oauth:
+    provider: keycloak
+    keycloak:
+      realm: default

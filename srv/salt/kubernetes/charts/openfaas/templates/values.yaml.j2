@@ -1,0 +1,68 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import openfaas with context %}
+{%- set public_domain = pillar['public-domain'] -%}
+{%- from "kubernetes/map.jinja" import common with context -%}
+{%- from "kubernetes/map.jinja" import charts with context -%}
+
+exposeServices: false
+clusterRole: true
+
+# Secrets managed via Salt states
+generateBasicAuth: false
+
+# Oauth managed by Keycloak
+{% if charts.get('keycloak', {'enabled': False}).enabled %}
+{%- set keycloak_url = 'https://' + charts.get('keycloak', {}).get('ingress_host') + '.' + pillar['public-domain'] -%}
+{%- set keycloak_password = salt['cmd.shell']("kubectl get secret --namespace keycloak keycloak-http -o jsonpath='{.data.password}' | base64 --decode; echo") -%}
+{%- set client_secret     = salt['cmd.shell']('/srv/kubernetes/manifests/openfaas/kc-clientsecret-openfaas.sh' + ' ' + 'keycloak' + ' ' + keycloak_password + ' ' + keycloak_url + ' ' + openfaas.oauth.keycloak.realm) -%}
+{%- set realm = openfaas.oauth.get('keycloak', {}).get('realm') -%}
+oauth2Plugin:
+  enabled: true
+  license: "example"
+  insecureTLS: false
+  scopes: "openid profile email"
+  jwksURL: {{ keycloak_url }}/auth/realms/{{ realm }}/protocol/openid-connect/certs
+  tokenURL: {{ keycloak_url }}/auth/realms/{{ realm }}/protocol/openid-connect/token
+  audience: {{ keycloak_url }}
+  authorizeURL: {{ keycloak_url }}/auth/realms/{{ realm }}/protocol/openid-connect/auth
+  welcomePageURL: {{ keycloak_url }}
+  cookieDomain: ".{{ keycloak_url }}"
+  baseHost: "{{ keycloak_url }}"
+  clientSecret: {{ client_secret }}
+  clientID: openfaas
+{% endif %}
+
+# Use OpenFaaS operator instead of faas-netes
+operator:
+  create: true
+
+# Managed by Prometheus operator
+{% if common.addons.get('kube_prometheus', {'enabled': False}).enabled %}
+prometheus:
+  create: false
+
+alertmanager:
+  create: false
+{% endif %}
+
+{% if common.addons.get('nats_operator', {'enabled': False}).enabled %}
+nats:
+  external:
+    enabled: true
+    clusterName: "stan-cluster"
+    host: "nats-cluster.nats-io"
+    port: "4222"
+{% endif %}
+
+# Ingress managed via Salt states
+ingress:
+  enabled: false
+
+ingressOperator:
+  create: false
+
+istio:
+  mtls: false

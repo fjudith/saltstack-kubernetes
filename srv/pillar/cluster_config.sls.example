@@ -146,7 +146,11 @@ kubernetes:
         ingress_host: httpbin
       metallb:
         enabled: True
-        verison: 0.8.3
+        version: 0.8.3
+      minio_operator:
+        enabled: True
+        image: docker.io/connecteverything/nats-operator:0.6.0
+        streaming_image: docker.io/synadia/nats-streaming-operator:v0.3.0-v1alpha1
   etcd:
     host: 127.0.0.1
     members:
@@ -284,6 +288,11 @@ kubernetes:
         provider: keycloak
         keycloak:
           realm: default
+    openfaas:
+      enabled: True
+      username: admin
+      password: V3ry1ns3sur3
+      client_version: 0.11.7
 tinyproxy:
   User: tinyproxy
   Group: tinyproxy

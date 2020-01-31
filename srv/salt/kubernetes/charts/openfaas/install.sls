@@ -41,3 +41,14 @@ openfaas:
         helm upgrade --install openfaas --namespace openfaas \
           --values /srv/kubernetes/manifests/openfaas/values.yaml \
           "./" --wait --timeout 5m
+
+openfaas-cron-connector:
+  cmd.run:
+    - runas: root
+    - require:
+      - cmd: openfaas-cron-connector-fetch-charts
+      - cmd: openfaas
+    - cwd: /srv/kubernetes/manifests/openfaas/cron-connector
+    - name: |
+        helm upgrade --install cron-connector --namespace openfaas \
+          "./" --wait --timeout 5m

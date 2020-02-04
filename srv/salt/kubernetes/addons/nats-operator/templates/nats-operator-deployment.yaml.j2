@@ -1,4 +1,8 @@
-{%- from "kubernetes/map.jinja" import common with context -%}
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import nats_operator with context %}
 
 apiVersion: apps/v1
 kind: Deployment
@@ -20,7 +24,7 @@ spec:
       serviceAccountName: nats-operator
       containers:
       - name: nats-operator
-        image: {{ common.addons.nats_operator.image }}
+        image: {{ nats_oprator.nats_operator.image }}
         imagePullPolicy: IfNotPresent
         args:
         - nats-operator

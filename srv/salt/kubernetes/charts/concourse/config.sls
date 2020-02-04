@@ -9,11 +9,13 @@
   file.managed:
     - require:
       - file:  /srv/kubernetes/manifests/concourse
-    - source: salt://kubernetes/charts/concourse/templates/values.yaml.j2
+    - source: salt://{{ tpldir }}/templates/values.yaml.j2
     - user: root
     - group: root
     - mode: 755
     - template: jinja
+    - context:
+      tpldir: {{ tpldir }}
 
 /srv/kubernetes/manifests/concourse/secrets:
   file.directory:

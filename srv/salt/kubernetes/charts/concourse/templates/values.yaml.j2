@@ -1,19 +1,24 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import concourse with context %}
 {%- set public_domain = pillar['public-domain'] -%}
 {%- from "kubernetes/map.jinja" import master with context -%}
 {%- from "kubernetes/map.jinja" import charts with context -%}
 
-imageTag: "{{ charts.concourse.version }}"
+imageTag: "{{ concourse.version }}"
 
 rbac:
   create: True
 
 postgresql:
   enable: True
-  password: {{ charts.concourse.db_password }}
+  password: {{ concourse.db_password }}
   {%- if master.storage.get('rook_ceph', {'enabled': False}).enabled %}
   persistence:
     enabled: True
-    size: {{ charts.concourse.db_size }}
+    size: {{ concourse.db_size }}
   {%- endif %}
 
 concourse:
@@ -24,7 +29,7 @@ concourse:
 
   web:
     replicas: 1
-    externalUrl: https://{{ charts.concourse.ingress_host }}.{{ public_domain }}
+    externalUrl: https://{{ concourse.ingress_host }}.{{ public_domain }}
     prometheus:
       enabled: True
       bindIp: "0.0.0.0"
@@ -33,8 +38,8 @@ concourse:
     {% if charts.get('keycloak', {'enabled': False}).enabled %}
     {%- set keycloak_url = 'https://' + charts.get('keycloak', {}).get('ingress_host') + '.' + pillar['public-domain'] -%}
     {%- set keycloak_password = salt['cmd.shell']("kubectl get secret --namespace keycloak keycloak-http -o jsonpath='{.data.password}' | base64 --decode; echo") -%}
-    {%- set client_secret     = salt['cmd.shell']('/srv/kubernetes/manifests/concourse/kc-clientsecret-concourse.sh' + ' ' + 'keycloak' + ' ' + keycloak_password + ' ' + keycloak_url + ' ' + charts.concourse.oauth.keycloak.realm) -%}
-    {%- set realm = charts.concourse.oauth.get('keycloak', {}).get('realm') -%}
+    {%- set client_secret     = salt['cmd.shell']('/srv/kubernetes/manifests/concourse/kc-clientsecret-concourse.sh' + ' ' + 'keycloak' + ' ' + keycloak_password + ' ' + keycloak_url + ' ' + concourse.oauth.keycloak.realm) -%}
+    {%- set realm = concourse.oauth.get('keycloak', {}).get('realm') -%}
 
     auth:
       mainTeam:
@@ -43,7 +48,7 @@ concourse:
           group: concourse-admins
       oauth:
         enabled: True
-        displayname: {{ charts.concourse.oauth.provider }}
+        displayname: {{ concourse.oauth.provider }}
         authUrl: {{ keycloak_url }}/auth/realms/{{ realm }}/protocol/openid-connect/auth  
         tokenUrl: {{ keycloak_url }}/auth/realms/{{ realm }}/protocol/openid-connect/token
         userinfoUrl: {{ keycloak_url }}/auth/realms/{{ realm }}/protocol/openid-connect/userinfo
@@ -59,7 +64,7 @@ secrets:
   create: True
   oauthClientId: concourse
   oauthClientSecret: {{ client_secret }}
-  localUsers: {{ charts.concourse.username }}:{{ charts.concourse.password }}{% if charts.get('spinnaker', {'enabled': False}).enabled -%}
+  localUsers: {{ concourse.username }}:{{ concourse.password }}{% if charts.get('spinnaker', {'enabled': False}).enabled -%}
 ,{{ charts.spinnaker.concourse.username }}:{{ charts.spinnaker.concourse.password }}
 {% endif -%}
   {% endif %}

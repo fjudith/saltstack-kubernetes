@@ -151,8 +151,7 @@ kubernetes:
         version: 0.8.3
       minio_operator:
         enabled: True
-        image: docker.io/connecteverything/nats-operator:0.6.0
-        streaming_image: docker.io/synadia/nats-streaming-operator:v0.3.0-v1alpha1
+        minio_image: docker.io/minio/minio:RELEASE.2020-01-03T19-12-21Z
   etcd:
     host: 127.0.0.1
     members:

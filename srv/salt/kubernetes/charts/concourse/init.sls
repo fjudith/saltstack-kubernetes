@@ -1,5 +1,5 @@
 {%- set public_domain = pillar['public-domain'] -%}
-{%- from "kubernetes/map.jinja" import master with context -%}
+{%- from "kubernetes/map.jinja" import common with context -%}
 {%- from "kubernetes/map.jinja" import charts with context -%}
 
 include:
@@ -9,7 +9,7 @@ include:
   {%- endif %}
   - kubernetes.charts.concourse.config
   - kubernetes.charts.concourse.namespace
-  {%- if master.storage.get('rook_minio', {'enabled': False}).enabled %}
+  {%- if common.addons.get('minio_operator', {'enabled': False}).enabled %}
   - kubernetes.charts.concourse.minio
   {%- endif %}
   - kubernetes.charts.concourse.ingress

@@ -14,7 +14,9 @@ concourse-fetch-charts:
   file.managed:
     - watch:
       - cmd: concourse-fetch-charts
-    - source: salt://kubernetes/charts/concourse/patch/requirements.yaml
+    - source: salt://{{ tpldir }}/patch/requirements.yaml
     - user: root
     - group: root
     - mode: 644
+    - context:
+      tpldir: {{ tpldir }}

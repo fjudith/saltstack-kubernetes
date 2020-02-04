@@ -1,5 +1,4 @@
 nats_operator:
-  enabled: True
   image: docker.io/connecteverything/nats-operator:0.6.2
   stan_image: docker.io/synadia/nats-streaming-operator:v0.3.0-v1alpha1
   nats_cluster_version: 2.1.4 

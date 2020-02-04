@@ -1,0 +1,17 @@
+concourse:
+  username: concourse
+  password: C0nC0urs3
+  db_password: V3ry1ns3sur3P4ssw0rd
+  db_size: 8Gi
+  version: 5.7.1
+  source_hash: ca942b23bb09c434fcdfd7358a7997972ff6c1f5
+  ingress_host: concourse
+  minio_image: docker.io/minio/minio:RELEASE.2020-01-03T19-12-21Z
+  # oauth:
+  #   provider: keycloak
+  #   keycloak:
+  #     realm: default
+  # s3:
+  #   accesskey: concourse
+  #   secretkey: C0nc0ur53P4ssw0rd
+  #   bucket: concourse

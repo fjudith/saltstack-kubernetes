@@ -1,11 +1,13 @@
 concourse-ingress:
   file.managed:
     - name: /srv/kubernetes/manifests/concourse-ingress.yaml
-    - source: salt://kubernetes/charts/concourse/templates/ingress.yaml.j2
+    - source: salt://{{ tpldir }}/templates/ingress.yaml.j2
     - user: root
     - template: jinja
     - group: root
     - mode: 644
+    - context:
+      tpldir: {{ tpldir }}
   cmd.run:
     - watch:
       - file: /srv/kubernetes/manifests/concourse-ingress.yaml

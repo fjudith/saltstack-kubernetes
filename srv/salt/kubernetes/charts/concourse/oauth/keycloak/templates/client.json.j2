@@ -1,19 +1,19 @@
+{% from tpldir ~ "/map.jinja" import concourse with context %}
 {%- set public_domain = pillar['public-domain'] -%}
-{%- from "kubernetes/map.jinja" import charts with context -%}
 
 {
     "id": "concourse",
     "clientId": "concourse",
-    "rootUrl": "https://{{ charts.concourse.ingress_host }}.{{ public_domain }}",
-    "adminUrl": "https://{{ charts.concourse.ingress_host }}.{{ public_domain }}",
+    "rootUrl": "https://{{ concourse.ingress_host }}.{{ public_domain }}",
+    "adminUrl": "https://{{ concourse.ingress_host }}.{{ public_domain }}",
     "surrogateAuthRequired": false,
     "enabled": true,
     "clientAuthenticatorType": "client-secret",
     "redirectUris": [
-      "https://{{ charts.concourse.ingress_host }}.{{ public_domain }}/sky/issuer/callback/*"
+      "https://{{ concourse.ingress_host }}.{{ public_domain }}/sky/issuer/callback/*"
     ],
     "webOrigins": [
-      "https://{{ charts.concourse.ingress_host }}.{{ public_domain }}"
+      "https://{{ concourse.ingress_host }}.{{ public_domain }}"
     ],
     "notBefore": 0,
     "bearerOnly": false,

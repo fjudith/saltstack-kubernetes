@@ -1,18 +1,22 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import concourse with context %}
 {%- set public_domain = pillar['public-domain'] -%}
-{%- from "kubernetes/map.jinja" import charts with context -%}
 {%- from "kubernetes/map.jinja" import master with context -%}
 
-/opt/fly-linux-amd64-v{{ charts.concourse.version }}:
+/opt/fly-linux-amd64-v{{ concourse.version }}:
   archive.extracted:
-    - source: https://github.com/concourse/concourse/releases/download/v{{ charts.concourse.version }}/fly-{{ charts.concourse.version }}-linux-amd64.tgz
-    - source_hash: {{ charts.concourse.source_hash }}
+    - source: https://github.com/concourse/concourse/releases/download/v{{ concourse.version }}/fly-{{ concourse.version }}-linux-amd64.tgz
+    - source_hash: {{ concourse.source_hash }}
     - archive_format: tar
     - enforce_toplevel: false
-    - if_missing: /opt/fly-linux-amd64-v{{ charts.concourse.version }}
+    - if_missing: /opt/fly-linux-amd64-v{{ concourse.version }}
 
 /usr/local/bin/fly:
   file.symlink:
-    - target: /opt/fly-linux-amd64-v{{ charts.concourse.version }}/fly
+    - target: /opt/fly-linux-amd64-v{{ concourse.version }}/fly
 
 
 concourse:
@@ -26,11 +30,11 @@ concourse:
     - cwd: /srv/kubernetes/manifests/concourse/concourse
     - name: |
         helm upgrade --install concourse --namespace concourse \
-            --set concourse.web.externalUrl=https://{{ charts.concourse.ingress_host }}.{{ public_domain }} \
+            --set concourse.web.externalUrl=https://{{ concourse.ingress_host }}.{{ public_domain }} \
             --set concourse.worker.driver=detect \
-            --set imageTag="{{ charts.concourse.version }}" \
+            --set imageTag="{{ concourse.version }}" \
             --set postgresql.enabled=true \
-            --set postgresql.password={{ charts.concourse.db_password }} \
+            --set postgresql.password={{ concourse.db_password }} \
             {%- if master.storage.get('rook_ceph', {'enabled': False}).enabled %}
             --values /srv/kubernetes/manifests/concourse/values.yaml \
             {%- endif %}

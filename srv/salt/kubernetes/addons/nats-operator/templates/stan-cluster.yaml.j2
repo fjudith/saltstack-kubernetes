@@ -1,0 +1,15 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import nats_operator with context %}
+
+apiVersion: streaming.nats.io/v1alpha1
+kind: NatsStreamingCluster
+metadata:
+  name: stan-cluster
+  namespace: nats-io
+spec:
+  size: 3
+  natsSvc: nats-cluster
+  image: {{ nats_operator.stan_cluster_image }}

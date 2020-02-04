@@ -137,7 +137,9 @@ kubernetes:
       nats_operator:
         enabled: True
         image: docker.io/connecteverything/nats-operator:0.6.2
-        streaming_image: docker.io/synadia/nats-streaming-operator:v0.3.0-v1alpha1
+        stan_image: docker.io/synadia/nats-streaming-operator:v0.3.0-v1alpha1
+        nats_cluster_version: 2.1.4 
+        stan_cluster_image: docker.io/amd64/nats-streaming:0.16.2-linux
       knative:
         enabled: False
         version: 0.1.1

@@ -37,7 +37,7 @@ spec:
       serviceAccountName: nats-streaming-operator
       containers:
       - name: nats-streaming-operator
-        image: {{ nats_operator.streaming_image }}
+        image: {{ nats_operator.stan_image }}
         imagePullPolicy: Always
         env:
         - name: MY_POD_NAMESPACE

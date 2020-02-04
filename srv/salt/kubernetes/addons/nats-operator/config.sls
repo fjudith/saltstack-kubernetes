@@ -3,6 +3,7 @@
 
 {#- Get the `tplroot` from `tpldir` #}
 {% from tpldir ~ "/map.jinja" import nats_operator with context %}
+{%- from "kubernetes/map.jinja" import common with context -%}
 
 /srv/kubernetes/manifests/nats-operator:
   file.directory:
@@ -36,11 +37,12 @@
     - context:
       tpldir: {{ tpldir }}
 
-/srv/kubernetes/manifests/nats-operator/cluster.yaml:
+/srv/kubernetes/manifests/nats-operator/nats-cluster.yaml:
   file.managed:
     - require:
       - file: /srv/kubernetes/manifests/nats-operator
-    - source: salt://{{ tpldir }}/files/cluster.yaml
+    - source: salt://{{ tpldir }}/templates/nats-cluster.yaml.j2
+    - template: jinja
     - skip_verify: true
     - user: root
     - group: root
@@ -60,11 +62,11 @@
     - context:
       tpldir: {{ tpldir }}
 
-/srv/kubernetes/manifests/nats-operator/nats-streaming-operator-deployment.yaml:
+/srv/kubernetes/manifests/nats-operator/stan-operator-deployment.yaml:
   file.managed:
     - require:
       - file: /srv/kubernetes/manifests/nats-operator
-    - source: salt://{{ tpldir }}/templates/nats-streaming-operator-deployment.yaml.j2
+    - source: salt://{{ tpldir }}/templates/stan-operator-deployment.yaml.j2
     - template: jinja
     - skip_verify: true
     - user: root
@@ -73,11 +75,12 @@
     - context:
       tpldir: {{ tpldir }}
 
-/srv/kubernetes/manifests/nats-operator/streaming-cluster.yaml:
+/srv/kubernetes/manifests/nats-operator/stan-cluster.yaml:
   file.managed:
     - require:
       - file: /srv/kubernetes/manifests/nats-operator
-    - source: salt://{{ tpldir }}/files/streaming-cluster.yaml
+    - source: salt://{{ tpldir }}/templates/stan-cluster.yaml.j2
+    - template: jinja
     - skip_verify: true
     - user: root
     - group: root

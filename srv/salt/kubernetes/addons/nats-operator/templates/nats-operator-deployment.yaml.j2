@@ -24,7 +24,7 @@ spec:
       serviceAccountName: nats-operator
       containers:
       - name: nats-operator
-        image: {{ nats_oprator.nats_operator.image }}
+        image: {{ nats_operator.image }}
         imagePullPolicy: IfNotPresent
         args:
         - nats-operator

@@ -3,12 +3,12 @@
 {%- from "kubernetes/map.jinja" import charts with context -%}
 
 include:
-  - kubernetes.charts.spinnaker.config
   - kubernetes.charts.spinnaker.charts
-  - kubernetes.charts.spinnaker.namespace
   {%- if charts.get('keycloak', {'enabled': False}).enabled %}
   - kubernetes.charts.spinnaker.oauth
   {%- endif %}
+  - kubernetes.charts.spinnaker.config
+  - kubernetes.charts.spinnaker.namespace
   {%- if master.storage.get('rook_minio', {'enabled': False}).enabled %}
   - kubernetes.charts.spinnaker.minio
   {%- endif %}

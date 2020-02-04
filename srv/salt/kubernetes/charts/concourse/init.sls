@@ -3,12 +3,12 @@
 {%- from "kubernetes/map.jinja" import charts with context -%}
 
 include:
-  - kubernetes.charts.concourse.config
   - kubernetes.charts.concourse.charts
-  - kubernetes.charts.concourse.namespace
   {%- if charts.get('keycloak', {'enabled': False}).enabled %}
   - kubernetes.charts.concourse.oauth
   {%- endif %}
+  - kubernetes.charts.concourse.config
+  - kubernetes.charts.concourse.namespace
   {%- if master.storage.get('rook_minio', {'enabled': False}).enabled %}
   - kubernetes.charts.concourse.minio
   {%- endif %}

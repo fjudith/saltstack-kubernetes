@@ -69,6 +69,7 @@ nats-streaming-cluster:
 nats-servicemonitor:
   cmd.run:
     - watch:
+        - cmd: nats-cluster
         - file: /srv/kubernetes/manifests/nats-operator/nats-servicemonitor.yaml
     - runas: root
     - use_vt: True

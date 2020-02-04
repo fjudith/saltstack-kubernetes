@@ -84,3 +84,17 @@
     - mode: 644
     - context:
       tpldir: {{ tpldir }}
+
+{% if common.addons.get('kube_prometheus', {'enabled': False}).enabled %}
+/srv/kubernetes/manifests/nats-operator/nats-servicemonitor.yaml:
+  file.managed:
+    - require:
+      - file: /srv/kubernetes/manifests/nats-operator
+    - source: salt://{{ tpldir }}/files/nats-servicemonitor.yaml
+    - skip_verify: true
+    - user: root
+    - group: root
+    - mode: 644
+    - context:
+      tpldir: {{ tpldir }}
+{% endif %}

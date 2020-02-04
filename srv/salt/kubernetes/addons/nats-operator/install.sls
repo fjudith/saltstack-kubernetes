@@ -64,3 +64,15 @@ nats-streaming-cluster:
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/nats-operator/streaming-cluster.yaml
     - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+
+{% if common.addons.get('kube_prometheus', {'enabled': False}).enabled %}
+nats-servicemonitor:
+  cmd.run:
+    - watch:
+        - file: /srv/kubernetes/manifests/nats-operator/nats-servicemonitor.yaml
+    - runas: root
+    - use_vt: True
+    - name: |
+        kubectl apply -f /srv/kubernetes/manifests/nats-operator/nats-servicemonitor.yaml
+    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+{% endif %}

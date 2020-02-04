@@ -1,0 +1,15 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: nats-cluster
+  namespace: nats-io
+  labels:
+    app: nats
+    nats_cluster: nats-cluster
+spec:
+  selector:
+    matchLabels:
+      app: nats
+      nats_cluster: nats-cluster
+  endpoints:
+  - port: metrics

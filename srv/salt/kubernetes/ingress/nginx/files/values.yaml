@@ -21,7 +21,9 @@ controller:
   nodeSelector:
     node-role.kubernetes.io/ingress: "true"
   tolerations:
-    - key: node-role.kubernetes.io/ingress
+    - key: node-role.kubernetes.io
+      operator: Equal
+      value: ingress
       effect: NoSchedule
   stats:
     enabled: true

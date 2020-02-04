@@ -11,6 +11,7 @@ exposeServices: false
 clusterRole: true
 
 # Secrets managed via Salt states
+basic_auth: true
 generateBasicAuth: false
 
 # Oauth managed by Keycloak
@@ -20,7 +21,7 @@ generateBasicAuth: false
 {%- set client_secret     = salt['cmd.shell']('/srv/kubernetes/manifests/openfaas/kc-clientsecret-openfaas.sh' + ' ' + 'keycloak' + ' ' + keycloak_password + ' ' + keycloak_url + ' ' + openfaas.oauth.keycloak.realm) -%}
 {%- set realm = openfaas.oauth.get('keycloak', {}).get('realm') -%}
 oauth2Plugin:
-  enabled: true
+  enabled: false
   license: "example"
   insecureTLS: false
   scopes: "openid profile email"
@@ -33,6 +34,7 @@ oauth2Plugin:
   baseHost: "{{ keycloak_url }}"
   clientSecret: {{ client_secret }}
   clientID: openfaas
+  image: {{ openfaas.oauth2_image }}
 {% endif %}
 
 # Use OpenFaaS operator instead of faas-netes

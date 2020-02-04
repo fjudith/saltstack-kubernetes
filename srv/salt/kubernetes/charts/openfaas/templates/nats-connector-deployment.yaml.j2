@@ -1,0 +1,59 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import openfaas with context %}
+{%- from "kubernetes/map.jinja" import common with context -%}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nats-connector
+    component: nats-connector
+  name: nats-connector
+  namespace: openfaas
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nats-connector
+      component: nats-connector
+  template:
+    metadata:
+      labels:
+        app: nats-connector
+        component: nats-connector
+    spec:
+      containers:
+      - name: nats-connector
+        image: {{ openfaas.nats_connector_image }}
+        env:
+          - name: gateway_url
+            value: "http://gateway.openfaas:8080"
+          - name: topics
+            value: "nats-test,"
+          - name: print_response
+            value: "true"
+          - name: print_response_body
+            value: "true"
+          - name: basic_auth
+            value: "true"
+          - name: secret_mount_path
+            value: "/var/secrets/"
+          - name: topic_delimiter
+            value: ","
+          - name: asynchronous_invocation
+            value: "false"
+          {%- if common.addons.get('nats_operator', {'enabled': False}).enabled %}
+          - name: broker_host
+            value: "nats-cluster.nats-io"    
+          {%- endif %}
+        volumeMounts:
+            - name: auth
+              readOnly: true
+              mountPath: "/var/secrets/"
+      volumes:
+      - name: auth
+        secret:
+          secretName: basic-auth

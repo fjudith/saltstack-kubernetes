@@ -28,3 +28,15 @@
     - template: jinja
     - context:
       tpldir: {{ tpldir }}
+
+/srv/kubernetes/manifests/openfaas/nats-connector-deployment.yaml:
+  file.managed:
+    - require:
+      - file:  /srv/kubernetes/manifests/openfaas
+    - source: salt://{{ tpldir }}/templates/nats-connector-deployment.yaml.j2
+    - user: root
+    - group: root
+    - mode: 755
+    - template: jinja
+    - context:
+      tpldir: {{ tpldir }}

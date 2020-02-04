@@ -52,3 +52,11 @@ openfaas-cron-connector:
     - name: |
         helm upgrade --install cron-connector --namespace openfaas \
           "./" --wait --timeout 5m
+
+openfaas-nats-connector:
+  cmd.run:
+    - runas: root
+    - watch:
+      - file: /srv/kubernetes/manifests/openfaas/nats-connector-deployment.yaml
+    - name: |
+        kubectl apply -f /srv/kubernetes/manifests/openfaas/nats-connector-deployment.yaml

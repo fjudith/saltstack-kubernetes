@@ -1,6 +1,5 @@
 {%- from "kubernetes/role/master/kubeadm/map.jinja" import kubeadm with context -%}
 
----
 kind: EncryptionConfig
 apiVersion: v1
 resources:
@@ -10,5 +9,5 @@ resources:
       - aescbc:
           keys:
             - name: key1
-              secret: "{{ kubeadm.encryptionKey }}"
+              secret: "{{ kubeadm.encryptionKey | base64_encode }}"
       - identity: {}

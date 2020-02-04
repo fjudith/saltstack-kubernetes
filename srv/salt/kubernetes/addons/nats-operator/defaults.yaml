@@ -1,4 +1,4 @@
 nats_operator:
   enabled: True
-  image: docker.io/connecteverything/nats-operator:0.6.0
+  image: docker.io/connecteverything/nats-operator:0.6.2
   streaming_image: docker.io/synadia/nats-streaming-operator:v0.3.0-v1alpha1

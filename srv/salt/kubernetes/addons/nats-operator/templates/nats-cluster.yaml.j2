@@ -14,3 +14,5 @@ spec:
   version: {{ nats_operator.nats_cluster_version }}
   pod:
     enableMetrics: true
+    metricsImage: "synadia/prometheus-nats-exporter"
+    metricsImageTag: {{nats_operator.prometheus_exporter_version }}

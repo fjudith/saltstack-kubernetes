@@ -152,6 +152,9 @@ kubernetes:
       minio_operator:
         enabled: True
         minio_image: docker.io/minio/minio:RELEASE.2020-01-03T19-12-21Z
+      descheduler:
+        enabled: True
+        image: docker.io/fjudith/descheduler:v0.10.0
   etcd:
     host: 127.0.0.1
     members:

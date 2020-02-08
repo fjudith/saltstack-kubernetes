@@ -1,0 +1,13 @@
+descheduler:
+  cron_schedule: "*/2 * * * *"
+  image: us.gcr.io/k8s-artifacts-prod/descheduler:v0.10.0
+  remove_duplicates: True
+  remove_pods_violating_inter_pod_anti_affinity: True
+  low_node_utilization:
+    enabled: True
+    cpu_threshold: 20
+    cpu_target: 50
+    mem_threshold: 20
+    mem_target: 50
+    pod_threshold: 20
+    pod_target: 30

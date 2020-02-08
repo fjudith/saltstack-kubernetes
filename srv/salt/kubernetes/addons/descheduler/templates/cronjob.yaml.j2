@@ -1,0 +1,41 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import descheduler with context %}
+
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: descheduler-cronjob
+  namespace: kube-system
+spec:
+  schedule: "{{ descheduler.cron_schedule | safe }}"
+  concurrencyPolicy: "Forbid"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          name: descheduler-pod
+        spec:
+          priorityClassName: system-cluster-critical
+          containers:
+          - name: descheduler
+            image: {{ descheduler.image }}
+            volumeMounts:
+            - mountPath: /policy-dir
+              name: policy-volume
+            command:
+              - "/bin/descheduler"
+            args:
+              - "--policy-config-file"
+              - "/policy-dir/policy.yaml"
+              - "--v"
+              - "3"
+          restartPolicy: "Never"
+          serviceAccountName: descheduler-sa
+          volumes:
+          - name: policy-volume
+            configMap:
+              name: descheduler-policy-configmap
+---

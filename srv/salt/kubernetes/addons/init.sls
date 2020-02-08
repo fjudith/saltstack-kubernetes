@@ -35,3 +35,6 @@ include:
 {%- if common.addons.get('httpbin', {'enabled': False}).enabled %}
   - kubernetes.addons.httpbin
 {%- endif -%}
+{%- if common.addons.get('descheduler', {'enabled': False}).enabled %}
+  - kubernetes.addons.descheduler
+{%- endif -%}

@@ -1,0 +1,32 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import descheduler with context %}
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: descheduler-policy-configmap
+  namespace: kube-system
+data:
+  policy.yaml: |
+    apiVersion: "descheduler/v1alpha1"
+    kind: "DeschedulerPolicy"
+    strategies:
+      "RemoveDuplicates":
+         enabled: {{ descheduler.remove_duplicates }}
+      "RemovePodsViolatingInterPodAntiAffinity":
+         enabled: {{ descheduler.remove_pods_violating_inter_pod_anti_affinity }}
+      "LowNodeUtilization":
+         enabled: {{ descheduler.low_node_utilization.enabled }}
+         params:
+           nodeResourceUtilizationThresholds:
+             thresholds:
+               "cpu" : {{ descheduler.low_node_utilization.cpu_threshold }}
+               "memory": {{ descheduler.low_node_utilization.mem_threshold }}
+               "pods": {{ descheduler.low_node_utilization.pod_threshold }}
+             targetThresholds:
+               "cpu" : {{ descheduler.low_node_utilization.cpu_target }}
+               "memory": {{ descheduler.low_node_utilization.mem_target }}
+               "pods": {{ descheduler.low_node_utilization.pod_target }}

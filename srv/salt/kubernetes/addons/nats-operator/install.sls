@@ -68,14 +68,16 @@ stan-cluster:
     - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
 
 {% if common.addons.get('kube_prometheus', {'enabled': False}).enabled %}
-nats-servicemonitor:
+nats-prometheus-operator:
   cmd.run:
     - watch:
         - cmd: nats-cluster
+        - file: /srv/kubernetes/manifests/nats-operator/prometheus-k8s-rbac.yaml
         - file: /srv/kubernetes/manifests/nats-operator/nats-servicemonitor.yaml
     - runas: root
     - use_vt: True
     - name: |
+        kubectl apply -f /srv/kubernetes/manifests/nats-operator/prometheus-k8s-rbac.yaml && \
         kubectl apply -f /srv/kubernetes/manifests/nats-operator/nats-servicemonitor.yaml
     - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
 {% endif %}

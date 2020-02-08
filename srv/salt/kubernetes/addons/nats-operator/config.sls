@@ -100,4 +100,16 @@
     - mode: 644
     - context:
       tpldir: {{ tpldir }}
+
+/srv/kubernetes/manifests/nats-operator/prometheus-k8s-rbac.yaml:
+  file.managed:
+    - require:
+      - file: /srv/kubernetes/manifests/nats-operator
+    - source: salt://{{ tpldir }}/files/prometheus-k8s-rbac.yaml
+    - skip_verify: true
+    - user: root
+    - group: root
+    - mode: 644
+    - context:
+      tpldir: {{ tpldir }}
 {% endif %}

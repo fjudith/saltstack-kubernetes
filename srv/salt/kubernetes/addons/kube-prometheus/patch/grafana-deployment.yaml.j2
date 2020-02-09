@@ -19,7 +19,7 @@ spec:
         app: grafana
     spec:
       containers:
-      - image: grafana/grafana:6.4.3
+      - image: grafana/grafana:6.5.2
         name: grafana
         ports:
         - containerPort: 3000
@@ -132,6 +132,11 @@ spec:
           name: grafana-dashboard-nginx
           readOnly: false
         {%- endif %}
+        {%- if common.addons.get('nats_operator', {'enabled': False}).enabled %}
+        - mountPath: /grafana-dashboard-definitions/0/nats
+          name: grafana-dashboard-nats
+          readOnly: false
+        {%- endif %}
       nodeSelector:
         beta.kubernetes.io/os: linux
       securityContext:
@@ -233,4 +238,9 @@ spec:
       - configMap:
           name: grafana-dashboard-nginx
         name: grafana-dashboard-nginx      
+      {%- endif %}
+      {%- if common.addons.get('nats_operator', {'enabled': False}).enabled %}
+      - configMap:
+          name: grafana-dashboard-nats
+        name: grafana-dashboard-nats
       {%- endif %}

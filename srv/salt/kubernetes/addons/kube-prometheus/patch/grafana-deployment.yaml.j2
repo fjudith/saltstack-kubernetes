@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import kube_prometheus with context %}
 {%- from "kubernetes/map.jinja" import common with context -%}
 {%- from "kubernetes/map.jinja" import master with context -%}
 
@@ -19,7 +24,7 @@ spec:
         app: grafana
     spec:
       containers:
-      - image: grafana/grafana:6.5.2
+      - image: {{ kube_prometheus.grafana_image }}
         name: grafana
         ports:
         - containerPort: 3000
@@ -117,7 +122,7 @@ spec:
         - mountPath: /grafana-dashboard-definitions/0/workload-total
           name: grafana-dashboard-workload-total
           readOnly: false
-          {%- if master.storage.get('rook_ceph', {'enabled': False}).enabled %}
+        {%- if master.storage.get('rook_ceph', {'enabled': False}).enabled %}
         - mountPath: /grafana-dashboard-definitions/0/rook
           name: grafana-dashboard-rook
           readOnly: false

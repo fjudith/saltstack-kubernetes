@@ -3,10 +3,12 @@ kube-prometheus-namespace:
     - require:
       - git: kube-prometheus-repo
     - name: /srv/kubernetes/manifests/kube-prometheus/namespace.yaml
-    - source: salt://kubernetes/addons/kube-prometheus/files/namespace.yaml
+    - source: salt://{{ tpldir }}/files/namespace.yaml
     - user: root
     - group: root
     - mode: 644
+    - context:
+      tpldir: {{ tpldir }}
   cmd.run:
     - runas: root
     - watch:

@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: cert-manager
+  namespace: cert-manager
+  labels:
+    app: cert-manager
+spec:
+  endpoints:
+  - port: "9402"
+    path: /metrics
+    interval: 60s
+    strapeTimeout: 30s
+  selector:
+    matchNames:
+      - cert-manager
+  namespaceSelector:
+    matchNames:
+      - cert-manager

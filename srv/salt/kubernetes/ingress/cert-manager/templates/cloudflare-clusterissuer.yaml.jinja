@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import cert_manager with context %}
 {%- from "kubernetes/map.jinja" import common with context -%}
 
 apiVersion: cert-manager.io/v1alpha2
@@ -7,7 +12,7 @@ metadata:
 spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory
-    email: {{ common.addons.cert_manager.acme_email }}
+    email: {{ cert_manager.acme_email }}
     privateKeySecretRef:
       name: letsencrypt-prod
     solvers:
@@ -20,9 +25,9 @@ spec:
       - selector: {}
         dns01:
           providers:
-            - name: {{ common.addons.cert_manager.dns.provider }}
+            - name: {{ cert_manager.dns.provider }}
               cloudflare:
-                email: {{ common.addons.cert_manager.dns.email }}
+                email: {{ cert_manager.dns.email }}
                 # A secretKeyRef to a cloudflare api key
                 apiKeySecretRef:
                   name: public-dns-secret

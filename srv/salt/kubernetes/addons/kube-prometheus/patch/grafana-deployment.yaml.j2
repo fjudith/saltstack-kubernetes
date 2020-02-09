@@ -142,6 +142,11 @@ spec:
           name: grafana-dashboard-nats
           readOnly: false
         {%- endif %}
+        {%- if common.addons.get('cert_manager', {'enabled': False}).enabled %}
+        - mountPath: /grafana-dashboard-definitions/0/cert
+          name: grafana-dashboard-cert
+          readOnly: false
+        {%- endif %}
       nodeSelector:
         beta.kubernetes.io/os: linux
       securityContext:
@@ -248,4 +253,9 @@ spec:
       - configMap:
           name: grafana-dashboard-nats
         name: grafana-dashboard-nats
+      {%- endif %}
+      {%- if common.addons.get('cert_manager', {'enabled': False}).enabled %}
+      - configMap:
+          name: grafana-dashboard-cert
+        name: grafana-dashboard-cert
       {%- endif %}

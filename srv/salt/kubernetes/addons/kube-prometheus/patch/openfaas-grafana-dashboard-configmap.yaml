@@ -72,11 +72,11 @@ data:
           "height": 213,
           "panels": [
             {
-              "content": "\n\n![](https://www.openfaas.com/assets/images/logo.png)",
+              "content": "\n<img src=\"https://raw.githubusercontent.com/openfaas/media/master/OpenFaaS_logo_stacked_opaque.png\" alt=\"drawing\" width=\"200\" align=\"center\"/>",
               "height": "",
               "id": 11,
               "links": [],
-              "mode": "markdown",
+              "mode": "html",
               "span": 2,
               "title": "",
               "transparent": true,

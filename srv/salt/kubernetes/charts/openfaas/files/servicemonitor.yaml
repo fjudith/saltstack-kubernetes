@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: gateway
+  namespace: openfaas
+  labels:
+    app: gateway
+spec:
+  endpoints:
+  - port: metrics
+    path: /metrics
+    interval: 5s
+    strapeTimeout: 30s
+  selector:
+    matchNames:
+      - gateway-metrics
+  namespaceSelector:
+    matchNames:
+      - openfaas

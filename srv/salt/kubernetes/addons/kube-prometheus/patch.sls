@@ -1,5 +1,6 @@
 {%- from "kubernetes/map.jinja" import common with context -%}
 {%- from "kubernetes/map.jinja" import master with context -%}
+{%- from "kubernetes/map.jinja" import charts with context -%}
 
 {% if master.storage.get('rook_ceph', {'enabled': False}).enabled %}
 ceph-grafana:
@@ -64,6 +65,20 @@ traefik-grafana:
     - watch:
       - git: kube-prometheus-repo
     - source: salt://{{ tpldir }}/patch/cert-manager-grafana-dashboard-configmap.yaml
+    - user: root
+    - group: root
+    - mode: 644
+    - context:
+      tpldir: {{ tpldir }}
+{% endif %}
+
+{% if charts.get('openfaas', {'enabled': False}).enabled %}
+openfaas-grafana:
+  file.managed:
+    - name: /srv/kubernetes/manifests/kube-prometheus/manifests/openfaas-grafana-dashboard-configmap.yaml
+    - watch:
+      - git: kube-prometheus-repo
+    - source: salt://{{ tpldir }}/patch/openfaas-grafana-dashboard-configmap.yaml
     - user: root
     - group: root
     - mode: 644

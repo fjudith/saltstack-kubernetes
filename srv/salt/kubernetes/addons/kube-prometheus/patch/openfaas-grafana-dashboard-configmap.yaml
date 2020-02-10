@@ -138,7 +138,7 @@ data:
               "tableColumn": "",
               "targets": [
                 {
-                  "expr": "up{job=\"gateway\"}",
+                  "expr": "up{job=\"gateway-metrics\"}",
                   "format": "time_series",
                   "intervalFactor": 2,
                   "legendFormat": "",

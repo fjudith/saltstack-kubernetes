@@ -57,6 +57,20 @@ traefik-grafana:
       tpldir: {{ tpldir }}
 {% endif %}
 
+{% if common.addons.get('cert_manager', {'enabled': False}).enabled %}
+traefik-grafana:
+  file.managed:
+    - name: /srv/kubernetes/manifests/kube-prometheus/manifests/cert-manager-grafana-dashboard-configmap.yaml
+    - watch:
+      - git: kube-prometheus-repo
+    - source: salt://{{ tpldir }}/patch/cert-manager-grafana-dashboard-configmap.yaml
+    - user: root
+    - group: root
+    - mode: 644
+    - context:
+      tpldir: {{ tpldir }}
+{% endif %}
+
 kube-prometheus-grafana:
   file.managed:
     - name: /srv/kubernetes/manifests/kube-prometheus/manifests/grafana-deployment.yaml

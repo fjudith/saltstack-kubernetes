@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: grafana-dashboard-traefik
+  name: grafana-dashboard-cert
   namespace: monitoring
   labels:
     grafana_dashboard: "True"
 data:
-  traefik-dashboard.json: |+
+  cert-manager-dashboard.json: |+
     {
       "__inputs": [
         {

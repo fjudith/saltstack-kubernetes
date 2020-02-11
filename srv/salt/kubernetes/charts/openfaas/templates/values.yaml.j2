@@ -41,11 +41,11 @@ oauth2Plugin:
 operator:
   create: true
 
+prometheus:
+  create: true
+
 # Managed by Prometheus operator
 {% if common.addons.get('kube_prometheus', {'enabled': False}).enabled %}
-prometheus:
-  create: false
-
 alertmanager:
   create: false
 {% endif %}

@@ -32,7 +32,7 @@ spec:
           - name: gateway_url
             value: "http://gateway.openfaas:8080"
           - name: topics
-            value: "nats-test,"
+            value: "{{ openfaas.nats_topics }}"
           - name: print_response
             value: "true"
           - name: print_response_body

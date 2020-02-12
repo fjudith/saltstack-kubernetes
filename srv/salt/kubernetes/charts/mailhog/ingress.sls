@@ -1,11 +1,13 @@
 mailhog-ingress:
   file.managed:
     - name: /srv/kubernetes/manifests/mailhog/ingress.yaml
-    - source: salt://kubernetes/charts/mailhog/templates/ingress.yaml.j2
+    - source: salt://{{ tpldir }}/templates/ingress.yaml.j2
     - user: root
     - template: jinja
     - group: root
     - mode: 644
+    - context:
+      tpldir: {{ tpldir }}
   cmd.run:
       - watch:
         - file: /srv/kubernetes/manifests/mailhog/ingress.yaml

@@ -1,0 +1,2 @@
+mailhog:
+  ingress_host: mail

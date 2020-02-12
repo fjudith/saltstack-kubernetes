@@ -1,0 +1,12 @@
+nginx-ingress-install:
+  cmd.run:
+    - watch:
+      - file: /srv/kubernetes/manifests/nginx/values.yaml
+      - cmd: nginx-ingress-namespace
+    - cwd: /srv/kubernetes/manifests/nginx/nginx-ingress
+    - name: |
+        helm dependency update && \
+        helm upgrade --install nginx --namespace ingress-nginx \
+          --values /srv/kubernetes/manifests/nginx/values.yaml \
+          "./" --timeout 5m
+    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz'

@@ -1,3 +1,4 @@
+{%- from "kubernetes/map.jinja" import charts with context -%}
 controller:
   daemonset:
     useHostPort: true
@@ -38,3 +39,7 @@ rbac:
   create: true
 serviceAccount:
   create: true
+{% if charts.get('mailhog', {'enabled': False}).enabled %}
+tcp:
+  25: "mailhog/mailhog:1025"
+{% endif %}

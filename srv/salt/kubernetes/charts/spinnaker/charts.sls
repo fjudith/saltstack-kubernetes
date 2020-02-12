@@ -1,7 +1,12 @@
+spinnaker-remove-charts:
+  file.absent:
+    - name: /srv/kubernetes/manifests/spinnaker/spinnaker
+
 spinnaker-fetch-charts:
   cmd.run:
     - runas: root
     - require:
+      - file: spinnaker-remove-charts
       - file: /srv/kubernetes/manifests/spinnaker
     - cwd: /srv/kubernetes/manifests/spinnaker
     - name: |

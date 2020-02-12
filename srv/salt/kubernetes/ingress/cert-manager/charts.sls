@@ -4,10 +4,15 @@
 {#- Get the `tplroot` from `tpldir` #}
 {% from tpldir ~ "/map.jinja" import cert_manager with context %}
 
+cert-manager-remove-charts:
+  file.absent:
+    - name: /srv/kubernetes/manifests/cert-manager/cert-manager
+
 cert-manager-fetch-charts:
   cmd.run:
     - runas: root
     - require:
+      - file: cert-manager-remove-charts
       - file: /srv/kubernetes/manifests/cert-manager
     - cwd: /srv/kubernetes/manifests/cert-manager
     - name: |

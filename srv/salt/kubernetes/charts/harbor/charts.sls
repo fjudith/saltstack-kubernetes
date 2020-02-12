@@ -1,7 +1,12 @@
+harbor-remove-charts:
+  file.absent:
+    - name: /srv/kubernetes/manifests/harbor/harbor
+
 harbor-fetch-charts:
   cmd.run:
     - runas: root
     - require:
+      - file: harbor-remove-charts
       - file: /srv/kubernetes/manifests/harbor
     - cwd: /srv/kubernetes/manifests/harbor
     - name: |

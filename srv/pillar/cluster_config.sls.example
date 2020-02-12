@@ -71,8 +71,8 @@ kubernetes:
           image: coredns/coredns:1.6.5
       helm:
         enabled: true
-        version: 3.0.1
-        source_hash: 10e1fdcca263062b1d7b2cb93a924be1ef3dd6c381263d8151dd1a20a3d8c0dc
+        version: 3.0.3
+        source_hash: fc75d62bafec2c3addc87b715ce2512820375ab812e6647dc724123b616586d6
       kube_prometheus:
         enabled: True
         version: 0.3.0

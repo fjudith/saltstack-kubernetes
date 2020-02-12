@@ -5,6 +5,9 @@ controller:
     hostPorts:
       http: 80
       https: 443
+      {%- if charts.get('mailhog', {'enabled': False}).enabled %}
+      smtp: 25
+      {%- endif %}
   kind: DaemonSet
   config:
     enable-vts-status: "true"

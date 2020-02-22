@@ -1,17 +1,3 @@
-{%- from "kubernetes/map.jinja" import common with context -%}
-
-/srv/kubernetes/manifests/coredns.yaml:
-    file.managed:
-    - source: salt://kubernetes/addons/coredns/templates/deployment.yaml.j2
-    - user: root
-    - template: jinja
-    - group: root
-    - mode: 644
-
-kubernetes-coredns-install:
-  cmd.run:
-    - watch:
-      - /srv/kubernetes/manifests/coredns.yaml
-    - name: |
-        kubectl apply -f /srv/kubernetes/manifests/coredns.yaml
-    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz'
+include:
+  - kubernetes.addons.coredns.config
+  - kubernetes.addons.coredns.install

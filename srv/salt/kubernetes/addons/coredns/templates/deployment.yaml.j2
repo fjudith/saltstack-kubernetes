@@ -1,4 +1,6 @@
 {%- from "kubernetes/map.jinja" import common with context -%}
+{%- from tpldir ~ "/map.jinja" import coredns with context -%}
+
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -57,7 +59,7 @@ data:
         errors
         health
         ready
-        kubernetes {{ common.addons.dns.domain }} in-addr.arpa ip6.arpa {
+        kubernetes {{ coredns.domain }} in-addr.arpa ip6.arpa {
             pods insecure
             upstream
             fallthrough in-addr.arpa ip6.arpa
@@ -105,7 +107,7 @@ spec:
         beta.kubernetes.io/os: linux
       containers:
       - name: coredns
-        image: {{ common.addons.dns.coredns.image }}
+        image: {{ coredns.image }}
         imagePullPolicy: IfNotPresent
         resources:
           limits:
@@ -174,7 +176,7 @@ metadata:
 spec:
   selector:
     k8s-app: kube-dns
-  clusterIP: {{ common.addons.dns.server }}
+  clusterIP: {{ coredns.server }}
   ports:
   - name: dns
     port: 53

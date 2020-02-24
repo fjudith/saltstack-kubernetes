@@ -189,8 +189,8 @@ kubernetes:
     storage:
       rook_ceph:
         enabled: True
-        image: rook/ceph:v1.1.8
-        ceph_image: ceph/ceph:v14.2.4-20190917
+        image: rook/ceph:v1.2.4
+        ceph_image: ceph/ceph:v14.2.6
         ingress_host: ceph
       rook_minio:
         enabled: True

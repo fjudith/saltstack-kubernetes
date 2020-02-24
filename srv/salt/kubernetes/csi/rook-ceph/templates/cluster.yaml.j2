@@ -1,4 +1,8 @@
-{%- from "kubernetes/map.jinja" import master with context -%}
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import rook_ceph with context %}
 
 #################################################################################################################
 # Define the settings for the rook-ceph cluster with common settings for a production cluster.
@@ -22,7 +26,9 @@ spec:
     # v13 is mimic, v14 is nautilus, and v15 is octopus.
     # RECOMMENDATION: In production, use a specific version tag instead of the general v14 flag, which pulls the latest release and could result in different
     # versions running within the cluster. See tags available at https://hub.docker.com/r/ceph/ceph/tags/.
-    image: {{ master.storage.rook_ceph.ceph_image }}
+    # If you want to be more precise, you can always use a timestamp tag such ceph/ceph:v14.2.5-20190917
+    # This tag might not contain a new Ceph version, just security fixes from the underlying operating system, which will reduce vulnerabilities
+    image: {{ rook_ceph.image }}
     # Whether to allow unsupported versions of Ceph. Currently mimic and nautilus are supported, with the recommendation to upgrade to nautilus.
     # Octopus is the version allowed when this is set to true.
     # Do not set to true in production.
@@ -36,6 +42,8 @@ spec:
   # Use at your OWN risk
   # To understand Rook's upgrade process of Ceph, read https://rook.io/docs/rook/master/ceph-upgrade.html#ceph-version-upgrades
   skipUpgradeChecks: false
+  # Whether or not continue if PGs are not clean during an upgrade
+  continueUpgradeAfterChecksEvenIfNotHealthy: false
   # set the amount of mons to be started
   mon:
     count: 3
@@ -72,6 +80,9 @@ spec:
     # The number of daemons that will perform the rbd mirroring.
     # rbd mirroring must be configured with "rbd mirror" from the rook toolbox.
     workers: 0
+  # enable the crash collector for ceph daemon crash collection
+  crashCollector:
+    disable: false
   # To control where various services will be scheduled by kubernetes, use the placement configuration sections below.
   # The example under 'all' would have all services scheduled on kubernetes nodes labeled with 'role=storage-node' and
   # tolerate taints with a key of 'storage-node'.
@@ -106,56 +117,45 @@ spec:
 #   mgr:
   resources:
 # The requests and limits set here, allow the mgr pod to use half of one CPU core and 1 gigabyte of memory
-   mgr:
-     limits:
-       cpu: "500m"
-       memory: "1024Mi"
-     requests:
-       cpu: "500m"
-       memory: "1024Mi"
+  mgr:
+    limits:
+      cpu: "500m"
+      memory: "1024Mi"
+    requests:
+      cpu: "500m"
+      memory: "1024Mi"
 # The above example requests/limits can also be added to the mon and osd components
 #    mon:
 #    osd:
 #    prepareosd:
+#    crashcollector:
   # The option to automatically remove OSDs that are out and are safe to destroy.
   removeOSDsIfOutAndSafeToRemove: false
+#  priorityClassNames:
+#    all: rook-ceph-default-priority-class
+#    mon: rook-ceph-mon-priority-class
+#    osd: rook-ceph-osd-priority-class
+#    mgr: rook-ceph-mgr-priority-class
   storage: # cluster level storage configuration and selection
     useAllNodes: true
     useAllDevices: true
-    topologyAware: true
-    deviceFilter:
-    location:
+    #deviceFilter:
     config:
-      # The default and recommended storeType is dynamically set to bluestore for devices and filestore for directories.
-      # Set the storeType explicitly only if it is required not to use the default.
-      # storeType: bluestore
       # metadataDevice: "md0" # specify a non-rotational storage so ceph-volume will use it as block db device of bluestore.
       # databaseSizeMB: "1024" # uncomment if the disks are smaller than 100 GB
       # journalSizeMB: "1024"  # uncomment if the disks are 20 GB or smaller
       # osdsPerDevice: "1" # this value can be overridden at the node or device level
       # encryptedDevice: "true" # the default value for this option is "false"
-# Cluster level list of directories to use for filestore-based OSD storage. If uncomment, this example would create an OSD under the dataDirHostPath.
-    directories:
-    - path: /var/lib/rook
 # Individual nodes and their config can be specified as well, but 'useAllNodes' above must be set to false. Then, only the named
 # nodes below will be used as storage resources.  Each node's 'name' field should match their 'kubernetes.io/hostname' label.
 #    nodes:
-#    - name: "172.17.4.101"
-#      directories: # specific directories to use for storage can be specified for each node
-#      - path: "/rook/storage-dir"
-#      resources:
-#        limits:
-#          cpu: "500m"
-#          memory: "1024Mi"
-#        requests:
-#          cpu: "500m"
-#          memory: "1024Mi"
 #    - name: "172.17.4.201"
 #      devices: # specific devices to use for storage can be specified for each node
 #      - name: "sdb"
 #      - name: "nvme01" # multiple osds can be created on high performance devices
 #        config:
 #          osdsPerDevice: "5"
+#      - name: "/dev/disk/by-id/ata-ST4000DM004-XXXX" # devices can be specified using full udev paths
 #      config: # configuration can be specified at the node level which overrides the cluster level config
 #        storeType: filestore
 #    - name: "172.17.4.301"
@@ -163,7 +163,7 @@ spec:
   # The section for configuring management of daemon disruptions during upgrade or fencing.
   disruptionManagement:
     # If true, the operator will create and manage PodDisruptionBudgets for OSD, Mon, RGW, and MDS daemons. OSD PDBs are managed dynamically
-    # via the strategy outlined in the [design](https://github.com/rook/rook/blob/master/design/ceph-managed-disruptionbudgets.md). The operator will
+    # via the strategy outlined in the [design](https://github.com/rook/rook/blob/master/design/ceph/ceph-managed-disruptionbudgets.md). The operator will
     # block eviction of OSDs by default and unblock them safely when drains are detected.
     managePodBudgets: false
     # A duration in minutes that determines how long an entire failureDomain like `region/zone/host` will be held in `noout` (in addition to the

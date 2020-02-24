@@ -20,7 +20,9 @@ spec:
     failureDomain: host
     replicated:
       size: 3
-  # The gaeteway service configuration
+  # Whether to preserve metadata and data pools on object store deletion
+  preservePoolsOnDelete: false
+  # The gateway service configuration
   gateway:
     # type of the gateway (s3)
     type: s3
@@ -58,3 +60,4 @@ spec:
     #  requests:
     #    cpu: "500m"
     #    memory: "1024Mi"
+    # priorityClassName: my-priority-class

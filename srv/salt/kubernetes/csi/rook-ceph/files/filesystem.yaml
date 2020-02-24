@@ -19,6 +19,11 @@ spec:
     - failureDomain: host
       replicated:
         size: 3
+        # gives a hint (%) to Ceph in terms of expected consumption of the total cluster capacity of a given pool
+        # for more info: https://docs.ceph.com/docs/master/rados/operations/placement-groups/#specifying-expected-pool-size
+        #targetSizeRatio: .5
+  # Whether to preserve metadata and data pools on filesystem deletion
+  preservePoolsOnDelete: true
   # The metadata service (mds) configuration
   metadataServer:
     # The number of active MDS instances
@@ -48,9 +53,21 @@ spec:
                 operator: In
                 values:
                 - rook-ceph-mds
-            # topologyKey: failure-domain.beta.kubernetes.io/zone can be used to spread MDS across different AZ
             # topologyKey: kubernetes.io/hostname will place MDS across different hosts
             topologyKey: kubernetes.io/hostname
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - rook-ceph-mds
+              # topologyKey: */zone can be used to spread MDS across different AZ
+              # Use <topologyKey: failure-domain.beta.kubernetes.io/zone> in k8s cluster if your cluster is v1.16 or lower
+              # Use <topologyKey: topology.kubernetes.io/zone>  in k8s cluster is v1.17 or upper
+              topologyKey: topology.kubernetes.io/zone
     # A key/value list of annotations
     annotations:
     #  key: value
@@ -62,3 +79,4 @@ spec:
     #  requests:
     #    cpu: "500m"
     #    memory: "1024Mi"
+    # priorityClassName: my-priority-class

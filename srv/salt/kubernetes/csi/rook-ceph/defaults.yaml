@@ -1,0 +1,6 @@
+
+rook_ceph:
+  image: rook/ceph:v1.2.4
+  ceph_image: ceph/ceph:v14.2.6
+  exporter_image: digitalocean/ceph_exporter:latest
+  ingress_host: ceph

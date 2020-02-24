@@ -58,7 +58,19 @@ spec:
             dataDirHostPath:
               pattern: ^/(\S+)
               type: string
+            disruptionManagement:
+              properties:
+                machineDisruptionBudgetNamespace:
+                  type: string
+                managePodBudgets:
+                  type: boolean
+                osdMaintenanceTimeout:
+                  type: integer
+                manageMachineDisruptionBudgets:
+                  type: boolean
             skipUpgradeChecks:
+              type: boolean
+            continueUpgradeAfterChecksEvenIfNotHealthy:
               type: boolean
             mon:
               properties:
@@ -68,6 +80,7 @@ spec:
                   maximum: 9
                   minimum: 0
                   type: integer
+                volumeClaimTemplate: {}
             mgr:
               properties:
                 modules:
@@ -81,10 +94,15 @@ spec:
               properties:
                 hostNetwork:
                   type: boolean
+                provider:
+                  type: string
+                selectors: {}
             storage:
               properties:
                 disruptionManagement:
                   properties:
+                    machineDisruptionBudgetNamespace:
+                      type: string
                     managePodBudgets:
                       type: boolean
                     osdMaintenanceTimeout:
@@ -118,13 +136,10 @@ spec:
                             pattern: ^(true|false)$
                       useAllDevices:
                         type: boolean
-                      deviceFilter: {}
-                      directories:
-                        type: array
-                        items:
-                          properties:
-                            path:
-                              type: string
+                      deviceFilter:
+                        type: string
+                      devicePathFilter:
+                        type: string
                       devices:
                         type: array
                         items:
@@ -132,22 +147,16 @@ spec:
                             name:
                               type: string
                             config: {}
-                      location: {}
                       resources: {}
                   type: array
                 useAllDevices:
                   type: boolean
-                deviceFilter: {}
-                location: {}
-                directories:
-                  type: array
-                  items:
-                    properties:
-                      path:
-                        type: string
+                deviceFilter:
+                  type: string
+                devicePathFilter:
+                  type: string
                 config: {}
-                topologyAware:
-                  type: boolean
+                storageClassDeviceSets: {}
             monitoring:
               properties:
                 enabled:
@@ -158,6 +167,12 @@ spec:
               properties:
                 workers:
                   type: integer
+            removeOSDsIfOutAndSafeToRemove:
+              type: boolean
+            external:
+              properties:
+                enable:
+                  type: boolean
             placement: {}
             resources: {}
   additionalPrinterColumns:
@@ -172,15 +187,42 @@ spec:
     - name: Age
       type: date
       JSONPath: .metadata.creationTimestamp
-    - name: State
+    - name: Phase
       type: string
-      description: Current State
-      JSONPath: .status.state
+      description: Phase
+      JSONPath: .status.phase
+    - name: Message
+      type: string
+      description: Message
+      JSONPath: .status.message
     - name: Health
       type: string
       description: Ceph Health
       JSONPath: .status.ceph.health
 # OLM: END CEPH CRD
+# OLM: BEGIN CEPH CLIENT CRD
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: cephclients.ceph.rook.io
+spec:
+  group: ceph.rook.io
+  names:
+    kind: CephClient
+    listKind: CephClientList
+    plural: cephclients
+    singular: cephclient
+  scope: Namespaced
+  version: v1
+  validation:
+    openAPIV3Schema:
+      properties:
+        spec:
+          properties:
+            caps:
+              type: object
+# OLM: END CEPH CLIENT CRD
 # OLM: BEGIN CEPH FS CRD
 ---
 apiVersion: apiextensions.k8s.io/v1beta1
@@ -219,14 +261,18 @@ spec:
                 replicated:
                   properties:
                     size:
-                      minimum: 1
+                      minimum: 0
                       maximum: 10
                       type: integer
                 erasureCoded:
                   properties:
                     dataChunks:
+                      minimum: 0
+                      maximum: 10
                       type: integer
                     codingChunks:
+                      minimum: 0
+                      maximum: 10
                       type: integer
             dataPools:
               type: array
@@ -237,15 +283,21 @@ spec:
                   replicated:
                     properties:
                       size:
-                        minimum: 1
+                        minimum: 0
                         maximum: 10
                         type: integer
                   erasureCoded:
                     properties:
                       dataChunks:
+                        minimum: 0
+                        maximum: 10
                         type: integer
                       codingChunks:
+                        minimum: 0
+                        maximum: 10
                         type: integer
+            preservePoolsOnDelete:
+              type: boolean
   additionalPrinterColumns:
     - name: ActiveMDS
       type: string
@@ -290,7 +342,6 @@ spec:
                 annotations: {}
                 placement: {}
                 resources: {}
-
 # OLM: END CEPH NFS CRD
 # OLM: BEGIN CEPH OBJECT STORE CRD
 ---
@@ -319,6 +370,8 @@ spec:
                 sslCertificateRef: {}
                 port:
                   type: integer
+                  minimum: 1
+                  maximum: 65535
                 securePort: {}
                 instances:
                   type: integer
@@ -353,6 +406,8 @@ spec:
                       type: integer
                     codingChunks:
                       type: integer
+            preservePoolsOnDelete:
+              type: boolean
 # OLM: END CEPH OBJECT STORE CRD
 # OLM: BEGIN CEPH OBJECT STORE USERS CRD
 ---
@@ -367,6 +422,9 @@ spec:
     listKind: CephObjectStoreUserList
     plural: cephobjectstoreusers
     singular: cephobjectstoreuser
+    shortNames:
+    - rcou
+    - objectuser
   scope: Namespaced
   version: v1
 # OLM: END CEPH OBJECT STORE USERS CRD
@@ -385,6 +443,31 @@ spec:
     singular: cephblockpool
   scope: Namespaced
   version: v1
+  validation:
+    openAPIV3Schema:
+      properties:
+        spec:
+          properties:
+            failureDomain:
+                type: string
+            replicated:
+              properties:
+                size:
+                  type: integer
+                  minimum: 0
+                  maximum: 9
+                targetSizeRatio:
+                  type: number
+            erasureCoded:
+              properties:
+                dataChunks:
+                  type: integer
+                  minimum: 0
+                  maximum: 9
+                codingChunks:
+                  type: integer
+                  minimum: 0
+                  maximum: 9
 # OLM: END CEPH BLOCK POOL CRD
 # OLM: BEGIN CEPH VOLUME POOL CRD
 ---
@@ -645,10 +728,11 @@ rules:
   - policy
   - apps
   resources:
-  #this is for the clusterdisruption controller
+  # This is for the clusterdisruption controller
   - poddisruptionbudgets
-  #this is for both clusterdisruption and nodedrain controllers
+  # This is for both clusterdisruption and nodedrain controllers
   - deployments
+  - replicasets
   verbs:
   - "*"
 - apiGroups:
@@ -673,6 +757,12 @@ rules:
   - create
   - update
   - delete
+- apiGroups:
+  - storage.k8s.io
+  resources:
+  - csidrivers
+  verbs:
+  - create
 ---
 # Aspects of ceph-mgr that require cluster-wide access
 kind: ClusterRole
@@ -1324,7 +1414,7 @@ rules:
     verbs: ["get", "list"]
   - apiGroups: [""]
     resources: ["persistentvolumes"]
-    verbs: ["get", "list", "watch", "create", "delete", "update"]
+    verbs: ["get", "list", "watch", "create", "delete", "update", "patch"]
   - apiGroups: [""]
     resources: ["persistentvolumeclaims"]
     verbs: ["get", "list", "watch", "update"]
@@ -1336,10 +1426,13 @@ rules:
     verbs: ["list", "watch", "create", "update", "patch"]
   - apiGroups: ["storage.k8s.io"]
     resources: ["volumeattachments"]
-    verbs: ["get", "list", "watch", "update"]
+    verbs: ["get", "list", "watch", "update", "patch"]
   - apiGroups: [""]
     resources: ["nodes"]
     verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["persistentvolumeclaims/status"]
+    verbs: ["update", "patch"]
 # OLM: END CSI CEPHFS CLUSTER ROLE
 # OLM: BEGIN CSI CEPHFS CLUSTER ROLEBINDING
 ---
@@ -1504,13 +1597,13 @@ rules:
     verbs: ["get", "list"]
   - apiGroups: [""]
     resources: ["persistentvolumes"]
-    verbs: ["get", "list", "watch", "create", "delete", "update"]
+    verbs: ["get", "list", "watch", "create", "delete", "update", "patch"]
   - apiGroups: [""]
     resources: ["persistentvolumeclaims"]
     verbs: ["get", "list", "watch", "update"]
   - apiGroups: ["storage.k8s.io"]
     resources: ["volumeattachments"]
-    verbs: ["get", "list", "watch", "update"]
+    verbs: ["get", "list", "watch", "update", "patch"]
   - apiGroups: [""]
     resources: ["nodes"]
     verbs: ["get", "list", "watch"]
@@ -1535,6 +1628,9 @@ rules:
   - apiGroups: ["snapshot.storage.k8s.io"]
     resources: ["volumesnapshots/status"]
     verbs: ["update"]
+  - apiGroups: [""]
+    resources: ["persistentvolumeclaims/status"]
+    verbs: ["update", "patch"]
 # OLM: END CSI RBD CLUSTER ROLE
 # OLM: BEGIN CSI RBD CLUSTER ROLEBINDING
 ---

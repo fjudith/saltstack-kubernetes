@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import rook_ceph with context %}
 {%- set public_domain = pillar['public-domain'] -%}
 {%- from "kubernetes/map.jinja" import common with context -%}
 {%- from "kubernetes/map.jinja" import master with context -%}
@@ -25,7 +30,7 @@ metadata:
     {%- endif %}
 spec:
   rules:
-  - host: {{ master.storage.rook_ceph.ingress_host }}.{{ public_domain }}
+  - host: {{ rook_ceph.ingress_host }}.{{ public_domain }}
     http:
       paths:
       - path: /
@@ -36,6 +41,6 @@ spec:
   tls:
   - secretName: ceph-prod-cert
     hosts:
-    - {{ master.storage.rook_ceph.ingress_host }}.{{ public_domain }}
+    - {{ rook_ceph.ingress_host }}.{{ public_domain }}
   {%- endif %}
 ---

@@ -2,13 +2,13 @@
 # vim: ft=jinja
 
 {#- Get the `tplroot` from `tpldir` #}
-{% from tpldir ~ "/map.jinja" import minio with context %}
+{% from tpldir ~ "/map.jinja" import minio_operator with context %}
 
 minio-client:
   file.managed:
     - name: /usr/local/bin/mc
-    - source: https://dl.min.io/client/mc/release/linux-amd64/mc.{{ minio.client_version }}
-    - source_hash: {{ minio.source_hash }}
+    - source: https://dl.min.io/client/mc/release/linux-amd64/mc.{{ minio_operator.client_version }}
+    - source_hash: {{ minio_operator.source_hash }}
     - mode: 555
     - user: root
     - group: root

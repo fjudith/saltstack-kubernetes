@@ -9,8 +9,10 @@
   file.managed:
     - require:
       - file:  /srv/kubernetes/manifests/spinnaker
-    - source: salt://kubernetes/charts/spinnaker/templates/values.yaml.j2
+    - source: salt://{{ tpldir }}/templates/values.yaml.j2
     - user: root
     - group: root
     - mode: 755
     - template: jinja
+    - context:
+      tpldir: {{ tpldir }}

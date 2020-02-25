@@ -1,12 +1,14 @@
 spinnaker-namespace:
   file.managed:
     - name: /srv/kubernetes/manifests/spinnaker/namespace.yaml
-    - source: salt://kubernetes/charts/spinnaker/files/namespace.yaml
+    - source: salt://{{ tpldir }}/files/namespace.yaml
     - require:
       - file: /srv/kubernetes/manifests/spinnaker
     - user: root
     - group: root
     - mode: 644
+    - context:
+      tpldir: {{ tpldir }}
   cmd.run:
     - runas: root
     - watch:

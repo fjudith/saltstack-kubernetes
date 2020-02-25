@@ -1,24 +1,28 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import spinnaker with context %}
 {%- set public_domain = pillar['public-domain'] -%}
-{%- from "kubernetes/map.jinja" import charts with context -%}
 
 {
     "id": "spinnaker",
     "clientId": "spinnaker",
     "name": "spinnaker",
     "description": "Spinnaker OIDC client",
-    "rootUrl": "https://{{ charts.spinnaker.ingress_host }}-gate.{{ public_domain }}",
-    "adminUrl": "https://{{ charts.spinnaker.ingress_host }}.{{ public_domain }}",
+    "rootUrl": "https://{{ spinnaker.ingress_host }}-gate.{{ public_domain }}",
+    "adminUrl": "https://{{ spinnaker.ingress_host }}.{{ public_domain }}",
     "baseUrl": "/login",
     "surrogateAuthRequired": false,
     "enabled": true,
     "clientAuthenticatorType": "client-secret",
     "redirectUris": [
-      "https://{{ charts.spinnaker.ingress_host }}.{{ public_domain }}/*",
-      "https://{{ charts.spinnaker.ingress_host }}-gate.{{ public_domain }}/*"
+      "https://{{ spinnaker.ingress_host }}.{{ public_domain }}/*",
+      "https://{{ spinnaker.ingress_host }}-gate.{{ public_domain }}/*"
     ],
     "webOrigins": [
-      "https://{{ charts.spinnaker.ingress_host }}.{{ public_domain }}/*",
-      "https://{{ charts.spinnaker.ingress_host }}-gate.{{ public_domain }}/*"
+      "https://{{ spinnaker.ingress_host }}.{{ public_domain }}/*",
+      "https://{{ spinnaker.ingress_host }}-gate.{{ public_domain }}/*"
     ],
     "notBefore": 0,
     "bearerOnly": false,

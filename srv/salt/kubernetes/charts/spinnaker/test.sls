@@ -1,12 +1,16 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import spinnaker with context %}
 {%- set public_domain = pillar['public-domain'] -%}
-{%- from "kubernetes/map.jinja" import charts with context -%}
 
 query-spinnaker-deck:
   http.wait_for_successful_query:
     - watch:
       - cmd: spinnaker
       - cmd: spinnaker-ingress
-    - name: https://{{ charts.spinnaker.ingress_host }}.{{ public_domain }}
+    - name: https://{{ spinnaker.ingress_host }}.{{ public_domain }}
     - wait_for: 120
     - request_interval: 5
     - status: 200
@@ -16,7 +20,7 @@ query-spinnaker-gate:
     - watch:
       - cmd: spinnaker
       - cmd: spinnaker-ingress
-    - name: https://{{ charts.spinnaker.ingress_host }}-gate.{{ public_domain }}
+    - name: https://{{ spinnaker.ingress_host }}-gate.{{ public_domain }}
     - wait_for: 120
     - request_interval: 5
     - status: 200
@@ -26,7 +30,7 @@ query-spinnaker-minio:
     - watch:
       - cmd: spinnaker
       - cmd: spinnaker-ingress
-    - name: https://{{ charts.spinnaker.ingress_host }}-minio.{{ public_domain }}/minio/login
+    - name: https://{{ spinnaker.ingress_host }}-minio.{{ public_domain }}/minio/login
     - wait_for: 120
     - request_interval: 5
     - status: 403

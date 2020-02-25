@@ -1,8 +1,12 @@
-{%- from "kubernetes/map.jinja" import charts with context -%}
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import spinnaker with context %}
 
 {
-  "id": "{{ charts.keycloak_gatekeeper.realm }}",
-  "realm": "{{ charts.keycloak_gatekeeper.realm }}",
+  "id": "{{ spinnaker.oauth.keycloak.realm }}",
+  "realm": "{{ spinnaker.oauth.keycloak.realm }}",
   "notBefore": 0,
   "revokeRefreshToken": false,
   "refreshTokenMaxReuse": 0,

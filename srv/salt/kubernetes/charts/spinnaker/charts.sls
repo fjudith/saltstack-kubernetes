@@ -18,25 +18,31 @@ spinnaker-fetch-charts:
   file.managed:
     - watch:
       - cmd: spinnaker-fetch-charts
-    - source: salt://kubernetes/charts/spinnaker/tmp/requirements.yaml
+    - source: salt://{{ tpldir }}/tmp/requirements.yaml
     - user: root
     - group: root
     - mode: 644
+    - context:
+      tpldir: {{ tpldir }}
 
 /srv/kubernetes/manifests/spinnaker/spinnaker/requirements.lock:
   file.managed:
     - watch:
       - cmd: spinnaker-fetch-charts
-    - source: salt://kubernetes/charts/spinnaker/tmp/requirements.lock
+    - source: salt://{{ tpldir }}/tmp/requirements.lock
     - user: root
     - group: root
     - mode: 644
+    - context:
+      tpldir: {{ tpldir }}
 
 /srv/kubernetes/manifests/spinnaker/spinnaker/Charts.yaml:
   file.managed:
     - watch:
       - cmd: spinnaker-fetch-charts
-    - source: salt://kubernetes/charts/spinnaker/tmp/Charts.yaml
+    - source: salt://{{ tpldir }}/tmp/Charts.yaml
     - user: root
     - group: root
     - mode: 644
+    - context:
+      tpldir: {{ tpldir }}

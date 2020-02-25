@@ -9,7 +9,7 @@ include:
   {%- endif %}
   - kubernetes.charts.spinnaker.config
   - kubernetes.charts.spinnaker.namespace
-  {%- if master.storage.get('rook_minio', {'enabled': False}).enabled %}
+  {%- if charts.get('minio_operator', {'enabled': False}).enabled %}
   - kubernetes.charts.spinnaker.minio
   {%- endif %}
   - kubernetes.charts.spinnaker.ingress

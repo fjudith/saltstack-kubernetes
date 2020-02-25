@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import spinnaker with context %}
 {%- set public_domain = pillar['public-domain'] -%}
 {%- from "kubernetes/map.jinja" import common with context -%}
 {%- from "kubernetes/map.jinja" import master with context -%}
@@ -5,8 +10,8 @@
 
 halyard:
   image:
-    tag: {{ charts.spinnaker.halyard_version }}
-  spinnakerVersion: {{ charts.spinnaker.version }}
+    tag: {{ spinnaker.halyard_version }}
+  spinnakerVersion: {{ spinnaker.version }}
   additionalProfileConfigMaps:
     data:
       front50-local.yml: |-
@@ -24,13 +29,13 @@ halyard:
   additionalSecrets:
     create: true
     data:
-      github.token: {{ charts.spinnaker.github.token | base64_encode }} # Github API key (repo permission only)
+      github.token: {{ spinnaker.github.token | base64_encode }} # Github API key (repo permission only)
   additionalConfigMaps:
     create: true
     data:
       config.src: |-
-        DECK_URL="https://{{ charts.spinnaker.ingress_host }}.{{ public_domain }}" # Url to access your deck 
-        GATE_URL="https://{{ charts.spinnaker.ingress_host }}-gate.{{ public_domain }}" # URL to access your gate
+        DECK_URL="https://{{ spinnaker.ingress_host }}.{{ public_domain }}" # Url to access your deck 
+        GATE_URL="https://{{ spinnaker.ingress_host }}-gate.{{ public_domain }}" # URL to access your gate
       
   additionalScripts:
     create: true
@@ -57,8 +62,8 @@ halyard:
       {% if charts.get('keycloak', {'enabled': False}).enabled %}
       {%- set keycloak_url = 'https://' + charts.get('keycloak', {}).get('ingress_host') + '.' + pillar['public-domain'] -%}
       {%- set keycloak_password = salt['cmd.shell']("kubectl get secret --namespace keycloak keycloak-http -o jsonpath='{.data.password}' | base64 --decode; echo") -%}
-      {%- set client_secret     = salt['cmd.shell']('/srv/kubernetes/manifests/spinnaker/kc-clientsecret-spinnaker.sh' + ' ' + 'keycloak' + ' ' + keycloak_password + ' ' + keycloak_url + ' ' + charts.spinnaker.oauth.keycloak.realm) -%}
-      {%- set realm = charts.spinnaker.oauth.get('keycloak', {}).get('realm') -%}
+      {%- set client_secret     = salt['cmd.shell']('/srv/kubernetes/manifests/spinnaker/kc-clientsecret-spinnaker.sh' + ' ' + 'keycloak' + ' ' + keycloak_password + ' ' + keycloak_url + ' ' + spinnaker.oauth.keycloak.realm) -%}
+      {%- set realm = spinnaker.oauth.get('keycloak', {}).get('realm') -%}
       02-configure_oauth2.sh: |-
         source /opt/halyard/additionalConfigMaps/config.src
         
@@ -101,8 +106,8 @@ halyard:
       {% if charts.get('concourse', {'enabled': False}).enabled %}
       05-configure_concouse.sh: |-
         # Configure Kubernetes cluster internal Concourse instance
-        USERNAME={{ charts.spinnaker.concourse.username }}
-        PASSWORD={{ charts.spinnaker.concourse.password }}
+        USERNAME={{ spinnaker.concourse.username }}
+        PASSWORD={{ spinnaker.concourse.password }}
         INSTANCE=internal
         URL='http://concourse-web.concourse:8080'
 
@@ -117,15 +122,15 @@ halyard:
       {% endif %}
 
 minio:
-  {%- if master.storage.get('rook_minio', {'enabled': False}).enabled %}
+  {%- if charts.get('minio_operator', {'enabled': False}).enabled %}
   enabled: false
 
 s3:
   enabled: true
   bucket: spinnaker
-  endpoint: http://spinnaker-minio:9000
-  accessKey: {{ charts.spinnaker.s3.accesskey }}
-  secretKey: {{ charts.spinnaker.s3.secretkey }}        
+  endpoint: http://minio:9000
+  accessKey: {{ spinnaker.s3.accesskey }}
+  secretKey: {{ spinnaker.s3.secretkey }}        
   {%- else -%}
   enabled: true
   persistence:

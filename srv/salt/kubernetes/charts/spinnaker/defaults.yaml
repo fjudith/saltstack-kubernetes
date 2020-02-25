@@ -1,0 +1,18 @@
+spinnaker:
+  version: 1.17.5
+  halyard_version: 1.26.0
+  ingress_host: spinnaker
+  # github:
+  #   enabled: True
+  #   token: 0123456789abcdefghij0123456789abcdefghij
+  # s3:
+  #   accesskey: spinnaker
+  #   secretkey: Sp1nn4k3rS3cr3tK3y
+  #   bucket: spinnaker
+  # oauth:
+  #   provider: keycloak
+  #   keycloak:
+  #     realm: default
+  # concourse:
+  #   username: spinnaker
+  #   password: 1nt3gr4t1on

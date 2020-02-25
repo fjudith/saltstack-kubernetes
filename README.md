@@ -134,7 +134,7 @@ The Kubernetes cluster deployment is acheived by connecting to the **salt-master
 This can be acheived using the following one-liner...
 
 ```bash
-ssh root@proxy01.example.com -C "salt '*' state.apply"
+ssh root@proxy01.example.com -C "salt-run state.orchestrate _orchestrate"
 ```
 
 ... Or by opening first a SSH session to get benefit of the salt state output coloring.
@@ -142,7 +142,7 @@ ssh root@proxy01.example.com -C "salt '*' state.apply"
 ```bash
 ssh root@proxy01.example.com
 
-root@proxy01 ~ # salt '*' state.apply
+root@proxy01 ~ # salt-run state.orchestrate _orchestrate
 ```
 
 ---

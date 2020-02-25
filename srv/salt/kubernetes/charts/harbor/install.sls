@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import harbor with context %}
 {%- set public_domain = pillar['public-domain'] -%}
 {%- from "kubernetes/map.jinja" import charts with context -%}
 
@@ -24,14 +29,16 @@ harbor-configure-oidc:
     - watch:
       - cmd: harbor
     - name: /srv/kubernetes/manifests/harbor/auth-oidc.json
-    - source: salt://kubernetes/charts/harbor/oauth/keycloak/templates/auth-oidc.json.j2
+    - source: salt://{{ tpldir }}/oauth/keycloak/templates/auth-oidc.json.j2
     - user: root
     - group: root
     - template: jinja
     - mode: 644
+    - context:
+      tpldir: {{ tpldir }}
   cmd.run:
     - watch:
       - file: /srv/kubernetes/manifests/harbor/auth-oidc.json
     - runas: root
     - name: |
-        http --auth "admin:{{ charts.harbor.admin_password }}" PUT https://{{ charts.harbor.core_ingress_host }}.{{ public_domain }}/api/configurations < /srv/kubernetes/manifests/harbor/auth-oidc.json
+        http --auth "admin:{{ harbor.admin_password }}" PUT https://{{ harbor.core_ingress_host }}.{{ public_domain }}/api/configurations < /srv/kubernetes/manifests/harbor/auth-oidc.json

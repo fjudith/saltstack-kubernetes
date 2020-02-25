@@ -16,7 +16,9 @@ harbor-fetch-charts:
 
 /srv/kubernetes/manifests/harbor/harbor/templates/nginx/deployment.yaml:
   file.managed:
-    - source: salt://kubernetes/charts/harbor/patch/nginx-deployment.yaml
+    - source: salt://{{tpldir }}/patch/nginx-deployment.yaml
     - user: root
     - group: root
     - mode: 644
+    - context:
+      tpldir: {{ tpldir }}

@@ -3,10 +3,12 @@ harbor-namespace:
     - require:
       - file: /srv/kubernetes/manifests/harbor
     - name: /srv/kubernetes/manifests/harbor/namespace.yaml
-    - source: salt://kubernetes/charts/harbor/files/namespace.yaml
+    - source: salt://{{ tpldir }}/files/namespace.yaml
     - user: root
     - group: root
     - mode: 644
+    - context:
+      tpldir: {{ tpldir }}
   cmd.run:
     - runas: root
     - watch:

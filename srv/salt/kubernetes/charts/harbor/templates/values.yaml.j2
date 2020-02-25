@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import harbor with context %}
 {%- set public_domain = pillar['public-domain'] -%}
 {%- from "kubernetes/map.jinja" import common with context -%}
 {%- from "kubernetes/map.jinja" import master with context -%}
@@ -40,8 +45,8 @@ expose:
     commonName: ""
   ingress:
     hosts:
-      core: {{ charts.harbor.core_ingress_host }}.{{ public_domain }}
-      notary: {{ charts.harbor.notary_ingress_host }}.{{ public_domain }}
+      core: {{ harbor.core_ingress_host }}.{{ public_domain }}
+      notary: {{ harbor.notary_ingress_host }}.{{ public_domain }}
     # set to the type of ingress controller if it has specific requirements.
     # leave as `default` for most ingress controllers.
     # set to `gce` if using the GCE ingress controller
@@ -115,7 +120,7 @@ expose:
 # the IP address of k8s node
 #
 # If Harbor is deployed behind the proxy, set it as the URL of proxy
-externalURL: https://{{ charts.harbor.core_ingress_host }}.{{ public_domain }}
+externalURL: https://{{ harbor.core_ingress_host }}.{{ public_domain }}
 
 # The persistence is enabled by default and a default StorageClass
 # is needed in the k8s cluster to provision volumes dynamicly.
@@ -206,7 +211,7 @@ persistence:
     # Refer to
     # https://github.com/docker/distribution/blob/master/docs/configuration.md#redirect
     # for the detail.
-    {%- if master.storage.get('rook_minio', {'enabled': False}).enabled %}
+    {%- if charts.get('minio_operator', {'enabled': False}).enabled %}
     disableredirect: true
     {%- else -%}
     disableredirect: false
@@ -220,7 +225,7 @@ persistence:
     # "oss" and fill the information needed in the corresponding section. The type
     # must be "filesystem" if you want to use persistent volumes for registry
     # and chartmuseum
-    {%- if master.storage.get('rook_minio', {'enabled': False}).enabled %}
+    {%- if charts.get('minio_operator', {'enabled': False}).enabled %}
     type: filesystem
     {%- else -%}
     type: s3
@@ -239,13 +244,13 @@ persistence:
       encodedkey: base64-encoded-json-key-file
       #rootdirectory: /gcs/object/name/prefix
       #chunksize: "5242880"
-    {%- if master.storage.get('rook_minio', {'enabled': False}).enabled %}
+    {%- if charts.get('minio_operator', {'enabled': False}).enabled %}
     s3:
       region: us-west-1
-      bucket: {{ charts.harbor.s3.bucket }}
-      accesskey: {{ charts.harbor.s3.accesskey }}
-      secretkey: {{ charts.harbor.s3.accesskey }}
-      regionendpoint: http://harbor-minio:9000
+      bucket: {{ harbor.s3.bucket }}
+      accesskey: {{ harbor.s3.accesskey }}
+      secretkey: {{ harbor.s3.accesskey }}
+      regionendpoint: http://minio:9000
       #encrypt: false
       #keyid: mykeyid
       #secure: true
@@ -310,9 +315,9 @@ imagePullSecrets:
 logLevel: info
 
 # The initial password of Harbor admin. Change it from portal after launching Harbor
-harborAdminPassword: "{{ charts.harbor.admin_password }}"
+harborAdminPassword: "{{ harbor.admin_password }}"
 # The secret key used for encryption. Must be a string of 16 chars.
-secretKey: "{{ charts.harbor.secretkey }}"
+secretKey: "{{ harbor.secretkey }}"
 
 # The proxy settings for updating clair vulnerabilities from the Internet and replicating
 # artifacts from/to the registries that cannot be reached directly
@@ -551,7 +556,7 @@ database:
       repository: busybox
       tag: latest
     # The initial superuser password for internal database
-    password: "{{ charts.harbor.database_password }}"
+    password: "{{ harbor.database_password }}"
     # resources:
     #  requests:
     #    memory: 256Mi

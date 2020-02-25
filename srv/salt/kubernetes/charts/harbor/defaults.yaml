@@ -1,0 +1,16 @@
+harbor:
+  version: 1.2.3
+  admin_password: Ch4ng3M3
+  secretkey: 2Ds7hlY9VHyKAcNd
+  database_password: Ch4ng3M34ls0
+  core_ingress_host: harbor
+  notary_ingress_host: notary
+  s3:
+    minio_image: docker.io/minio/minio:RELEASE.2020-01-03T19-12-21Z
+    accesskey: harbor
+    secretkey: Ch4ng3M34ls0
+    bucket: harbor
+  oauth:
+    provider: keycloak
+    keycloak:
+      realm: default

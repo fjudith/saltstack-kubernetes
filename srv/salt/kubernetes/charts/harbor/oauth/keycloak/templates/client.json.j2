@@ -1,21 +1,25 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import openfaas with context %}
 {%- set public_domain = pillar['public-domain'] -%}
-{%- from "kubernetes/map.jinja" import charts with context -%}
 
 {
     "id": "harbor",
     "clientId": "harbor",
     "name": "harbor",
     "description": "Harbor OIDC client",
-    "rootUrl": "https://{{ charts.harbor.core_ingress_host }}.{{ public_domain }}",
-    "adminUrl": "https://{{ charts.harbor.core_ingress_host }}.{{ public_domain }}",
+    "rootUrl": "https://{{ harbor.core_ingress_host }}.{{ public_domain }}",
+    "adminUrl": "https://{{ harbor.core_ingress_host }}.{{ public_domain }}",
     "surrogateAuthRequired": false,
     "enabled": true,
     "clientAuthenticatorType": "client-secret",
     "redirectUris": [
-      "https://{{ charts.harbor.core_ingress_host }}.{{ public_domain }}/c/oidc/callback/*"
+      "https://{{ harbor.core_ingress_host }}.{{ public_domain }}/c/oidc/callback/*"
     ],
     "webOrigins": [
-      "https://{{ charts.harbor.core_ingress_host }}.{{ public_domain }}"
+      "https://{{ harbor.core_ingress_host }}.{{ public_domain }}"
     ],
     "notBefore": 0,
     "bearerOnly": false,

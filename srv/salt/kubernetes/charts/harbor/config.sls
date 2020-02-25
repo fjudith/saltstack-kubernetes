@@ -9,8 +9,10 @@
     file.managed:
     - require:
       - file: /srv/kubernetes/manifests/harbor
-    - source: salt://kubernetes/charts/harbor/templates/values.yaml.j2
+    - source: salt://{{ tpldir }}/templates/values.yaml.j2
     - template: jinja
     - user: root
     - group: root
     - mode: 644
+    - context:
+      tpldir: {{ tpldir }}

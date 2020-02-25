@@ -4,4 +4,4 @@
 {% import_yaml tpldir ~ "/defaults.yaml" or {} as defaults %}
 
 {#- Merge in salt pillar #}
-{% set harbor = salt['pillar.get']('kubernetes:charts:harbor', default=defaults['harbor'], merge=True) %}
+{% set spinnaker = salt['pillar.get']('kubernetes:charts:spinnaker', default=defaults['spinnaker'], merge=True) %}

@@ -2,7 +2,7 @@
 set -e
 
 export SALT_VERSION=2019.2.2
-export SALTGUI_VERSION=1.17.0
+export SALTGUI_VERSION=1.18.0
 export DEBIAN_FRONTEND=noninteractive
 export SALT_USER=salt
 

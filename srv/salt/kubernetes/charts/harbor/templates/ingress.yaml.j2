@@ -27,7 +27,7 @@ metadata:
     {%- endif %}
 spec:
   rules:
-  - host: {{ charts.harbor.core_ingress_host }}.{{ public_domain }}
+  - host: {{ harbor.core_ingress_host }}.{{ public_domain }}
     http:
       paths:
       - path: /api/
@@ -58,7 +58,7 @@ spec:
   tls:
   - secretName: core-prod-cert
     hosts:
-    - {{ charts.harbor.core_ingress_host }}.{{ public_domain }}
+    - {{ harbor.core_ingress_host }}.{{ public_domain }}
   {%- endif %}
 ---
 apiVersion: extensions/v1beta1
@@ -74,7 +74,7 @@ metadata:
     {%- endif %}
 spec:
   rules:
-  - host: {{ charts.harbor.notary_ingress_host }}.{{ public_domain }}
+  - host: {{ harbor.notary_ingress_host }}.{{ public_domain }}
     http:
       paths:
       - path: /
@@ -85,7 +85,7 @@ spec:
   tls:
   - secretName: notary-prod-cert
     hosts:
-    - {{ charts.harbor.notary_ingress_host }}.{{ public_domain }}
+    - {{ harbor.notary_ingress_host }}.{{ public_domain }}
   {%- endif %}
 ---
 apiVersion: extensions/v1beta1
@@ -101,7 +101,7 @@ metadata:
     {%- endif %}
 spec:
   rules:
-  - host: {{ charts.harbor.core_ingress_host }}-minio.{{ public_domain }}
+  - host: {{ harbor.core_ingress_host }}-minio.{{ public_domain }}
     http:
       paths:
       - path: /
@@ -112,6 +112,6 @@ spec:
   tls:
   - secretName: harbor-minio-prod-cert
     hosts:
-    - {{ charts.harbor.core_ingress_host }}-minio.{{ public_domain }}
+    - {{ harbor.core_ingress_host }}-minio.{{ public_domain }}
   {%- endif %}
 ---

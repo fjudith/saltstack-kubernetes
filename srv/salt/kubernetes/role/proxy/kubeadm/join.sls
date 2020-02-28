@@ -3,7 +3,7 @@
 
 {%- set hostname = salt['grains.get']('fqdn') -%}
 {%- set localIpAddress = salt['network.ip_addrs'](pillar['controlPlaneInterface']) -%}
-{%- from "kubernetes/role/node/kubeadm/map.jinja" import kubeadm with context %}
+{%- from "kubernetes/role/proxy/kubeadm/map.jinja" import kubeadm with context %}
 
 kubernetes-ca:
   file.directory:

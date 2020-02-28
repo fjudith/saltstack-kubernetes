@@ -2,7 +2,7 @@
 # vim: ft=jinja
 
 {#- Start imports #}
-{% import_yaml "kubernetes/role/node/kubeadm/defaults.yaml" or {} as defaults %}
+{% import_yaml "kubernetes/role/proxy/kubeadm/defaults.yaml" or {} as defaults %}
 
 {#- Merge in salt pillar #}
 {% set kubeadm = salt['pillar.get']('kubeadm', default=defaults['kubeadm'], merge=True) %}

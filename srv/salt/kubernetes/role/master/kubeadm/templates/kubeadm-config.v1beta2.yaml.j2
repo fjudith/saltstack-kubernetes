@@ -106,7 +106,6 @@ apiServer:
     apiserver-count: "{{ apiserverCount|length }}"
     {%- if charts.get('keycloak', {'enabled': False}).enabled %}
     oidc-client-id: kubernetes
-    odic-username-claim: email
     oidc-groups-claim: groups
     oidc-issuer-url: https://{{ charts.keycloak.ingress_host }}.{{ public_domain }}/auth/realms/default
     {%- endif %}

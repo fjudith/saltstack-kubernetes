@@ -9,5 +9,5 @@ resources:
       - aescbc:
           keys:
             - name: key1
-              secret: "{{ kubeadm.encryptionKey | base64_encode }}"
+              secret: "{{ kubeadm.encryptionKey }}"
       - identity: {}

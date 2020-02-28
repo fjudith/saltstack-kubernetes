@@ -3,7 +3,7 @@
 {%- set clusterHost = pillar['cluster-host'] -%}
 {%- set controlPlaneInterface = pillar['controlPlaneInterface'] -%}
 {%- set localIpAddress = salt['network.ip_addrs'](controlPlaneInterface) -%}
-{%- from "kubernetes/role/node/kubeadm/map.jinja" import kubeadm with context -%}
+{%- from "kubernetes/role/proxy/kubeadm/map.jinja" import kubeadm with context -%}
 {%- from "kubernetes/map.jinja" import common with context -%}
 {%- from "kubernetes/map.jinja" import master with context -%}
 {%- from "kubernetes/map.jinja" import charts with context -%}

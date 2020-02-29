@@ -12,8 +12,8 @@ kube-prometheus-query-api:
   http.wait_for_successful_query:
     - watch:
       - cmd: kube-prometheus-crds
-    - name: 'http://127.0.0.1:8080/apis/monitoring.coreos.com'
-    - match: monitoring.coreos.com
+    - name: 'http://127.0.0.1:8080/apis/monitoring.coreos.com/v1/servicemonitors'
+    - match: ServiceMonitorList
     - wait_for: 180
     - request_interval: 5
     - status: 200

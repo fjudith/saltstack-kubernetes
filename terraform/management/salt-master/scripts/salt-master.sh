@@ -55,6 +55,11 @@ external_auth:
       - '@runner'
       - '@wheel'
       - '@jobs'
+    sysops:
+      - .*
+      - '@runner'
+      - '@wheel'
+      - '@jobs'
 
 rest_cherrypy:
     port: 3333

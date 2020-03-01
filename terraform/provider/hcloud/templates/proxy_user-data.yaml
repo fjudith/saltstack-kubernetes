@@ -253,6 +253,11 @@ write_files:
             - '@runner'
             - '@wheel'
             - '@jobs'
+          sysops:
+            - .*
+            - '@runner'
+            - '@wheel'
+            - '@jobs'
 
       rest_cherrypy:
           port: 3333

@@ -1,9 +1,10 @@
-{%- from "kubernetes/map.jinja" import charts with context -%}
+{%- from "kubernetes/map.jinja" import master with context -%}
+{%- from "kubernetes/map.jinja" import common with context -%}
 
 include:
-{%- if pillar.kubernetes.master.storage.get('rook_ceph', {'enabled': False}).enabled %}
+{%- if master.storage.get('rook_ceph', {'enabled': False}).enabled %}
   - kubernetes.csi.rook-ceph
 {%- endif -%}
-{%- if pillar.kubernetes.master.storage.get('rook_minio', {'enabled': False}).enabled %}
-  - kubernetes.csi.rook-minio
+{%- if common.addons.get('minio_operator', {'enabled': False}).enabled %}
+  - kubernetes.addons.minio-operator
 {%- endif -%}

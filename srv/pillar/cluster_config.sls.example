@@ -86,9 +86,6 @@ kubernetes:
         image: k8s.gcr.io/metrics-server-amd64:v0.3.6
       dashboard:
         enabled: True
-        dashboard_image: kubernetesui/dashboard:v2.0.0-beta5
-        scraper_image: kubernetesui/metrics-scraper:v1.0.2
-        ingress_host: kubernetes-dashboard
       traefik:
         enabled: False
         password: '$$apr1$$u7.rXtVi$$DQtLfP6lJJZqvENhyo6EX1'

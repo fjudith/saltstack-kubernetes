@@ -1,4 +1,8 @@
-{%- from "kubernetes/map.jinja" import common with context -%}
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import dashboard with context %}
 
 # Copyright 2017 The Kubernetes Authors.
 #
@@ -34,7 +38,7 @@ spec:
     spec:
       containers:
         - name: kubernetes-dashboard
-          image: {{ common.addons.dashboard.dashboard_image }}
+          image: {{ dashboard.dashboard_image }}
           imagePullPolicy: Always
           ports:
             - containerPort: 8443

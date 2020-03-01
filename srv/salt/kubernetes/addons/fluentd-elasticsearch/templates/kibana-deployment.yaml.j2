@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import fluentd_elasticsearch with context %}
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:

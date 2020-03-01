@@ -71,3 +71,5 @@
     - template: jinja
     - group: root
     - mode: 644
+    - context:
+        tpldir: {{ tpldir }}

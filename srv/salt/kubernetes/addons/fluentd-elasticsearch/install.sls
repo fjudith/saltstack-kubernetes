@@ -1,4 +1,4 @@
-kubernetes-fluentd-elasticsearch-install:
+fluentd-elasticsearch:
   cmd.run:
     - watch:
       - file: /srv/kubernetes/manifests/fluentd-elasticsearch

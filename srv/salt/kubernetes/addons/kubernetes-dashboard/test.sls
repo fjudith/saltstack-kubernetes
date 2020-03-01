@@ -9,7 +9,7 @@ kubernetes-dashboard-wait:
     - use_vt: True
     - timeout: 180
 
-query-grafana:
+query-kubernetes-dashboard:
   http.wait_for_successful_query:
     - watch:
       - cmd: kubernetes-dashboard

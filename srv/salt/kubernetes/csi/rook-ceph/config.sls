@@ -73,28 +73,6 @@
     - context:
       tpldir: {{ tpldir }}
 
-/srv/kubernetes/manifests/rook-ceph/storageclass.yaml:
-  file.managed:
-    - require:
-      - file: /srv/kubernetes/manifests/rook-ceph
-    - source: salt://{{ tpldir }}/files/storageclass.yaml
-    - user: root
-    - group: root
-    - mode: 644
-    - context:
-      tpldir: {{ tpldir }}
-
-/srv/kubernetes/manifests/rook-ceph/filesystem-storageclass.yaml:
-  file.managed:
-    - require:
-      - file: /srv/kubernetes/manifests/rook-ceph
-    - source: salt://{{ tpldir }}/files/filesystem-storageclass.yaml
-    - user: root
-    - group: root
-    - mode: 644
-    - context:
-      tpldir: {{ tpldir }}
-
 /srv/kubernetes/manifests/rook-ceph/toolbox.yaml:
   file.managed:
     - require:

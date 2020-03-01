@@ -211,7 +211,6 @@ kubernetes:
         bucket: concourse
     keycloak:
       enabled: True
-      version: 7.0.1
       password: V3ry1ns3sur3P4ssw0rd
       db_size: 8Gi
       ingress_host: keycloak

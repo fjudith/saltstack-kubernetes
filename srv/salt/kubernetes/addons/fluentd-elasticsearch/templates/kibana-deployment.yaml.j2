@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: kibana-logging
-        image: docker.elastic.co/kibana/kibana-oss:7.2.0
+        image: {{ fluentd_elasticsearch.kibana_image }}
         resources:
           # need more cpu upon initialization, therefore burstable class
           limits:

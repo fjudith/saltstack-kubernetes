@@ -1,0 +1,3 @@
+helm:
+  version: 3.0.3
+  source_hash: fc75d62bafec2c3addc87b715ce2512820375ab812e6647dc724123b616586d6

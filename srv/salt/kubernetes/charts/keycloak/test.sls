@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import keycloak with context %}
 {%- set public_domain = pillar['public-domain'] -%}
 {%- from "kubernetes/map.jinja" import charts with context -%}
 {%- from "kubernetes/map.jinja" import master with context -%}
@@ -5,7 +10,7 @@
 
 query-keycloak:
   http.wait_for_successful_query:
-    - name: "https://{{ charts.keycloak.ingress_host }}.{{ public_domain }}/auth/realms/master/"
+    - name: "https://{{ keycloak.ingress_host }}.{{ public_domain }}/auth/realms/master/"
     - wait_for: 180
     - request_interval: 5
     - status: 200

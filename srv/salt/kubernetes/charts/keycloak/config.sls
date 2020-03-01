@@ -9,7 +9,9 @@
   file.managed:
     - require:
       - file:  /srv/kubernetes/manifests/keycloak
-    - source: salt://kubernetes/charts/keycloak/files/values.yaml
+    - source: salt://{{ tpldir }}/files/values.yaml
     - user: root
     - group: root
     - mode: 644
+    - context:
+      tpldir: {{ tpldir }}

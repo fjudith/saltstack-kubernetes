@@ -3,11 +3,13 @@ keycloak-ingress:
     - require:
       - file:  /srv/kubernetes/manifests/keycloak
     - name: /srv/kubernetes/manifests/keycloak/keycloak-ingress.yaml
-    - source: salt://kubernetes/charts/keycloak/templates/ingress.yaml.j2
+    - source: salt://{{ tpldir }}/templates/ingress.yaml.j2
     - user: root
     - template: jinja
     - group: root
     - mode: 644
+    - context:
+      tpldir: {{ tpldir }}
   cmd.run:
     - require:
       - cmd: keycloak

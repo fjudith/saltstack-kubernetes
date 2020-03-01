@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import keycloak with context %}
 {%- set public_domain = pillar['public-domain'] -%}
 {%- from "kubernetes/map.jinja" import charts with context -%}
 {%- from "kubernetes/map.jinja" import master with context -%}
@@ -15,8 +20,8 @@ keycloak:
     - name: |
         helm repo update && \
         helm upgrade --install keycloak --namespace keycloak \
-            --set keycloak.image.tag={{ charts.keycloak.version }} \
-            --set keycloak.password={{ charts.keycloak.password }} \
+            --set keycloak.image.tag={{ keycloak.version }} \
+            --set keycloak.password={{ keycloak.password }} \
             {%- if master.storage.get('rook_ceph', {'enabled': False}).enabled %}
             -f /srv/kubernetes/manifests/keycloak/values.yaml \
             {%- endif %}

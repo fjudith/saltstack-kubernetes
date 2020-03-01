@@ -19,7 +19,9 @@ keycloak-fetch-charts:
   file.managed:
     - watch:
       - cmd: keycloak-fetch-charts
-    - source: salt://kubernetes/charts/keycloak/patch/requirements.yaml
+    - source: salt://{{ tpldir }}/patch/requirements.yaml
     - user: root
     - group: root
     - mode: 644
+    - context:
+      tpldir: {{ tpldir }}

@@ -39,10 +39,10 @@ rook-cephfs:
     - require:
       - cmd: rook-ceph-cluster
     - watch:
-      - file: /srv/kubernetes/manifests/rook-ceph/filesystem/storageclass.yaml
+      - file: /srv/kubernetes/manifests/rook-ceph/filesystem-storageclass.yaml
     - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
     - name: |
-        kubectl apply -f /srv/kubernetes/manifests/rook-ceph/filesystem/storageclass.yaml
+        kubectl apply -f /srv/kubernetes/manifests/rook-ceph/filesystem-storageclass.yaml
 
 {% if rook_ceph.get('default_storageclass', {'enabled': False}).enabled %}
 rook-ceph-default-storageclass:

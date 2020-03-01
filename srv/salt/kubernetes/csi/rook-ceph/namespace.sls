@@ -4,7 +4,7 @@
 {#- Get the `tplroot` from `tpldir` #}
 {% from tpldir ~ "/map.jinja" import rook_ceph with context %}
 
-minio-operator-namespace:
+rook-ceph-namespace:
   file.managed:
     - require:
       - file: /srv/kubernetes/manifests/rook-ceph

@@ -1,4 +1,8 @@
-{%- from "kubernetes/map.jinja" import common with context -%}
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import metrics_server with context %}
 
 ---
 apiVersion: v1
@@ -31,7 +35,7 @@ spec:
         emptyDir: {}
       containers:
       - name: metrics-server
-        image: {{ common.addons.metrics_server.image }}
+        image: {{ metrics_server.image }}
         args:
           - --cert-dir=/tmp
           - --secure-port=4443

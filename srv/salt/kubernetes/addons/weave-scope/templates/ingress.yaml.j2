@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import weave_scope with context %}
 {%- set public_domain = pillar['public-domain'] -%}
 {%- from "kubernetes/map.jinja" import common with context -%}
 {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
@@ -21,7 +26,7 @@ metadata:
     {%- endif%}
 spec:
   rules:
-  - host: {{ common.addons.weave_scope.ingress_host }}.{{ public_domain }}
+  - host: {{ weave_scope.ingress_host }}.{{ public_domain }}
     http:
       paths:
       - path: /
@@ -32,6 +37,6 @@ spec:
   tls:
   - secretName: weave-scope-prod-cert
     hosts:
-    - {{ common.addons.weave_scope.ingress_host }}.{{ public_domain }}
+    - {{ weave_scope.ingress_host }}.{{ public_domain }}
   {%- endif%}
 ---

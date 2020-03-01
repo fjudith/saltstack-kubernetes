@@ -1,0 +1,3 @@
+weave_scope:
+  image: docker.io/weaveworks/scope:1.12.0
+  ingress_host: scope

@@ -1,4 +1,8 @@
-{%- from "kubernetes/map.jinja" import common with context -%}
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import weave_scope with context %}
 
 # borrowed from https://cloud.weave.works/k8s/scope.yaml?k8s-version=1.9.3
 apiVersion: apps/v1
@@ -37,7 +41,7 @@ spec:
             - 'weave-scope-app.weave.svc.cluster.local.:80'
           command:
             - /home/weave/scope
-          image: '{{ common.addons.weave_scope.image }}'
+          image: '{{ weave_scope.image }}'
           imagePullPolicy: IfNotPresent
           resources:
             requests:

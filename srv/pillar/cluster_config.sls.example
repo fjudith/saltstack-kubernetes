@@ -90,9 +90,8 @@ kubernetes:
         enabled: False
         password: '$$apr1$$u7.rXtVi$$DQtLfP6lJJZqvENhyo6EX1'
         acme_email: user@example.com
-      npd:
+      node_problem_detector:
         enabled: True
-        image: k8s.gcr.io/node-problem-detector:v0.6.2
       nginx:
         enabled: true
       istio:
@@ -118,8 +117,6 @@ kubernetes:
         enabled: True
       weave_scope:
         enabled: True
-        image: docker.io/weaveworks/scope:1.12.0
-        ingress_host: scope
       kubeless:
         enabled: True
         version: 1.0.5

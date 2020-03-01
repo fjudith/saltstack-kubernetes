@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import heapster_influxdb with context %}
+
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -58,7 +64,7 @@ spec:
         supplementalGroups: [ 65534 ]
         fsGroup: 65534
       containers:
-        - image: k8s.gcr.io/heapster-amd64:v1.6.0-beta.1
+        - image: {{ heapster_influxdb.heapster_image }}
           name: heapster
           livenessProbe:
             httpGet:
@@ -71,7 +77,7 @@ spec:
             - /heapster
             - --source=kubernetes.summary_api:''
             - --sink=influxdb:http://monitoring-influxdb:8086
-        - image: k8s.gcr.io/heapster-amd64:v1.6.0-beta.1
+        - image: {{ heapster_influxdb.heapster_image }}
           name: eventer
           command:
             - /eventer

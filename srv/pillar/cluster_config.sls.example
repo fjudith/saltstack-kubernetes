@@ -79,7 +79,7 @@ kubernetes:
         prometheus_ingress_host: prometheus
         alertmanager_ingress_host: alertmanager
         grafana_ingress_host: grafana
-      heapster-influxdb:
+      heapster_influxdb:
         enabled: False
       metrics_server:
         enabled: true

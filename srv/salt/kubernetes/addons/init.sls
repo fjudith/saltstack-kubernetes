@@ -17,8 +17,8 @@ include:
 {%- if common.addons.get('npd', {'enabled': False}).enabled %}
   - kubernetes.addons.node-problem-detector
 {%- endif -%}
-{%- if common.addons.get('heapster-influxdb', {'enabled': False}).enabled %}
-  - kubernetes.addons.influxdb-grafana
+{%- if common.addons.get('heapster_influxdb', {'enabled': False}).enabled %}
+  - kubernetes.addons.heapster-influxdb
 {%- endif -%}
 {%- if common.addons.get('fluentd_elasticsearch', {'enabled': False}).enabled %}
   - kubernetes.addons.fluentd-elasticsearch

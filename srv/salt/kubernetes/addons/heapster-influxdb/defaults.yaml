@@ -1,0 +1,5 @@
+heapster_influxdb:
+  heapster_image: k8s.gcr.io/heapster-amd64:v1.6.0-beta.1
+  influxdb_image: k8s.gcr.io/heapster-influxdb-amd64:v1.3.3
+  grafana_image: k8s.gcr.io/heapster-grafana-amd64:v4.4.3
+

@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import heapster_influxdb with context %}
+
 kind: Deployment
 apiVersion: apps/v1
 metadata:
@@ -29,7 +35,7 @@ spec:
         operator: "Exists"
       containers:
         - name: influxdb
-          image: k8s.gcr.io/heapster-influxdb-amd64:v1.3.3
+          image: {{ heapster_influxdb.influxdb_image }}
           resources:
             limits:
               cpu: 100m
@@ -46,7 +52,7 @@ spec:
           - name: influxdb-persistent-storage
             mountPath: /data
         - name: grafana
-          image: k8s.gcr.io/heapster-grafana-amd64:v4.4.3
+          image: {{ heapster_influxdb.grafana_image }}
           resources:
             # keep request = limit to keep this container in guaranteed class
             limits:

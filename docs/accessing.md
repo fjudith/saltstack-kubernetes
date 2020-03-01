@@ -12,7 +12,7 @@ Cluster monitoring | **Grafana** | https://grafana.example.com
 Cluster management | **Prometheus** | https://prometheus.example.com
 Cluster altert management | **AltertManager** | https://altermanager.example.com
 Rook-Ceph Storage monitoring | **Ceph UI** | https://ceph.example.com
-Rook-Minio Storage management | **Minio UI** | https://minio.example.com
+Minio Storage management | **Minio UI** | https://minio.example.com
 Network Monitoring | **Weave Scope** | https://scope.example.com
 Container Image Registry | **Harbor** | https://registry.example.com
 Istio Metrics | **Grafana** | https://istio-grafana.example.com

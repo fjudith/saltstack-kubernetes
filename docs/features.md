@@ -209,7 +209,7 @@ Solutions to provide storage persistence to stateful applications.
   <tr align='center'>
     <td align='center'>Rook</td>
     <td align='center'>Rook-Ceph</td>
-    <td align='center'>Rook-Minio</td>
+    <td align='center'>Minio</td>
     <td align='center'>Rook-CockroachDB</td>
   </tr>
   <tr align='center'>

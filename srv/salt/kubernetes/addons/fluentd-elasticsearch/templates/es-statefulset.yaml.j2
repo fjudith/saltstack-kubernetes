@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import fluentd_elasticsearch with context %}
 {%- from "kubernetes/map.jinja" import master with context -%}
 
 # RBAC authn and authz
@@ -70,7 +75,7 @@ spec:
     spec:
       serviceAccountName: elasticsearch-logging
       containers:
-      - image: quay.io/fluentd_elasticsearch/elasticsearch:v7.2.0
+      - image: {{ fluentd_elasticsearch.elasticsearch_image }}
         name: elasticsearch-logging
         imagePullPolicy: Always
         resources:

@@ -89,9 +89,9 @@ kubernetes:
 
 ## Rook Minio 
 
-Rook-Minio object storage server use a combination of Access and Secret keys to authentication to its API and WebUI.
+Minio object storage server use a combination of Access and Secret keys to authentication to its API and WebUI.
 
-Use the following command line to generate Rook-Minio Access and Secret keys.
+Use the following command line to generate Minio Access and Secret keys.
 
 ```bash
 echo -n 'Th1515MyUs3rN4m3' | base64
@@ -104,7 +104,7 @@ Record the Access key and Secret key as `username` and `password` in the Salt pi
 kubernetes:
   master:
     storage:
-      rook-minio:
+      minio_operator:
         username: VGgxNTE1TXlVczNyTjRtMw==
         password: VGgxNTE1TXlVczNyUDRzc3cwcmQ=
 ```

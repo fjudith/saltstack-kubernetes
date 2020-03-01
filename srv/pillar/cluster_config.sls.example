@@ -117,7 +117,7 @@ kubernetes:
           provider: cloudflare
           email: admin@example.com
           secret: 012345abcde012345abcde012345abcde012345abcde
-      fluentd-elasticsearch:
+      fluentd_elasticsearch:
         enabled: True
       weave_scope:
         enabled: True

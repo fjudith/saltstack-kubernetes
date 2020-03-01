@@ -20,7 +20,7 @@ include:
 {%- if common.addons.get('heapster-influxdb', {'enabled': False}).enabled %}
   - kubernetes.addons.influxdb-grafana
 {%- endif -%}
-{%- if common.addons.get('fluentd-elasticsearch', {'enabled': False}).enabled %}
+{%- if common.addons.get('fluentd_elasticsearch', {'enabled': False}).enabled %}
   - kubernetes.addons.fluentd-elasticsearch
 {%- endif -%}
 {%- if common.addons.get('weave_scope', {'enabled': False}).enabled %}

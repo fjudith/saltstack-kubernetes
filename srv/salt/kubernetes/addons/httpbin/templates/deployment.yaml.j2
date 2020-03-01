@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import httpbin with context %}
+
+
 # Copyright 2017 Istio Authors
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,20 +27,6 @@ kind: ServiceAccount
 metadata:
   name: httpbin
 ---
-apiVersion: v1
-kind: Service
-metadata:
-  name: httpbin
-  labels:
-    app: httpbin
-spec:
-  ports:
-  - name: http
-    port: 8000
-    targetPort: 80
-  selector:
-    app: httpbin
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -52,7 +45,7 @@ spec:
     spec:
       serviceAccountName: httpbin
       containers:
-      - image: docker.io/kennethreitz/httpbin
+      - image: {{ httpbin.image }}
         imagePullPolicy: IfNotPresent
         name: httpbin
         ports:

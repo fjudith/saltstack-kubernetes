@@ -1,0 +1,3 @@
+httpbin:
+  image: docker.io/kennethreitz/httpbin
+  ingress_host: httpbin

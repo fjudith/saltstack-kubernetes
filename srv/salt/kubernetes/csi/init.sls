@@ -6,5 +6,5 @@ include:
   - kubernetes.csi.rook-ceph
 {%- endif -%}
 {%- if common.addons.get('minio_operator', {'enabled': False}).enabled %}
-  - kubernetes.addons.minio-operator
+  - kubernetes.csi.minio-operator
 {%- endif -%}

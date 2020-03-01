@@ -15,28 +15,6 @@
     - group: root
     - mode: 644
 
-/srv/kubernetes/manifests/nginx/kube-prometheus-prometheus.yaml:
-  file.managed:
-    - require:
-      - file: /srv/kubernetes/manifests/nginx
-    - source: salt://{{ tpldir }}/files/kube-prometheus-prometheus.yaml
-    - user: root
-    - group: root
-    - mode: 644
-    - context:
-      tpldir: {{ tpldir }}
-
-/srv/kubernetes/manifests/nginx/grafana-dashboard-configmap.yaml:
-  file.managed:
-    - require:
-      - file: /srv/kubernetes/manifests/nginx
-    - source: salt://{{ tpldir }}/files/grafana-dashboard-configmap.yaml
-    - user: root
-    - group: root
-    - mode: 644
-    - context:
-      tpldir: {{ tpldir }}
-
 /srv/kubernetes/manifests/nginx/configuration.yaml:
   file.managed:
     - require:

@@ -149,7 +149,7 @@ dockerRegistries:
    - fjudith/draw.io
 {% if charts.get('harbor', {'enabled': False}).enabled %}
 - name: harbor
-  address: {{ charts.harbor.core_ingress_host }}.{{ public_domain }}
+  address: {{ charts.harbor.coreIngressHost }}.{{ public_domain }}
   username: admin
   password: {{ charts.harbor.admin_password }}
 {% endif %}

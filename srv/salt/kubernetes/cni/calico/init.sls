@@ -52,14 +52,6 @@
     - group: root
     - mode: 755
 
-/etc/calico/kube/kubeconfig:
-    file.managed:
-    - source: salt://kubernetes/cni/calico/templates/kubeconfig.j2
-    - user: root
-    - template: jinja
-    - group: root
-    - mode: 640
-
 /srv/kubernetes/manifests/calico/calico-rbac-kkd.yaml:
     file.managed:
     - watch:

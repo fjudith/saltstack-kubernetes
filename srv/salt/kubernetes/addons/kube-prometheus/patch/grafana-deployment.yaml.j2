@@ -4,7 +4,7 @@
 {#- Get the `tplroot` from `tpldir` #}
 {% from tpldir ~ "/map.jinja" import kube_prometheus with context %}
 {%- from "kubernetes/map.jinja" import common with context -%}
-{%- from "kubernetes/map.jinja" import master with context -%}
+{%- from "kubernetes/map.jinja" import storage with context -%}
 {%- from "kubernetes/map.jinja" import charts with context -%}
 
 apiVersion: apps/v1
@@ -123,7 +123,7 @@ spec:
         - mountPath: /grafana-dashboard-definitions/0/workload-total
           name: grafana-dashboard-workload-total
           readOnly: false
-        {%- if master.storage.get('rook_ceph', {'enabled': False}).enabled %}
+        {%- if storage.get('rook_ceph', {'enabled': False}).enabled %}
         - mountPath: /grafana-dashboard-definitions/0/rook
           name: grafana-dashboard-rook
           readOnly: false
@@ -240,7 +240,7 @@ spec:
       - configMap:
           name: grafana-dashboard-workload-total
         name: grafana-dashboard-workload-total
-      {%- if master.storage.get('rook_ceph', {'enabled': False}).enabled %}
+      {%- if storage.get('rook_ceph', {'enabled': False}).enabled %}
       - configMap:
           name: grafana-dashboard-rook
         name: grafana-dashboard-rook

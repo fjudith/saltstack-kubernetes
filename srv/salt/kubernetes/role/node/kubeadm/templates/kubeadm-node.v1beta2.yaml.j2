@@ -5,7 +5,7 @@
 {%- set localIpAddress = salt['network.ip_addrs'](controlPlaneInterface) -%}
 {%- from "kubernetes/role/node/kubeadm/map.jinja" import kubeadm with context -%}
 {%- from "kubernetes/map.jinja" import common with context -%}
-{%- from "kubernetes/map.jinja" import master with context -%}
+{%- from "kubernetes/map.jinja" import storage with context -%}
 {%- from "kubernetes/map.jinja" import charts with context -%}
 
 {%- set apiserver = [] -%}
@@ -20,7 +20,7 @@
 {% endif %}
 
 {%- set nodeLabels = "node.kubernetes.io/role=node" -%}
-{%- if master.storage.get('rook_ceph', {'enabled': False}).enabled -%}
+{%- if storage.get('rook_ceph', {'enabled': False}).enabled -%}
   {%- set nodeLabels = nodeLabels + ',' + "role=storage-node" -%}
 {%- endif -%}
 

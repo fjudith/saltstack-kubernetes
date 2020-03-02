@@ -161,38 +161,17 @@ kubernetes:
       - host: 172.17.4.53
         name: etcd03
     version: v3.3.15
-  master:
-    service_addresses: 10.96.0.0/12
-    members:
-      - host: 172.17.4.101
-        name: master01
-      - host: 172.17.4.102
-        name: master02
-      - host: 172.17.4.103
-        name: master03
-    encryption_key: '9mmDipLv1QEjSzmNia/KyTl79aq6gCMWmqBsyk4P2Lc='
-    token:
-      admin: 3acb77307c903c780f341d5f0ae4a3b3
-      kubelet: 56c5903a3cd445c5dfc302e4674ccc1a
-      calico: 0b6c09902d7478220746cfe5605b9ef2
-      kube_scheduler: fea3115c71d7fb87fd078978601474d7
-      kube_controller_manager: 167945c664a88280d640ac45ff743ddb
-      kube_proxy: 3606ab299c3e5ce37e834058eb7618fb
-      bootstrap: 0d3bdadc181bdc504481195206314386
-      monitoring: af41e9fef61d6a253152d53c9d9decc2
-      logging: 45ceb5b4a0a82177aaadfcdabd51786f
-      dns: a219bb8d953055339fde377a6ba6dd7c
-    storage:
-      rook_ceph:
-        enabled: True
-        image: rook/ceph:v1.2.4
-        ceph_image: ceph/ceph:v14.2.6
-        ingress_host: ceph
-      rook_edgefs:
-        enabled: False
-        image: rook/edgefs:1.1.8
-        edgefs_image: edgefs/edgefs:1.2.86
-        ingress_host: edgefs
+  storage:
+    rook_ceph:
+      enabled: True
+      image: rook/ceph:v1.2.4
+      ceph_image: ceph/ceph:v14.2.6
+      ingress_host: ceph
+    rook_edgefs:
+      enabled: False
+      image: rook/edgefs:1.1.8
+      edgefs_image: edgefs/edgefs:1.2.86
+      ingress_host: edgefs
   charts:
     concourse:
       enabled: true

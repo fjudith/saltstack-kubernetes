@@ -1,4 +1,4 @@
-{%- from "kubernetes/map.jinja" import master with context -%}
+{%- from "kubernetes/map.jinja" import storage with context -%}
 
 apiVersion: edgefs.rook.io/v1beta1
 kind: Cluster
@@ -6,7 +6,7 @@ metadata:
   name: rook-edgefs
   namespace: rook-edgefs
 spec:
-  edgefsImageName: {{ master.storage.rook_edgefs.edgefs_image }}  # specify version here, i.e. edgefs/edgefs:1.1.0 etc
+  edgefsImageName: {{ storage.rook_edgefs.edgefs_image }}  # specify version here, i.e. edgefs/edgefs:1.1.0 etc
   serviceAccount: rook-edgefs-cluster
   dataDirHostPath: /var/lib/edgefs
   placement:

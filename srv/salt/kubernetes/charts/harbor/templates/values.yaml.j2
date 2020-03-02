@@ -5,7 +5,7 @@
 {% from tpldir ~ "/map.jinja" import harbor with context %}
 {%- set public_domain = pillar['public-domain'] -%}
 {%- from "kubernetes/map.jinja" import common with context -%}
-{%- from "kubernetes/map.jinja" import master with context -%}
+{%- from "kubernetes/map.jinja" import storage with context -%}
 {%- from "kubernetes/map.jinja" import charts with context -%}
 {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
   {%- set controller = "nginx" -%}
@@ -129,7 +129,7 @@ externalURL: https://{{ harbor.coreIngressHost }}.{{ public_domain }}
 #
 # For storing images and charts, you can also use "azure", "gcs", "s3",
 # "swift" or "oss". Set it in the "imageChartStorage" section
-{%- if master.storage.get('rook_ceph', {'enabled': False}).enabled %}
+{%- if storage.get('rook_ceph', {'enabled': False}).enabled %}
 persistence:
   enabled: true
 {%- else -%}
@@ -141,7 +141,7 @@ persistence:
   resourcePolicy: "keep"
   persistentVolumeClaim:
     registry:
-      {%- if master.storage.get('rook_ceph', {'enabled': False}).enabled %}
+      {%- if storage.get('rook_ceph', {'enabled': False}).enabled %}
       accessMode: ReadWriteMany
       storageClass: "rook-cephfs"
       subPath: ""
@@ -159,7 +159,7 @@ persistence:
       size: 5Gi
       {%- endif %}
     chartmuseum:
-      {%- if master.storage.get('rook_ceph', {'enabled': False}).enabled %}
+      {%- if storage.get('rook_ceph', {'enabled': False}).enabled %}
       accessMode: ReadWriteMany
       storageClass: "rook-cephfs"
       subPath: ""
@@ -172,7 +172,7 @@ persistence:
       size: 5Gi
       {%- endif %}
     jobservice:
-      {%- if master.storage.get('rook_ceph', {'enabled': False}).enabled %}
+      {%- if storage.get('rook_ceph', {'enabled': False}).enabled %}
       accessMode: ReadWriteMany
       storageClass: "rook-cephfs"
       subPath: ""
@@ -211,7 +211,7 @@ persistence:
     # Refer to
     # https://github.com/docker/distribution/blob/master/docs/configuration.md#redirect
     # for the detail.
-    {%- if common.addons.get('minio_operator', {'enabled': False}).enabled %}
+    {%- if storage.get('minio_operator', {'enabled': False}).enabled %}
     disableredirect: true
     {%- else -%}
     disableredirect: false
@@ -225,7 +225,7 @@ persistence:
     # "oss" and fill the information needed in the corresponding section. The type
     # must be "filesystem" if you want to use persistent volumes for registry
     # and chartmuseum
-    {%- if common.addons.get('minio_operator', {'enabled': False}).enabled %}
+    {%- if storage.get('minio_operator', {'enabled': False}).enabled %}
     type: s3
     {%- else -%}
     type: filesystem
@@ -244,7 +244,7 @@ persistence:
       encodedkey: base64-encoded-json-key-file
       #rootdirectory: /gcs/object/name/prefix
       #chunksize: "5242880"
-    {%- if common.addons.get('minio_operator', {'enabled': False}).enabled %}
+    {%- if storage.get('minio_operator', {'enabled': False}).enabled %}
     s3:
       region: us-west-1
       bucket: {{ harbor.s3.bucket }}

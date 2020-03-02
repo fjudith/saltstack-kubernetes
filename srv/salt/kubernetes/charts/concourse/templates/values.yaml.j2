@@ -4,7 +4,7 @@
 {#- Get the `tplroot` from `tpldir` #}
 {% from tpldir ~ "/map.jinja" import concourse with context %}
 {%- set public_domain = pillar['public-domain'] -%}
-{%- from "kubernetes/map.jinja" import master with context -%}
+{%- from "kubernetes/map.jinja" import storage with context -%}
 {%- from "kubernetes/map.jinja" import charts with context -%}
 
 imageTag: "{{ concourse.version }}"
@@ -15,7 +15,7 @@ rbac:
 postgresql:
   enable: True
   password: {{ concourse.db_password }}
-  {%- if master.storage.get('rook_ceph', {'enabled': False}).enabled %}
+  {%- if storage.get('rook_ceph', {'enabled': False}).enabled %}
   persistence:
     enabled: True
     size: {{ concourse.db_size }}

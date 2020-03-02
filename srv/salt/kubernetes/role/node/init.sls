@@ -1,5 +1,5 @@
 {%- from "kubernetes/map.jinja" import common with context -%}
-{%- from "kubernetes/map.jinja" import master with context -%}
+{%- from "kubernetes/map.jinja" import storage with context -%}
 {%- set os = salt['grains.get']('os') -%}
 
 {% if os == "Debian" or os == "Ubuntu" %}
@@ -100,7 +100,7 @@ net.ipv6.conf.all.forwarding:
     - value: 1
 {% endif %}
 
-{% if master.storage.get('rook_ceph', {'enabled': False}).enabled %}
+{% if storage.get('rook_ceph', {'enabled': False}).enabled %}
 /data/rook:
   file.directory:
     - user: root

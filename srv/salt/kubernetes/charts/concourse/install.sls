@@ -4,7 +4,7 @@
 {#- Get the `tplroot` from `tpldir` #}
 {% from tpldir ~ "/map.jinja" import concourse with context %}
 {%- set public_domain = pillar['public-domain'] -%}
-{%- from "kubernetes/map.jinja" import master with context -%}
+{%- from "kubernetes/map.jinja" import storage with context -%}
 
 /opt/fly-linux-amd64-v{{ concourse.version }}:
   archive.extracted:
@@ -35,7 +35,7 @@ concourse:
             --set imageTag="{{ concourse.version }}" \
             --set postgresql.enabled=true \
             --set postgresql.password={{ concourse.db_password }} \
-            {%- if master.storage.get('rook_ceph', {'enabled': False}).enabled %}
+            {%- if storage.get('rook_ceph', {'enabled': False}).enabled %}
             --values /srv/kubernetes/manifests/concourse/values.yaml \
             {%- endif %}
             "./" --wait --timeout 5m

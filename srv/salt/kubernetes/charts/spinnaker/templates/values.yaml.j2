@@ -5,7 +5,7 @@
 {% from tpldir ~ "/map.jinja" import spinnaker with context %}
 {%- set public_domain = pillar['public-domain'] -%}
 {%- from "kubernetes/map.jinja" import common with context -%}
-{%- from "kubernetes/map.jinja" import master with context -%}
+{%- from "kubernetes/map.jinja" import storage with context -%}
 {%- from "kubernetes/map.jinja" import charts with context -%}
 
 halyard:
@@ -122,7 +122,7 @@ halyard:
       {% endif %}
 
 minio:
-{%- if common.addons.get('minio_operator', {'enabled': False}).enabled %}
+{%- if storage.get('minio_operator', {'enabled': False}).enabled %}
   enabled: false
 
 s3:

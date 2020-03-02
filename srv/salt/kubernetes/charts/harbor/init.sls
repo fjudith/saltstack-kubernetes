@@ -1,6 +1,6 @@
 {%- set public_domain = pillar['public-domain'] -%}
 {%- from "kubernetes/map.jinja" import charts with context -%}
-{%- from "kubernetes/map.jinja" import common with context -%}
+{%- from "kubernetes/map.jinja" import storage with context -%}
 
 include:
   - kubernetes.charts.harbor.config
@@ -9,7 +9,7 @@ include:
   {%- if charts.get('keycloak', {'enabled': False}).enabled %}
   - kubernetes.charts.harbor.oauth
   {%- endif %}
-  {%- if common.addons.get('minio_operator', {'enabled': False}).enabled %}
+  {%- if storage.get('minio_operator', {'enabled': False}).enabled %}
   - kubernetes.charts.harbor.minio
   {%- endif %}
   - kubernetes.charts.harbor.ingress

@@ -1,5 +1,4 @@
 {%- from "kubernetes/map.jinja" import common with context -%}
-{%- from "kubernetes/map.jinja" import master with context -%}
 
 include:
   - kubernetes.ingress.metallb

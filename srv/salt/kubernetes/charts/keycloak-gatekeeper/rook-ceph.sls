@@ -5,7 +5,7 @@
 {% from tpldir ~ "/map.jinja" import keycloak_gatekeeper with context %}
 {%- set public_domain = pillar['public-domain'] -%}
 {%- from "kubernetes/map.jinja" import charts with context -%}
-{%- from "kubernetes/map.jinja" import master with context -%}
+{%- from "kubernetes/map.jinja" import storage with context -%}
 {%- set keycloak_password = salt['cmd.shell']("kubectl get secret --namespace keycloak keycloak-http -o jsonpath='{.data.password}' | base64 --decode; echo") -%}
 
 /srv/kubernetes/manifests/keycloak-gatekeeper/rook-ceph.json:
@@ -38,4 +38,4 @@ keycloak-rook-ceph:
     - runas: root
     - use_vt: true
     - name: |
-        ./kcgk-injector.sh create-client-rook-ceph keycloak {{ keycloak_password }} https://{{ charts.keycloak.ingress_host }}.{{ public_domain }} {{ keycloak_gatekeeper.realm }} https://{{ master.storage.rook_ceph.ingress_host }}.{{ public_domain }}
+        ./kcgk-injector.sh create-client-rook-ceph keycloak {{ keycloak_password }} https://{{ charts.keycloak.ingress_host }}.{{ public_domain }} {{ keycloak_gatekeeper.realm }} https://{{ storage.rook_ceph.ingress_host }}.{{ public_domain }}

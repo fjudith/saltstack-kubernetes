@@ -5,7 +5,7 @@
 {% from tpldir ~ "/map.jinja" import keycloak with context %}
 {%- set public_domain = pillar['public-domain'] -%}
 {%- from "kubernetes/map.jinja" import charts with context -%}
-{%- from "kubernetes/map.jinja" import master with context -%}
+{%- from "kubernetes/map.jinja" import storage with context -%}
 
 keycloak:
   cmd.run:
@@ -22,7 +22,7 @@ keycloak:
         helm upgrade --install keycloak --namespace keycloak \
             --set keycloak.image.tag={{ keycloak.version }} \
             --set keycloak.password={{ keycloak.password }} \
-            {%- if master.storage.get('rook_ceph', {'enabled': False}).enabled %}
+            {%- if storage.get('rook_ceph', {'enabled': False}).enabled %}
             -f /srv/kubernetes/manifests/keycloak/values.yaml \
             {%- endif %}
             "./" --wait --timeout 5m

@@ -1,6 +1,6 @@
 
 {%- from "kubernetes/map.jinja" import common with context -%}
-{%- from "kubernetes/map.jinja" import master with context -%}
+{%- from "kubernetes/map.jinja" import storage with context -%}
 {%- from "kubernetes/map.jinja" import charts with context -%}
 
 include:
@@ -16,7 +16,7 @@ include:
   {%- if common.addons.get('kube_prometheus', {'enabled': False}).enabled %}
   - kubernetes.charts.keycloak-gatekeeper.kube-prometheus
   {%- endif %}
-  {%- if master.storage.get('rook_ceph', {'enabled': False}).enabled %}
+  {%- if storage.get('rook_ceph', {'enabled': False}).enabled %}
   - kubernetes.charts.keycloak-gatekeeper.rook-ceph
   {%- endif %}
   - kubernetes.charts.keycloak-gatekeeper.test

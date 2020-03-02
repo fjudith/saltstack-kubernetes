@@ -5,7 +5,6 @@
 {% from tpldir ~ "/map.jinja" import keycloak with context %}
 {%- set public_domain = pillar['public-domain'] -%}
 {%- from "kubernetes/map.jinja" import charts with context -%}
-{%- from "kubernetes/map.jinja" import master with context -%}
 
 
 query-keycloak:
@@ -22,6 +21,6 @@ query-keycloak:
       {%- if charts.get('harbor', {'enabled': False}).enabled %}
       - sls: kubernetes.charts.harbor
       {%- endif %}
-      {%- if master.storage.get('keycloak', {'enabled': False}).enabled %}
+      {%- if charts.get('spinnaker', {'enabled': False}).enabled %}
       - sls: kubernetes.charts.spinnaker
       {%- endif %}

@@ -3,7 +3,7 @@
 
 {#- Get the `tplroot` from `tpldir` #}
 {% from tpldir ~ "/map.jinja" import fluentd_elasticsearch with context %}
-{%- from "kubernetes/map.jinja" import master with context -%}
+{%- from "kubernetes/map.jinja" import storage with context -%}
 
 # RBAC authn and authz
 apiVersion: v1
@@ -99,7 +99,7 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
-     {%- if not master.storage.get('rook_ceph', {'enabled': False}).enabled %}
+     {%- if not storage.get('rook_ceph', {'enabled': False}).enabled %}
       volumes:
       - name: elasticsearch-logging
         emptyDir: {}
@@ -113,7 +113,7 @@ spec:
         name: elasticsearch-logging-init
         securityContext:
           privileged: true
-  {%- if master.storage.get('rook_ceph', {'enabled': False}).enabled %}
+  {%- if storage.get('rook_ceph', {'enabled': False}).enabled %}
   volumeClaimTemplates:
     - metadata:
         name: elasticsearch-logging

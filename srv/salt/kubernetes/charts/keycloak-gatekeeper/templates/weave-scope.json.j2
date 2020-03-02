@@ -1,18 +1,19 @@
+{%- from "kubernetes/map.jinja" import common with context -%}
 {%- set public_domain = pillar['public-domain'] -%}
 
 {
     "id": "weave-scope",
     "clientId": "weave-scope",
-    "rootUrl": "https://scope.{{ public_domain }}",
-    "adminUrl": "https://scope.{{ public_domain }}",
+    "rootUrl": "https://{{ common.addons.weave_scope.ingress_host }}.{{ public_domain }}",
+    "adminUrl": "https://{{ common.addons.weave_scope.ingress_host }}.{{ public_domain }}",
     "surrogateAuthRequired": false,
     "enabled": true,
     "clientAuthenticatorType": "client-secret",
     "redirectUris": [
-      "https://scope.{{ public_domain }}/oauth/callback/*"
+      "https://{{ common.addons.weave_scope.ingress_host }}.{{ public_domain }}/oauth/callback/*"
     ],
     "webOrigins": [
-      "https://scope.{{ public_domain }}"
+      "https://{{ common.addons.weave_scope.ingress_host }}.{{ public_domain }}"
     ],
     "notBefore": 0,
     "bearerOnly": false,

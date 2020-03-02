@@ -1,0 +1,6 @@
+keycloak_gatekeeper:
+  version: "master"
+  realm: "default"
+  groups:
+    - "kubernetes-admins,cluster-admin"
+    - "kubernetes-users,view"

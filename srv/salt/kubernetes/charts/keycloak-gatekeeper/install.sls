@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import keycloak_gatekeeper with context %}
 {%- set public_domain = pillar['public-domain'] -%}
 {%- from "kubernetes/map.jinja" import charts with context -%}
 {%- set keycloak_password = salt['cmd.shell']("kubectl get secret --namespace keycloak keycloak-http -o jsonpath='{.data.password}' | base64 --decode; echo") -%}
@@ -10,7 +15,7 @@ keycloak-create-realm:
     - runas: root
     - use_vt: true
     - name: |
-        ./kcgk-injector.sh create-realm keycloak {{ keycloak_password }} https://{{ charts.keycloak.ingress_host }}.{{ public_domain }} {{ charts.keycloak_gatekeeper.realm }}
+        ./kcgk-injector.sh create-realm keycloak {{ keycloak_password }} https://{{ charts.keycloak.ingress_host }}.{{ public_domain }} {{ keycloak_gatekeeper.realm }}
 
 keycloak-create-groups:
   cmd.run:
@@ -22,7 +27,7 @@ keycloak-create-groups:
     - runas: root
     - use_vt: true
     - name: |
-        ./kcgk-injector.sh create-groups keycloak {{ keycloak_password }} https://{{ charts.keycloak.ingress_host }}.{{ public_domain }} {{ charts.keycloak_gatekeeper.realm }}
+        ./kcgk-injector.sh create-groups keycloak {{ keycloak_password }} https://{{ charts.keycloak.ingress_host }}.{{ public_domain }} {{ keycloak_gatekeeper.realm }}
 
 keycloak-create-client-scopes:
   cmd.run:
@@ -33,4 +38,4 @@ keycloak-create-client-scopes:
     - runas: root
     - use_vt: true
     - name: |
-        ./kcgk-injector.sh create-client-scopes keycloak {{ keycloak_password }} https://{{ charts.keycloak.ingress_host }}.{{ public_domain }} {{ charts.keycloak_gatekeeper.realm }}
+        ./kcgk-injector.sh create-client-scopes keycloak {{ keycloak_password }} https://{{ charts.keycloak.ingress_host }}.{{ public_domain }} {{ keycloak_gatekeeper.realm }}

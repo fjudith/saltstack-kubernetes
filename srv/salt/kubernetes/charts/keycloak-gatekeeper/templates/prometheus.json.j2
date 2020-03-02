@@ -1,18 +1,19 @@
+{%- from "kubernetes/map.jinja" import common with context -%}
 {%- set public_domain = pillar['public-domain'] -%}
 
 {
     "id": "prometheus",
     "clientId": "prometheus",
-    "rootUrl": "https://prometheus.{{ public_domain }}",
-    "adminUrl": "https://prometheus.{{ public_domain }}",
+    "rootUrl": "https://{{ common.addons.kube_prometheus.prometheus_ingress_host }}.{{ public_domain }}",
+    "adminUrl": "https://{{ common.addons.kube_prometheus.prometheus_ingress_host }}.{{ public_domain }}",
     "surrogateAuthRequired": false,
     "enabled": true,
     "clientAuthenticatorType": "client-secret",
     "redirectUris": [
-      "https://prometheus.{{ public_domain }}/oauth/callback/*"
+      "https://{{ common.addons.kube_prometheus.prometheus_ingress_host }}.{{ public_domain }}/oauth/callback/*"
     ],
     "webOrigins": [
-      "https://prometheus.{{ public_domain }}"
+      "https://{{ common.addons.kube_prometheus.prometheus_ingress_host }}.{{ public_domain }}"
     ],
     "notBefore": 0,
     "bearerOnly": false,

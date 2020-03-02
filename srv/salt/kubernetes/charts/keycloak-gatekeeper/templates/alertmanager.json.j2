@@ -1,19 +1,19 @@
-{%- set public_domain = pillar['public-domain'] -%}
 {%- from "kubernetes/map.jinja" import common with context -%}
+{%- set public_domain = pillar['public-domain'] -%}
 
 {
     "id": "alertmanager",
     "clientId": "alertmanager",
-    "rootUrl": "https://alertmanager.{{ public_domain }}",
-    "adminUrl": "https://alertmanager.{{ public_domain }}",
+    "rootUrl": "https://{{ common.addons.kube_prometheus.alertmanager_ingress_host }}.{{ public_domain }}",
+    "adminUrl": "https://{{ common.addons.kube_prometheus.alertmanager_ingress_host }}.{{ public_domain }}",
     "surrogateAuthRequired": false,
     "enabled": true,
     "clientAuthenticatorType": "client-secret",
     "redirectUris": [
-      "https://alertmanager.{{ public_domain }}/oauth/callback/*"
+      "https://{{ common.addons.kube_prometheus.alertmanager_ingress_host }}.{{ public_domain }}/oauth/callback/*"
     ],
     "webOrigins": [
-      "https://alertmanager.{{ public_domain }}"
+      "https://{{ common.addons.kube_prometheus.alertmanager_ingress_host }}.{{ public_domain }}"
     ],
     "notBefore": 0,
     "bearerOnly": false,

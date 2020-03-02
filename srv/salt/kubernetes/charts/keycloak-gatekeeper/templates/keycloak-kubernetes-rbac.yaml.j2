@@ -1,6 +1,6 @@
-{%- from "kubernetes/map.jinja" import charts with context -%}
+{% from tpldir ~ "/map.jinja" import keycloak_gatekeeper with context %}
 
-{%- for item in charts.keycloak_gatekeeper.groups -%}
+{%- for item in keycloak_gatekeeper.groups -%}
 {%- set entry = item.split(',') -%}
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1

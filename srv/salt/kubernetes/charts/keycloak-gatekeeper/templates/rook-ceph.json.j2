@@ -1,18 +1,19 @@
+{%- from "kubernetes/map.jinja" import master with context -%}
 {%- set public_domain = pillar['public-domain'] -%}
 
 {
     "id": "rook-ceph",
     "clientId": "rook-ceph",
-    "rootUrl": "https://ceph.{{ public_domain }}",
-    "adminUrl": "https://ceph.{{ public_domain }}",
+    "rootUrl": "https://{{ master.storage.rook_ceph.ingress_host }}.{{ public_domain }}",
+    "adminUrl": "https://{{ master.storage.rook_ceph.ingress_host }}.{{ public_domain }}",
     "surrogateAuthRequired": false,
     "enabled": true,
     "clientAuthenticatorType": "client-secret",
     "redirectUris": [
-      "https://ceph.{{ public_domain }}/oauth/callback/*"
+      "https://{{ master.storage.rook_ceph.ingress_host }}.{{ public_domain }}/oauth/callback/*"
     ],
     "webOrigins": [
-      "https://ceph.{{ public_domain }}"
+      "https://{{ master.storage.rook_ceph.ingress_host }}.{{ public_domain }}"
     ],
     "notBefore": 0,
     "bearerOnly": false,

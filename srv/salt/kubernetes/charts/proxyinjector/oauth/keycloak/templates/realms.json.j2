@@ -1,8 +1,8 @@
-{%- from "kubernetes/map.jinja" import charts with context -%}
+{% from tpldir ~ "/map.jinja" import proxyinjector with context %}
 
 {
-  "id": "{{ charts.proxyinjector.oauth.keycloak.realm }}",
-  "realm": "{{ charts.proxyinjector.oauth.keycloak.realm }}",
+  "id": "{{ proxyinjector.oauth.keycloak.realm }}",
+  "realm": "{{ proxyinjector.oauth.keycloak.realm }}",
   "notBefore": 0,
   "revokeRefreshToken": false,
   "refreshTokenMaxReuse": 0,

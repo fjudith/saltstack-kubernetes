@@ -11,7 +11,7 @@ proxyinjector:
           --values /srv/kubernetes/manifests/proxyinjector/values.yaml \
           ./ --wait --timeout 3m
 
-proxyinjector-demo-install:
+proxyinjector-demo:
   cmd.run:
     - watch:
       - cmd: proxyinjector

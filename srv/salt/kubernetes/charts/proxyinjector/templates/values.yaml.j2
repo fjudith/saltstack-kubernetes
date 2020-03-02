@@ -1,4 +1,8 @@
-{%- from "kubernetes/map.jinja" import charts with context -%}
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import proxyinjector with context %}
 
 kubernetes:
   host: https://kubernetes.default
@@ -9,17 +13,17 @@ proxyinjector:
   labels:
     provider: stakater
     group: com.stakater.platform
-    version: v{{ charts.proxyinjector.version }}
+    version: v{{ proxyinjector.version }}
   image:
     name: stakater/proxyinjector
-    tag: "v{{ charts.proxyinjector.version }}"
+    tag: "v{{ proxyinjector.version }}"
     pullPolicy: IfNotPresent
   watchGlobally: true
   configFilePath: /etc/ProxyInjector
   data:
     config.yml: |-
       proxyconfig:
-        gatekeeper-image : "{{ charts.proxyinjector.image }}"
+        gatekeeper-image : "{{ proxyinjector.image }}"
         enable-default-deny: true
         secure-cookie: false
         verbose: true

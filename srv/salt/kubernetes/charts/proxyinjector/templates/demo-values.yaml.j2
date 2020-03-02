@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import proxyinjector with context %}
 {%- set public_domain = pillar['public-domain'] -%}
 {%- from "kubernetes/map.jinja" import charts with context -%}
 
@@ -18,8 +23,8 @@ annotations:
   authproxy.stakater.com/target-port: "80"
   authproxy.stakater.com/ressources: "uri=/*"
   authproxy.stakater.com/listen: "80"
-  authproxy.stakater.com/upstream-url: "https://{{ charts.proxyinjector.ingress_host }}.{{ public_domain }}"
+  authproxy.stakater.com/upstream-url: "https://{{ proxyinjector.ingress_host }}.{{ public_domain }}"
   authproxy.stakater.com/client-id: "demo"
   authproxy.stakater.com/client-secret: "{{ client_secret }}"
-  authproxy.stakater.com/gatekeeper-image: "{{ charts.proxyinjector.image }}"
+  authproxy.stakater.com/gatekeeper-image: "{{ proxyinjector.image }}"
   {% endif %}

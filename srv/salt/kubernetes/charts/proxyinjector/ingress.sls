@@ -1,13 +1,15 @@
 proxyinjector-demo-ingress:
   file.managed:
     - name: /srv/kubernetes/manifests/proxyinjector/ingress.yaml
-    - source: salt://kubernetes/charts/proxyinjector/templates/ingress.yaml.j2
+    - source: salt://{{ tpldir }}/templates/ingress.yaml.j2
     - require:
       - file: /srv/kubernetes/manifests/proxyinjector
     - user: root
     - template: jinja
     - group: root
     - mode: 644
+    - context:
+      tpldir: {{ tpldir }}
   cmd.run:
     - require:
       - cmd: proxyinjector-namespace

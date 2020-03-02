@@ -1,22 +1,22 @@
+{% from tpldir ~ "/map.jinja" import proxyinjector with context %}
 {%- set public_domain = pillar['public-domain'] -%}
-{%- from "kubernetes/map.jinja" import charts with context -%}
 
 {
     "id": "demo",
     "clientId": "demo",
     "name": "demo",
     "description": "Stakater ProxyInjector Demo OIDC client",
-    "rootUrl": "https://{{ charts.proxyinjector.ingress_host }}.{{ public_domain }}",
-    "adminUrl": "https://{{ charts.proxyinjector.ingress_host }}.{{ public_domain }}",
+    "rootUrl": "https://{{ proxyinjector.ingress_host }}.{{ public_domain }}",
+    "adminUrl": "https://{{ proxyinjector.ingress_host }}.{{ public_domain }}",
     "baseUrl": "/login",
     "surrogateAuthRequired": false,
     "enabled": true,
     "clientAuthenticatorType": "client-secret",
     "redirectUris": [
-      "https://{{ charts.proxyinjector.ingress_host }}.{{ public_domain }}/oauth/callback/*"
+      "https://{{ proxyinjector.ingress_host }}.{{ public_domain }}/oauth/callback/*"
     ],
     "webOrigins": [
-      "https://{{ charts.proxyinjector.ingress_host }}.{{ public_domain }}"
+      "https://{{ proxyinjector.ingress_host }}.{{ public_domain }}"
     ],
     "notBefore": 0,
     "bearerOnly": false,

@@ -86,6 +86,7 @@ kubernetes:
         image: k8s.gcr.io/metrics-server-amd64:v0.3.6
       dashboard:
         enabled: True
+        ingress_host: kubernetes-dashboard
       traefik:
         enabled: False
         password: '$$apr1$$u7.rXtVi$$DQtLfP6lJJZqvENhyo6EX1'
@@ -117,6 +118,7 @@ kubernetes:
         enabled: True
       weave_scope:
         enabled: True
+        ingress_host: scope
       kubeless:
         enabled: True
         version: 1.0.5

@@ -1,0 +1,8 @@
+proxyinjector:
+  version: 0.0.23
+  image: keycloak/keycloak-gatekeeper:7.0.0
+  ingress_host: demo
+  oauth:
+    provider: keycloak
+    keycloak:
+      realm: default

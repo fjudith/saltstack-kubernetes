@@ -17,7 +17,7 @@ harbor-fetch-charts:
     - cwd: /srv/kubernetes/manifests/harbor
     - name: |
         helm repo add harbor https://helm.goharbor.io
-        helm fetch --untar harbor/harbor --version {{ harbor.version }}
+        helm fetch --untar harbor/harbor --version v{{ harbor.version }}
 
 
 /srv/kubernetes/manifests/harbor/harbor/templates/nginx/deployment.yaml:

@@ -28,12 +28,12 @@ query-spinnaker-gate:
 query-spinnaker-minio:
   http.wait_for_successful_query:
     - watch:
-      - cmd: spinnaker
+      - cmd: spinnaker-minio
       - cmd: spinnaker-ingress
-    - name: https://{{ spinnaker.ingress_host }}-minio.{{ public_domain }}/minio/login
+    - name: https://{{ spinnaker.ingress_host }}-minio.{{ public_domain }}/minio/health/ready
     - wait_for: 120
     - request_interval: 5
-    - status: 403
+    - status: 200
 
 spinnaker-front50-wait:
   cmd.run:

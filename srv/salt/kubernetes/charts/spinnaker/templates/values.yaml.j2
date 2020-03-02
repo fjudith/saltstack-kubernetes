@@ -122,7 +122,7 @@ halyard:
       {% endif %}
 
 minio:
-  {%- if charts.get('minio_operator', {'enabled': False}).enabled %}
+{%- if common.addons.get('minio_operator', {'enabled': False}).enabled %}
   enabled: false
 
 s3:
@@ -131,12 +131,11 @@ s3:
   endpoint: http://minio:9000
   accessKey: {{ spinnaker.s3.accesskey }}
   secretKey: {{ spinnaker.s3.secretkey }}        
-  {%- else -%}
+{% else %}
   enabled: true
   persistence:
     enabled: true
-  {%- endif %}
-
+{% endif -%}
 
 dockerRegistries:
 - name: dockerhub

@@ -1,5 +1,5 @@
 {%- set public_domain = pillar['public-domain'] -%}
-{%- from "kubernetes/map.jinja" import master with context -%}
+{%- from "kubernetes/map.jinja" import common with context -%}
 {%- from "kubernetes/map.jinja" import charts with context -%}
 
 include:
@@ -9,7 +9,7 @@ include:
   {%- endif %}
   - kubernetes.charts.spinnaker.config
   - kubernetes.charts.spinnaker.namespace
-  {%- if charts.get('minio_operator', {'enabled': False}).enabled %}
+  {%- if common.addons.get('minio_operator', {'enabled': False}).enabled %}
   - kubernetes.charts.spinnaker.minio
   {%- endif %}
   - kubernetes.charts.spinnaker.ingress

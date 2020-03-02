@@ -10,8 +10,9 @@ docker:
   configfile: /etc/default/docker
   config: []
   daemon_config: {}
-  version: '18.06.3'
+  version: 18.06.3
   rootuser: root
+  data_dir: /var/lib/docker
 
   use_upstream_repo: true
   use_old_repo: false

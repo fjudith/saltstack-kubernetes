@@ -10,7 +10,7 @@
     - source_hash: {{ containerd.source_hash }}
     - archive_format: tar
 
-containerd-install:
+containerd:
   service.dead:
     - name: containerd.service
     - watch:

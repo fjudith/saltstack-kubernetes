@@ -38,7 +38,6 @@
       - file: /etc/containerd
     - source: salt://{{ tpldir }}/files/config.toml
     - user: root
-    - template: jinja
     - group: root
     - mode: 644
     - context:
@@ -47,7 +46,7 @@
 containerd.service:
   service.running:
     - watch:
-      - containerd-install
+      - service: containerd
       - file: /etc/systemd/system/containerd.service
       - file: /etc/containerd/config.toml
     - enable: True

@@ -20,7 +20,7 @@ query-concourse-minio:
     - watch:
       - cmd: concourse-minio
       - cmd: concourse-ingress
-    - name: https://{{ concourse.ingress_host }}-minio.{{ public_domain }}/minio/login
+    - name: https://{{ concourse.ingress_host }}-minio.{{ public_domain }}/minio/health/ready
     - wait_for: 120
     - request_interval: 5
-    - status: 403
+    - status: 200

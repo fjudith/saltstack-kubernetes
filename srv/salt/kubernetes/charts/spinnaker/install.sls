@@ -1,4 +1,8 @@
-{%- from "kubernetes/map.jinja" import charts with context -%}
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import spinnaker with context %}
 
 spinnaker:
   cmd.run:
@@ -16,7 +20,7 @@ spinnaker:
     - name: |
         helm dependency update && \
         helm upgrade --install spinnaker --namespace spinnaker \
-          --set halyard.spinnakerVersion={{ charts.spinnaker.version }} \
-          --set halyard.image.tag={{ charts.spinnaker.halyard_version }} \
+          --set halyard.spinnakerVersion={{ spinnaker.version }} \
+          --set halyard.image.tag={{ spinnaker.halyard_version }} \
           --values /srv/kubernetes/manifests/spinnaker/values.yaml \
           "./" --timeout 10m

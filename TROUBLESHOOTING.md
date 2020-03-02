@@ -64,19 +64,19 @@ sleep 10 && \
     rm -f ${FILENAME}.ppm
 ```
 
-### Listen salt event bus
+## Listen salt event bus
 
 ```bash
 salt-run state.event pretty=True
 ```
 
 
-### Unable to add a new service to be monitored with kube-prometheus
+## Unable to add a new service to be monitored with kube-prometheus
 
 https://github.com/coreos/prometheus-operator/issues/731
 
 
-### Force deletion of a stuck namespace
+## Force deletion of a stuck namespace
 
 Start proxy.
 
@@ -92,9 +92,20 @@ curl -k -H "Content-Type: application/json" -X PUT --data-binary @tmp.json http:
 rm -f tmp.json
 ```
 
-### Force deletion of a stuck persistent volume
+## Force deletion of a stuck persistent volume
 
 ```bash
 PV_NAME="annoying persistentvolume"
 kubectl patch pv ${PV_NAME}  -p '{"metadata":{"finalizers":null}}'
+```
+
+## Restore kubadmo configuration
+
+The folloing commands aims to restore the configuration required for further control-plane nodes to join when the 24 hours grace period expired.
+
+Run the following commands from the server that ran the initial `kubeadm init` phase.
+
+```bash
+kubeadm init phase bootstrap-token --config kubeadm-config.yaml
+kubeadm init phase upload-certs --config kubeadm-config.yaml --upload-certs
 ```

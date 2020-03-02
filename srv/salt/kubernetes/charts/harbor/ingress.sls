@@ -11,8 +11,6 @@ harbor-minio-ingress:
     - context:
       tpldir: {{ tpldir }}
   cmd.run:
-    - require:
-      - cmd: harbor
     - watch:
       - file: /srv/kubernetes/manifests/harbor/ingress.yaml
     - runas: root

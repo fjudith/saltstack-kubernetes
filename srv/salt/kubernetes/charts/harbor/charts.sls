@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import harbor with context %}
+
 harbor-remove-charts:
   file.absent:
     - name: /srv/kubernetes/manifests/harbor/harbor
@@ -11,7 +17,7 @@ harbor-fetch-charts:
     - cwd: /srv/kubernetes/manifests/harbor
     - name: |
         helm repo add harbor https://helm.goharbor.io
-        helm fetch --untar harbor/harbor
+        helm fetch --untar harbor/harbor --version {{ harbor.version }}
 
 
 /srv/kubernetes/manifests/harbor/harbor/templates/nginx/deployment.yaml:

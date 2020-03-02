@@ -27,10 +27,9 @@ query-harbor-notary:
 query-harbor-minio:
   http.wait_for_successful_query:
     - watch:
-      - cmd: harbor
+      - cmd: harbor-minio
       - cmd: harbor-minio-ingress
-    - name: https://{{ harbor.core_ingress_host }}-minio.{{ public_domain }}/minio/login
-
+    - name: https://{{ harbor.core_ingress_host }}-minio.{{ public_domain }}/minio/health/ready
     - wait_for: 120
     - request_interval: 5
-    - status: 403
+    - status: 200

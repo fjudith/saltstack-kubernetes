@@ -240,7 +240,6 @@ kubernetes:
         password: 1nt3gr4t1on
     harbor:
       enabled: true
-      version: 1.2.3
       admin_password: Ch4ng3M3
       secretkey: 2Ds7hlY9VHyKAcNd
       database_password: Ch4ng3M34ls0

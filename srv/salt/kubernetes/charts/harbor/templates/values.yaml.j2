@@ -143,7 +143,7 @@ persistence:
     registry:
       {%- if master.storage.get('rook_ceph', {'enabled': False}).enabled %}
       accessMode: ReadWriteMany
-      storageClass: "csi-cephfs"
+      storageClass: "rook-cephfs"
       subPath: ""
       size: 5Gi
       {%- else -%}
@@ -161,7 +161,7 @@ persistence:
     chartmuseum:
       {%- if master.storage.get('rook_ceph', {'enabled': False}).enabled %}
       accessMode: ReadWriteMany
-      storageClass: "csi-cephfs"
+      storageClass: "rook-cephfs"
       subPath: ""
       size: 5Gi
       {%- else -%}
@@ -174,7 +174,7 @@ persistence:
     jobservice:
       {%- if master.storage.get('rook_ceph', {'enabled': False}).enabled %}
       accessMode: ReadWriteMany
-      storageClass: "csi-cephfs"
+      storageClass: "rook-cephfs"
       subPath: ""
       size: 1Gi
       {%- else -%}
@@ -211,7 +211,7 @@ persistence:
     # Refer to
     # https://github.com/docker/distribution/blob/master/docs/configuration.md#redirect
     # for the detail.
-    {%- if charts.get('minio_operator', {'enabled': False}).enabled %}
+    {%- if common.addons.get('minio_operator', {'enabled': False}).enabled %}
     disableredirect: true
     {%- else -%}
     disableredirect: false
@@ -225,7 +225,7 @@ persistence:
     # "oss" and fill the information needed in the corresponding section. The type
     # must be "filesystem" if you want to use persistent volumes for registry
     # and chartmuseum
-    {%- if charts.get('minio_operator', {'enabled': False}).enabled %}
+    {%- if common.addons.get('minio_operator', {'enabled': False}).enabled %}
     type: filesystem
     {%- else -%}
     type: s3

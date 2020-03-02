@@ -1,8 +1,8 @@
-{%- from "kubernetes/map.jinja" import charts with context -%}
+{% from tpldir ~ "/map.jinja" import harbor with context %}
 
 {
-  "id": "{{ charts.keycloak_gatekeeper.realm }}",
-  "realm": "{{ charts.keycloak_gatekeeper.realm }}",
+  "id": "{{ harbor.oauth.keycloak.realm }}",
+  "realm": "{{ harbor.oauth.keycloak.realm }}",
   "notBefore": 0,
   "revokeRefreshToken": false,
   "refreshTokenMaxReuse": 0,

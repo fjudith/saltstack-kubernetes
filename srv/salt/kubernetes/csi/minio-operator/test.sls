@@ -14,4 +14,4 @@ query-minio-ui:
     - name: https://{{ minio_operator.ingress_host }}.{{ public_domain }}/minio/health/ready
     - wait_for: 120
     - request_interval: 5
-    - status: 403
+    - status: 200

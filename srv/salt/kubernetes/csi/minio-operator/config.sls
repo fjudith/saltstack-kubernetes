@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-# vim: ft=jinja
-
-{#- Get the `tplroot` from `tpldir` #}
-{% from tpldir ~ "/map.jinja" import minio with context %}
-
 /srv/kubernetes/manifests/minio-operator:
   file.directory:
     - user: root

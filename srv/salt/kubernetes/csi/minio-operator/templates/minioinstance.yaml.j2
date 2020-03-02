@@ -2,7 +2,7 @@
 # vim: ft=jinja
 
 {#- Get the `tplroot` from `tpldir` #}
-{% from tpldir ~ "/map.jinja" import minio with context %}
+{% from tpldir ~ "/map.jinja" import minio_operator with context %}
 
 apiVersion: v1
 kind: Secret
@@ -11,8 +11,8 @@ metadata:
   namespace: minio
 type: Opaque
 data:
-  accesskey: {{ minio.accesskey | base64_encode }} # base 64 encoded "minio" (echo -n 'minio' | base64)
-  secretkey: {{ minio.secretkey | base64_encode }} # based 64 encoded "minio123" (echo -n 'minio123' | base64)
+  accesskey: {{ minio_operator.accesskey | base64_encode }} # base 64 encoded "minio" (echo -n 'minio' | base64)
+  secretkey: {{ minio_operator.secretkey | base64_encode }} # based 64 encoded "minio123" (echo -n 'minio123' | base64)
 ---
 apiVersion: v1
 kind: Service
@@ -47,7 +47,7 @@ spec:
       prometheus.io/port: "9000"
       prometheus.io/scrape: "true"
   ## Registry location and Tag to download MinIO Server image
-  image: {{ minio.minio_image }}
+  image: {{ minio_operator.minio_image }}
   ## Secret with credentials to be used by MinIO instance.
   credsSecret:
     name: minio-creds-secret

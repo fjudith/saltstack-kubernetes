@@ -2,8 +2,7 @@
 # vim: ft=jinja
 
 {#- Get the `tplroot` from `tpldir` #}
-{% from tpldir ~ "/map.jinja" import minio with context %}
-
+{% from tpldir ~ "/map.jinja" import minio_operator with context %}
 {%- set public_domain = pillar['public-domain'] -%}
 {%- from "kubernetes/map.jinja" import common with context -%}
 {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
@@ -27,7 +26,7 @@ metadata:
     {%- endif %}
 spec:
   rules:
-  - host: {{ minio.ingress_host }}.{{ public_domain }}
+  - host: {{ minio_operator.ingress_host }}.{{ public_domain }}
     http:
       paths:
       - path: /
@@ -38,6 +37,6 @@ spec:
   tls:
   - secretName: minio-prod-cert
     hosts:
-    - {{ minio.ingress_host }}.{{ public_domain }}
+    - {{ minio_operator.ingress_host }}.{{ public_domain }}
   {%- endif %}
 ---

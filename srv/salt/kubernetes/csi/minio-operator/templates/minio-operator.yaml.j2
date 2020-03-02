@@ -2,7 +2,7 @@
 # vim: ft=jinja
 
 {#- Get the `tplroot` from `tpldir` #}
-{% from tpldir ~ "/map.jinja" import minio with context %}
+{% from tpldir ~ "/map.jinja" import minio_operator with context %}
 
 apiVersion: v1
 kind: Namespace
@@ -137,5 +137,5 @@ spec:
       serviceAccountName: minio-operator-sa
       containers:
         - name: minio-operator
-          image: {{ minio.image }}
+          image: {{ minio_operator.image }}
           imagePullPolicy: IfNotPresent

@@ -221,8 +221,6 @@ kubernetes:
       ingress_host: mailhog
     spinnaker:
       enabled: True
-      version: 1.17.5
-      halyard_version: 1.26.0
       ingress_host: spinnaker
       github:
         enabled: True

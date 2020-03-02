@@ -1,11 +1,13 @@
 vistio-ingress:
   file.managed:
     - name: /srv/kubernetes/manifests/vistio-ingress.yaml
-    - source: salt://kubernetes/charts/vistio/templates/ingress.yaml.j2
+    - source: salt://{{ tpldir }}/templates/ingress.yaml.j2
     - user: root
     - template: jinja
     - group: root
     - mode: 644
+    - context:
+      tpldir: {{ tpldir }}
   cmd.run:
       - require:
         - cmd: vistio

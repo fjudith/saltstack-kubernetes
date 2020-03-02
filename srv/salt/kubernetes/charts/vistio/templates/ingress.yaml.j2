@@ -1,6 +1,10 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import vistio with context %}
 {%- set public_domain = pillar['public-domain'] -%}
 {%- from "kubernetes/map.jinja" import common with context -%}
-{%- from "kubernetes/map.jinja" import charts with context -%}
 {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
   {%- set controller = "nginx" -%}
 {%- elif common.addons.get('traefik', {'enabled': False}).enabled %}
@@ -22,7 +26,7 @@ metadata:
     {%- endif %}
 spec:
   rules:
-  - host: {{ charts.vistio.ingress_host }}.{{ public_domain }}
+  - host: {{ vistio.ingress_host }}.{{ public_domain }}
     http:
       paths:
       - path: /
@@ -33,7 +37,7 @@ spec:
   tls:
   - secretName: vistio-web-prod-cert
     hosts:
-    - {{ charts.vistio.ingress_host }}.{{ public_domain }}
+    - {{ vistio.ingress_host }}.{{ public_domain }}
   {%- endif %}
 ---
 apiVersion: extensions/v1beta1
@@ -49,7 +53,7 @@ metadata:
     {%- endif %}
 spec:
   rules:
-  - host: {{ charts.vistio.ingress_host }}-api.{{ public_domain }}
+  - host: {{ vistio.ingress_host }}-api.{{ public_domain }}
     http:
       paths:
       - path: /
@@ -60,6 +64,6 @@ spec:
   tls:
   - secretName: vistio-api-prod-cert
     hosts:
-    - {{ charts.vistio.ingress_host }}-api.{{ public_domain }}
+    - {{ vistio.ingress_host }}-api.{{ public_domain }}
   {%- endif %}
 ---

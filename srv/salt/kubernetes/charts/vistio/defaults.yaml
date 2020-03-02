@@ -1,0 +1,3 @@
+vistio:
+  version: 0.2.1
+  ingress_host: vistio

@@ -256,7 +256,6 @@ kubernetes:
           realm: default
     vistio:
       enabled: true
-      version: 0.2.1
       ingress_host: vistio
     ethereum:
       enabled: true

@@ -8,9 +8,18 @@ rook-ceph-common:
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/rook-ceph/common.yaml
 
+rook-ceph-wait-api:
+  http.wait_for_successful_query:
+    - name: 'http://127.0.0.1:8080/apis/ceph.rook.io/v1'
+    - match: CephCluster
+    - wait_for: 180
+    - request_interval: 5
+    - status: 200
+
 rook-ceph-operator:
   cmd.run:
     - require:
+      - http: rook-ceph-wait-api
       - cmd: rook-ceph-common
     - watch:
       - file: /srv/kubernetes/manifests/rook-ceph/operator.yaml
@@ -26,14 +35,6 @@ rook-ceph-operator-wait:
     - name: until kubectl -n rook-ceph get pods --selector=app=rook-ceph-operator --field-selector=status.phase=Running -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.status.phase}{"\n"}{end}'; do printf 'rook-ceph-operator is not Running' && sleep 5; done
     - use_vt: True
     - timeout: 180
-
-rook-ceph-wait-api:
-  http.wait_for_successful_query:
-    - name: 'http://127.0.0.1:8080/apis/ceph.rook.io/v1'
-    - match: CephCluster
-    - wait_for: 180
-    - request_interval: 5
-    - status: 200
 
 rook-ceph-cluster:
   cmd.run:
@@ -122,6 +123,7 @@ rook-ceph-monitoring:
 rook-ceph-nfs-install:
   cmd.run:
     - require:
+      - http: rook-ceph-wait-api
       - cmd: rook-ceph-monitoring
     - watch:
       - file: /srv/kubernetes/manifests/rook-ceph/common.yaml

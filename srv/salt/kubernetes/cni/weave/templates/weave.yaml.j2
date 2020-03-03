@@ -1,4 +1,5 @@
-{%- from "kubernetes/map.jinja" import common with context -%}
+{%- from tpldir ~ "/map.jinja" import weave with context -%}
+{%- from "kubernetes/map.jinja" import kubeadm with context -%}
 
 apiVersion: v1
 kind: List
@@ -123,7 +124,7 @@ items:
                 - /home/weave/launch.sh
               env:
                 - name: IPALLOC_RANGE
-                  value: {{ common.cni.network }}
+                  value: {{ kubeadm.networking.serviceSubnet }}
                 - name: WEAVE_PASSWORD
                   valueFrom:
                     secretKeyRef:
@@ -134,7 +135,7 @@ items:
                     fieldRef:
                       apiVersion: v1
                       fieldPath: spec.nodeName
-              image: '{{ common.cni.weave.weave_image }}'
+              image: '{{ weave.weave_image }}'
               livenessProbe:
                 httpGet:
                   host: 127.0.0.1
@@ -169,7 +170,7 @@ items:
                     fieldRef:
                       apiVersion: v1
                       fieldPath: spec.nodeName
-              image: '{{ common.cni.weave.npc_image }}'
+              image: '{{ weave.npc_image }}'
               resources:
                 requests:
                   cpu: 10m
@@ -219,4 +220,4 @@ items:
       name: weave-net
       namespace: kube-system
     data:
-      WEAVE_PASSWORD: "{{ common.cni.weave.password | base64_encode }}"
+      WEAVE_PASSWORD: "{{ weave.password | base64_encode }}"

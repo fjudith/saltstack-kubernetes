@@ -1,0 +1,18 @@
+calico:
+  node_image: quay.io/calico/node:v3.10.0
+  typha_image: quay.io/calico/typha:v3.10.0
+  cni_image: quay.io/calico/cni:v3.10.0
+  controller_image: quay.io/calico/kube-controllers:v3.10.0
+  flexvol_image: calico/pod2daemon-flexvol:v3.10.0
+  version: 3.10.0
+  mtu: 1430
+  ipv4:
+    range: 10.244.0.0/16
+    nat: true
+    ip_in_ip: always
+    interface: eth0
+  ipv6:
+    enable: false
+    nat: true
+    interface: eth0
+    range: fd80:24e2:f998:72d6::/64

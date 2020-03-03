@@ -1,4 +1,5 @@
-{%- from "kubernetes/map.jinja" import common with context -%}
+{%- from tpldir ~ "/map.jinja" import calico with context -%}
+{%- from "kubernetes/map.jinja" import kubeadm with context -%}
 
 ---
 # Source: calico/templates/calico-config.yaml
@@ -15,7 +16,7 @@ data:
   calico_backend: "bird"
 
   # Configure the MTU to use
-  veth_mtu: "{{ common.cni.calico.mtu }}"
+  veth_mtu: "{{ calico.mtu }}"
 
   # The CNI network configuration to install on each node.  The special
   # values in this config will be automatically populated.
@@ -535,7 +536,7 @@ spec:
       securityContext:
         fsGroup: 65534
       containers:
-      - image: {{ common.cni.calico.typha_image }}
+      - image: {{ calico.typha_image }}
         name: calico-typha
         ports:
         - containerPort: 5473
@@ -650,7 +651,7 @@ spec:
         # It can be deleted if this is a fresh installation, or if you have already
         # upgraded to use calico-ipam.
         - name: upgrade-ipam
-          image: {{ common.cni.calico.cni_image }}
+          image: {{ calico.cni_image }}
           command: ["/opt/cni/bin/calico-ipam", "-upgrade"]
           env:
             - name: KUBERNETES_NODE_NAME
@@ -670,7 +671,7 @@ spec:
         # This container installs the CNI binaries
         # and CNI network config file on each node.
         - name: install-cni
-          image: {{ common.cni.calico.cni_image }}
+          image: {{ calico.cni_image }}
           command: ["/install-cni.sh"]
           env:
             # Name of the CNI config file to create.
@@ -704,7 +705,7 @@ spec:
         # Adds a Flex Volume Driver that creates a per-pod Unix Domain Socket to allow Dikastes
         # to communicate with Felix over the Policy Sync API.
         - name: flexvol-driver
-          image: {{ common.cni.calico.flexvol_image }}
+          image: {{ calico.flexvol_image }}
           volumeMounts:
           - name: flexvol-driver-host
             mountPath: /host/driver
@@ -713,7 +714,7 @@ spec:
         # container programs network policy and routes on each
         # host.
         - name: calico-node
-          image: {{ common.cni.calico.node_image }}
+          image: {{ calico.node_image }}
           env:
             # Use Kubernetes API as the backing datastore.
             - name: DATASTORE_TYPE
@@ -746,7 +747,7 @@ spec:
               value: "autodetect"
             # Enable IPIP
             - name: CALICO_IPV4POOL_IPIP
-              value: "{{ common.cni.calico.ipv4.ip_in_ip }}"
+              value: "{{ calico.ipv4.ip_in_ip }}"
             # Set MTU for tunnel device used if ipip is enabled
             - name: FELIX_IPINIPMTU
               valueFrom:
@@ -757,7 +758,7 @@ spec:
             # chosen from this range. Changing this value after installation will have
             # no effect. This should fall within `--cluster-cidr`.
             - name: CALICO_IPV4POOL_CIDR
-              value: "{{ common.cni.network }}"
+              value: "{{ kubeadm.networking.podSubnet }}"
             # Disable file logging so `kubectl logs` works.
             - name: CALICO_DISABLE_FILE_LOGGING
               value: "true"
@@ -766,20 +767,20 @@ spec:
               value: "ACCEPT"
             # Disable IPv6 on Kubernetes.
             - name: CALICO_IPV6POOL_CIDR
-              value: "{{ common.cni.calico.ipv6.range }}"
+              value: "{{ calico.ipv6.range }}"
             - name: FELIX_IPV6SUPPORT
               value: "false"
             - name: IP_AUTODETECTION_METHOD
-              value: "interface={{ common.cni.calico.ipv4.interface }}"
+              value: "interface={{ calico.ipv4.interface }}"
             - name: IP6_AUTODETECTION_METHOD
-              value: "interface={{ common.cni.calico.ipv6.interface }}"
+              value: "interface={{ calico.ipv6.interface }}"
             # Set Felix logging to "info"
             - name: FELIX_LOGSEVERITYSCREEN
               value: "info"
             - name: FELIX_HEALTHENABLED
               value: "true"
             - name: CALICO_ADVERTISE_CLUSTER_IPS
-              value: "{{ master.service_addresses }}"
+              value: "{{ kubeadm.networking.serviceSubnet }}"
           securityContext:
             privileged: true
           resources:
@@ -901,7 +902,7 @@ spec:
       priorityClassName: system-cluster-critical
       containers:
         - name: calico-kube-controllers
-          image: {{ common.cni.calico.controller_image }}
+          image: {{ calico.controller_image }}
           env:
             # Choose which controllers to run.
             - name: ENABLED_CONTROLLERS

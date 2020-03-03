@@ -11,6 +11,10 @@ kubeadm:
   # kubeadm alpha certs certificate-key
   certificateKey: 127a3baac30e6891987e6e20774da9f3334500c1e61cc688604513c116ce1831
 
+  networking:
+    serviceSubnet: "10.96.0.0/12"
+    podSubnet: "10.244.0.0/16"
+
 kubernetes:
   common:
     image: gcr.io/google_containers/hyperkube:v1.16.3
@@ -33,23 +37,12 @@ kubernetes:
       network: 10.244.0.0/16
       provider: calico
       calico:
-        node_image: quay.io/calico/node:v3.10.0
-        typha_image: quay.io/calico/typha:v3.10.0
-        cni_image: quay.io/calico/cni:v3.10.0
-        controller_image: quay.io/calico/kube-controllers:v3.10.0
-        flexvol_image: calico/pod2daemon-flexvol:v3.10.0
-        version: 3.10.0
         mtu: 1430
         ipv4:
-          range: 10.244.0.0/16
-          nat: true
-          ip_in_ip: always
           interface: ens10
         ipv6:
           enable: false
-          nat: true
           interface: ens10
-          range: fd80:24e2:f998:72d6::/64
       flannel:
         flannel_image: quay.io/coreos/flannel:v0.11.0-amd64
         interface: ens10

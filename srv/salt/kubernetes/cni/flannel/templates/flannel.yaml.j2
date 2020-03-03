@@ -1,4 +1,5 @@
-{%- from "kubernetes/map.jinja" import common with context -%}
+{%- from tpldir ~ "/map.jinja" import flannel with context -%}
+{%- from "kubernetes/map.jinja" import kubeadm with context -%}
 
 apiVersion: policy/v1beta1
 kind: PodSecurityPolicy
@@ -126,7 +127,7 @@ data:
     }
   net-conf.json: |
     {
-      "Network": "{{ common.cni.network }}",
+      "Network": "{{ kubeadm.networking.serviceSubnet }}",
       "Backend": {
         "Type": "vxlan"
       }
@@ -170,7 +171,7 @@ spec:
       serviceAccountName: flannel
       initContainers:
       - name: install-cni
-        image: {{ common.cni.flannel.flannel_image }}
+        image: {{ flannel.flannel_image }}
         command:
         - cp
         args:
@@ -184,12 +185,12 @@ spec:
           mountPath: /etc/kube-flannel/
       containers:
       - name: kube-flannel
-        image: {{ common.cni.flannel.flannel_image }}
+        image: {{ flannel.flannel_image }}
         command:
         - /opt/bin/flanneld
         args:
         - --ip-masq
-        - --iface={{ common.cni.flannel.interface }}
+        - --iface={{ flannel.interface }}
         - --kube-subnet-mgr
         - -v=10
         resources:

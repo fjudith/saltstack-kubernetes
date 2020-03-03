@@ -1,0 +1,3 @@
+flannel:
+  flannel_image: quay.io/coreos/flannel:v0.11.0-amd64
+  interface: eth0

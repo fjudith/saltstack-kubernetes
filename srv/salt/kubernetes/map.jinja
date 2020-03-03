@@ -1,4 +1,5 @@
-{% set common = salt['pillar.get']('kubernetes:common') %}
-{% set master = salt['pillar.get']('kubernetes:master') %}
-{% set storage = salt['pillar.get']('kubernetes:storage') %}
-{% set charts = salt['pillar.get']('kubernetes:charts') %}
+{% set common   = salt['pillar.get']('kubernetes:common') %}
+{% set etcd     = salt['pillar.get']('kubernetes:etcd') %}
+{% set kubeadm  = salt['pillar.get']('kubeadm') %}
+{% set storage  = salt['pillar.get']('kubernetes:storage') %}
+{% set charts   = salt['pillar.get']('kubernetes:charts') %}

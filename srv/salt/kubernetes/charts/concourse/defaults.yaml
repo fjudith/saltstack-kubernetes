@@ -6,7 +6,7 @@ concourse:
   version: 5.7.1
   source_hash: ca942b23bb09c434fcdfd7358a7997972ff6c1f5
   ingress_host: concourse
-  minio_image: docker.io/minio/minio:RELEASE.2020-01-03T19-12-21Z
+  minio_image: docker.io/minio/minio:latest
   # oauth:
   #   provider: keycloak
   #   keycloak:

@@ -140,7 +140,6 @@ kubernetes:
         version: 0.8.3
       minio_operator:
         enabled: True
-        minio_image: docker.io/minio/minio:RELEASE.2020-01-03T19-12-21Z
       descheduler:
         enabled: True
         image: docker.io/fjudith/descheduler:v0.10.0

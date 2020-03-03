@@ -18,7 +18,7 @@ harbor:
   notarySignerVersion: 0.6.1-v1.10.1
   databaseVersion: 1.10.1
   redisVersion: 1.10.1
-  minio_image: docker.io/minio/minio:RELEASE.2020-01-03T19-12-21Z
+  minio_image: docker.io/minio/minio:latest
   s3:
     accesskey: harbor
     secretkey: Ch4ng3M34ls0

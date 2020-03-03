@@ -1,0 +1,5 @@
+cilium:
+  cilium_image: docker.io/cilium/cilium:v1.3.2
+  etcd_ca_crt: /etc/kubernetes/pki/etcd/ca.crt
+  etcd_server_crt: /etc/kubernetes/pki/apiserver-etcd-client.crt
+  etcd_server_key: /etc/kubernetes/pki/apiserver-etcd-client.key

@@ -1,5 +1,4 @@
-{%- from "kubernetes/map.jinja" import etcd with context -%}
-{%- from "kubernetes/map.jinja" import common with context -%}
+{%- from tpldir ~ "/map.jinja" import cilium with context -%}
 
 apiVersion: v1
 kind: ConfigMap
@@ -208,7 +207,7 @@ spec:
               key: ct-global-max-entries-other
               name: cilium-config
               optional: true
-        image: {{ common.cni.cilium.cilium_image }}
+        image: {{ cilium.cilium_image }}
         imagePullPolicy: Always
         lifecycle:
           postStart:

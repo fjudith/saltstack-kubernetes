@@ -27,9 +27,18 @@ rook-ceph-operator-wait:
     - use_vt: True
     - timeout: 180
 
+rook-ceph-wait-api:
+  http.wait_for_successful_query:
+    - name: 'http://127.0.0.1:8080/apis/ceph.rook.io/v1'
+    - match: CephCluster
+    - wait_for: 180
+    - request_interval: 5
+    - status: 200
+
 rook-ceph-cluster:
   cmd.run:
     - require:
+      - http: rook-ceph-wait-api
       - cmd: rook-ceph-operator-wait
     - watch:
       - file: /srv/kubernetes/manifests/rook-ceph/cluster.yaml

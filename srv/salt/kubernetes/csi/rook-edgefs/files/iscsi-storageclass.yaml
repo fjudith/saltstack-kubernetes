@@ -1,0 +1,12 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: edgefs-iscsi-csi-storageclass
+provisioner: io.edgefs.csi.iscsi
+parameters:
+  segment: rook-edgefs
+  service: iscsi01
+  cluster: cltest
+  tenant: test
+  bucket: bk1
+  encryption: "true"

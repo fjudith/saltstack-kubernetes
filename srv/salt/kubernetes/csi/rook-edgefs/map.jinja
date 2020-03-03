@@ -1,0 +1,7 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{% import_yaml tpldir ~ "/defaults.yaml" or {} as defaults %}
+
+{#- Merge in salt pillar #}
+{% set rook_edgefs = salt['pillar.get']('kubernetes:storage:rook_edgefs', default=defaults['rook_edgefs'], merge=True) %}

@@ -129,7 +129,7 @@ externalURL: https://{{ harbor.coreIngressHost }}.{{ public_domain }}
 #
 # For storing images and charts, you can also use "azure", "gcs", "s3",
 # "swift" or "oss". Set it in the "imageChartStorage" section
-{%- if storage.get('rook_ceph', {'enabled': False}).enabled %}
+{%- if storage.get('rook_ceph', {'enabled': False}).enabled or storage.get('rook_edgefs', {'enabled': False}).enabled %}
 persistence:
   enabled: true
 {%- else -%}
@@ -141,9 +141,13 @@ persistence:
   resourcePolicy: "keep"
   persistentVolumeClaim:
     registry:
-      {%- if storage.get('rook_ceph', {'enabled': False}).enabled %}
+      {%- if storage.get('rook_ceph', {'enabled': False}).enabled or storage.get('rook_edgefs', {'enabled': False}).enabled %}
       accessMode: ReadWriteMany
+      {%- if storage.get('rook_ceph', {'enabled': False}).enabled %}
       storageClass: "rook-cephfs"
+      {%- elif storage.get('rook_edgefs', {'enabled': False}).enabled %}
+      storageClass: "edgefs-nfs-csi-storageclass"
+      {%- endif %}
       subPath: ""
       size: 5Gi
       {%- else -%}
@@ -159,9 +163,13 @@ persistence:
       size: 5Gi
       {%- endif %}
     chartmuseum:
-      {%- if storage.get('rook_ceph', {'enabled': False}).enabled %}
+      {%- if storage.get('rook_ceph', {'enabled': False}).enabled or storage.get('rook_edgefs', {'enabled': False}).enabled %}
       accessMode: ReadWriteMany
+      {%- if storage.get('rook_ceph', {'enabled': False}).enabled %}
       storageClass: "rook-cephfs"
+      {%- elif storage.get('rook_edgefs', {'enabled': False}).enabled %}
+      storageClass: "edgefs-nfs-csi-storageclass"
+      {%- endif %}
       subPath: ""
       size: 5Gi
       {%- else -%}
@@ -172,9 +180,13 @@ persistence:
       size: 5Gi
       {%- endif %}
     jobservice:
-      {%- if storage.get('rook_ceph', {'enabled': False}).enabled %}
+      {%- if storage.get('rook_ceph', {'enabled': False}).enabled or storage.get('rook_edgefs', {'enabled': False}).enabled %}
       accessMode: ReadWriteMany
+      {%- if storage.get('rook_ceph', {'enabled': False}).enabled %}
       storageClass: "rook-cephfs"
+      {%- elif storage.get('rook_edgefs', {'enabled': False}).enabled %}
+      storageClass: "edgefs-nfs-csi-storageclass"
+      {%- endif %}
       subPath: ""
       size: 1Gi
       {%- else -%}

@@ -99,7 +99,7 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
-     {%- if not storage.get('rook_ceph', {'enabled': False}).enabled %}
+     {%- if not storage.get('rook_ceph', {'enabled': False}).enabled or storage.get('rook_edgefs', {'enabled': False}).enabled %}
       volumes:
       - name: elasticsearch-logging
         emptyDir: {}
@@ -113,13 +113,13 @@ spec:
         name: elasticsearch-logging-init
         securityContext:
           privileged: true
-  {%- if storage.get('rook_ceph', {'enabled': False}).enabled %}
+  {%- if storage.get('rook_ceph', {'enabled': False}).enabled or storage.get('rook_edgefs', {'enabled': False}).enabled %}
   volumeClaimTemplates:
     - metadata:
         name: elasticsearch-logging
       spec:
         accessModes: [ "ReadWriteOnce"]
-        storageClassName: 'rook-ceph-block'
+        # storageClassName: 'rook-ceph-block'
         resources:
           requests:
             storage: 10Gi

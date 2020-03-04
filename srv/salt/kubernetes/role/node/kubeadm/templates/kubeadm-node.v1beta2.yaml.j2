@@ -20,7 +20,7 @@
 {% endif %}
 
 {%- set nodeLabels = "node.kubernetes.io/role=node" -%}
-{%- if storage.get('rook_ceph', {'enabled': False}).enabled -%}
+{%- if storage.get('rook_ceph', {'enabled': False}).enabled or storage.get('rook_edgefs', {'enabled': False}).enabled -%}
   {%- set nodeLabels = nodeLabels + ',' + "role=storage-node" -%}
 {%- endif -%}
 

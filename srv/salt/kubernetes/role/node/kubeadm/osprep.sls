@@ -94,7 +94,7 @@ net.ipv6.conf.all.forwarding:
     - value: 1
 {% endif %}
 
-{% if storage.get('rook_ceph', {'enabled': False}).enabled %}
+{% if storage.get('rook_ceph', {'enabled': False}).enabled or storage.get('rook_edgefs', {'enabled': False}).enabled %}
 /data/rook:
   file.directory:
     - user: root

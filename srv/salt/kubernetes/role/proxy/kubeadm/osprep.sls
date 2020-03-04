@@ -93,12 +93,3 @@ net.ipv6.conf.all.forwarding:
   sysctl.present:
     - value: 1
 {% endif %}
-
-{% if storage.get('rook_ceph', {'enabled': False}).enabled %}
-/data/rook:
-  file.directory:
-    - user: root
-    - group: root
-    - dir_mode: 750
-    - makedirs: True
-{% endif %}

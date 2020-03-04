@@ -20,6 +20,8 @@ vistio:
           --set web.env.updateURL=https://{{ vistio.ingress_host }}-api.{{ public_domain }}/graph \
           {%- if storage.get('rook_ceph', {'enabled': False}).enabled %}
           --set api.storage.class=rook-ceph-block \
+          {%- elif storage.get('rook_edgefs', {'enabled': False}).enabled %}
+          --set api.storage.class=edgefs-iscsi-csi-storageclass \
           {%- endif %}
           "helm/vistio"
 

@@ -22,7 +22,7 @@ keycloak:
         helm upgrade --install keycloak --namespace keycloak \
             --set keycloak.image.tag={{ keycloak.version }} \
             --set keycloak.password={{ keycloak.password }} \
-            {%- if storage.get('rook_ceph', {'enabled': False}).enabled %}
+            {%- if storage.get('rook_ceph', {'enabled': False}).enabled or storage.get('rook_edgefs', {'enabled': False}).enabled %}
             -f /srv/kubernetes/manifests/keycloak/values.yaml \
             {%- endif %}
             "./" --wait --timeout 5m

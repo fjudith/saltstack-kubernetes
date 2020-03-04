@@ -2,7 +2,7 @@
 {%- from "kubernetes/map.jinja" import storage with context -%}
 {%- from "kubernetes/map.jinja" import charts with context -%}
 
-{% if storage.get('rook_ceph', {'enabled': False}).enabled %}
+{% if storage.get('rook_ceph', {'enabled': False}).enabled or storage.get('rook_edgefs', {'enabled': False}).enabled %}
 ceph-grafana:
   file.managed:
     - name: /srv/kubernetes/manifests/kube-prometheus/manifests/rook-ceph-grafana-dashboard-configmap.yaml

@@ -6,7 +6,9 @@ kube-prometheus-crds:
     - use_vt: True
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/kube-prometheus/manifests/setup/
+        until kubectl get servicemonitors --all-namespaces ; do date; sleep 1; echo ""; done
     - unless: curl --fail --silent 'http://127.0.0.1:8080/apis/monitoring.coreos.com/v1'
+    - timeout: 60
 
 kube-prometheus-query-api:
   http.wait_for_successful_query:

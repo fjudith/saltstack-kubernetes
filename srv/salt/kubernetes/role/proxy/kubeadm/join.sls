@@ -16,7 +16,7 @@ kubernetes-ca:
 kubeadm-register-node:
   file.managed:
     - name: /root/kubeadm-join-node.yaml
-    - source: salt://kubernetes/role/node/kubeadm/templates/kubeadm-node.{{ kubeadm.apiVersion }}.yaml.j2
+    - source: salt://kubernetes/role/proxy/kubeadm/templates/kubeadm-node.{{ kubeadm.apiVersion }}.yaml.j2
     - user: root
     - template: jinja
     - group: root

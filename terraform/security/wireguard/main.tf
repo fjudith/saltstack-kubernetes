@@ -35,9 +35,9 @@ resource "null_resource" "wireguard" {
     ]
   }
 
-  # provisioner "remote-exec" {
-  #   script = "${path.module}/scripts/install-kernel-headers.sh"
-  # }
+  provisioner "remote-exec" {
+    script = "${path.module}/scripts/install-kernel-headers.sh"
+  }
 
   # provisioner "remote-exec" {
   #   inline = [

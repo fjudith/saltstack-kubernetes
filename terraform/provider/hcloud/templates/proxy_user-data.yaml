@@ -373,3 +373,10 @@ runcmd:
   - [/usr/sbin/ufw, allow, cilium-geneve]
   - [/usr/sbin/ufw, allow, salt-gui]
   - [/usr/sbin/ufw, --force, enable]
+
+power_state:
+  delay: "+30"
+  mode: reboot
+  message: Coming back very soon !
+  timeout: 30
+  condition: True

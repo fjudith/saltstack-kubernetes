@@ -179,3 +179,10 @@ runcmd:
   - [/usr/sbin/ufw, allow, in, 'on', ${PRIVATE_INTERFACE}, to, any, port, ${VPN_PORT}]
   - [/usr/sbin/ufw, allow, ssh]
   - [/usr/sbin/ufw, --force, enable]
+
+power_state:
+ delay: "+30"
+ mode: poweroff
+ message: Bye Bye
+ timeout: 30
+ condition: True

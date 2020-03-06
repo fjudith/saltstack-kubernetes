@@ -35,15 +35,15 @@ resource "null_resource" "wireguard" {
     ]
   }
 
-  provisioner "remote-exec" {
-    script = "${path.module}/scripts/install-kernel-headers.sh"
-  }
+  # provisioner "remote-exec" {
+  #   script = "${path.module}/scripts/install-kernel-headers.sh"
+  # }
 
-  provisioner "remote-exec" {
-    inline = [
-      "DEBIAN_FRONTEND=noninteractive apt-get install -yqq wireguard-dkms wireguard-tools",
-    ]
-  }
+  # provisioner "remote-exec" {
+  #   inline = [
+  #     "DEBIAN_FRONTEND=noninteractive apt-get install -yqq wireguard-dkms wireguard-tools",
+  #   ]
+  # }
 
   provisioner "file" {
     content     = "${element(data.template_file.interface-conf.*.rendered, count.index)}"

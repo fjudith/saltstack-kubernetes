@@ -20,7 +20,7 @@ users:
     # groups: salt
     lock_passwd: True
     # openssl passwd -6 <text>
-    passwd: $6$rE0lkoq4kCK.gW3T$gLBR8SPUAqn0pUHTMxGYLHeWMqe.9hHARYcBwFJ0RmovHQ95TvPF6yWHnJNUEfKN/Wx4plRUnEEWwsVZJRySq0
+    passwd: $6$ruFYJtv6laHXjMgV$aRSYw/3m1uHvkqmqb3TK.e.By4lreWxx/g1KJx3WJtcyJjmuX0SzVryOfwCjtnk0efXkMSql3kC6987PTasXB0
     shell: /bin/bash
 
 package_upgrade: true
@@ -181,8 +181,8 @@ runcmd:
   - [/usr/sbin/ufw, --force, enable]
 
 power_state:
- delay: "+30"
- mode: poweroff
- message: Bye Bye
- timeout: 30
- condition: True
+  delay: "+30"
+  mode: reboot
+  message: Coming back very soon !
+  timeout: 30
+  condition: True

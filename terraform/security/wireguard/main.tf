@@ -36,14 +36,14 @@ resource "null_resource" "wireguard" {
   }
 
   provisioner "remote-exec" {
-    script = "${path.module}/scripts/install-kernel-headers.sh"
-  }
-
-  provisioner "remote-exec" {
     inline = [
       "DEBIAN_FRONTEND=noninteractive apt-get install -yqq wireguard-dkms wireguard-tools",
       "modprobe wireguard",
     ]
+  }
+
+  provisioner "remote-exec" {
+    script = "${path.module}/scripts/install-kernel-headers.sh"
   }
 
   provisioner "file" {

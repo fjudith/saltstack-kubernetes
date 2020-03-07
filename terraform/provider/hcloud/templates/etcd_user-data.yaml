@@ -179,6 +179,8 @@ runcmd:
   - [/usr/sbin/ufw, allow, in, 'on', ${PRIVATE_INTERFACE}, to, any, port, ${VPN_PORT}]
   - [/usr/sbin/ufw, allow, ssh]
   - [/usr/sbin/ufw, --force, enable]
+    # Kernel headers
+  - [apt, install, "linux-headers-$(uname -r)"]
 
 power_state:
   delay: "+30"

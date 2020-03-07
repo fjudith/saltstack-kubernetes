@@ -233,6 +233,8 @@ runcmd:
   - [/usr/sbin/ufw, allow, cilium-vxlan]
   - [/usr/sbin/ufw, allow, cilium-geneve]
   - [/usr/sbin/ufw, --force, enable]
+    # Kernel headers
+  - [apt, install, "linux-headers-$(uname -r)"]
 
 power_state:
   delay: "+30"

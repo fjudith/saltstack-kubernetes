@@ -20,10 +20,10 @@ users:
     # groups: salt
     lock_passwd: True
     # openssl passwd -6 <text>
-    passwd: "\$6\$eg0uRnaXLSYHz9zk\$XZ.oMymbfAZmAe0QQIZnDqviC0Qg.Bs3z9SkQOomTyrF.8y0W08b3xiG66xxRfw2KyeoiLE7gtRJa2kkfOIgj."
+    passwd: \$6\$eg0uRnaXLSYHz9zk\$XZ.oMymbfAZmAe0QQIZnDqviC0Qg.Bs3z9SkQOomTyrF.8y0W08b3xiG66xxRfw2KyeoiLE7gtRJa2kkfOIgj.
     shell: /bin/bash
 
-# package_upgrade: true
+package_upgrade: true
 
 apt:
   sources:

@@ -181,10 +181,3 @@ runcmd:
   - [/usr/sbin/ufw, --force, enable]
   # Kernel headers
   # - [/usr/bin/apt, install, linux-headers-$(uname -r)]
-
-power_state:
-  delay: "+30"
-  mode: reboot
-  message: Rebooting due to Package upgrade
-  timeout: 30
-  condition: True

@@ -235,10 +235,3 @@ runcmd:
   - [/usr/sbin/ufw, --force, enable]
     # Kernel headers
   - [apt, install, "linux-headers-$(uname -r)"]
-
-power_state:
-  delay: "+30"
-  mode: reboot
-  message: Coming back very soon !
-  timeout: 30
-  condition: True

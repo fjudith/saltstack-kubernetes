@@ -218,7 +218,7 @@ runcmd:
   - [/usr/sbin/ufw, allow, cilium-geneve]
   - [/usr/sbin/ufw, --force, enable]
   # Kernel headers
-  - [/usr/bin/apt, install, linux-headers-\$(uname -r)]
+  - [/usr/bin/apt, install, linux-headers-$(uname -r)]
 
 power_state:
   delay: "+30"

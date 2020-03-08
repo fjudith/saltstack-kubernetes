@@ -23,7 +23,7 @@ users:
     passwd: $6$ruFYJtv6laHXjMgV$aRSYw/3m1uHvkqmqb3TK.e.By4lreWxx/g1KJx3WJtcyJjmuX0SzVryOfwCjtnk0efXkMSql3kC6987PTasXB0
     shell: /bin/bash
 
-package_upgrade: true
+# package_upgrade: true
 
 apt:
   sources:

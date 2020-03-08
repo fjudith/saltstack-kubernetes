@@ -23,7 +23,7 @@ users:
     passwd: $6$ruFYJtv6laHXjMgV$aRSYw/3m1uHvkqmqb3TK.e.By4lreWxx/g1KJx3WJtcyJjmuX0SzVryOfwCjtnk0efXkMSql3kC6987PTasXB0
     shell: /bin/bash
 
-package_upgrade: true
+# package_upgrade: true
 
 apt:
   sources:
@@ -217,8 +217,6 @@ runcmd:
   - [/usr/sbin/ufw, allow, cilium-vxlan]
   - [/usr/sbin/ufw, allow, cilium-geneve]
   - [/usr/sbin/ufw, --force, enable]
-    # Kernel headers
-  - [apt, install, "linux-headers-$(uname -r)"]
 
 power_state:
   delay: "+30"

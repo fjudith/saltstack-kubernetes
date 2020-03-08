@@ -23,7 +23,7 @@ users:
     passwd: $6$eg0uRnaXLSYHz9zk$XZ.oMymbfAZmAe0QQIZnDqviC0Qg.Bs3z9SkQOomTyrF.8y0W08b3xiG66xxRfw2KyeoiLE7gtRJa2kkfOIgj.
     shell: /bin/bash
 
-package_upgrade: true
+# package_upgrade: true
 
 apt:
   sources:
@@ -234,11 +234,11 @@ runcmd:
   - [/usr/sbin/ufw, allow, cilium-geneve]
   - [/usr/sbin/ufw, --force, enable]
   # Kernel headers
-  - [/usr/bin/apt, install, linux-headers-$(uname -r)]
+  # - [/usr/bin/apt, install, linux-headers-$(uname -r)]
 
 power_state:
   delay: "+30"
   mode: reboot
-  message: Coming back very soon !
+  message: Rebooting due to Package upgrade
   timeout: 30
   condition: True

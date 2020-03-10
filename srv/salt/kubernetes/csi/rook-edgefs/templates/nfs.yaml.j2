@@ -1,11 +1,16 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import rook_edgefs with context %}
+
 apiVersion: edgefs.rook.io/v1
-kind: S3X
+kind: NFS
 metadata:
-  name: s3x01
+  name: {{ rook_edgefs.nfs_service }}
   namespace: rook-edgefs
 spec:
   instances: 1
-  #sslCertificateRef: s3x-ssl-secret
   #placement:
   #  nodeAffinity:
   #    requiredDuringSchedulingIgnoredDuringExecution:

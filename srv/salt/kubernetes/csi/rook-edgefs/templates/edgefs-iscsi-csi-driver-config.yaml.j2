@@ -14,10 +14,10 @@ k8sEdgefsNamespaces: ["rook-edgefs"] #element 0 is a default edgefs cluster name
 k8sEdgefsMgmtPrefix: rook-edgefs-mgr #edgefs cluster management prefix
 
 #Edgefs csi operatins options
-cluster: cltest #substitution edgefs cluster name for csi operations
-tenant: test    #substitution edgefs tenant name for csi operations
-bucket: bk1     #substitution edgefs bucket name for csi operations
+cluster: {{ rook_edgefs.cluster }}         #substitution edgefs cluster name for csi operations
+tenant: {{ rook_edgefs.tenant }}           #substitution edgefs tenant name for csi operations
+bucket: {{ rook_edgefs.iscsi_service }}     #substitution edgefs bucket name for csi operations
 
 # Edgefs connnection options
-username: {{ rook_edgefs.username }} #edgefs k8s cluster grpc connection username
-password: {{ rook_edgefs.password }} #edgefs k8s cluster  grpc connection password
+username: admin #edgefs k8s cluster grpc connection username
+password: admin #edgefs k8s cluster  grpc connection password

@@ -23,9 +23,6 @@ metadata:
     {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
     cert-manager.io/cluster-issuer: letsencrypt-prod
     kubernetes.io/tls-acme: "true"
-    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
-    nginx.ingress.kubernetes.io/server-snippet: |
-      proxy_ssl_verify off;
     {%- endif %}
 spec:
   rules:
@@ -38,7 +35,7 @@ spec:
           servicePort: 3000
   {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
   tls:
-  - secretName: ceph-prod-cert
+  - secretName: edgefs-prod-cert
     hosts:
     - {{ rook_edgefs.ingress_host }}.{{ public_domain }}
   {%- endif %}

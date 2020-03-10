@@ -1,11 +1,20 @@
 rook_edgefs:
+  command_timout: 120
   image: docker.io/rook/edgefs:v1.2.4
   edgefs_image: docker.io/edgefs/edgefs:1.2.167
   ingress_host: edgefs
   username: admin
   password: V3ry1ns3cur3P4ssw0rd
-  csi_driver: https://raw.githubusercontent.com/kubernetes/csi-api/release-1.13/pkg/crd/manifests/csidriver.yaml
-  csi_nodeinfo: https://raw.githubusercontent.com/kubernetes/csi-api/release-1.13/pkg/crd/manifests/csinodeinfo.yaml
+  csi_driver: https://raw.githubusercontent.com/kubernetes/csi-api/release-1.14/pkg/crd/manifests/csidriver.yaml
+  csi_nodeinfo: https://raw.githubusercontent.com/kubernetes/csi-api/release-1.14/pkg/crd/manifests/csinodeinfo.yaml
+  cluster: cluster0
+  tenant: tenant0
+  iscsi_service: iscsi0
+  nfs_service: nfs0
+  s3_service: s30
+  s3x_service: s3x0
+  swift_service: swift0
+  isgw_service: isgw0
   default_storageclass:
     enabled: false
     name: edgefs-iscsi-csi-storageclass

@@ -4,4 +4,8 @@ include:
   - kubernetes.csi.rook-edgefs.namespace
   - kubernetes.csi.rook-edgefs.ingress
   - kubernetes.csi.rook-edgefs.install
+  - kubernetes.csi.rook-edgefs.iscsi
+  - kubernetes.csi.rook-edgefs.nfs
+  - kubernetes.csi.rook-edgefs.s3
+  - kubernetes.csi.rook-edgefs.s3x
   - kubernetes.csi.rook-edgefs.storageclass

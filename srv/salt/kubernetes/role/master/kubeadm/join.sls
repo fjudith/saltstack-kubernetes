@@ -38,6 +38,7 @@ kubeadm-join:
       - pkg: kubectl
       - pkg: kubeadm
     - timeout: 300
+    - unless: test -f /etc/kubernetes/admin.conf
     - name: |
         /usr/bin/kubeadm join --config /root/kubeadm-controlplane.yaml --ignore-preflight-errors=all --v=5
 

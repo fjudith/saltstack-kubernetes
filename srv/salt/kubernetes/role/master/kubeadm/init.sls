@@ -26,6 +26,7 @@ kubeadm-init:
       - pkg: kubelet
       - pkg: kubectl
       - pkg: kubeadm
+    - unless: test -f /etc/kubernetes/admin.conf
     - timeout: 300
     - name: |
         /usr/bin/kubeadm init --config /root/kubeadm-config.yaml --ignore-preflight-errors=all --upload-certs --v=5

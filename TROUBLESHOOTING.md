@@ -101,11 +101,22 @@ kubectl patch pv ${PV_NAME}  -p '{"metadata":{"finalizers":null}}'
 
 ## Restore kubadmo configuration
 
-The folloing commands aims to restore the configuration required for further control-plane nodes to join when the 24 hours grace period expired.
+The following commands aims to restore the configuration required for further control-plane nodes to join when the 24 hours grace period expired.
 
 Run the following commands from the server that ran the initial `kubeadm init` phase.
 
 ```bash
 kubeadm init phase bootstrap-token --config kubeadm-config.yaml
 kubeadm init phase upload-certs --config kubeadm-config.yaml --upload-certs
+```
+
+
+## Wait for deployment to be completed
+
+```bash
+while [ "$(kubectl -n rook-edgefs-system get deployment rook-edgefs-operator -o jsonpath='{.status.conditions[0].reason}')" != "MinimumReplicasAvailable" ]
+do
+  printf '.' && sleep 5
+done && \
+kubectl -n rook-edgefs-system get deployment rook-edgefs-operator
 ```

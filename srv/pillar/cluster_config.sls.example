@@ -17,8 +17,6 @@ kubeadm:
 
 kubernetes:
   common:
-    image: gcr.io/google_containers/hyperkube:v1.16.3
-    version: v1.16.3
     cri:
       provider: docker
       crictl_version: 1.15.0

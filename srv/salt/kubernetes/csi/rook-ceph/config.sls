@@ -164,17 +164,6 @@
     - context:
       tpldir: {{ tpldir }}
 
-/srv/kubernetes/manifests/rook-ceph/kube-prometheus-grafana-dashboard.yaml:
-  file.managed:
-    - require:
-      - file: /srv/kubernetes/manifests/rook-ceph
-    - source: salt://{{ tpldir }}/files/kube-prometheus-grafana-dashboard.yaml
-    - user: root
-    - group: root
-    - mode: 644
-    - context:
-      tpldir: {{ tpldir }}
-
 /srv/kubernetes/manifests/rook-ceph/nfs.yaml:
   file.managed:
     - require:

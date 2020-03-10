@@ -104,7 +104,6 @@ rook-ceph-monitoring:
       - file: /srv/kubernetes/manifests/rook-ceph/ceph-exporter.yaml
       - file: /srv/kubernetes/manifests/rook-ceph/kube-prometheus-prometheus.yaml
       - file: /srv/kubernetes/manifests/rook-ceph/kube-prometheus-service-monitor.yaml
-      - file: /srv/kubernetes/manifests/rook-ceph/kube-prometheus-grafana-dashboard.yaml
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/rook-ceph/toolbox.yaml
         {%- if common.addons.get('kube_prometheus', {'enabled': False}).enabled %}
@@ -112,7 +111,6 @@ rook-ceph-monitoring:
         kubectl apply -f /srv/kubernetes/manifests/rook-ceph/kube-prometheus-grafana-dashboard.yaml
         kubectl apply -f /srv/kubernetes/manifests/rook-ceph/kube-prometheus-prometheus.yaml
         kubectl apply -f /srv/kubernetes/manifests/rook-ceph/kube-prometheus-service-monitor.yaml
-        kubectl apply -f /srv/kubernetes/manifests/rook-ceph/prometheus-ceph-rules.yaml
         {%- else %}
         kubectl apply -f /srv/kubernetes/manifests/rook-ceph/prometheus.yaml
         kubectl apply -f /srv/kubernetes/manifests/rook-ceph/prometheus-service.yaml

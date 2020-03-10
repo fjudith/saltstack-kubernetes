@@ -204,23 +204,27 @@ Solutions to provide storage persistence to stateful applications.
 <table>
   <tr align='center'>
     <th align='center' colspan='3'>Distributed storage</th>
+    <th>S3 compatible storage</th>
     <th align='center'>Distributed database</th>
   </tr>
   <tr align='center'>
     <td align='center'>Rook</td>
     <td align='center'>Rook-Ceph</td>
+    <td align='center'>Rook-EdgeFS</td>
     <td align='center'>Minio</td>
     <td align='center'>Rook-CockroachDB</td>
   </tr>
   <tr align='center'>
     <td align='center'><img src='media/rook.png' width="50px"></td>
     <td align='center'><img src='media/ceph.png' width="50px"></td>
+    <td align='center'><img src='media/edgefs.png' width="50px"></td>
     <td align='center'><img src='media/minio.png' width="50px"></td>
     <td align='center'><img src='media/cockroach_labs.png' width="50px"></td>
   </tr>
   <tr>
     <td align='center'>Storage infrastructure deployment</td>
-    <td align='center'>Block, Object and File storage</td>
+    <td align='center'><b>Local</b> Block, Object and File storage</td>
+    <td align='center'><b>Geo-Distributed</b> Block, Object and File storage</td>
     <td align='center'>Object storage</td>
     <td align='center'>Distributed SQL database</td>
   </tr>

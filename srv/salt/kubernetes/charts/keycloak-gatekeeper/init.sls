@@ -16,7 +16,7 @@ include:
   {%- if common.addons.get('kube_prometheus', {'enabled': False}).enabled %}
   - kubernetes.charts.keycloak-gatekeeper.kube-prometheus
   {%- endif %}
-  {%- if storage.get('rook_ceph', {'enabled': False}).enabled or storage.get('rook_edgefs', {'enabled': False}).enabled %}
+  {%- if storage.get('rook_ceph', {'enabled': False}).enabled %}
   - kubernetes.charts.keycloak-gatekeeper.rook-ceph
   {%- endif %}
   - kubernetes.charts.keycloak-gatekeeper.test

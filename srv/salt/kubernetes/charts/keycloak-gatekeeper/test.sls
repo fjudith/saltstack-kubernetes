@@ -55,7 +55,7 @@ query-kgk-alertmanager:
     - status: 200
 {% endif %}
 
-{% if storage.get('rook_ceph', {'enabled': False}).enabled or storage.get('rook_edgefs', {'enabled': False}).enabled %}
+{% if storage.get('rook_ceph', {'enabled': False}).enabled %}
 query-kgk-rook-ceph:
   http.wait_for_successful_query:
     - watch:

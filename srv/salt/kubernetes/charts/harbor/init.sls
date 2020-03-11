@@ -12,6 +12,6 @@ include:
   {%- if storage.get('minio_operator', {'enabled': False}).enabled %}
   - kubernetes.charts.harbor.minio
   {%- endif %}
-  - kubernetes.charts.harbor.ingress
   - kubernetes.charts.harbor.install
+  - kubernetes.charts.harbor.ingress
   - kubernetes.charts.harbor.test

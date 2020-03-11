@@ -12,6 +12,6 @@ include:
   {%- if storage.get('minio_operator', {'enabled': False}).enabled %}
   - kubernetes.charts.concourse.minio
   {%- endif %}
-  - kubernetes.charts.concourse.ingress
   - kubernetes.charts.concourse.install
+  - kubernetes.charts.concourse.ingress
   - kubernetes.charts.concourse.test

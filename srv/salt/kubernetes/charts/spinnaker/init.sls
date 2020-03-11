@@ -12,6 +12,6 @@ include:
   {%- if storage.get('minio_operator', {'enabled': False}).enabled %}
   - kubernetes.charts.spinnaker.minio
   {%- endif %}
-  - kubernetes.charts.spinnaker.ingress
   - kubernetes.charts.spinnaker.install
+  - kubernetes.charts.spinnaker.ingress
   - kubernetes.charts.spinnaker.test

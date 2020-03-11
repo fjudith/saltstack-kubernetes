@@ -2,13 +2,27 @@
 {%- from "kubernetes/map.jinja" import storage with context -%}
 {%- from "kubernetes/map.jinja" import charts with context -%}
 
-{% if storage.get('rook_ceph', {'enabled': False}).enabled or storage.get('rook_edgefs', {'enabled': False}).enabled %}
+{% if storage.get('rook_ceph', {'enabled': False}).enabled %}
 ceph-grafana:
   file.managed:
     - name: /srv/kubernetes/manifests/kube-prometheus/manifests/rook-ceph-grafana-dashboard-configmap.yaml
     - watch:
       - git: kube-prometheus-repo
     - source: salt://{{ tpldir }}/patch/rook-ceph-grafana-dashboard-configmap.yaml
+    - user: root
+    - group: root
+    - mode: 644
+    - context:
+      tpldir: {{ tpldir }}
+{% endif %}
+
+{% if storage.get('rook_edgefs', {'enabled': False}).enabled %}
+edgefs-grafana:
+  file.managed:
+    - name: /srv/kubernetes/manifests/kube-prometheus/manifests/rook-edgefs-grafana-dashboard-configmap.yaml
+    - watch:
+      - git: kube-prometheus-repo
+    - source: salt://{{ tpldir }}/patch/rook-edgefs-grafana-dashboard-configmap.yaml
     - user: root
     - group: root
     - mode: 644

@@ -123,9 +123,14 @@ spec:
         - mountPath: /grafana-dashboard-definitions/0/workload-total
           name: grafana-dashboard-workload-total
           readOnly: false
-        {%- if storage.get('rook_ceph', {'enabled': False}).enabled or storage.get('rook_edgefs', {'enabled': False}).enabled %}
-        - mountPath: /grafana-dashboard-definitions/0/rook
-          name: grafana-dashboard-rook
+        {%- if storage.get('rook_ceph', {'enabled': False}).enabled %}
+        - mountPath: /grafana-dashboard-definitions/0/rook-ceph
+          name: grafana-dashboard-rook-ceph
+          readOnly: false
+        {%- endif %}
+        {%- if storage.get('rook_edgefs', {'enabled': False}).enabled %}
+        - mountPath: /grafana-dashboard-definitions/0/rook-edgefs
+          name: grafana-dashboard-rook-edgefs
           readOnly: false
         {%- endif %}
         {%- if common.addons.get('traefik', {'enabled': False}).enabled %}
@@ -240,10 +245,15 @@ spec:
       - configMap:
           name: grafana-dashboard-workload-total
         name: grafana-dashboard-workload-total
-      {%- if storage.get('rook_ceph', {'enabled': False}).enabled or storage.get('rook_edgefs', {'enabled': False}).enabled %}
+      {%- if storage.get('rook_ceph', {'enabled': False}).enabled %}
       - configMap:
-          name: grafana-dashboard-rook
-        name: grafana-dashboard-rook
+          name: grafana-dashboard-rook-ceph
+        name: grafana-dashboard-rook-ceph
+      {%- endif %}
+      {%- if storage.get('rook_edgefs', {'enabled': False}).enabled %}
+      - configMap:
+          name: grafana-dashboard-rook-edgefs
+        name: grafana-dashboard-rook-edgefs
       {%- endif %}
       {%- if common.addons.get('traefik', {'enabled': False}).enabled %}
       - configMap:

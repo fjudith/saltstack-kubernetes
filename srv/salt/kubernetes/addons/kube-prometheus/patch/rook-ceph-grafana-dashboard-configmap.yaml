@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: grafana-dashboard-rook
+  name: grafana-dashboard-rook-ceph
   namespace: monitoring
   labels:
     grafana_dashboard: "True"

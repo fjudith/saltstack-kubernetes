@@ -9,8 +9,10 @@
   file.managed:
     - require:
       - file: /etc/kubernetes/pki
-    - source: salt://kubernetes/role/master/kubeadm/templates/encryption-config.yaml.j2
+    - source: salt://{{ tpldir }}/templates/encryption-config.yaml.j2
     - template: jinja
     - user: root
     - group: root
     - mode: 644
+    - context:
+        tpldir: {{ tpldir }}

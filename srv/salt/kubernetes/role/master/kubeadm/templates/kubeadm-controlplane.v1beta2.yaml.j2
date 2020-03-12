@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 # vim: ft=jinja
 
+{%- from tpldir ~ "/map.jinja" import kubeadm with context %}
 {%- set hostname = salt['grains.get']('fqdn') -%}
 {%- set public_domain = pillar['public-domain'] -%}
 {%- set clusterHost = pillar['cluster-host'] -%}
 {%- set controlPlaneInterface = pillar['controlPlaneInterface'] -%}
 {%- set localIpAddress = salt['network.ip_addrs'](controlPlaneInterface) -%}
-{%- from "kubernetes/role/master/kubeadm/map.jinja" import kubeadm with context %}
 {%- from "kubernetes/map.jinja" import charts with context -%}
 
 {%- set apiserverCount = [] -%}

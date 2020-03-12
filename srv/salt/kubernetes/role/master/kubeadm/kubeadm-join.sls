@@ -1,15 +1,7 @@
 # -*- coding: utf-8 -*-
 # vim: ft=jinja
 
-{%- set localIpAddress = salt['network.ip_addrs'](pillar['controlPlaneInterface']) -%}
-{%- from "kubernetes/role/master/kubeadm/map.jinja" import kubeadm with context %}
-
-include:
-  - kubernetes.role.master.kubeadm.osprep
-  - kubernetes.role.master.kubeadm.repo
-  - kubernetes.role.master.kubeadm.install
-  - kubernetes.role.master.kubeadm.audit-policy
-  - kubernetes.role.master.kubeadm.encryption
+{%- from tpldir ~ "/map.jinja" import kubeadm with context %}
 
 kubeadm-reset:
   cmd.run:
@@ -20,15 +12,16 @@ kubeadm-reset:
     - name: |
         /usr/bin/kubeadm reset -f --cert-dir /etc/kubernetes/pki      
 
-
 kubeadm-join:
   file.managed:
     - name: /root/kubeadm-controlplane.yaml
-    - source: salt://kubernetes/role/master/kubeadm/templates/kubeadm-controlplane.{{ kubeadm.apiVersion }}.yaml.j2
+    - source: salt://{{ tpldir }}/templates/kubeadm-controlplane.{{ kubeadm.apiVersion }}.yaml.j2
     - user: root
     - template: jinja
     - group: root
     - mode: 644
+    - context: 
+        tpldir: {{ tpldir }}
   cmd.run:
     - watch: 
       - file: /root/kubeadm-controlplane.yaml

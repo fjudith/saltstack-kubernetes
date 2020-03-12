@@ -19,5 +19,6 @@
     - user: root
     - group: root
     - dir_mode: 644
-    - source: salt://kubernetes/role/master/kubeadm/templates/kube-apiserver-audit-policy.yaml.j2
-    - template: jinja
+    - source: salt://{{ tpldir }}/files/kube-apiserver-audit-policy.yaml
+    - context:
+        tpldir: {{ tpldir }}

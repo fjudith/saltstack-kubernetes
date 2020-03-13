@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # vim: ft=jinja
 
-{%- from tpldir ~ "/map.jinja" import kubeadm with context %}
+{% from tpldir ~ "/map.jinja" import kubeadm with context %}
 {%- set hostname = salt['grains.get']('fqdn') -%}
 {%- set localIpAddress = salt['network.ip_addrs'](pillar['controlPlaneInterface']) -%}
 

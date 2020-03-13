@@ -8,3 +8,4 @@ private_ips.txt
 ssl
 *.backup
 backend.tf
+update-kubeconfig.sh

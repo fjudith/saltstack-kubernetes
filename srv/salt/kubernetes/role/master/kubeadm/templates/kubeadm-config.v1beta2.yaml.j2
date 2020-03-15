@@ -104,6 +104,9 @@ controlPlaneEndpoint: {{ controlPlaneAddress ~ ':' ~ kubeadm.bindPort }}
 apiServer:
   extraArgs:
     apiserver-count: "{{ apiserverCount|length }}"
+    {%- if storage.get('rook_edgefs', {'enabled': False}).enabled %}
+    feature-gates:  VolumeSnapshotDataSource=true,CSIDriverRegistry=true
+    {%- endif %}
     {%- if charts.get('keycloak', {'enabled': False}).enabled %}
     oidc-client-id: kubernetes
     oidc-groups-claim: groups

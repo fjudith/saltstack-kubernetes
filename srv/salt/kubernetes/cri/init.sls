@@ -14,7 +14,7 @@ cri-tools-archive:
     - user: root
     - template: jinja
     - group: root
-    - mode: 644
+    - mode: "0644"
 
 /usr/local/bin/runc:
   file.managed:
@@ -22,7 +22,7 @@ cri-tools-archive:
     - source_hash: 0a9ac20ee52b6084ad161d516cc4e6248c5fd0cdf1fd4a7ac27f5243675632f9
     - user: root
     - group: root
-    - mode: 755
+    - mode: "0755"
 
 /usr/bin/runc:
   file.symlink:

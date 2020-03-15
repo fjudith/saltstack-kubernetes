@@ -35,7 +35,7 @@ rook-edgefs-s3x-driver:
     - template: jinja
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
   cmd.run:

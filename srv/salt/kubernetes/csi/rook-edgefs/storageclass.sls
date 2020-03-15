@@ -12,7 +12,7 @@ rook-edgefs-local-storage:
     - source: salt://{{ tpldir }}/files/storage-class.yaml
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
   cmd.run:
@@ -33,7 +33,7 @@ rook-edgefs-iscsi-storageclass:
     - template: jinja
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
   cmd.run:
@@ -55,7 +55,7 @@ rook-edgefs-nfs-storageclass:
     - template: jinja
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
   cmd.run:

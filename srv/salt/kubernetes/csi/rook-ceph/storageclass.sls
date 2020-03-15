@@ -12,7 +12,7 @@ rook-ceph-block:
     - source: salt://{{ tpldir }}/files/storageclass.yaml
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
   cmd.run:
@@ -32,7 +32,7 @@ rook-cephfs:
     - source: salt://{{ tpldir }}/files/filesystem-storageclass.yaml
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
   cmd.run:

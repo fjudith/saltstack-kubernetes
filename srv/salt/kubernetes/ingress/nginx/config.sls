@@ -2,7 +2,7 @@
   file.directory:
     - user: root
     - group: root
-    - dir_mode: 750
+    - dir_mode: "0750"
     - makedirs: True
 
 /srv/kubernetes/manifests/nginx/values.yaml:
@@ -13,7 +13,7 @@
     - template: jinja
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
 
 /srv/kubernetes/manifests/nginx/configuration.yaml:
   file.managed:
@@ -22,7 +22,7 @@
     - source: salt://{{ tpldir }}/files/configuration.yaml
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
 
 /srv/kubernetes/manifests/nginx/prometheus.yaml:
   file.managed:
@@ -31,7 +31,7 @@
     - source: salt://{{ tpldir }}/files/prometheus.yaml
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 
@@ -42,6 +42,6 @@
     - source: salt://{{ tpldir }}/files/grafana.yaml
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}

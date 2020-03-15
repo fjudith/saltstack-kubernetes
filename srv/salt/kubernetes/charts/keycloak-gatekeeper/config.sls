@@ -2,7 +2,7 @@
   file.directory:
     - user: root
     - group: root
-    - dir_mode: 750
+    - dir_mode: "0750"
     - makedirs: True
 
 /srv/kubernetes/manifests/keycloak-gatekeeper/kcgk-injector.sh:
@@ -12,7 +12,7 @@
     - source: salt://{{ tpldir }}/scripts/kcgk-injector.sh
     - user: root
     - group: root
-    - mode: 555
+    - mode: "0555"
     - context:
       tpldir: {{ tpldir }}
 
@@ -24,7 +24,7 @@
     - user: root
     - group: root
     - template: jinja
-    - mode: 555
+    - mode: "0555"
     - context:
       tpldir: {{ tpldir }}
 
@@ -35,7 +35,7 @@
     - source: salt://{{ tpldir }}/files/keycloak-kubernetes-admins-group.json
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 
@@ -46,7 +46,7 @@
     - source: salt://{{ tpldir }}/files/keycloak-kubernetes-users-group.json
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 
@@ -58,6 +58,6 @@
     - user: root
     - group: root
     - template: jinja
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}

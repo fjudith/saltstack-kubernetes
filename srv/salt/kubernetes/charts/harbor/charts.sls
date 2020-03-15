@@ -25,6 +25,6 @@ harbor-fetch-charts:
     - source: salt://{{tpldir }}/patch/nginx-deployment.yaml
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}

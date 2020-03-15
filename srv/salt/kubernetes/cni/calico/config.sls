@@ -2,32 +2,32 @@
   file.directory:
     - user: root
     - group: root
-    - dir_mode: 750
+    - dir_mode: "0750"
     - makedirs: True
 
 /etc/calico/:
   file.directory:
     - user: root
     - group: root
-    - dir_mode: 750
+    - dir_mode: "0750"
 
 /etc/calico/kube/:
   file.directory:
     - user: root
     - group: root
-    - dir_mode: 750
+    - dir_mode: "0750"
 
 /opt/calico/:
   file.directory:
     - user: root
     - group: root
-    - dir_mode: 750
+    - dir_mode: "0750"
 
 /opt/calico/bin:
   file.directory:
     - user: root
     - group: root
-    - dir_mode: 750
+    - dir_mode: "0750"
 
 /srv/kubernetes/manifests/calico/calico-rbac-kkd.yaml:
     file.managed:
@@ -36,7 +36,7 @@
     - source: salt://{{ tpldir }}/files/calico-rbac-kkd.yaml
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 
@@ -48,6 +48,6 @@
     - user: root
     - template: jinja
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}

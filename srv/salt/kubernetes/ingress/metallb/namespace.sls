@@ -6,7 +6,7 @@ metallb-namespace:
       - file: /srv/kubernetes/manifests/metallb
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
   cmd.run:
     - runas: root
     - watch:

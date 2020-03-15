@@ -32,7 +32,7 @@ rook-edgefs-iscsi:
     - template: jinja
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
   cmd.run:
@@ -51,7 +51,7 @@ rook-edgefs-iscsi-driver-config:
     - source: salt://{{ tpldir }}/templates/edgefs-iscsi-csi-driver-config.yaml.j2
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - template: jinja
     - context:
       tpldir: {{ tpldir }}
@@ -72,7 +72,7 @@ rook-edgefs-iscsi-driver:
     - source: salt://{{ tpldir }}/files/edgefs-iscsi-csi-driver.yaml
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
   cmd.run:

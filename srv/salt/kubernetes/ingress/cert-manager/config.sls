@@ -8,7 +8,7 @@
   file.directory:
     - user: root
     - group: root
-    - dir_mode: 750
+    - dir_mode: "0750"
     - makedirs: True
 
 /srv/kubernetes/manifests/cert-manager/00-crds.yaml:
@@ -18,7 +18,7 @@
     - source: https://github.com/jetstack/cert-manager/releases/download/v{{ cert_manager.version }}/cert-manager.crds.yaml
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - skip_verify: true
 
 /srv/kubernetes/manifests/cert-manager/clusterissuer.yaml:
@@ -29,6 +29,6 @@
     - user: root
     - template: jinja
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}

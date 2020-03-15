@@ -12,7 +12,7 @@
   file.directory:
     - user: root
     - group: root
-    - dir_mode: 750
+    - dir_mode: "0750"
     - makedirs: True
 
 /srv/kubernetes/manifests/keycloak-gatekeeper/kubernetes-dashboard.json:
@@ -21,7 +21,7 @@
     - user: root
     - group: root
     - template: jinja
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 
@@ -31,7 +31,7 @@
     - user: root
     - group: root
     - template: jinja
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 
@@ -41,7 +41,7 @@
     - user: root
     - group: root
     - template: jinja
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 
@@ -53,7 +53,7 @@
     - user: root
     - group: root
     - template: jinja
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 

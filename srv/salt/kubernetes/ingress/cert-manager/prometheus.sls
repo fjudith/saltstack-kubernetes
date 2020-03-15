@@ -6,7 +6,7 @@ cert-manager-prometheus-rbac:
     - source: salt://{{ tpldir }}/files/prometheus-k8s-rbac.yaml
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
   cmd.run:
@@ -26,7 +26,7 @@ cert-manager-servicemonitor:
     - source: salt://{{ tpldir }}/files/servicemonitor.yaml
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
   cmd.run:

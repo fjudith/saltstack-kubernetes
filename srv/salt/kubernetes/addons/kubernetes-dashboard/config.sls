@@ -2,7 +2,7 @@
   file.directory:
     - user: root
     - group: root
-    - dir_mode: 750
+    - dir_mode: "0750"
     - makedirs: True
 
 /srv/kubernetes/manifests/kubernetes-dashboard/00_dashboard-namespace.yaml:
@@ -12,7 +12,7 @@
     - source: salt://{{ tpldir }}/files/dashboard-namespace.yaml
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
         tpldir: {{ tpldir }}
 
@@ -23,7 +23,7 @@
     - source: salt://{{ tpldir }}/files/dashboard-serviceaccount.yaml
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
         tpldir: {{ tpldir }}
 
@@ -34,7 +34,7 @@
     - source: salt://{{ tpldir }}/files/dashboard-service.yaml
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
         tpldir: {{ tpldir }}
 
@@ -45,7 +45,7 @@
     - source: salt://{{ tpldir }}/files/dashboard-secret.yaml
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
         tpldir: {{ tpldir }}
 
@@ -56,7 +56,7 @@
     - source: salt://{{ tpldir }}/files/dashboard-configmap.yaml
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
         tpldir: {{ tpldir }}
 
@@ -67,7 +67,7 @@
     - source: salt://{{ tpldir }}/files/dashboard-rbac.yaml
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
         tpldir: {{ tpldir }}
 
@@ -79,7 +79,7 @@
     - user: root
     - template: jinja
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
         tpldir: {{ tpldir }}
 
@@ -90,7 +90,7 @@
     - source: salt://{{ tpldir }}/files/scraper-service.yaml
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
         tpldir: {{ tpldir }}
 
@@ -102,7 +102,7 @@
     - user: root
     - template: jinja
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
         tpldir: {{ tpldir }}
 
@@ -114,6 +114,6 @@
     - user: root
     - group: root
     - template: jinja
-    - mode: 644
+    - mode: "0644"
     - context:
         tpldir: {{ tpldir }}

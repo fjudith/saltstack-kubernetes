@@ -2,7 +2,7 @@
   file.directory:
     - user: root
     - group: root
-    - dir_mode: 750
+    - dir_mode: "0750"
 
 /root/.kube/config:
   file.managed:
@@ -10,18 +10,18 @@
     - user: root
     - template: jinja
     - group: root
-    - mode: 640
+    - mode: "0640"
 
 /srv/kubernetes:
   file.directory:
     - user: root
     - group: root
-    - dir_mode: 750
+    - dir_mode: "0750"
 
 /srv/kubernetes/acme.json:
   file.managed:
     - source: salt://kubernetes/role/proxy/files/acme.json
     - user: root
     - group: root
-    - mode: 600
+    - mode: "0600"
     - replace: False

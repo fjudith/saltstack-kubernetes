@@ -18,7 +18,7 @@ kubeless-client:
   file.copy:
     - name: /usr/local/bin/kubeless
     - source: /tmp/kubeless-v{{ kubeless.version }}/bundles/kubeless_linux-amd64/kubeless
-    - mode: 555
+    - mode: "0555"
     - user: root
     - group: root
     - force: true

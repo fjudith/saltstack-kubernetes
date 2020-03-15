@@ -13,14 +13,14 @@
   file.directory:
     - user: root
     - group: root
-    - dir_mode: 750
+    - dir_mode: "0750"
     - makedirs: True
 
 /etc/containers/oci/hooks.d:
   file.directory:
     - user: root
     - group: root
-    - dir_mode: 750
+    - dir_mode: "0750"
     - makedirs: True
 
 /etc/containers/policy.json:
@@ -30,7 +30,7 @@
     - source: salt://{{ tpldir }}/files/policy.json
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 
@@ -41,7 +41,7 @@
     - source: salt://{{ tpldir }}/files/seccomp.json
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 
@@ -49,7 +49,7 @@
   file.directory:
     - user: root
     - group: root
-    - dir_mode: 755
+    - dir_mode: "0755"
     - makedirs: True
 
 /lib/systemd/system/crio.service:
@@ -59,7 +59,7 @@
     - source: salt://{{ tpldir }}/files/crio.service
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 
@@ -70,7 +70,7 @@
     - source: salt://{{ tpldir }}/files/crio-shutdown.service
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 
@@ -81,7 +81,7 @@
     - source: salt://{{ tpldir }}/files/crio.conf
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 

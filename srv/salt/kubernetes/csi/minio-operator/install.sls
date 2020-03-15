@@ -9,7 +9,7 @@ minio-client:
     - name: /usr/local/bin/mc
     - source: https://dl.min.io/client/mc/release/linux-amd64/archive/mc.{{ minio_operator.client_version }}
     - source_hash: {{ minio_operator.source_hash }}
-    - mode: 555
+    - mode: "0555"
     - user: root
     - group: root
 

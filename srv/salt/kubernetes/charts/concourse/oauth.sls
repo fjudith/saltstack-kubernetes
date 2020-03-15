@@ -22,7 +22,7 @@ concourse-create-realm:
     - user: root
     - group: root
     - template: jinja
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
   cmd.script:
@@ -39,7 +39,7 @@ concourse-create-realm:
       - REALM: "{{ concourse.oauth.keycloak.realm }}"
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 
@@ -50,7 +50,7 @@ concourse-create-realm:
       - file: /srv/kubernetes/manifests/concourse
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 
@@ -62,7 +62,7 @@ concourse-create-groups:
       - file: /srv/kubernetes/manifests/concourse
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
   cmd.script:
@@ -82,7 +82,7 @@ concourse-create-groups:
       - file: /srv/kubernetes/manifests/concourse/users-group.json
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 
@@ -94,7 +94,7 @@ concourse-create-client-scopes:
       - file: /srv/kubernetes/manifests/concourse
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
   cmd.script:
@@ -113,7 +113,7 @@ concourse-create-client-scopes:
       - file: /srv/kubernetes/manifests/concourse/client-scopes.json
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 
@@ -122,7 +122,7 @@ concourse-create-client-scopes:
     - source: salt://{{ tpldir }}/oauth/keycloak/files/protocolmapper.json
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 
@@ -132,7 +132,7 @@ concourse-create-client-scopes:
     - user: root
     - group: root
     - template: jinja
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 
@@ -142,7 +142,7 @@ concourse-create-client-scopes:
     - user: root
     - group: root
     - template: jinja
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 
@@ -152,7 +152,7 @@ concourse-create-client-scopes:
     - user: root
     - group: root
     - template: jinja
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 
@@ -165,7 +165,7 @@ concourse-create-client:
     - user: root
     - group: root
     - template: jinja
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
   cmd.script:
@@ -186,7 +186,7 @@ concourse-create-client:
       - file: /srv/kubernetes/manifests/concourse/client.json
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 
@@ -196,6 +196,6 @@ concourse-create-client:
     - user: root
     - group: root
     - template: jinja
-    - mode: 744
+    - mode: "0744"
     - context:
       tpldir: {{ tpldir }}

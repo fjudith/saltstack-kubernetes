@@ -4,7 +4,7 @@
   file.directory:
     - user: root
     - group: root
-    - dir_mode: 750
+    - dir_mode: "0750"
     - makedirs: True
 
 /srv/kubernetes/manifests/traefik/traefik.yaml:
@@ -15,7 +15,7 @@
     - user: root
     - template: jinja
     - group: root
-    - mode: 644
+    - mode: "0644"
 
 /srv/kubernetes/manifests/traefik/service-monitor.yaml:
     require:
@@ -25,7 +25,7 @@
     - user: root
     - template: jinja
     - group: root
-    - mode: 644
+    - mode: "0644"
 
 /srv/kubernetes/manifests/traefik/grafana-dashboard.yaml:
     require:
@@ -34,7 +34,7 @@
     - source: salt://kubernetes/ingress/traefik/files/grafana-dashboard-configmap.yaml
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
 
 kubernetes-traefik-install:
   cmd.run:

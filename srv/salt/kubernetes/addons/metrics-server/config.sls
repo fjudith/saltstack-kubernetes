@@ -2,7 +2,7 @@
   file.directory:
     - user: root
     - group: root
-    - dir_mode: 750
+    - dir_mode: "0750"
     - makedirs: True
 
 /srv/kubernetes/manifests/metrics-server/aggregated-metrics-reader.yaml:
@@ -12,7 +12,7 @@
     - source: salt://{{ tpldir }}/files/aggregated-metrics-reader.yaml
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
         tpldir: {{ tpldir }}
 
@@ -23,7 +23,7 @@
     - source: salt://{{ tpldir }}/files/auth-delegator.yaml
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
         tpldir: {{ tpldir }}
 
@@ -34,7 +34,7 @@
     - source: salt://{{ tpldir }}/files/auth-reader.yaml
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
         tpldir: {{ tpldir }}
 
@@ -45,7 +45,7 @@
     - source: salt://{{ tpldir }}/files/metrics-apiservice.yaml
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
         tpldir: {{ tpldir }}
 
@@ -56,7 +56,7 @@
     - source: salt://{{ tpldir }}/files/metrics-server-service.yaml
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
         tpldir: {{ tpldir }}
 
@@ -67,7 +67,7 @@
     - source: salt://{{ tpldir }}/files/resource-reader.yaml
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
         tpldir: {{ tpldir }}
 
@@ -79,6 +79,6 @@
     - template: jinja
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
         tpldir: {{ tpldir }}

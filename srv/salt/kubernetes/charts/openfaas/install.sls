@@ -8,7 +8,7 @@
   file.managed:
     - source: https://github.com/openfaas/faas-cli/releases/download/{{ openfaas.client_version }}/faas-cli
     - source_hash: {{ openfaas.client_source_hash }}
-    - mode: 755
+    - mode: "0755"
     - user: root
     - group: root
     - if_missing: /opt/faas-cli-v{{ openfaas.client_version }}

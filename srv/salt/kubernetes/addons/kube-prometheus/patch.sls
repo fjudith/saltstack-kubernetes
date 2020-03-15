@@ -11,7 +11,7 @@ ceph-grafana:
     - source: salt://{{ tpldir }}/patch/rook-ceph-grafana-dashboard-configmap.yaml
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 {% endif %}
@@ -25,7 +25,7 @@ edgefs-grafana:
     - source: salt://{{ tpldir }}/patch/rook-edgefs-grafana-dashboard-configmap.yaml
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 {% endif %}
@@ -39,7 +39,7 @@ nats-grafana:
     - source: salt://{{ tpldir }}/patch/nats-grafana-dashboard-configmap.yaml
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 {% endif %}
@@ -53,7 +53,7 @@ nginx-ingress-grafana:
     - source: salt://{{ tpldir }}/patch/nginx-ingress-grafana-dashboard-configmap.yaml
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 {% endif %}
@@ -67,7 +67,7 @@ traefik-grafana:
     - source: salt://{{ tpldir }}/patch/traefik-grafana-dashboard-configmap.yaml
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 {% endif %}
@@ -81,7 +81,7 @@ traefik-grafana:
     - source: salt://{{ tpldir }}/patch/cert-manager-grafana-dashboard-configmap.yaml
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 {% endif %}
@@ -95,7 +95,7 @@ openfaas-grafana:
     - source: salt://{{ tpldir }}/patch/openfaas-grafana-dashboard-configmap.yaml
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 {% endif %}
@@ -109,6 +109,6 @@ kube-prometheus-grafana:
     - user: root
     - template: jinja
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}

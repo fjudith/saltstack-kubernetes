@@ -21,7 +21,7 @@ spinnaker-fetch-charts:
     - source: salt://{{ tpldir }}/tmp/requirements.yaml
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 
@@ -32,7 +32,7 @@ spinnaker-fetch-charts:
     - source: salt://{{ tpldir }}/tmp/requirements.lock
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 
@@ -43,6 +43,6 @@ spinnaker-fetch-charts:
     - source: salt://{{ tpldir }}/tmp/Charts.yaml
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}

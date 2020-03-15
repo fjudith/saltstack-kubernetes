@@ -16,7 +16,7 @@
 /usr/local/bin/helm:
   file.copy:
     - source: /tmp/helm-v{{ helm.version }}/linux-amd64/helm
-    - mode: 555
+    - mode: "0555"
     - user: root
     - group: root
     - force: true

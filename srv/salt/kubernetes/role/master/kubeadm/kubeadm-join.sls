@@ -19,7 +19,7 @@ kubeadm-join:
     - user: root
     - template: jinja
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context: 
         tpldir: {{ tpldir }}
   cmd.run:
@@ -39,7 +39,7 @@ kubeadm-join:
   file.directory:
     - user: root
     - group: root
-    - dir_mode: 750
+    - dir_mode: "0750"
 
 /root/.kube/config:
   file.symlink:
@@ -50,5 +50,5 @@ kubeadm-join:
     - target: /etc/kubernetes/admin.conf
     - user: root
     - group: root
-    - mode: 444
+    - mode: "0444"
     - force: true

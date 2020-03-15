@@ -17,7 +17,7 @@ spinnaker-create-realm:
     - user: root
     - group: root
     - template: jinja
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
   cmd.script:
@@ -34,7 +34,7 @@ spinnaker-create-realm:
       - REALM: "{{ charts.spinnaker.oauth.keycloak.realm }}"
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 
@@ -45,7 +45,7 @@ spinnaker-create-realm:
       - file: /srv/kubernetes/manifests/spinnaker
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 
@@ -57,7 +57,7 @@ spinnaker-create-groups:
       - file: /srv/kubernetes/manifests/spinnaker
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
   cmd.script:
@@ -77,7 +77,7 @@ spinnaker-create-groups:
       - file: /srv/kubernetes/manifests/spinnaker/users-group.json
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 
@@ -89,7 +89,7 @@ spinnaker-create-client-scopes:
       - file: /srv/kubernetes/manifests/spinnaker
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
   cmd.script:
@@ -108,7 +108,7 @@ spinnaker-create-client-scopes:
       - file: /srv/kubernetes/manifests/spinnaker/client-scopes.json
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 
@@ -117,7 +117,7 @@ spinnaker-create-client-scopes:
     - source: salt://{{ tpldir }}/oauth/keycloak/files/protocolmapper.json
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 
@@ -128,7 +128,7 @@ spinnaker-create-client-scopes:
     - user: root
     - group: root
     - template: jinja
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 
@@ -141,7 +141,7 @@ spinnaker-create-client:
     - user: root
     - group: root
     - template: jinja
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
   cmd.script:
@@ -162,7 +162,7 @@ spinnaker-create-client:
       - file: /srv/kubernetes/manifests/spinnaker/client.json
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 
@@ -172,6 +172,6 @@ spinnaker-create-client:
     - user: root
     - group: root
     - template: jinja
-    - mode: 744
+    - mode: "0744"
     - context:
       tpldir: {{ tpldir }}

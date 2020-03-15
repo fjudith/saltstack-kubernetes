@@ -22,7 +22,7 @@ openfaas-create-realm:
     - user: root
     - group: root
     - template: jinja
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
   cmd.script:
@@ -39,7 +39,7 @@ openfaas-create-realm:
       - REALM: "{{ openfaas.oauth.keycloak.realm }}"
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
 
 /srv/kubernetes/manifests/openfaas/admins-group.json:
   file.managed:
@@ -48,7 +48,7 @@ openfaas-create-realm:
       - file: /srv/kubernetes/manifests/openfaas
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
 
 openfaas-create-groups:
   file.managed:
@@ -58,7 +58,7 @@ openfaas-create-groups:
       - file: /srv/kubernetes/manifests/openfaas
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
   cmd.script:
@@ -78,7 +78,7 @@ openfaas-create-groups:
       - file: /srv/kubernetes/manifests/openfaas/users-group.json
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
 
 openfaas-create-client-scopes:
   file.managed:
@@ -88,7 +88,7 @@ openfaas-create-client-scopes:
       - file: /srv/kubernetes/manifests/openfaas
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
   cmd.script:
@@ -107,14 +107,14 @@ openfaas-create-client-scopes:
       - file: /srv/kubernetes/manifests/openfaas/client-scopes.json
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
 
 /srv/kubernetes/manifests/openfaas/protocolmapper.json:
   file.managed:
     - source: salt://{{ tpldir }}/oauth/keycloak/files/protocolmapper.json
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 
@@ -124,7 +124,7 @@ openfaas-create-client-scopes:
     - user: root
     - group: root
     - template: jinja
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 
@@ -134,7 +134,7 @@ openfaas-create-client-scopes:
     - user: root
     - group: root
     - template: jinja
-    - mode: 644
+    - mode: "0644"
 
 /srv/kubernetes/manifests/openfaas/userid-protocolmapper.json:
   file.managed:
@@ -142,7 +142,7 @@ openfaas-create-client-scopes:
     - user: root
     - group: root
     - template: jinja
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 
@@ -155,7 +155,7 @@ openfaas-create-client:
     - user: root
     - group: root
     - template: jinja
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
   cmd.script:
@@ -176,7 +176,7 @@ openfaas-create-client:
       - file: /srv/kubernetes/manifests/openfaas/client.json
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
 
 /srv/kubernetes/manifests/openfaas/kc-clientsecret-openfaas.sh:
   file.managed:
@@ -184,6 +184,6 @@ openfaas-create-client:
     - user: root
     - group: root
     - template: jinja
-    - mode: 744
+    - mode: "0744"
     - context:
       tpldir: {{ tpldir }}

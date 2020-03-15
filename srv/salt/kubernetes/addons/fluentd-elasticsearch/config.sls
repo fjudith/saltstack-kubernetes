@@ -2,7 +2,7 @@
   file.directory:
     - user: root
     - group: root
-    - dir_mode: 750
+    - dir_mode: "0750"
     - makedirs: True
 
 /srv/kubernetes/manifests/fluentd-elasticsearch/es-service.yaml:
@@ -12,7 +12,7 @@
     - source: salt://{{ tpldir }}/files/es-service.yaml
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
         tpldir: {{ tpldir }}
 
@@ -23,7 +23,7 @@
     - source: salt://{{ tpldir }}/files/fluentd-es-configmap.yaml
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
         tpldir: {{ tpldir }}
 
@@ -34,7 +34,7 @@
     - source: salt://{{ tpldir }}/files/kibana-service.yaml
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
         tpldir: {{ tpldir }}
 
@@ -46,7 +46,7 @@
     - template: jinja
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
         tpldir: {{ tpldir }}
 
@@ -58,7 +58,7 @@
     - template: jinja
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
         tpldir: {{ tpldir }}
 
@@ -70,6 +70,6 @@
     - user: root
     - template: jinja
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
         tpldir: {{ tpldir }}

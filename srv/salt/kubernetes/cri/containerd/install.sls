@@ -21,5 +21,5 @@ containerd:
     - source: /tmp/containerd-v{{ containerd.version }}/bin
     - user: root
     - group: root
-    - mode: 555
+    - mode: "0555"
     - unless: cmp -s /usr/local/bin/containerd /tmp/containerd-v{{ containerd.version }}/bin/containerd

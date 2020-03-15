@@ -4,13 +4,13 @@
   file.directory:
     - user: root
     - group: root
-    - dir_mode: 750
+    - dir_mode: "0750"
 
 /etc/cni/net.d:
   file.directory:
     - user: root
     - group: root
-    - dir_mode: 750
+    - dir_mode: "0750"
 
 cni-latest-archive:
   archive.extracted:
@@ -27,7 +27,7 @@ cni-latest-archive:
     - source: salt://kubernetes/cni/99-loopback.conf
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
 
 
 {% if common.cni.provider == "cilium" %}

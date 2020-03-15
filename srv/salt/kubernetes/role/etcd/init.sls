@@ -4,20 +4,20 @@
   file.directory:
     - user: root
     - group: root
-    - dir_mode: 750
+    - dir_mode: "0750"
 
 /usr/lib/coreos:
   file.directory:
     - user: root
     - group: root
-    - dir_mode: 750
+    - dir_mode: "0750"
     - makedirs: True
 
 /var/lib/coreos:
   file.directory:
     - user: root
     - group: root
-    - dir_mode: 750
+    - dir_mode: "0750"
     - makedirs: True
 
 /usr/bin/mkdir:
@@ -44,7 +44,7 @@ etcd-install:
   file.copy:
     - name: /usr/bin/etcd
     - source: /opt/etcd-{{ etcd.version }}-linux-amd64/etcd
-    - mode: 555
+    - mode: "0555"
     - user: root
     - group: root
     - force: true
@@ -56,7 +56,7 @@ etcdctl-install:
   file.copy:
     - name: /usr/bin/etcdctl
     - source: /opt/etcd-{{ etcd.version }}-linux-amd64/etcdctl
-    - mode: 555
+    - mode: "0555"
     - user: root
     - group: root
     - force: true
@@ -70,7 +70,7 @@ etcdctl-install:
     - user: root
     - template: jinja
     - group: root
-    - mode: 644
+    - mode: "0644"
 
 etcd-member.service:
   service.running:

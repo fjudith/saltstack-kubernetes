@@ -14,7 +14,7 @@
     - user: root
     - group: root
     - template: jinja
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 
@@ -23,7 +23,7 @@
     - source: salt://{{ tpldir }}/files/alertmanager-protocolmapper.json
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 
@@ -46,7 +46,7 @@ keycloak-alertmanager:
     - user: root
     - group: root
     - template: jinja
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 
@@ -55,7 +55,7 @@ keycloak-alertmanager:
     - source: salt://{{ tpldir }}/files/prometheus-protocolmapper.json
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 

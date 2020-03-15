@@ -6,7 +6,7 @@ nats-operator-prometheus-rbac:
     - source: salt://{{ tpldir }}/files/prometheus-k8s-rbac.yaml
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
   cmd.run:
@@ -26,7 +26,7 @@ nats-operator-servicemonitor:
     - source: salt://{{ tpldir }}/files/servicemonitor.yaml
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
   cmd.run:

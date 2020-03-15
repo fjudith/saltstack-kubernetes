@@ -11,7 +11,7 @@
 /usr/local/bin/istioctl:
   file.copy:
     - source: /srv/kubernetes/manifests/istio/istio-{{ common.addons.istio.version }}/bin/istioctl
-    - mode: 555
+    - mode: "0555"
     - user: root
     - group: root
     - force: true
@@ -27,7 +27,7 @@ istio-namespace:
     - source: salt://kubernetes/ingress/istio/files/namespace.yaml
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
   cmd.run:
     - watch:
       - file: /srv/kubernetes/manifests/istio/namespace.yaml
@@ -82,7 +82,7 @@ istio-gateway-certificate:
     - user: root
     - template: jinja
     - group: root
-    - mode: 644
+    - mode: "0644"
   cmd.run:
     - watch:
       - cmd: istio
@@ -108,7 +108,7 @@ istio-ingress:
     - user: root
     - template: jinja
     - group: root
-    - mode: 644
+    - mode: "0644"
   cmd.run:
     - watch:
       - file: /srv/kubernetes/manifests/istio/ingress.yaml
@@ -123,7 +123,7 @@ istio-bookinfo:
     - user: root
     - template: jinja
     - group: root
-    - mode: 644
+    - mode: "0644"
   cmd.run:
     - cwd: /srv/kubernetes/manifests/istio/istio-{{ common.addons.istio.version }}
     - watch:

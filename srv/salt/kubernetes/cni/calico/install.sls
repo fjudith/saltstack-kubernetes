@@ -5,21 +5,21 @@
     - source: https://github.com/projectcalico/calicoctl/releases/download/v{{ calico.version }}/calicoctl-linux-amd64
     - skip_verify: true
     - group: root
-    - mode: 755
+    - mode: "0755"
 
 /opt/cni/bin/calico:
   file.managed:
     - source: https://github.com/projectcalico/cni-plugin/releases/download/v{{ calico.version }}/calico-amd64
     - skip_verify: true
     - group: root
-    - mode: 755
+    - mode: "0755"
 
 /opt/cni/bin/calico-ipam:
   file.managed:
     - source: https://github.com/projectcalico/cni-plugin/releases/download/v{{ calico.version }}/calico-ipam-amd64
     - skip_verify: true
     - group: root
-    - mode: 755
+    - mode: "0755"
 
 query-calico-required-api:
   http.wait_for_successful_query:

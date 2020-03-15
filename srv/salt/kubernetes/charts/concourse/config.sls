@@ -2,7 +2,7 @@
   file.directory:
     - user: root
     - group: root
-    - dir_mode: 750
+    - dir_mode: "0750"
     - makedirs: True
 
 /srv/kubernetes/manifests/concourse/values.yaml:
@@ -12,7 +12,7 @@
     - source: salt://{{ tpldir }}/templates/values.yaml.j2
     - user: root
     - group: root
-    - mode: 755
+    - mode: "0755"
     - template: jinja
     - context:
       tpldir: {{ tpldir }}
@@ -23,5 +23,5 @@
       - file: /srv/kubernetes/manifests/concourse
     - user: root
     - group: root
-    - dir_mode: 750
+    - dir_mode: "0750"
     - makedirs: True

@@ -2,7 +2,7 @@
   file.directory:
     - user: root
     - group: root
-    - dir_mode: 750
+    - dir_mode: "0750"
     - makedirs: True
 
 /srv/kubernetes/manifests/httpbin/deployment.yaml:
@@ -12,7 +12,7 @@
     - source: salt://{{ tpldir }}/templates/deployment.yaml.j2
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - template: jinja
     - context:
         tpldir: {{ tpldir }}
@@ -24,6 +24,6 @@
     - source: salt://{{ tpldir }}/files/service.yaml
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
         tpldir: {{ tpldir }}

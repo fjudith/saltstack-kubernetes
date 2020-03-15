@@ -3,7 +3,7 @@
     - source: salt://{{ tpldir }}/files/containerd.service
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 
@@ -11,7 +11,7 @@
   file.directory:
     - user: root
     - group: root
-    - dir_mode: 750
+    - dir_mode: "0750"
     - makedirs: True
 
 /etc/systemd/system/kubelet.service.d/0-containerd.conf:
@@ -21,7 +21,7 @@
     - source: salt://{{ tpldir }}/files/0-containerd.conf
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 
@@ -29,7 +29,7 @@
   file.directory:
     - user: root
     - group: root
-    - dir_mode: 750
+    - dir_mode: "0750"
     - makedirs: True
 
 /etc/containerd/config.toml:
@@ -39,7 +39,7 @@
     - source: salt://{{ tpldir }}/files/config.toml
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 

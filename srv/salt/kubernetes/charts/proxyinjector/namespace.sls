@@ -6,7 +6,7 @@ proxyinjector-demo-namespace:
       - file: /srv/kubernetes/manifests/proxyinjector
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
   cmd.run:

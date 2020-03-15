@@ -18,7 +18,7 @@ vistio-addon:
     - source: salt://{{ tpldir }}/files/values-mesh-only.yaml
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 {%- else -%}
@@ -27,7 +27,7 @@ vistio-addon:
     - source: salt://{{ tpldir }}/files/values-with-ingress.yaml
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
 {% endif %}

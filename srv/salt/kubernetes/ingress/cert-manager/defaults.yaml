@@ -1,8 +1,8 @@
 cert_manager:
   enabled: True
-  version: 0.13.1
+  version: 0.14.0
   acme_email: user@example.com
-  dns:
-    provider: cloudflare
-    email: admin@example.com
-    secret: 012345abcde012345abcde012345abcde012345abcde
+  # dns:
+  #   provider: cloudflare
+  #   email: admin@example.com
+  #   secret: 012345abcde012345abcde012345abcde012345abcde

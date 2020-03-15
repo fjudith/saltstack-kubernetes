@@ -16,21 +16,16 @@ spec:
     privateKeySecretRef:
       name: letsencrypt-prod
     solvers:
-      {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
-      - selector: {}
-        http01:
+      - http01:
           ingress:
+            {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
             class: nginx
-      {%- else %}
-      - selector: {}
-        dns01:
-          providers:
-            - name: {{ cert_manager.dns.provider }}
-              cloudflare:
-                email: {{ cert_manager.dns.email }}
-                # A secretKeyRef to a cloudflare api key
-                apiKeySecretRef:
-                  name: public-dns-secret
-                  key: secret-access-key
-      {%- endif %}
+            {%- endif %}
+      - dns01:
+          {{ cert_manager.dns.provider }}:
+            email: {{ cert_manager.dns.email }}
+            # A secretKeyRef to a cloudflare api key
+            apiTokenSecretRef:
+              name: public-dns-secret
+              key: secret-access-key
       

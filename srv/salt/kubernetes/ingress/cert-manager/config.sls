@@ -15,7 +15,7 @@
   file.managed:
     - require:
       - file: /srv/kubernetes/manifests/cert-manager
-    - source: https://raw.githubusercontent.com/jetstack/cert-manager/v{{ cert_manager.version }}/deploy/manifests/00-crds.yaml
+    - source: https://github.com/jetstack/cert-manager/releases/download/v{{ cert_manager.version }}/cert-manager.crds.yaml
     - user: root
     - group: root
     - mode: 644
@@ -25,7 +25,7 @@
   file.managed:
     - require:
       - file: /srv/kubernetes/manifests/cert-manager
-    - source: salt://{{ tpldir }}/templates/{{ cert_manager.dns.provider }}-clusterissuer.yaml.jinja
+    - source: salt://{{ tpldir }}/templates/clusterissuer.yaml.j2
     - user: root
     - template: jinja
     - group: root

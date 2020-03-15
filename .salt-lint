@@ -1,0 +1,19 @@
+---
+exclude_paths:
+  - docs/
+  - terraform/
+skip_list:
+  - 207
+  - 208
+tags:
+  - formatting
+verbosity: 1
+rules:
+  formatting:
+    ignore: |
+      ignore/this/directory/*.sls
+      *.jinja
+      *.j2
+  210:
+    ignore: 'exclude_this_file.sls'
+severity: True

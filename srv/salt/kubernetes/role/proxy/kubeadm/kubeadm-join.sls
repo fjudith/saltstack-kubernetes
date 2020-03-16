@@ -5,12 +5,17 @@
 {%- set hostname = salt['grains.get']('fqdn') -%}
 {%- set localIpAddress = salt['network.ip_addrs'](pillar['controlPlaneInterface']) -%}
 
+{%- set masters = [] -%}
+{%- for key, value in salt['mine.get'](tgt="role:master", fun="network.get_hostname", tgt_type="grain")|dictsort(false, 'value') -%}
+  {%- do masters.append(value) -%}
+{%- endfor -%}
+
 kubernetes-ca:
   file.directory:
     - name: /etc/kubernetes/pki
   x509.pem_managed:
     - name: /etc/kubernetes/pki/ca.crt
-    - text: {{ salt['mine.get'](tgt='master01', fun='x509.get_pem_entries', tgt_type='glob')['master01']['/etc/kubernetes/pki/ca.crt']|replace('\n', '') }}
+    - text: {{ salt['mine.get'](tgt=masters|first, fun='x509.get_pem_entries', tgt_type='glob')[masters|first]['/etc/kubernetes/pki/ca.crt']|replace('\n', '') }}
     - backup: True
 
 kubeadm-register-node:
@@ -39,7 +44,7 @@ kubectl-label-node:
     - watch:
       - cmd: kubeadm-register-node
     - name: /root/.kube/config
-    - contents: {{ salt['mine.get'](tgt='master01', fun='file.read', tgt_type='compound').values()|list|yaml }}
+    - contents: {{ salt['mine.get'](tgt=masters|first, fun='file.read', tgt_type='compound').values()|list|yaml }}
     - makedirs: true
   cmd.run:
     - watch:

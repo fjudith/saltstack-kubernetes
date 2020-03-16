@@ -5,12 +5,12 @@
 
 kubeadm-reset:
   cmd.run:
-    - only_if: ls /etc/kubernetes/manifests/kube-apiserver.yaml
+    - onlyif: test -f /etc/kubernetes/admin.conf
     - require:
       - pkg: kubeadm
     - timeout: 300
     - name: |
-        /usr/bin/kubeadm reset -f --cert-dir /etc/kubernetes/pki      
+        /usr/bin/kubeadm reset -f --cert-dir /etc/kubernetes/pki
 
 kubeadm-join:
   file.managed:
@@ -20,10 +20,10 @@ kubeadm-join:
     - template: jinja
     - group: root
     - mode: "0644"
-    - context: 
+    - context:
         tpldir: {{ tpldir }}
   cmd.run:
-    - watch: 
+    - watch:
       - file: /root/kubeadm-controlplane.yaml
       - cmd: kubeadm-reset
     - require:

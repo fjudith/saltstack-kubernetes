@@ -9,6 +9,7 @@
 {%- set controlPlaneInterface = pillar['controlPlaneInterface'] -%}
 {%- set localIpAddress = salt['network.ip_addrs'](controlPlaneInterface) -%}
 {%- from "kubernetes/map.jinja" import charts with context -%}
+{%- from "kubernetes/map.jinja" import storage with context -%}
 
 {%- set apiserverCount = [] -%}
 {%- for hostname in salt['mine.get'](tgt='role:master', fun='network.get_hostname', tgt_type='grain') -%}

@@ -10,13 +10,13 @@
 {%- from "kubernetes/map.jinja" import common with context -%}
 {%- from "kubernetes/map.jinja" import charts with context -%}
 
-{%- set apiserver = [] -%}
-{%- for hostname in salt['mine.get'](tgt='role:master', fun='network.get_hostname', tgt_type='grain') -%}
-  {%- do apiserver.append(hostname) -%}
+{%- set masters = [] -%}
+{%- for key, value in salt['mine.get'](tgt="role:master", fun="network.get_hostname", tgt_type="grain")|dictsort(false, 'value') -%}
+  {%- do masters.append(value) -%}
 {%- endfor -%}
 
-{%- if apiserver|length == 1 -%}
-  {%- set controlPlaneAddress = "master01"  -%}
+{%- if masters|length == 1 -%}
+  {%- set controlPlaneAddress = masters|first  -%}
 {%- else-%}
   {%- set controlPlaneAddress = clusterHost ~ '.' ~ public_domain -%}
 {% endif %}

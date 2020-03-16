@@ -15,7 +15,7 @@ keycloak:
       - file: /srv/kubernetes/manifests/keycloak/keycloak/requirements.yaml
       - cmd: keycloak-namespace
       - cmd: keycloak-fetch-charts
-    - only_if: kubectl get storageclass | grep \(default\)
+    - onlyif: kubectl get storageclass | grep \(default\)
     - cwd: /srv/kubernetes/manifests/keycloak/keycloak
     - name: |
         helm repo update && \

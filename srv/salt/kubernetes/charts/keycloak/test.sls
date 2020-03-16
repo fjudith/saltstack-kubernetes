@@ -24,3 +24,9 @@ query-keycloak:
       {%- if charts.get('spinnaker', {'enabled': False}).enabled %}
       - sls: kubernetes.charts.spinnaker
       {%- endif %}
+      {%- if charts.get('proxyinjector', {'enabled': False}).enabled %}
+      - sls: kubernetes.charts.proxyinjector
+      {%- endif %}
+      {%- if charts.get('openfaas', {'enabled': False}).enabled %}
+      - sls: kubernetes.charts.openfaas
+      {%- endif %}

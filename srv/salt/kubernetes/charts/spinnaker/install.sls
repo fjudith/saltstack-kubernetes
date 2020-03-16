@@ -7,7 +7,7 @@
 spinnaker:
   cmd.run:
     - runas: root
-    - only_if: kubectl get storageclass | grep \(default\)
+    - onlyif: kubectl get storageclass | grep \(default\)
     - cwd: /srv/kubernetes/manifests/spinnaker/spinnaker
     - require:
       - cmd: spinnaker-namespace

@@ -101,9 +101,11 @@ kubernetes:
         enabled: True
         acme_email: user@example.com
         dns:
+          enabled: False
           provider: cloudflare
-          email: admin@example.com
-          secret: 012345abcde012345abcde012345abcde012345abcde
+          cloudflare:
+            email: admin@example.com
+            secret: 012345abcde012345abcde012345abcde012345abcde
       fluentd_elasticsearch:
         enabled: True
       weave_scope:

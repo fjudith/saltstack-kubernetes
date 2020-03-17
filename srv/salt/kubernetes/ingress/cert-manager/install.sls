@@ -13,22 +13,16 @@ cert-manager-crds:
     - onlyif: curl --silent 'http://127.0.0.1:8080/healthz/'
     - name: kubectl apply -f /srv/kubernetes/manifests/cert-manager/00-crds.yaml
 
-cert-manager-remove-secret:
+cert-manager-secret:
   cmd.run:
-    - watch:
-      - cmd: cert-manager-namespace
     - runas: root
     - use_vt: True
-    - onlyif: kubectl -n cert-manager get secret public-dns-secret
-    - name: kubectl -n cert-manager delete secret public-dns-secret
-
-cert-manager-create-secret:
-  cmd.run:
-    - watch:
-      - cmd: cert-manager-remove-secret
-    - runas: root
-    - use_vt: True
-    - name: kubectl -n cert-manager create secret generic public-dns-secret --from-literal=secret-access-key="{{ cert_manager.dns.secret }}"
+    - name: |
+        echo "Configure DNS provider secret"
+        {%- if cert_manager.get('dns', {'enabled': False}).enabled and cert_manager.dns.provider == 'cloudflare'%}
+        kubectl -n cert-manager delete secret public-dns-secret
+        kubectl -n cert-manager create secret generic public-dns-secret --from-literal=secret-access-key="{{ cert_manager.dns.cloudflare.secret }}"
+        {%- endif %}
 
 cert-manager:
   cmd.run:
@@ -53,7 +47,6 @@ cert-manager-clusterissuer:
   cmd.run:
     - require:
       - http: query-cert-manager-required-api
-      - cmd: cert-manager-create-secret
     - watch:
         - file: /srv/kubernetes/manifests/cert-manager/clusterissuer.yaml
     - runas: root

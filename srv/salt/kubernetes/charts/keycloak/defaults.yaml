@@ -1,5 +1,5 @@
 keycloak:
-  version: 7.0.1
+  version: 9.0.0
   password: W34v3l4b@keycloak
   db_size: 8Gi
   ingress_host: signin

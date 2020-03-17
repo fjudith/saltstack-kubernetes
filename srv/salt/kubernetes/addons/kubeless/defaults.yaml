@@ -1,5 +1,5 @@
 kubeless:
-  version: 1.0.5
+  version: 1.0.6
   ui_version: master
   ingress_host: kubeless
   nats_trigger_image: docker.io/kubeless/nats-trigger-controller:v1.0.0

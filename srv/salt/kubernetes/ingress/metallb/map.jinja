@@ -1,0 +1,7 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{% import_yaml tpldir ~ "/defaults.yaml" or {} as defaults %}
+
+{#- Merge in salt pillar #}
+{% set metallb = salt['pillar.get']('kubernetes:common:addons:metallb', default=defaults['metallb'], merge=True) %}

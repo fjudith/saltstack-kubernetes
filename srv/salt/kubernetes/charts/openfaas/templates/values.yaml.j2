@@ -15,7 +15,7 @@ basic_auth: true
 generateBasicAuth: false
 
 # Oauth managed by Keycloak
-{% if charts.get('keycloak', {'enabled': False}).enabled %}
+{% if charts.get('keycloak', {'enabled': False}).enabled and openfaas.get('oauth', {'enabled': False}).enabled %}
 {%- set keycloak_url = 'https://' + charts.get('keycloak', {}).get('ingress_host') + '.' + pillar['public-domain'] -%}
 {%- set keycloak_password = salt['cmd.shell']("kubectl get secret --namespace keycloak keycloak-http -o jsonpath='{.data.password}' | base64 --decode; echo") -%}
 {%- set client_secret     = salt['cmd.shell']('/srv/kubernetes/manifests/openfaas/kc-clientsecret-openfaas.sh' + ' ' + 'keycloak' + ' ' + keycloak_password + ' ' + keycloak_url + ' ' + openfaas.oauth.keycloak.realm) -%}

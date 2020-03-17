@@ -8,6 +8,7 @@ openfaas:
   password: V3ry1ns3cur3
   nats_topics: "nats_test,"
   oauth:
+    enabled: False
     provider: keycloak
     keycloak:
       realm: default

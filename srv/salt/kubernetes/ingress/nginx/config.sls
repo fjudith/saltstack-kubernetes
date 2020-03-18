@@ -14,6 +14,8 @@
     - user: root
     - group: root
     - mode: "0644"
+    - context:
+        tpldir: {{ tpldir }}
 
 /srv/kubernetes/manifests/nginx/configuration.yaml:
   file.managed:
@@ -23,6 +25,8 @@
     - user: root
     - group: root
     - mode: "0644"
+    - context:
+        tpldir: {{ tpldir }}
 
 /srv/kubernetes/manifests/nginx/prometheus.yaml:
   file.managed:

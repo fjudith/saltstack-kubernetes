@@ -1,5 +1,12 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import nginx with context %}
 {%- from "kubernetes/map.jinja" import charts with context -%}
 controller:
+  image:
+    tag: {{ nginx.version }}
   daemonset:
     useHostPort: true
     hostPorts:
@@ -37,6 +44,8 @@ controller:
       enabled: true
 defaultBackend:
   enabled: true
+  image:
+    tag: {{ nginx.backend_version }}
   replicaCount: 2
 rbac:
   create: true

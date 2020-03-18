@@ -4,6 +4,7 @@
 {#- Get the `tplroot` from `tpldir` #}
 {%- from tpldir ~ "/map.jinja" import docker with context %}
 
+
 {% set pkgState = 'absent' %}
 {% if docker.enabled %}
   {% set pkgState = 'installed' %}
@@ -11,4 +12,4 @@
 
 docker-ce:
   pkg.{{ pkgState }}:
-    - version: {{ docker.version }}~ce~3-0~ubuntu
+    - version: 5:{{ docker.version }}~3-0~ubuntu-{{ grains["oscodename"] }}

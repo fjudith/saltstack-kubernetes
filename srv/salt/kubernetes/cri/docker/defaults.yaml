@@ -10,7 +10,7 @@ docker:
   configfile: /etc/default/docker
   config: []
   daemon_config: {}
-  version: 18.06.3
+  version: 19.03.8
   rootuser: root
   data_dir: /var/lib/docker
 

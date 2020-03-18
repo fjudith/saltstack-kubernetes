@@ -1,6 +1,6 @@
 kubeadm:
   enabled: true
-  kubernetesVersion: 1.16.0
+  kubernetesVersion: 1.17.3
   apiVersion: v1beta2
   token: "abcdef.0123456789abcdef"
   nodeToken: "123456.abcdefghij123456"
@@ -12,7 +12,7 @@ kubeadm:
   etcd:
     local: true
     imageRepository: "k8s.gcr.io"
-    imageTag: 3.3.15
+    imageTag: 3.4.3
     datadir: "/var/lib/etcd"
     port: 2379
     serverCertSANs: []
@@ -57,6 +57,6 @@ kubeadm:
   dns:
     type: CoreDNS
     imageRepository: k8s.gcr.io
-    imageTag: 1.6.2
+    imageTag: 1.6.5
   kubeletExtraArgs:
     cgroup-driver: systemd

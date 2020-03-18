@@ -1,4 +1,8 @@
-{%- from "kubernetes/map.jinja" import common with context -%}
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import traefik with context %}
 {%- set public_domain = pillar['public-domain'] -%}
 
 kind: ClusterRole
@@ -63,10 +67,10 @@ data:
       [entryPoints.https]
       address = ":443"
       [entryPoints.https.auth.basic]
-      users = ["admin:{{ common.addons.traefik.password }}"]
+      users = ["admin:{{ traefik.password }}"]
         [entryPoints.https.tls]
     [acme]
-    email = "{{ common.addons.traefik.acme_email }}"
+    email = "{{ addons.traefik.acme_email }}"
     storageFile = "/acme/acme.json"
     entryPoint = "https"
     onDemand = true
@@ -102,7 +106,7 @@ spec:
       serviceAccountName: traefik-ingress-controller
       terminationGracePeriodSeconds: 60
       containers:
-      - image: traefik
+      - image: traefik:{{ traefik.version }}
         name: traefik-ingress-lb
         ports:
         - name: http

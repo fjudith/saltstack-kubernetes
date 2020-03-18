@@ -7,7 +7,7 @@ haproxy.service:
     - enable: True
     - reload: True
     - require:
-      - pkg: haproxy.install
+      - pkg: haproxy
 {% if salt['grains.get']('os_family') == 'Debian' %}
       - file: haproxy.service
 {% endif %}

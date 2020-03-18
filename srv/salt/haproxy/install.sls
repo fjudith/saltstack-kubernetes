@@ -1,11 +1,8 @@
-{% from tpldir ~ "/map.jinja" import haproxy with context %}
+{%- from tpldir ~ "/map.jinja" import haproxy with context -%}
 
-haproxy.install:
+
+haproxy:
+  require:
+    - pkg: haproxy-repo
   pkg.installed:
-    - name: {{ haproxy.package }}
-{% if salt['pillar.get']('haproxy:require') %}
-    - require:
-{% for item in salt['pillar.get']('haproxy:require') %}
-      - {{ item }}
-{% endfor %}
-{% endif %}
+    - version: "{{ haproxy.version | safe }}"

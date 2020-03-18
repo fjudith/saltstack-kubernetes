@@ -1,13 +1,7 @@
-{% set haproxy = salt['grains.filter_by']({
-    'default': {
-        'package': 'haproxy',
-        'config_file': '/etc/haproxy/haproxy.cfg',
-        'config_file_source': 'salt://haproxy/templates/haproxy.jinja',
-        'user': 'root',
-        'group': 'root',
-        'service': 'haproxy',
-    },
-    'FreeBSD': {
-        'group': 'wheel',
-    },
-}, merge=salt['pillar.get']('haproxy:lookup'), base='default') %}
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{% import_yaml tpldir ~ "/defaults.yaml" or {} as defaults %}
+
+{#- Merge in salt pillar #}
+{% set haproxy = salt['pillar.get']('haproxy', default=defaults['haproxy'], merge=True) %}

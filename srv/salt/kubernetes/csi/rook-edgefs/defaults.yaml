@@ -15,6 +15,7 @@ rook_edgefs:
   s3x_service: s3x0
   swift_service: swift0
   isgw_service: isgw0
+  iscsi_fstype: ext4
   default_storageclass:
     enabled: false
     name: edgefs-iscsi-csi-storageclass

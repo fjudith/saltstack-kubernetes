@@ -21,3 +21,5 @@ bucket: {{ rook_edgefs.iscsi_service }}     #substitution edgefs bucket name for
 # Edgefs connnection options
 username: admin #edgefs k8s cluster grpc connection username
 password: admin #edgefs k8s cluster  grpc connection password
+
+fsType: {{ rook_edgefs.iscsi_fstype }}

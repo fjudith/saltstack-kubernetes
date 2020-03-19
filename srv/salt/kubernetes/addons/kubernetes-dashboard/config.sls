@@ -105,15 +105,3 @@
     - mode: "0644"
     - context:
         tpldir: {{ tpldir }}
-
-/srv/kubernetes/manifests/kubernetes-dashboard/09_dashboard-ingress.yaml:
-  file.managed:
-    - require:
-      - file: /srv/kubernetes/manifests/kubernetes-dashboard
-    - source: salt://{{ tpldir }}/templates/dashboard-ingress.yaml.j2
-    - user: root
-    - group: root
-    - template: jinja
-    - mode: "0644"
-    - context:
-        tpldir: {{ tpldir }}

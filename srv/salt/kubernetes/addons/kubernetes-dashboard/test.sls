@@ -13,6 +13,7 @@ query-kubernetes-dashboard:
   http.wait_for_successful_query:
     - watch:
       - cmd: kubernetes-dashboard
+      - cmd: kubernetes-dashboard-ingress
     - name: http://localhost:8080/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:443/proxy
     - wait_for: 120
     - request_interval: 5

@@ -10,7 +10,6 @@ kubernetes-dashboard:
       - file: /srv/kubernetes/manifests/kubernetes-dashboard/06_dashboard-deployment.yaml
       - file: /srv/kubernetes/manifests/kubernetes-dashboard/07_scraper-service.yaml
       - file: /srv/kubernetes/manifests/kubernetes-dashboard/08_scraper-deployment.yaml
-      - file: /srv/kubernetes/manifests/kubernetes-dashboard/09_dashboard-ingress.yaml
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/kubernetes-dashboard/
     - onlyif: curl --silent 'http://127.0.0.1:8080/healthz'

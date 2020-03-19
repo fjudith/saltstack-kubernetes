@@ -21,35 +21,23 @@ kubernetes:
       provider: docker
       crictl_version: 1.15.0
       runc_version: 1.0.0-rc8
-      docker:
-        version: 18.06.3
-        data_dir: /var/lib/docker
-      containerd:
-        version: 1.2.6
-        source_hash: 3c23bc34c7c0cb2e45fe469f5fcfdb3829aab8e51a425b1efb702f00f215c4c6
-      crio:
-        version: 1.15
     cni:
       source: https://github.com/containernetworking/plugins/releases/download/v0.8.5/cni-plugins-linux-amd64-v0.8.5.tgz
       source_hash: bd682ffcf701e8f83283cdff7281aad0c83b02a56084d6e601216210732833f9
       network: 10.244.0.0/16
       provider: calico
       calico:
-        mtu: 1430
         ipv4:
           interface: ens10
         ipv6:
           enable: false
           interface: ens10
       flannel:
-        flannel_image: quay.io/coreos/flannel:v0.11.0-amd64
         interface: ens10
       weave:
-        weave_image: weaveworks/weave-kube:2.5.2
-        npc_image: weaveworks/weave-npc:2.5.2
-        password: 1234567890abcdefghij
+        interface: ens10
       cilium:
-        cilium_image: docker.io/cilium/cilium:v1.3.2
+        interface: ens10
     addons:
       dns:
         enabled: True
@@ -62,11 +50,8 @@ kubernetes:
           image: coredns/coredns:1.6.5
       helm:
         enabled: true
-        version: 3.0.3
-        source_hash: fc75d62bafec2c3addc87b715ce2512820375ab812e6647dc724123b616586d6
       kube_prometheus:
         enabled: True
-        version: 0.3.0
         prometheus_ingress_host: prometheus
         alertmanager_ingress_host: alertmanager
         grafana_ingress_host: grafana
@@ -74,7 +59,6 @@ kubernetes:
         enabled: False
       metrics_server:
         enabled: true
-        image: k8s.gcr.io/metrics-server-amd64:v0.3.6
       dashboard:
         enabled: True
         ingress_host: kubernetes-dashboard
@@ -88,7 +72,7 @@ kubernetes:
         enabled: true
       istio:
         enabled: True
-        version: 1.4.2
+        version: 1.4.6
         tracing: jaeger
         prometheus_ingress_host: istio-prometheus
         tracing_ingress_host: istio-tracing
@@ -113,7 +97,6 @@ kubernetes:
         ingress_host: scope
       kubeless:
         enabled: True
-        version: 1.0.5
         ui_version: master
         ingress_host: kubeless
         nats_trigger_image: docker.io/kubeless/nats-trigger-controller:v1.0.0
@@ -124,10 +107,6 @@ kubernetes:
         zookeeper_image: docker.io/bitnami/zookeeper:3.4.10-r12
       nats_operator:
         enabled: True
-        image: docker.io/connecteverything/nats-operator:0.6.2
-        stan_image: docker.io/synadia/nats-streaming-operator:v0.3.0-v1alpha1
-        nats_cluster_version: 2.1.4 
-        stan_cluster_image: docker.io/amd64/nats-streaming:0.16.2-linux
       knative:
         enabled: False
         version: 0.1.1
@@ -136,12 +115,8 @@ kubernetes:
         ingress_host: httpbin
       metallb:
         enabled: True
-        version: 0.8.3
-      minio_operator:
-        enabled: True
       descheduler:
         enabled: True
-        image: docker.io/fjudith/descheduler:v0.10.0
   etcd:
     host: 127.0.0.1
     members:
@@ -153,14 +128,21 @@ kubernetes:
         name: etcd03
     version: v3.3.15
   storage:
+    minio_operator:
+      enabled: True
+      ingress_host: minio
     rook_ceph:
       enabled: True
       ingress_host: ceph
+      default_storageclass:
+        enabled: True
+        name: rook-ceph-block
     rook_edgefs:
       enabled: False
-      image: rook/edgefs:1.1.8
-      edgefs_image: edgefs/edgefs:1.2.86
       ingress_host: edgefs
+      default_storageclass:
+        enabled: False
+        name: edgefs-iscsi-csi-storageclass
   charts:
     concourse:
       enabled: true
@@ -228,7 +210,7 @@ kubernetes:
       address: "0xDd7bC23204b6f4529D91ba79c185984ADcf12CbD"
       private_key: "92c69eb5fdae8af5ed2cffbf9eb5e40d30aa646db354338f7b7841038aa61c9e"
       secret: "some_random_secret"
-      ingress_host: blockchain
+      ingress_host: etherum
     keycloak_gatekeeper:
       enabled: true
       version: "master"
@@ -248,109 +230,3 @@ kubernetes:
       ingress_host: openfaas
       username: admin
       password: V3ry1ns3cur3
-tinyproxy:
-  User: tinyproxy
-  Group: tinyproxy
-  config: /etc/tinyproxy/tinyproxy.conf
-  MaxClients: 200
-  MinSpareServers: 10
-  MaxSpareServers: 40
-  StartServers: 20
-  Allow:
-    - 127.0.0.1
-    - 192.168.0.0/16
-    - 172.16.0.0/12
-    - 10.0.0.0/8
-  ConnectPort:
-    - 443
-    - 563
-    - 6443
-    - 2379
-    - 2380
-keepalived:
-  global_defs:
-    router_id: LVS_DEVEL
-  vrrp_instance:
-    VI_1:
-      state: MASTER
-      interface: wg0
-      virtual_router_id: 51
-      priority: 100
-      advert_int: 1
-      authentication:
-        auth_type: PASS
-        auth_pass: 1111
-      virtual_ipaddress:
-        - 172.17.4.253
-        - 172.17.4.254
-  virtual_server:
-    0.0.0.0 6443:
-      delay_loop: 6
-      lb_algo: rr
-      lb_kind: NAT
-      nat_mask: 255.255.255.0
-      persistence_timeout: 50
-      protocol: TCP
-      real_server:
-        172.17.4.101 6443:
-          weight: 1
-        172.17.4.102 6443:
-          weight: 2
-        172.17.4.103 6443:
-          weight: 3
-haproxy:
-  enabled: true
-  overwrite: True
-  defaults:
-    timeouts:
-      - tunnel        3600s
-      - http-request    10s
-      - queue           1m
-      - connect         10s
-      - client          1m
-      - server          1m
-      - http-keep-alive 10s
-      - check 10s
-    stats:
-      - enable
-      - uri: 'admin?stats'
-  listens:
-    stats:
-      bind:
-        - "0.0.0.0:58080"
-      mode: http
-      stats:
-        enable: True
-        uri: "/admin?stats"
-  global:
-    ssl-default-bind-ciphers: "ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA384"
-    ssl-default-bind-options: "no-sslv3 no-tlsv10 no-tlsv11"
-  user: haproxy
-  group: haproxy
-  chroot:
-    enable: true
-    path: /var/lib/haproxy
-  daemon: true
-  frontends:
-    kubernetes-master:
-      bind: "*:6443"
-      mode: tcp
-      default_backend: kube-apiserver
-  backends:
-    kube-apiserver:
-      mode: tcp
-      balance: source
-      sticktable: "type binary len 32 size 30k expire 30m"
-      servers:
-        master01:
-          host: 172.17.4.101
-          port: 6443
-          check: check
-        master02:
-          host: 172.17.4.102
-          port: 6443
-          check: check
-        master03:
-          host: 172.17.4.103
-          port: 6443
-          check: check

@@ -1,5 +1,0 @@
----
-# proxy/keepalived/defaults.yaml
-
-global_defs:
-  smtp_server: localhost

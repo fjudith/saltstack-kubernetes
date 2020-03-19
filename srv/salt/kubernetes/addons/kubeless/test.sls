@@ -26,6 +26,7 @@ test-kubeless-nats-pubsub:
     - runas: root
     - use_vt: True
     - cwd: /srv/kubernetes/manifests/kubeless/
+    - timeout: 120
     - name: |
         NATS_CLUSTER_IP=$(kubectl -n nats-io get service/nats-cluster -o jsonpath='{.spec.clusterIP}')
 
@@ -39,11 +40,20 @@ test-kubeless-nats-pubsub:
         
         # Publishing
         kubeless trigger nats publish --url nats://${NATS_CLUSTER_IP}:4222 --topic test --message "Hello World!"
-        
-        until kubectl get pods --selector function=pubsub-python-nats --field-selector=status.phase=Running ;
-          do printf '.' && sleep 1
-        done
 
-        kubectl logs -l function=pubsub-python-nats
+        until kubectl -n default get deployment pubsub-python-nats
+        do 
+          printf '.' && sleep 5
+        done && \
+        echo "" && \
+        REPLICAS=$(kubectl -n default get deployment pubsub-python-nats -o jsonpath='{.status.replicas}') && \
+        echo "Waiting for pubsub-python-nats to be up and running" && \
+        while [ "$(kubectl -n default get deployment pubsub-python-nats -o jsonpath='{.status.readyReplicas}')" != "${REPLICAS}" ]
+        do
+          printf '.' && sleep 5
+        done && \
+        echo "" && \
+
+        kubectl -n default logs -l function=pubsub-python-nats
     - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
 {% endif %}

@@ -1,2 +1,4 @@
 traefik:
   version: 1.7.20
+  password: '$apr1$mHqffeCI$8Bl8/cCsjejRsAYt7qFrj/'
+  acme_email: admin@example.com

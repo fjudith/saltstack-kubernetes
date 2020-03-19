@@ -1,0 +1,104 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import traefik with context %}
+{%- set public_domain = pillar['public-domain'] -%}
+
+estFramework:
+  enabled: True
+
+serviceType: LoadBalancer
+replicas: 2
+
+nodeSelector:
+  node-role.kubernetes.io/ingress: "true"
+
+tolerations:
+  - key: node-role.kubernetes.io
+    operator: Equal
+    value: ingress
+    effect: NoSchedule
+
+ssl:
+  enabled: True
+  enforced: True
+  permatentRedirect: True
+  upstream: False
+  insecureSkipVerify: False
+  generateTLs: True
+    defaultCN: "{{ public_domain }}"
+  defaultSANList:
+    - {{ public_domain }}
+    - *.{{ public_domain }}
+  defaultIPList: []
+  auth:
+    basic:
+      traefik: {{ traefik.password }}
+
+  ## storeAcme has to be enabled to support HA Support using acme, but at least one kvprovider is needed
+  storeAcme: True
+  acmeStorageLocation: traefik/acme/account
+  importAcme: false
+
+kvprovider:
+  etcd:
+    endpoint: etcd-service:2379
+    useAPIV3: True
+    watch: true
+    prefix: traefik
+
+acme:
+  keyType: RSA4096
+  enabled: True
+  email: {{ traefik.acme_email }}
+  onHostRule: true
+  staging: False
+  domains:
+    enabled: True
+  
+    # List of sets of main and (optional) SANs to generate for
+    # for wildcard certificates see https://docs.traefik.io/configuration/acme/#wildcard-domains
+    - main: "*.{{ public_domain }}"
+    - sans:
+      - "{{ public_domain }}"
+  
+  ## ACME challenge type: "tls-sni-01", "tls-alpn-01", "http-01" or "dns-01"
+  ## Note that "tls-sni-01" has been DEPRECATED.
+  challengeType: tls-alpn-01
+  
+  ## Configure the endpoint used for the HTTP challenge
+  ## Applicable only if using the http-01 challenge type
+  httpChallenge:
+    entrypoint: http
+
+dashboard:
+  enabled: True
+  domain: traefik.{{ public_domain }}
+  serviceType: CLusterIP
+  auth:
+    basic:
+      admin: {{ traefik.password }}
+
+rbac:
+  enabled: True
+
+## Enable the /metrics endpoint, for now only supports prometheus
+## set to true to enable metric collection by prometheus
+metrics:
+  prometheus:
+    enabled: True
+    serviceMonitor:
+    enabled: True
+    interval: 30s
+
+deployment:
+  hostPort:
+    httpEnabled: true
+    httpsEnabled: True
+    dashboardEnabled: False
+    httpPort: 80
+    httpsPort: 443
+    dashboardPort: 8080
+
+sendAnonymousUsage: False

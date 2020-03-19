@@ -107,6 +107,9 @@ apiServer:
     apiserver-count: "{{ apiserverCount|length }}"
     {%- if storage.get('rook_edgefs', {'enabled': False}).enabled %}
     feature-gates:  VolumeSnapshotDataSource=true,CSIDriverRegistry=true
+    allow-privileged: true
+    {%- else -%}
+    allow-privileged: {{ kubeadm.allowPrivileged }}
     {%- endif %}
     {%- if charts.get('keycloak', {'enabled': False}).enabled %}
     oidc-client-id: kubernetes

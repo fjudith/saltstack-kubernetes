@@ -30,6 +30,7 @@ kubeadm:
     dnsDomain: "cluster.local"
   clusterDNSIP: "10.96.0.10"
   apiServer:
+    allowPrivileged: "false"
     extraArgs:
       authorization-mode: "Node,RBAC"
       anonymous-auth: "true"
@@ -59,4 +60,5 @@ kubeadm:
     imageRepository: k8s.gcr.io
     imageTag: 1.6.5
   kubeletExtraArgs:
+    allowPrivileged: "false"
     cgroup-driver: systemd

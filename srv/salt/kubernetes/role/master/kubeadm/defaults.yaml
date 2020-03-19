@@ -60,5 +60,4 @@ kubeadm:
     imageRepository: k8s.gcr.io
     imageTag: 1.6.5
   kubeletExtraArgs:
-    allowPrivileged: "false"
     cgroup-driver: systemd

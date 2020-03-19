@@ -7,10 +7,10 @@
     - group: {{ haproxy.group }}
     - mode: "0644"
     - template: jinja
-    - watch_in: 
+    - watch_in:
       - service: haproxy.service
     - context:
-      tpldir: {{ tpldir }}
+        tpldir: {{ tpldir }}
     {% if haproxy.overwrite == False %}
     - unless:
       - test -e {{ haproxy.config_file }}

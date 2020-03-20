@@ -142,11 +142,11 @@ spec:
   #devicesResurrectMode: "restoreZapWait"
   #dashboard:
   #  localAddr: 10.3.30.75
-  #network: # cluster level networking configuration
-  #  provider: host
-  #  selectors:
-  #    server: "enp2s0f0"
-  #    broker: "enp2s0f0"
+  network: # cluster level networking configuration
+    provider: {{ rook_edgefs.network.provider }}
+    selectors:
+      server: "{{ rook_edgefs.network.server }}"
+      broker: "{{ rook_edgefs.network.broker }}"
   #skipHostPrepare: true
   #maxContainerCapacity: 132Ti
   #sysRepCount: 1                  # SystemReplicationCount [1..n](default is 3)

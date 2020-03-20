@@ -16,6 +16,10 @@ rook_edgefs:
   swift_service: swift0
   isgw_service: isgw0
   iscsi_fstype: ext4
+  network:
+    provider: host
+    server: eth0
+    broker: eth0
   default_storageclass:
     enabled: false
     name: edgefs-iscsi-csi-storageclass

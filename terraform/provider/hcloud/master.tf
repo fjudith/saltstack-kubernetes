@@ -35,3 +35,15 @@ resource "hcloud_server" "master" {
     ]
   }
 }
+
+data "template_file" "master_cloud-init" {
+  count    = 1
+  template = "${file("${path.module}/../cloud-init/master_user-data.yaml")}"
+  vars {
+    SALT_MASTER_HOST     = "${hcloud_server.edge01.0.name}"
+    VPN_INTERFACE        = "${var.vpn_interface}"
+    VPN_IP_RANGE         = "${var.vpn_iprange}"
+    VPN_PORT             = "${var.vpn_port}"
+    PRIVATE_INTERFACE    = "eth0"
+  }
+}

@@ -114,3 +114,25 @@ resource "hcloud_server" "edge02" {
     destination = "~/.ssh/id_rsa.pub"
   }
 }
+
+data "template_file" "edge01_cloud-init" {
+  template = "${file("${path.module}/../cloud-init/edge_user-data.yaml")}"
+  vars {
+    SALT_MASTER_HOST     = "localhost"
+    VPN_INTERFACE        = "${var.vpn_interface}"
+    VPN_IP_RANGE         = "${var.vpn_iprange}"
+    VPN_PORT             = "${var.vpn_port}"
+    PRIVATE_INTERFACE    = "eth0"
+  }
+}
+
+data "template_file" "edge02_cloud-init" {
+  template = "${file("${path.module}/../cloud-init/edge_user-data.yaml")}"
+  vars {
+    SALT_MASTER_HOST     = "${hcloud_server.edge01.0.name}"
+    VPN_INTERFACE        = "${var.vpn_interface}"
+    VPN_IP_RANGE         = "${var.vpn_iprange}"
+    VPN_PORT             = "${var.vpn_port}"
+    PRIVATE_INTERFACE    = "eth0"
+  }
+}

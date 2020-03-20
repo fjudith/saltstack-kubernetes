@@ -1,4 +1,5 @@
-[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/2188/badge)](https://bestpractices.coreinfrastructure.org/projects/2188)
+[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/2188/badge)](https://bestpractices.coreinfrastructure.org/projects/2188)[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Ffjudith%2Fsaltstack-kubernetes.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Ffjudith%2Fsaltstack-kubernetes?ref=badge_shield)
+
 
 <img src="https://i.imgur.com/SJAtDZk.png" width="460" height="125" >
 
@@ -258,3 +259,6 @@ This project is vastly inspired by the following projects:
 * [Kubernetes The Hard Way](https://github.com/kelseyhightower/kubernetes-the-hard-way) from [@kelseyhightower](https://github.com/kelseyhightower)
 * [Saltformula-Kubernetes](https://github.com/salt-formulas/salt-formula-kubernetes)
 * [Kubernetes Icons](https://github.com/octo-technology/kubernetes-icons)
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Ffjudith%2Fsaltstack-kubernetes.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Ffjudith%2Fsaltstack-kubernetes?ref=badge_large)

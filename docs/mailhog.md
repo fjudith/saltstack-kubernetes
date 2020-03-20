@@ -13,7 +13,7 @@ kubernetes:
     ingress_host: mail
 ```
 
-To manually deploy Mailhog, run the following command line from the **Salt-Master** (i.e. proxy01).
+To manually deploy Mailhog, run the following command line from the **Salt-Master** (i.e. edge01).
 
 ```bash
 salt -G role:master state.apply kubernetes.charts.mailhog

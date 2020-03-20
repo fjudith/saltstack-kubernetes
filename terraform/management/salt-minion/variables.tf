@@ -4,9 +4,9 @@ variable "http_proxy_host" {}
 
 variable "http_proxy_port" {}
 
-variable "proxy_count" {}
+variable "edge_count" {}
 
-variable "proxy_private_ips" {
+variable "edge_private_ips" {
   type = "list"
 }
 

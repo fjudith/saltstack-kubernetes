@@ -1,6 +1,4 @@
-variable "count" {}
-
-variable "proxy_count" {}
+variable "edge_count" {}
 
 variable "etcd_count" {}
 
@@ -10,7 +8,7 @@ variable "node_count" {}
 
 variable "bastion_host" {}
 
-variable "proxy_bit" {
+variable "edge_bit" {
   default = 250
 }
 

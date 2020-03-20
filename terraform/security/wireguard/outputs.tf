@@ -1,11 +1,11 @@
 output "gateway_vpn_ips" {
   depends_on = ["null_resource.wireguard"]
-  value      = ["${data.template_file.proxy_vpn_ips.0.rendered}"]
+  value      = ["${data.template_file.edge_vpn_ips.0.rendered}"]
 }
 
-output "proxy_vpn_ips" {
+output "edge_vpn_ips" {
   depends_on = ["null_resource.wireguard"]
-  value      = ["${data.template_file.proxy_vpn_ips.*.rendered}"]
+  value      = ["${data.template_file.edge_vpn_ips.*.rendered}"]
 }
 
 output "etcd_vpn_ips" {
@@ -28,9 +28,9 @@ output "vpn_ips" {
   value      = ["${data.template_file.vpn_ips.*.rendered}"]
 }
 
-output "proxy_vpn_ipv6s" {
+output "edge_vpn_ipv6s" {
   depends_on = ["null_resource.wireguard"]
-  value      = ["${data.template_file.proxy_vpn_ipv6s.*.rendered}"]
+  value      = ["${data.template_file.edge_vpn_ipv6s.*.rendered}"]
 }
 
 output "etcd_vpn_ipv6s" {

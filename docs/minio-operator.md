@@ -14,7 +14,7 @@ kubernetes:
       secretkey: V3ry1ns3cur3P4ssword
 ```
 
-To manually deploy Rook Minio run the following command line from the **Salt-Master** (i.e. proxy01).
+To manually deploy Rook Minio run the following command line from the **Salt-Master** (i.e. edge01).
 
 ```bash
 salt -G role:master state.apply kubernetes.csi.minio-operator

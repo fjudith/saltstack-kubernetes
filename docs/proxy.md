@@ -1,8 +1,8 @@
-# Proxy (a.k.a Edge Gateway Node)
+# edge (a.k.a Edge Gateway Node)
 
-Proxy is a role for nodes dedicated to the inbound (Ingress) and outboud (Egress) traffic. In other words it allows to select a server the endorce the functions of an edge gateway and a perimeter load-balancer of the Kubernetes cluster.
+edge is a role for nodes dedicated to the inbound (Ingress) and outboud (Egress) traffic. In other words it allows to select a server the endorce the functions of an edge gateway and a perimeter load-balancer of the Kubernetes cluster.
 
-Proxy is a basic Kubernetes node registered with the `taint node-role.kubernetes.io/ingress=:NoSchedule` and labeled with the role `node-role.kubernetes.io/ingress`, as such it only accepts the scheduling of [Daemonsets](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/) or Pods configured with to following [Toleration](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/) and [Node Selector](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) in the deployment specs.
+edge is a basic Kubernetes node registered with the `taint node-role.kubernetes.io/ingress=:NoSchedule` and labeled with the role `node-role.kubernetes.io/ingress`, as such it only accepts the scheduling of [Daemonsets](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/) or Pods configured with to following [Toleration](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/) and [Node Selector](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) in the deployment specs.
 
 ```yaml
 spec:

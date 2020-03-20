@@ -1,8 +1,8 @@
 resource "null_resource" "wireguard" {
-  count = "${var.proxy_count + var.etcd_count + var.master_count + var.node_count }"
+  count = "${var.edge_count + var.etcd_count + var.master_count + var.node_count }"
 
   triggers {
-    count = "${var.proxy_count + var.etcd_count + var.master_count + var.node_count }"
+    count = "${var.edge_count + var.etcd_count + var.master_count + var.node_count }"
   }
 
   connection {
@@ -80,7 +80,7 @@ resource "null_resource" "wireguard" {
 }
 
 data "template_file" "interface-conf" {
-  count    = "${var.proxy_count + var.etcd_count + var.master_count + var.node_count }"
+  count    = "${var.edge_count + var.etcd_count + var.master_count + var.node_count }"
   template = "${file("${path.module}/templates/interface.conf")}"
 
   vars {
@@ -93,7 +93,7 @@ data "template_file" "interface-conf" {
 }
 
 data "template_file" "peer-conf" {
-  count    = "${var.proxy_count + var.etcd_count + var.master_count + var.node_count }"
+  count    = "${var.edge_count + var.etcd_count + var.master_count + var.node_count }"
   template = "${file("${path.module}/templates/peer.conf")}"
 
   vars {
@@ -106,7 +106,7 @@ data "template_file" "peer-conf" {
 }
 
 data "template_file" "overlay-route-service" {
-  count    = "${var.proxy_count + var.etcd_count + var.master_count + var.node_count }"
+  count    = "${var.edge_count + var.etcd_count + var.master_count + var.node_count }"
   template = "${file("${path.module}/templates/overlay-route.service")}"
 
   vars {
@@ -116,26 +116,26 @@ data "template_file" "overlay-route-service" {
 }
 
 data "external" "keys" {
-  count = "${var.proxy_count + var.etcd_count + var.master_count + var.node_count }"
+  count = "${var.edge_count + var.etcd_count + var.master_count + var.node_count }"
 
   program = ["sh", "${path.module}/scripts/gen_keys.sh"]
 }
 
-data "template_file" "proxy_vpn_ips" {
-  count    = "${var.proxy_count}"
+data "template_file" "edge_vpn_ips" {
+  count    = "${var.edge_count}"
   template = "$${ip}"
 
   vars {
-    ip = "${cidrhost(var.vpn_iprange, var.proxy_bit + count.index + 1)}"
+    ip = "${cidrhost(var.vpn_iprange, var.edge_bit + count.index + 1)}"
   }
 }
 
-data "template_file" "proxy_vpn_ipv6s" {
-  count    = "${var.proxy_count}"
+data "template_file" "edge_vpn_ipv6s" {
+  count    = "${var.edge_count}"
   template = "$${ipv6}"
 
   vars {
-    ipv6 = "${cidrhost(var.vpn_ipv6range, var.proxy_bit + count.index + 1)}"
+    ipv6 = "${cidrhost(var.vpn_ipv6range, var.edge_bit + count.index + 1)}"
   }
 }
 
@@ -194,19 +194,19 @@ data "template_file" "node_vpn_ipv6s" {
 }
 
 data "template_file" "vpn_ips" {
-  count    = "${var.proxy_count + var.etcd_count + var.master_count + var.node_count }"
+  count    = "${var.edge_count + var.etcd_count + var.master_count + var.node_count }"
   template = "$${ip}"
 
   vars {
-    ip = "${element(concat(data.template_file.proxy_vpn_ips.*.rendered, data.template_file.etcd_vpn_ips.*.rendered, data.template_file.master_vpn_ips.*.rendered, data.template_file.node_vpn_ips.*.rendered), count.index)}"
+    ip = "${element(concat(data.template_file.edge_vpn_ips.*.rendered, data.template_file.etcd_vpn_ips.*.rendered, data.template_file.master_vpn_ips.*.rendered, data.template_file.node_vpn_ips.*.rendered), count.index)}"
   }
 }
 
 data "template_file" "vpn_ipv6s" {
-  count    = "${var.proxy_count + var.etcd_count + var.master_count + var.node_count }"
+  count    = "${var.edge_count + var.etcd_count + var.master_count + var.node_count }"
   template = "$${ipv6}"
 
   vars {
-    ipv6 = "${element(concat(data.template_file.proxy_vpn_ipv6s.*.rendered, data.template_file.etcd_vpn_ipv6s.*.rendered, data.template_file.master_vpn_ipv6s.*.rendered, data.template_file.node_vpn_ipv6s.*.rendered), count.index)}"
+    ipv6 = "${element(concat(data.template_file.edge_vpn_ipv6s.*.rendered, data.template_file.etcd_vpn_ipv6s.*.rendered, data.template_file.master_vpn_ipv6s.*.rendered, data.template_file.node_vpn_ipv6s.*.rendered), count.index)}"
   }
 }

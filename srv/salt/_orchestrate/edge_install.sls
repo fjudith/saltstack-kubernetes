@@ -2,7 +2,7 @@
 
 edge_haproxy_state:
   salt.state:
-    - tgt: 'role:proxy'
+    - tgt: 'role:edge'
     - tgt_type: grain
     - sls: haproxy
     - queue: True

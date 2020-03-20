@@ -234,11 +234,11 @@ resource "null_resource" "cert-master" {
 
 resource "null_resource" "cert-node" {
   depends_on = ["null_resource.cert-ca"]
-  count      = "${var.proxy_count + var.node_count}"
+  count      = "${var.edge_count + var.node_count}"
 
   connection {
     type                = "ssh"
-    host                = "${element(concat(var.proxy_private_ips, var.node_private_ips), count.index)}"
+    host                = "${element(concat(var.edge_private_ips, var.node_private_ips), count.index)}"
     user                = "${var.ssh_user}"
     private_key         = "${file(var.ssh_private_key)}"
     agent               = false
@@ -250,31 +250,31 @@ resource "null_resource" "cert-node" {
 
   provisioner "local-exec" {
     interpreter = ["bash", "-c"]
-    command     = "${path.module}/scripts/cfssl.sh ssl/node-${element(concat(var.proxy_hostnames, var.node_hostnames), count.index)} node node-${element(concat(var.proxy_hostnames, var.node_hostnames), count.index)} ${join("," , concat(list(element(concat(var.proxy_private_ips, var.node_private_ips), count.index), element(concat(var.proxy_hostnames, var.node_hostnames), count.index))))}"
+    command     = "${path.module}/scripts/cfssl.sh ssl/node-${element(concat(var.edge_hostnames, var.node_hostnames), count.index)} node node-${element(concat(var.edge_hostnames, var.node_hostnames), count.index)} ${join("," , concat(list(element(concat(var.edge_private_ips, var.node_private_ips), count.index), element(concat(var.edge_hostnames, var.node_hostnames), count.index))))}"
   }
 
   provisioner "file" {
-    source      = "ssl/node-${element(concat(var.proxy_hostnames, var.node_hostnames), count.index)}/node-${element(concat(var.proxy_hostnames, var.node_hostnames), count.index)}.tar"
+    source      = "ssl/node-${element(concat(var.edge_hostnames, var.node_hostnames), count.index)}/node-${element(concat(var.edge_hostnames, var.node_hostnames), count.index)}.tar"
     destination = "/tmp/node.tar"
   }
 
   provisioner "local-exec" {
     interpreter = ["bash", "-c"]
-    command     = "${path.module}/scripts/cfssl.sh ssl/node-${element(concat(var.proxy_hostnames, var.node_hostnames), count.index)} kube-proxy kube-proxy-${element(concat(var.proxy_private_ips, var.node_private_ips), count.index)} ${join(",", concat(var.proxy_private_ips, var.node_private_ips))}"
+    command     = "${path.module}/scripts/cfssl.sh ssl/node-${element(concat(var.edge_hostnames, var.node_hostnames), count.index)} kube-proxy kube-proxy-${element(concat(var.edge_private_ips, var.node_private_ips), count.index)} ${join(",", concat(var.edge_private_ips, var.node_private_ips))}"
   }
 
   provisioner "file" {
-    source      = "ssl/node-${element(concat(var.proxy_hostnames, var.node_hostnames), count.index)}/kube-proxy-${element(concat(var.proxy_private_ips, var.node_private_ips), count.index)}.tar"
+    source      = "ssl/node-${element(concat(var.edge_hostnames, var.node_hostnames), count.index)}/kube-proxy-${element(concat(var.edge_private_ips, var.node_private_ips), count.index)}.tar"
     destination = "/tmp/kube-proxy.tar"
   }
 
   provisioner "local-exec" {
     interpreter = ["bash", "-c"]
-    command     = "${path.module}/scripts/cfssl.sh ssl/node-${element(concat(var.proxy_hostnames, var.node_hostnames), count.index)} flanneld flanneld-${element(concat(var.proxy_hostnames, var.node_hostnames), count.index)} ${element(concat(var.proxy_private_ips, var.node_private_ips), count.index)}"
+    command     = "${path.module}/scripts/cfssl.sh ssl/node-${element(concat(var.edge_hostnames, var.node_hostnames), count.index)} flanneld flanneld-${element(concat(var.edge_hostnames, var.node_hostnames), count.index)} ${element(concat(var.edge_private_ips, var.node_private_ips), count.index)}"
   }
 
   provisioner "file" {
-    source      = "ssl/node-${element(concat(var.proxy_hostnames, var.node_hostnames), count.index)}/flanneld-${element(concat(var.proxy_hostnames, var.node_hostnames), count.index)}.tar"
+    source      = "ssl/node-${element(concat(var.edge_hostnames, var.node_hostnames), count.index)}/flanneld-${element(concat(var.edge_hostnames, var.node_hostnames), count.index)}.tar"
     destination = "/tmp/flanneld.tar"
   }
 

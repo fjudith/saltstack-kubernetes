@@ -2,7 +2,7 @@ variable "etcd_count" {}
 variable "master_count" {}
 variable "node_count" {}
 
-variable "proxy_count" {}
+variable "edge_count" {}
 
 variable "bastion_host" {}
 variable "domain" {}
@@ -21,13 +21,13 @@ variable "master_cluster_ip" {
   default     = "10.96.0.1"
 }
 
-variable "proxy_private_ips" {
-  description = "List of Proxy private ip adresses"
+variable "edge_private_ips" {
+  description = "List of edge private ip adresses"
   type        = "list"
 }
 
-variable "proxy_hostnames" {
-  description = "List of Kubernetes proxy hostnames"
+variable "edge_hostnames" {
+  description = "List of Kubernetes edge hostnames"
   type        = "list"
 }
 

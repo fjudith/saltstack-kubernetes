@@ -1,5 +1,5 @@
 resource "null_resource" "proxy-exceptions-quote" {
-  count = "${var.count}"
+  count = "${var.host_count}"
 
   connection {
     type                = "ssh"

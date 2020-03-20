@@ -28,7 +28,7 @@ kubernetes:
     version: v3.2.24
 ```
 
-To manually deploy Etcd run the following command line from the **Salt-Master** (i.e. proxy01).
+To manually deploy Etcd run the following command line from the **Salt-Master** (i.e. edge01).
 
 ```bash
 salt -G role:etcd state.apply kubernetes.role.etcd

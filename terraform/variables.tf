@@ -45,7 +45,7 @@ variable "etcd_type" {
   default = "START1-XS"
 }
 
-variable "proxy_count" {
+variable "edge_count" {
   default = 2
 }
 
@@ -73,7 +73,7 @@ variable "node_count" {
   default = 3
 }
 
-variable "proxy_type" {
+variable "edge_type" {
   default = "START1-S"
 }
 
@@ -122,8 +122,8 @@ variable "node_bit" {
   default     = 200
 }
 
-variable "proxy_bit" {
-  description = "VPN starting IP for proxy"
+variable "edge_bit" {
+  description = "VPN starting IP for edge"
   default     = 250
 }
 

@@ -33,7 +33,7 @@ If [Keycloak](./keycloak.md) pillar is enabled. Courcourse will be configured to
           realm: default
 ```
 
-To manually deploy Concourse, run the following command line from the **Salt-Master** (i.e. proxy01).
+To manually deploy Concourse, run the following command line from the **Salt-Master** (i.e. edge01).
 
 ```bash
 salt -G role:master state.apply kubernetes.charts.concourse

@@ -15,9 +15,9 @@ hcloud_ssh_keys = ["<ssh public key>"]
 
 image = "Ubuntu Bionic"
 
-proxy_count = "2"
+edge_count = "2"
 
-proxy_type = "cx11"
+edge_type = "cx11"
 
 etcd_count = "3"
 
@@ -44,9 +44,9 @@ node_type = "cx41"
 
 # image = "Ubuntu Bionic"
 
-# proxy_count = "2"
+# edge_count = "2"
 
-# proxy_type = "VC1S"
+# edge_type = "VC1S"
 
 # etcd_count = "3"
 
@@ -84,7 +84,7 @@ masterIP = "70"
 
 nodeIP = "100"
 
-proxyIP = "40"
+edgeIP = "40"
 
 docker_interface = "docker0"
 

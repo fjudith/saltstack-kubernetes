@@ -1,4 +1,4 @@
-variable "count" {}
+variable "dns_count" {}
 
 variable "email" {}
 

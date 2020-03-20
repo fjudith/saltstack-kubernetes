@@ -21,7 +21,7 @@ kubernetes:
           secret: <Global API Key>
 ```
 
-To manually deploy Cert-Manager, run the following command line from the **Salt-Master** (i.e. proxy01).
+To manually deploy Cert-Manager, run the following command line from the **Salt-Master** (i.e. edge01).
 
 ```bash
 salt -G role:master state.apply kubernetes.ingress.cert-manager

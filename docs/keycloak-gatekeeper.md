@@ -29,7 +29,7 @@ kubernetes:
         - "kubernetes-users,view"
 ```
 
-To manually deploy Keycloak-Gatekeeper, run the following command line from the **Salt-Master** (i.e. proxy01).
+To manually deploy Keycloak-Gatekeeper, run the following command line from the **Salt-Master** (i.e. edge01).
 
 ```bash
 salt -G role:master state.apply kubernetes.charts.keycloak-gatekeeper

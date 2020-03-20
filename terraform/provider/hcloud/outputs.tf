@@ -1,7 +1,7 @@
 output "private_ips" {
   value = [
-    "${hcloud_server.proxy01.*.ipv4_address}",
-    "${hcloud_server.proxy02.*.ipv4_address}",
+    "${hcloud_server.edge01.*.ipv4_address}",
+    "${hcloud_server.edge02.*.ipv4_address}",
     "${hcloud_server.etcd.*.ipv4_address}",
     "${hcloud_server.master.*.ipv4_address}",
     "${hcloud_server.node.*.ipv4_address}",
@@ -10,18 +10,18 @@ output "private_ips" {
 
 output "hostnames" {
   value = [
-    "${hcloud_server.proxy01.*.name}",
-    "${hcloud_server.proxy02.*.name}",
+    "${hcloud_server.edge01.*.name}",
+    "${hcloud_server.edge02.*.name}",
     "${hcloud_server.etcd.*.name}",
     "${hcloud_server.master.*.name}",
     "${hcloud_server.node.*.name}",
   ]
 }
 
-output "proxy_hostnames" {
+output "edge_hostnames" {
   value = [
-    "${hcloud_server.proxy01.*.name}",
-    "${hcloud_server.proxy02.*.name}",
+    "${hcloud_server.edge01.*.name}",
+    "${hcloud_server.edge02.*.name}",
   ]
 }
 
@@ -43,15 +43,15 @@ output "node_hostnames" {
   ]
 }
 
-output "proxy_hostname" {
+output "edge_hostname" {
   value = [
-    "${hcloud_server.proxy01.*.name}",
+    "${hcloud_server.edge01.*.name}",
   ]
 }
 
 output "salt_minion" {
   value = [
-    "${hcloud_server.proxy02.*.ipv4_address}",
+    "${hcloud_server.edge02.*.ipv4_address}",
     "${hcloud_server.etcd.*.ipv4_address}",
     "${hcloud_server.master.*.ipv4_address}",
     "${hcloud_server.node.*.ipv4_address}",
@@ -60,18 +60,18 @@ output "salt_minion" {
 
 output "salt_syndic" {
   value = [
-    "${hcloud_server.proxy01.*.ipv4_address}",
+    "${hcloud_server.edge01.*.ipv4_address}",
   ]
 }
 
 output "bastion_host" {
-  value = "${hcloud_server.proxy01.0.ipv4_address}"
+  value = "${hcloud_server.edge01.0.ipv4_address}"
 }
 
-output "proxy_private_ips" {
+output "edge_private_ips" {
   value = [
-    "${hcloud_server.proxy01.*.ipv4_address}",
-    "${hcloud_server.proxy02.*.ipv4_address}",
+    "${hcloud_server.edge01.*.ipv4_address}",
+    "${hcloud_server.edge02.*.ipv4_address}",
   ]
 }
 
@@ -99,22 +99,22 @@ output "node_public_ips" {
   value = ["${hcloud_server.node.*.ipv4_address}"]
 }
 
-output "proxy01_private_ips" {
-  value = ["${hcloud_server.proxy01.*.ipv4_address}"]
+output "edge01_private_ips" {
+  value = ["${hcloud_server.edge01.*.ipv4_address}"]
 }
 
-output "proxy02_private_ips" {
-  value = ["${hcloud_server.proxy02.*.ipv4_address}"]
+output "edge02_private_ips" {
+  value = ["${hcloud_server.edge02.*.ipv4_address}"]
 }
 
 output "public_ip" {
-  value = ["${hcloud_server.proxy01.*.ipv4_address}"]
+  value = ["${hcloud_server.edge01.*.ipv4_address}"]
 }
 
 output "public_ips" {
   value = [
-    "${hcloud_server.proxy01.*.ipv4_address}",
-    "${hcloud_server.proxy02.*.ipv4_address}",
+    "${hcloud_server.edge01.*.ipv4_address}",
+    "${hcloud_server.edge02.*.ipv4_address}",
   ]
 }
 

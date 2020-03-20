@@ -1,3 +1,3 @@
-# Proxy-Exceptions Module
+# Proxy-exceptions Module
 
-This module sets the addresses allowed to bypass the proxy server.
+This module sets the addresses allowed to bypass the edge server.

@@ -91,8 +91,8 @@ At the end of the process a similar output should be displayed, listing all the 
 Outputs:
 
 hostnames = [
-    proxy01,
-    proxy02,
+    edge01,
+    edge02,
     etcd01,
     etcd02,
     etcd03,
@@ -129,20 +129,20 @@ vpn_ips = [
 
 ### Kubernetes cluster deployment
 
-The Kubernetes cluster deployment is acheived by connecting to the **salt-master** server (i.e proxy01) to execute the salt states.
+The Kubernetes cluster deployment is acheived by connecting to the **salt-master** server (i.e edge01) to execute the salt states.
 
 This can be acheived using the following one-liner...
 
 ```bash
-ssh root@proxy01.example.com -C "salt-run state.orchestrate _orchestrate"
+ssh root@edge01.example.com -C "salt-run state.orchestrate _orchestrate"
 ```
 
 ... Or by opening first a SSH session to get benefit of the salt state output coloring.
 
 ```bash
-ssh root@proxy01.example.com
+ssh root@edge01.example.com
 
-root@proxy01 ~ # salt-run state.orchestrate _orchestrate
+root@edge01 ~ # salt-run state.orchestrate _orchestrate
 ```
 
 ---
@@ -161,7 +161,7 @@ Download the Kubernetes cluster CA certificate.
 export CLUSTER_DOMAIN="example.com"
 
 mkdir -p ~/.kube/ssl/${CLUSTER_DOMAIN}
-scp root@proxy01.${CLUSTER_DOMAIN}:/etc/kubernetes/ssl/ca.pem ~/.kube/ssl/${CLUSTER_DOMAIN}/
+scp root@edge01.${CLUSTER_DOMAIN}:/etc/kubernetes/ssl/ca.pem ~/.kube/ssl/${CLUSTER_DOMAIN}/
 ```
 
 Create the kubectl configuration file.
@@ -215,8 +215,8 @@ node03     Ready    node           11d   v1.12.1
 node04     Ready    node           11d   v1.12.1
 node05     Ready    node           11d   v1.12.1
 node06     Ready    node           11d   v1.12.1
-proxy01    Ready    ingress,node   11d   v1.12.1
-proxy02    Ready    ingress,node   11d   v1.12.1
+edge01    Ready    ingress,node   11d   v1.12.1
+edge02    Ready    ingress,node   11d   v1.12.1
 ```
 
 Retreive the URLs protected by the Kube-APIserver.

@@ -3,12 +3,12 @@
 ##################################################
 # variable "count" {}
 
-resource "null_resource" "salt-minion-proxy" {
-  count = "${var.proxy_count}"
+resource "null_resource" "salt-minion-edge" {
+  count = "${var.edge_count}"
 
   connection {
     type                = "ssh"
-    host                = "${element(var.proxy_private_ips, count.index)}"
+    host                = "${element(var.edge_private_ips, count.index)}"
     user                = "${var.ssh_user}"
     private_key         = "${file(var.ssh_private_key)}"
     agent               = false
@@ -27,7 +27,7 @@ resource "null_resource" "salt-minion-proxy" {
   }
 
   provisioner "file" {
-    content     = "role: proxy"
+    content     = "role: edge"
     destination = "/etc/salt/grains"
   }
 

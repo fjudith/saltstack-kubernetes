@@ -20,18 +20,18 @@ resource "scaleway_ip" "public_ip" {
 }
 
 ##################################################
-# Proxy 0
+# edge 0
 ##################################################
-resource "scaleway_server" "proxy01" {
+resource "scaleway_server" "edge01" {
   count       = 1
-  name        = "proxy01"
+  name        = "edge01"
   image       = "${data.scaleway_image.ubuntu.id}"
   bootscript  = "${data.scaleway_bootscript.bootscript.id}"
-  type        = "${var.proxy_type}"
+  type        = "${var.edge_type}"
   public_ip   = "${element(scaleway_ip.public_ip.*.ip, count.index)}"
   state       = "running"
   enable_ipv6 = true
-  tags        = ["proxy", "primary"]
+  tags        = ["edge", "primary"]
 
   connection {
     type        = "ssh"
@@ -113,7 +113,7 @@ provisioner "remote-exec" {
   }
 
   provisioner "file" {
-    content     = "role: proxy"
+    content     = "role: edge"
     destination = "/etc/salt/grains"
   }
 
@@ -142,19 +142,19 @@ provisioner "remote-exec" {
 }
 
 ##################################################
-# proxy02
+# edge02
 ##################################################
-resource "scaleway_server" "proxy02" {
-  depends_on = ["scaleway_server.proxy01"]
+resource "scaleway_server" "edge02" {
+  depends_on = ["scaleway_server.edge01"]
 
   count       = 1
-  name        = "proxy02"
+  name        = "edge02"
   image       = "${data.scaleway_image.ubuntu.id}"
   bootscript  = "${data.scaleway_bootscript.bootscript.id}"
-  type        = "${var.proxy_type}"
+  type        = "${var.edge_type}"
   state       = "running"
   enable_ipv6 = true
-  tags        = ["proxy", "secondary"]
+  tags        = ["edge", "secondary"]
 
   connection {
     type                = "ssh"
@@ -162,7 +162,7 @@ resource "scaleway_server" "proxy02" {
     user                = "${var.ssh_user}"
     private_key         = "${file(var.ssh_private_key)}"
     agent               = false
-    bastion_host        = "${scaleway_server.proxy01.0.public_ip}"
+    bastion_host        = "${scaleway_server.edge01.0.public_ip}"
     bastion_user        = "${var.ssh_user}"
     bastion_private_key = "${file(var.ssh_private_key)}"
     timeout             = "2m"
@@ -185,8 +185,8 @@ resource "scaleway_server" "proxy02" {
 
   provisioner "remote-exec" {
     inline = [
-      "echo 'http_proxy=http://${scaleway_server.proxy01.0.private_ip}:8888' | tee -a  /etc/environment",
-      "echo 'https_proxy=http://${scaleway_server.proxy01.0.private_ip}:8888' | tee -a  /etc/environment",
+      "echo 'http_proxy=http://${scaleway_server.edge01.0.private_ip}:8888' | tee -a  /etc/environment",
+      "echo 'https_proxy=http://${scaleway_server.edge01.0.private_ip}:8888' | tee -a  /etc/environment",
     ]
   }
 
@@ -236,7 +236,7 @@ resource "scaleway_server" "proxy02" {
   }
 
   provisioner "file" {
-    content     = "role: proxy"
+    content     = "role: edge"
     destination = "/etc/salt/grains"
   }
 }
@@ -245,7 +245,7 @@ resource "scaleway_server" "proxy02" {
 # etcd
 ##################################################
 resource "scaleway_server" "etcd" {
-  depends_on = ["scaleway_server.proxy01"]
+  depends_on = ["scaleway_server.edge01"]
 
   count       = "${var.etcd_count}"
   name        = "${format("etcd%02d", count.index + 1)}"
@@ -264,7 +264,7 @@ resource "scaleway_server" "etcd" {
     user                = "${var.ssh_user}"
     private_key         = "${file(var.ssh_private_key)}"
     agent               = false
-    bastion_host        = "${scaleway_server.proxy01.0.public_ip}"
+    bastion_host        = "${scaleway_server.edge01.0.public_ip}"
     bastion_user        = "${var.ssh_user}"
     bastion_private_key = "${file(var.ssh_private_key)}"
     timeout             = "2m"
@@ -287,8 +287,8 @@ resource "scaleway_server" "etcd" {
 
   provisioner "remote-exec" {
     inline = [
-      "echo 'http_proxy=http://${scaleway_server.proxy01.0.private_ip}:8888' | tee -a  /etc/environment",
-      "echo 'https_proxy=http://${scaleway_server.proxy01.0.private_ip}:8888' | tee -a  /etc/environment",
+      "echo 'http_proxy=http://${scaleway_server.edge01.0.private_ip}:8888' | tee -a  /etc/environment",
+      "echo 'https_proxy=http://${scaleway_server.edge01.0.private_ip}:8888' | tee -a  /etc/environment",
     ]
   }
 
@@ -345,7 +345,7 @@ provisioner "remote-exec" {
 # Kubernetes Master
 ##################################################
 resource "scaleway_server" "master" {
-  depends_on = ["scaleway_server.proxy01", "scaleway_server.etcd"]
+  depends_on = ["scaleway_server.edge01", "scaleway_server.etcd"]
 
   count      = "${var.master_count}"
   name       = "${format("master%02d", count.index + 1)}"
@@ -364,7 +364,7 @@ resource "scaleway_server" "master" {
     user                = "${var.ssh_user}"
     private_key         = "${file(var.ssh_private_key)}"
     agent               = false
-    bastion_host        = "${scaleway_server.proxy01.0.public_ip}"
+    bastion_host        = "${scaleway_server.edge01.0.public_ip}"
     bastion_user        = "${var.ssh_user}"
     bastion_private_key = "${file(var.ssh_private_key)}"
     timeout             = "2m"
@@ -387,8 +387,8 @@ resource "scaleway_server" "master" {
 
   provisioner "remote-exec" {
     inline = [
-      "echo 'http_proxy=http://${scaleway_server.proxy01.0.private_ip}:8888' | tee -a  /etc/environment",
-      "echo 'https_proxy=http://${scaleway_server.proxy01.0.private_ip}:8888' | tee -a  /etc/environment",
+      "echo 'http_edge=http://${scaleway_server.edge01.0.private_ip}:8888' | tee -a  /etc/environment",
+      "echo 'https_proxy=http://${scaleway_server.edge01.0.private_ip}:8888' | tee -a  /etc/environment",
     ]
   }
 
@@ -445,7 +445,7 @@ provisioner "remote-exec" {
 # Kubernetes Node
 ##################################################
 resource "scaleway_server" "node" {
-  depends_on = ["scaleway_server.proxy01", "scaleway_server.master"]
+  depends_on = ["scaleway_server.edge01", "scaleway_server.master"]
 
   count       = "${var.node_count}"
   name        = "${format("node%02d", count.index + 1)}"
@@ -462,7 +462,7 @@ resource "scaleway_server" "node" {
     user                = "${var.ssh_user}"
     private_key         = "${file(var.ssh_private_key)}"
     agent               = false
-    bastion_host        = "${scaleway_server.proxy01.0.public_ip}"
+    bastion_host        = "${scaleway_server.edge01.0.public_ip}"
     bastion_user        = "${var.ssh_user}"
     bastion_private_key = "${file(var.ssh_private_key)}"
     timeout             = "2m"
@@ -490,8 +490,8 @@ resource "scaleway_server" "node" {
 
   provisioner "remote-exec" {
     inline = [
-      "echo 'http_proxy=http://${scaleway_server.proxy01.0.private_ip}:8888' | tee -a  /etc/environment",
-      "echo 'https_proxy=http://${scaleway_server.proxy01.0.private_ip}:8888' | tee -a  /etc/environment",
+      "echo 'http_proxy=http://${scaleway_server.edge01.0.private_ip}:8888' | tee -a  /etc/environment",
+      "echo 'https_proxy=http://${scaleway_server.edge01.0.private_ip}:8888' | tee -a  /etc/environment",
     ]
   }
 

@@ -27,7 +27,7 @@ The following certificates are required for the TLS mutual authentication and en
 
 Node configuration does not involes any specific pillar data.
 
-To manually configure a Node run the following command line from the **Salt-Master** (i.e. proxy01).
+To manually configure a Node run the following command line from the **Salt-Master** (i.e. edge01).
 
 ```bash
 salt -G role:node state.apply

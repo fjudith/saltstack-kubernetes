@@ -32,7 +32,7 @@ Download the Kubernetes cluster CA certificate.
 export CLUSTER_DOMAIN="example.com"
 
 mkdir -p ~/.kube/ssl/${CLUSTER_DOMAIN}
-scp root@proxy01.${CLUSTER_DOMAIN}:/etc/kubernetes/ssl/ca.pem ~/.kube/ssl/${CLUSTER_DOMAIN}/
+scp root@edge01.${CLUSTER_DOMAIN}:/etc/kubernetes/ssl/ca.pem ~/.kube/ssl/${CLUSTER_DOMAIN}/
 ```
 
 Create the kubectl configuration file.
@@ -86,8 +86,8 @@ node03     Ready    node           11d   v1.12.1
 node04     Ready    node           11d   v1.12.1
 node05     Ready    node           11d   v1.12.1
 node06     Ready    node           11d   v1.12.1
-proxy01    Ready    ingress,node   11d   v1.12.1
-proxy02    Ready    ingress,node   11d   v1.12.1
+edge01    Ready    ingress,node   11d   v1.12.1
+edge02    Ready    ingress,node   11d   v1.12.1
 ```
 
 Retreive the URLs protected by the Kube-APIserver.

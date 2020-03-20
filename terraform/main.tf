@@ -5,7 +5,7 @@
 
 #   organization     = "${var.scaleway_organization}"
 #   token            = "${var.scaleway_token}"
-#   proxy_type       = "${var.proxy_type}"
+#   edge_type       = "${var.edge_type}"
 #   etcd_count       = "${var.etcd_count}"
 #   etcd_type        = "${var.etcd_type}"
 #   master_count     = "${var.master_count}"
@@ -22,7 +22,7 @@ module "provider" {
   source = "./provider/hcloud"
 
   token        = "${var.hcloud_token}"
-  proxy_type   = "${var.proxy_type}"
+  edge_type    = "${var.edge_type}"
   etcd_count   = "${var.etcd_count}"
   etcd_type    = "${var.etcd_type}"
   master_count = "${var.master_count}"
@@ -36,7 +36,7 @@ module "provider" {
 module "proxy-exception" {
   source = "./security/proxy-exceptions"
 
-  count        = "${var.etcd_count + var.master_count + var.node_count + 2}"
+  host_count   = "${var.etcd_count + var.master_count + var.node_count + 2}"
   bastion_host = "${module.provider.bastion_host}"
   vpn_iprange  = "${var.vpn_iprange}"
   overlay_cidr = "${var.overlay_cidr}"
@@ -47,22 +47,21 @@ module "proxy-exception" {
 module "dns" {
   source = "./dns/cloudflare"
 
-  count      = 1
+  dns_count  = 1
   email      = "${var.cloudflare_email}"
   token      = "${var.cloudflare_token}"
   domain     = "${var.domain}"
   public_ips = "${module.provider.public_ip}"
-  hostnames  = "${module.provider.proxy_hostname}"
+  hostnames  = "${module.provider.edge_hostname}"
 }
 
 module "wireguard" {
   source = "./security/wireguard"
 
-  count        = "${var.etcd_count + var.master_count + var.node_count + 2}"
   bastion_host = "${module.provider.bastion_host}"
   private_ips  = "${module.provider.private_ips}"
-  proxy_count  = "${var.proxy_count}"
-  proxy_bit    = "${var.proxy_bit}"
+  edge_count   = "${var.edge_count}"
+  edge_bit     = "${var.edge_bit}"
   etcd_count   = "${var.etcd_count}"
   etcd_bit     = "${var.etcd_bit}"
   master_count = "${var.master_count}"
@@ -88,11 +87,11 @@ module "wireguard" {
 #   source = "./management/salt-minion"
 
 #   bastion_host       = "${module.provider.bastion_host}"
-#   salt_master_host   = "${module.wireguard.proxy_vpn_ips[0]}"
-#   http_proxy_host    = "${module.wireguard.proxy_vpn_ips[0]}"
-#   http_proxy_port    = 3128
-#   proxy_count        = "${var.proxy_count}"
-#   proxy_private_ips  = "${module.wireguard.proxy_vpn_ips}"
+#   salt_master_host   = "${module.wireguard.edge_vpn_ips[0]}"
+#   http_edge_host    = "${module.wireguard.edge_vpn_ips[0]}"
+#   http_edge_port    = 3128
+#   edge_count        = "${var.edge_count}"
+#   edge_private_ips  = "${module.wireguard.edge_vpn_ips}"
 #   etcd_count         = "${var.etcd_count}"
 #   etcd_private_ips   = "${module.wireguard.etcd_vpn_ips}"
 #   master_count       = "${var.master_count}"
@@ -101,10 +100,10 @@ module "wireguard" {
 #   node_private_ips   = "${module.wireguard.node_vpn_ips}"
 # }
 
-# module "firewall-proxy" {
-#   source = "./security/ufw/proxy"
+# module "firewall-edge" {
+#   source = "./security/ufw/edge"
 
-#   count                = "${var.proxy_count}"
+#   count                = "${var.edge_count}"
 #   bastion_host         = "${module.provider.bastion_host}"
 #   private_interface    = "${module.provider.private_network_interface}"
 #   vpn_interface        = "${module.wireguard.vpn_interface}"
@@ -112,7 +111,7 @@ module "wireguard" {
 #   docker_interface     = "${var.docker_interface}"
 #   kubernetes_interface = "${var.overlay_interface}"
 #   overlay_cidr         = "${var.overlay_cidr}"
-#   connections          = "${module.provider.proxy_private_ips}"
+#   connections          = "${module.provider.edge_private_ips}"
 # }
 
 # module "firewall-etcd" {
@@ -160,9 +159,9 @@ module "encryption" {
   source = "./encryption/cfssl"
 
   bastion_host       = "${module.provider.bastion_host}"
-  proxy_count        = "${var.proxy_count}"
-  proxy_private_ips  = "${module.wireguard.proxy_vpn_ips}"
-  proxy_hostnames    = "${module.provider.proxy_hostnames}"
+  edge_count         = "${var.edge_count}"
+  edge_private_ips   = "${module.wireguard.edge_vpn_ips}"
+  edge_hostnames     = "${module.provider.edge_hostnames}"
   etcd_count         = "${var.etcd_count}"
   etcd_private_ips   = "${module.wireguard.etcd_vpn_ips}"
   etcd_hostnames     = "${module.provider.etcd_hostnames}"
@@ -183,15 +182,15 @@ module "encryption" {
 #   bastion_host  = "${module.provider.bastion_host}"
 #   vpn_interface = "${module.wireguard.vpn_interface}"
 #   gateway       = "${element(module.wireguard.gateway_vpn_ips,0)}"
-#   connections   = "${concat(list(module.wireguard.proxy_vpn_ips[1]), module.wireguard.etcd_vpn_ips, module.wireguard.master_vpn_ips, module.wireguard.node_vpn_ips)}"
+#   connections   = "${concat(list(module.wireguard.edge_vpn_ips[1]), module.wireguard.etcd_vpn_ips, module.wireguard.master_vpn_ips, module.wireguard.node_vpn_ips)}"
 # }
 
 output "hostnames" {
   value = "${module.provider.hostnames}"
 }
 
-output "proxy_hostnames" {
-  value = "${module.provider.proxy_hostnames}"
+output "edge_hostnames" {
+  value = "${module.provider.edge_hostnames}"
 }
 
 output "private_ips" {

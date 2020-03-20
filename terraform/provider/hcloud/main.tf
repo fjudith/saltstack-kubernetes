@@ -16,14 +16,14 @@ resource "hcloud_network_subnet" "kubernetes" {
   ip_range = "10.0.1.0/24"
 }
 
-resource "hcloud_server" "proxy01" {
+resource "hcloud_server" "edge01" {
   count       = 1
-  name        = "proxy01"
+  name        = "edge01"
   location    = "${var.location}"
   image       = "${var.image}"
-  server_type = "${var.proxy_type}"
+  server_type = "${var.edge_type}"
   ssh_keys    = ["${var.ssh_keys}"]
-  user_data   = "${data.template_file.proxy01_cloud-init.rendered}"
+  user_data   = "${data.template_file.edge01_cloud-init.rendered}"
   labels = {
     app  = "kubernetes"
     role = "edge_router"
@@ -70,18 +70,18 @@ resource "hcloud_server" "proxy01" {
 }
 
 ##################################################
-# proxy02
+# edge02
 ##################################################
-resource "hcloud_server" "proxy02" {
-  depends_on = ["hcloud_server.proxy01"]
+resource "hcloud_server" "edge02" {
+  depends_on = ["hcloud_server.edge01"]
 
   count       = 1
-  name        = "proxy02"
+  name        = "edge02"
   location    = "${var.location}"
   image       = "${var.image}"
-  server_type = "${var.proxy_type}"
+  server_type = "${var.edge_type}"
   ssh_keys    = ["${var.ssh_keys}"]
-  user_data   = "${data.template_file.proxy02_cloud-init.rendered}"
+  user_data   = "${data.template_file.edge02_cloud-init.rendered}"
   labels = {
     app  = "kubernetes"
     role = "edge_router"
@@ -94,7 +94,7 @@ resource "hcloud_server" "proxy02" {
     user                = "${var.ssh_user}"
     private_key         = "${file(var.ssh_private_key)}"
     agent               = false
-    bastion_host        = "${hcloud_server.proxy01.0.ipv4_address}"
+    bastion_host        = "${hcloud_server.edge01.0.ipv4_address}"
     bastion_user        = "${var.ssh_user}"
     bastion_private_key = "${file(var.ssh_private_key)}"
     timeout             = "2m"
@@ -134,7 +134,7 @@ resource "hcloud_server" "proxy02" {
 # etcd
 ##################################################
 resource "hcloud_server" "etcd" {
-  depends_on = ["hcloud_server.proxy01"]
+  depends_on = ["hcloud_server.edge01"]
 
   count       = "${var.etcd_count}"
   name        = "${format("etcd%02d", count.index + 1)}"
@@ -155,7 +155,7 @@ resource "hcloud_server" "etcd" {
     user                = "${var.ssh_user}"
     private_key         = "${file(var.ssh_private_key)}"
     agent               = false
-    bastion_host        = "${hcloud_server.proxy01.0.ipv4_address}"
+    bastion_host        = "${hcloud_server.edge01.0.ipv4_address}"
     bastion_user        = "${var.ssh_user}"
     bastion_private_key = "${file(var.ssh_private_key)}"
     timeout             = "2m"
@@ -172,7 +172,7 @@ resource "hcloud_server" "etcd" {
 # Kubernetes Master
 ##################################################
 resource "hcloud_server" "master" {
-  depends_on = ["hcloud_server.proxy01", "hcloud_server.etcd"]
+  depends_on = ["hcloud_server.edge01", "hcloud_server.etcd"]
 
   count       = "${var.master_count}"
   name        = "${format("master%02d", count.index + 1)}"
@@ -193,7 +193,7 @@ resource "hcloud_server" "master" {
     user                = "${var.ssh_user}"
     private_key         = "${file(var.ssh_private_key)}"
     agent               = false
-    bastion_host        = "${hcloud_server.proxy01.0.ipv4_address}"
+    bastion_host        = "${hcloud_server.edge01.0.ipv4_address}"
     bastion_user        = "${var.ssh_user}"
     bastion_private_key = "${file(var.ssh_private_key)}"
     timeout             = "2m"
@@ -210,7 +210,7 @@ resource "hcloud_server" "master" {
 # Kubernetes Node
 ##################################################
 resource "hcloud_server" "node" {
-  depends_on = ["hcloud_server.proxy01", "hcloud_server.master"]
+  depends_on = ["hcloud_server.edge01", "hcloud_server.master"]
 
   count       = "${var.node_count}"
   name        = "${format("node%02d", count.index + 1)}"
@@ -231,7 +231,7 @@ resource "hcloud_server" "node" {
     user                = "${var.ssh_user}"
     private_key         = "${file(var.ssh_private_key)}"
     agent               = false
-    bastion_host        = "${hcloud_server.proxy01.0.ipv4_address}"
+    bastion_host        = "${hcloud_server.edge01.0.ipv4_address}"
     bastion_user        = "${var.ssh_user}"
     bastion_private_key = "${file(var.ssh_private_key)}"
     timeout             = "2m"
@@ -244,15 +244,15 @@ resource "hcloud_server" "node" {
   }
 }
 
-resource "hcloud_server_network" "proxy01" {
+resource "hcloud_server_network" "edge01" {
   count = 1
-  server_id = "${hcloud_server.proxy01.id}"
+  server_id = "${hcloud_server.edge01.id}"
   network_id = "${hcloud_network.private.id}"
 }
 
-resource "hcloud_server_network" "proxy02" {
+resource "hcloud_server_network" "edge02" {
   count = 1
-  server_id = "${hcloud_server.proxy02.id}"
+  server_id = "${hcloud_server.edge02.id}"
   network_id = "${hcloud_network.private.id}"
 }
 
@@ -274,8 +274,8 @@ resource "hcloud_server_network" "node" {
   network_id = "${hcloud_network.private.id}"
 }
 
-data "template_file" "proxy01_cloud-init" {
-  template = "${file("${path.module}/templates/proxy_user-data.yaml")}"
+data "template_file" "edge01_cloud-init" {
+  template = "${file("${path.module}/templates/edge_user-data.yaml")}"
   vars {
     SALT_MASTER_HOST     = "localhost"
     VPN_INTERFACE        = "${var.vpn_interface}"
@@ -285,10 +285,10 @@ data "template_file" "proxy01_cloud-init" {
   }
 }
 
-data "template_file" "proxy02_cloud-init" {
-  template = "${file("${path.module}/templates/proxy_user-data.yaml")}"
+data "template_file" "edge02_cloud-init" {
+  template = "${file("${path.module}/templates/edge_user-data.yaml")}"
   vars {
-    SALT_MASTER_HOST     = "${hcloud_server.proxy01.0.name}"
+    SALT_MASTER_HOST     = "${hcloud_server.edge01.0.name}"
     VPN_INTERFACE        = "${var.vpn_interface}"
     VPN_IP_RANGE         = "${var.vpn_iprange}"
     VPN_PORT             = "${var.vpn_port}"
@@ -300,7 +300,7 @@ data "template_file" "etcd_cloud-init" {
   count    = 1
   template = "${file("${path.module}/templates/etcd_user-data.yaml")}"
   vars {
-    SALT_MASTER_HOST     = "${hcloud_server.proxy01.0.name}"
+    SALT_MASTER_HOST     = "${hcloud_server.edge01.0.name}"
     VPN_INTERFACE        = "${var.vpn_interface}"
     VPN_IP_RANGE         = "${var.vpn_iprange}"
     VPN_PORT             = "${var.vpn_port}"
@@ -312,7 +312,7 @@ data "template_file" "master_cloud-init" {
   count    = 1
   template = "${file("${path.module}/templates/master_user-data.yaml")}"
   vars {
-    SALT_MASTER_HOST     = "${hcloud_server.proxy01.0.name}"
+    SALT_MASTER_HOST     = "${hcloud_server.edge01.0.name}"
     VPN_INTERFACE        = "${var.vpn_interface}"
     VPN_IP_RANGE         = "${var.vpn_iprange}"
     VPN_PORT             = "${var.vpn_port}"
@@ -324,7 +324,7 @@ data "template_file" "node_cloud-init" {
   count    = 1
   template = "${file("${path.module}/templates/node_user-data.yaml")}"
   vars {
-    SALT_MASTER_HOST     = "${hcloud_server.proxy01.0.name}"
+    SALT_MASTER_HOST     = "${hcloud_server.edge01.0.name}"
     VPN_INTERFACE        = "${var.vpn_interface}"
     VPN_IP_RANGE         = "${var.vpn_iprange}"
     VPN_PORT             = "${var.vpn_port}"

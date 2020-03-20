@@ -47,7 +47,7 @@ variable "node_count" {
   default = 3
 }
 
-variable "proxy_type" {
+variable "edge_type" {
   default = "cx11"
 }
 

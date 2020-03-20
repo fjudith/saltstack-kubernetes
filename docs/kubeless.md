@@ -13,7 +13,7 @@ kubernetes:
         ui_version: master
 ```
 
-To manually deploy Kubeless, run the following command line from the **Salt-Master** (i.e. proxy01).
+To manually deploy Kubeless, run the following command line from the **Salt-Master** (i.e. edge01).
 
 ```bash
 salt -G role:master state.apply kubernetes.addons.kubeless

@@ -5,7 +5,7 @@ provider "cloudflare" {
 }
 
 resource "cloudflare_record" "hosts" {
-  count = "${var.count}"
+  count = "${var.dns_count}"
 
   domain  = "${var.domain}"
   name    = "${element(var.hostnames, count.index)}"

@@ -52,7 +52,7 @@ kubernetes:
         name: master03
 ```
 
-To manually configure a Master and deploy the Kubernetes [cluster addons](./features.md) run the following command line from the **Salt-Master** (i.e. proxy01).
+To manually configure a Master and deploy the Kubernetes [cluster addons](./features.md) run the following command line from the **Salt-Master** (i.e. edge01).
 
 ```bash
 salt -G role:master state.apply
@@ -92,8 +92,8 @@ node03     Ready    node           14d   v1.12.2   172.17.4.203   <none>        
 node04     Ready    node           14d   v1.12.2   172.17.4.204   <none>        Ubuntu 18.04.1 LTS   4.15.0-34-generic   containerd://1.2.0
 node05     Ready    node           14d   v1.12.2   172.17.4.205   <none>        Ubuntu 18.04 LTS     4.15.0-22-generic   containerd://1.2.0
 node06     Ready    node           14d   v1.12.2   172.17.4.206   <none>        Ubuntu 18.04.1 LTS   4.15.0-34-generic   containerd://1.2.0
-proxy01    Ready    ingress,node   14d   v1.12.2   172.17.4.251   <none>        Ubuntu 18.04.1 LTS   4.15.0-34-generic   containerd://1.2.0
-proxy02    Ready    ingress,node   14d   v1.12.2   172.17.4.252   <none>        Ubuntu 18.04.1 LTS   4.15.0-34-generic   containerd://1.2.0
+edge01    Ready    ingress,node   14d   v1.12.2   172.17.4.251   <none>        Ubuntu 18.04.1 LTS   4.15.0-34-generic   containerd://1.2.0
+edge02    Ready    ingress,node   14d   v1.12.2   172.17.4.252   <none>        Ubuntu 18.04.1 LTS   4.15.0-34-generic   containerd://1.2.0
 ```
 
 

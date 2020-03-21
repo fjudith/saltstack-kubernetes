@@ -1,6 +1,17 @@
+{%- from "kubernetes/map.jinja" import common with context -%}
+
 include:
-  - kubernetes.csi.rook-ceph.config
-  - kubernetes.csi.rook-ceph.namespace
-  - kubernetes.csi.rook-ceph.install
-  - kubernetes.csi.rook-ceph.ingress
-  - kubernetes.csi.rook-ceph.storageclass
+  - .config
+  - .namespace
+  - .install
+  - .pool
+  - .object
+  - .filesystem
+  - .toolbox
+  - .ingress
+  {%- if common.addons.get('kube_prometheus', {'enabled': False}).enabled %}
+  - .prometheus
+  {%- else %}
+  - .prometheus_embeded
+  {%- endif %}
+  - .storageclass

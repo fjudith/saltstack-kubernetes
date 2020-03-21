@@ -5,6 +5,7 @@ rook_ceph:
   exporter_image: digitalocean/ceph_exporter:latest
   ingress_host: ceph
   store_type: filestore
+  timeout: 180
   default_storageclass:
     enabled: true
     name: rook-ceph-block

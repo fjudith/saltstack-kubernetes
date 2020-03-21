@@ -36,18 +36,3 @@ subjects:
   name: prometheus-k8s
   namespace: monitoring
 ---
-apiVersion: monitoring.coreos.com/v1
-kind: Prometheus
-metadata:
-  name: rook-prometheus
-  namespace: rook-ceph
-  labels:
-    prometheus: rook-prometheus
-spec:
-  serviceAccountName: prometheus-k8s
-  serviceMonitorSelector:
-    matchLabels:
-      team: rook
-  resources:
-    requests:
-      memory: 400Mi

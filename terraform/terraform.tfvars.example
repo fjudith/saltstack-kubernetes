@@ -11,7 +11,7 @@ ovh_application_key = "0123456789abcefg"
 
 ovh_application_secret = "abcdefghij0123456789abcdefghij01"
 
-ovh_consummer_key = "0123456789abcdefghij0134567890ab"
+ovh_consumer_key = "0123456789abcdefghij0134567890ab"
 /* */
 
 cluster_public_dns = "kubernetes.domain.tld"

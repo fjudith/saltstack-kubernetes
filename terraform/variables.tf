@@ -166,7 +166,7 @@ variable "ovh_application_secret" {
   default = "0123456789abcdef0123456789abcdef"
 }
 
-variable "ovh_consummer_key" {
+variable "ovh_consumer_key" {
   description = "OVH API consummer key"
   default = "0123456789abcdef0123456789abcdef"
 }

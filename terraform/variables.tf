@@ -151,6 +151,26 @@ variable "cloudflare_token" {
   default     = "01234567890123456789012345678901234567"
 }
 
+variable "ovh_endpoint" {
+  description = "OVH API endpoint"
+  default = "ovh-eu"
+}
+
+variable "ovh_application_key" {
+  description = "OVH API application key"
+  default = "0123456789abcdef"
+}
+
+variable "ovh_application_secret" {
+  description = "OVH API secret key"
+  default = "0123456789abcdef0123456789abcdef"
+}
+
+variable "ovh_consummer_key" {
+  description = "OVH API consummer key"
+  default = "0123456789abcdef0123456789abcdef"
+}
+
 variable "domain" {
   default = "domain.tld"
 }

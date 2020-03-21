@@ -1,6 +1,18 @@
+/* Cloud Flare */
 cloudflare_email = "user@domain.tld"
 
 cloudflare_token = "0123456789abcdefghijklmnopqrstuvwxyz0"
+/* */
+
+/* OVH */
+ovh_endpoint = "ovh_eu"
+
+ovh_application_key = "0123456789abcefg"
+
+ovh_application_secret = "abcdefghij0123456789abcdefghij01"
+
+ovh_consummer_key = "0123456789abcdefghij0134567890ab"
+/* */
 
 cluster_public_dns = "kubernetes.domain.tld"
 

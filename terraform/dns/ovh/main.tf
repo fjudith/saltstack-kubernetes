@@ -35,9 +35,9 @@ resource "ovh_domain_zone_record" "wildcard" {
 resource "ovh_domain_zone_record" "kubernetes" {
   depends_on = ["ovh_domain_zone_record.domain"]
 
-  domain  = "${var.domain}"
-  name    = "kubernetes"
-  value   = "${var.domain}"
-  type    = "CNAME"
-  ttl     = 30
+  zone      = "${var.domain}"
+  subdomain = "kubernetes"
+  target    = "${var.domain}"
+  fieldtype = "CNAME"
+  ttl       = 30
 }

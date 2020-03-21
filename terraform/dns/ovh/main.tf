@@ -23,7 +23,7 @@ resource "ovh_domain_zone_record" "domain" {
 }
 
 resource "ovh_domain_zone_record" "wildcard" {
-  ["ovh_domain_zone_record.domain"]
+  depends_on = ["ovh_domain_zone_record.domain"]
 
   zone       = "${var.domain}"
   subdomain  = "*"

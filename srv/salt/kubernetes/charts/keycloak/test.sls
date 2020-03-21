@@ -6,7 +6,6 @@
 {%- set public_domain = pillar['public-domain'] -%}
 {%- from "kubernetes/map.jinja" import charts with context -%}
 
-
 query-keycloak:
   http.wait_for_successful_query:
     - name: "https://{{ keycloak.ingress_host }}.{{ public_domain }}/auth/realms/master/"
@@ -14,19 +13,19 @@ query-keycloak:
     - request_interval: 5
     - status: 200
     - require_in:
-      - sls: kubernetes.charts.keycloak-gatekeeper
+      - sls: kubernetes.charts.keycloak-gatekeeper.init
       {%- if charts.get('concourse', {'enabled': False}).enabled %}
-      - sls: kubernetes.charts.concourse
+      - sls: kubernetes.charts.concourse.init
       {%- endif %}
       {%- if charts.get('harbor', {'enabled': False}).enabled %}
-      - sls: kubernetes.charts.harbor
+      - sls: kubernetes.charts.harbor.init
       {%- endif %}
       {%- if charts.get('spinnaker', {'enabled': False}).enabled %}
-      - sls: kubernetes.charts.spinnaker
+      - sls: kubernetes.charts.spinnaker.init
       {%- endif %}
       {%- if charts.get('proxyinjector', {'enabled': False}).enabled %}
-      - sls: kubernetes.charts.proxyinjector
+      - sls: kubernetes.charts.proxyinjector.init
       {%- endif %}
       {%- if charts.get('openfaas', {'enabled': False}).enabled %}
-      - sls: kubernetes.charts.openfaas
+      - sls: kubernetes.charts.openfaas.init
       {%- endif %}

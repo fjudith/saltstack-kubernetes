@@ -13,16 +13,15 @@ cert-manager-crds:
     - onlyif: curl --silent 'http://127.0.0.1:8080/healthz/'
     - name: kubectl apply -f /srv/kubernetes/manifests/cert-manager/00-crds.yaml
 
-cert-manager-secret:
+{% if cert_manager.get('dns', {'enabled': False}).enabled and cert_manager.dns.provider == 'cloudflare'%}
+cert-manager-cloudflare-secret:
   cmd.run:
     - runas: root
     - use_vt: True
     - name: |
-        echo "Configure DNS provider secret"
-        {%- if cert_manager.get('dns', {'enabled': False}).enabled and cert_manager.dns.provider == 'cloudflare'%}
         kubectl -n cert-manager delete secret public-dns-secret
         kubectl -n cert-manager create secret generic public-dns-secret --from-literal=secret-access-key="{{ cert_manager.dns.cloudflare.secret }}"
-        {%- endif %}
+{% endif %}
 
 cert-manager:
   cmd.run:

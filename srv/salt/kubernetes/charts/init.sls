@@ -8,11 +8,11 @@ include:
 {%- if charts.get('vistio', {'enabled': False}).enabled %}
   - kubernetes.charts.vistio
 {%- endif -%}
-{%- if charts.get('proxyinjector', {'enabled': False}).enabled %}
-  - kubernetes.charts.proxyinjector
-{%- endif -%}
 {%- if charts.get('keycloak', {'enabled': False}).enabled and charts.get('keycloak_gatekeeper', {'enabled': False}).enabled %}
   - kubernetes.charts.keycloak-gatekeeper
+{%- endif -%}
+{%- if charts.get('proxyinjector', {'enabled': False}).enabled %}
+  - kubernetes.charts.proxyinjector
 {%- endif -%}
 {%- if charts.get('harbor', {'enabled': False}).enabled %}
   - kubernetes.charts.harbor
@@ -25,4 +25,7 @@ include:
 {%- endif -%}
 {%- if charts.get('openfaas', {'enabled': False}).enabled %}
   - kubernetes.charts.openfaas
+{%- endif -%}
+{%- if charts.get('falco', {'enabled': False}).enabled %}
+  - kubernetes.charts.falco
 {%- endif -%}

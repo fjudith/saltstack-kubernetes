@@ -94,6 +94,25 @@ Solutions for Function as a Service.
   </tr>
 </table>
 
+## Security & Compliance
+
+Solutions for continuous security audit.
+
+<table>
+  <tr align='center'>
+    <th align='center'>Threat detection engine</th>
+  </tr>
+  <tr align='center'>
+    <td align='center'><a ref='https://falco.org'>Falco<a></td>
+  </tr>
+  <tr align='center'>
+    <td align='center'><img src='media/falco.png' width="50px"></td>
+  </tr>
+  <tr>
+    <td align='center'>Detects unexpected applicaton behavioir and alerts on theats at runtime.</td>
+  </tr>
+</table>
+
 ## Continuous delivery
 
 Solutions for software factory.
@@ -377,15 +396,18 @@ Managed DNS services.
 
 <table>
   <tr align='center'>
-    <th align='center' colspan='1'>Name resolution</th>
+    <th align='center' colspan='2'>Name resolution</th>
   </tr>
   <tr align='center'>
     <td align='center'>Cloudflare</td>
+    <td align='center'>OVH</td>
   </tr>
   <tr align='center'>
     <td align='center'><img src='media/cloudflare.png' width="50px"></td>
+    <td align='center'><img src='media/ovh.png' width="50px"></td>
   </tr>
   <tr>
+    <td align='center'>API driven DNS service with DDOS protection</td>
     <td align='center'>API driven DNS service</td>
   </tr>
 </table>

@@ -1,0 +1,10 @@
+falco:
+  version: 0.20.0
+  pod_security_policy: false
+  http_proxy: ""
+  https_proxy: ""
+  no_proxy: ""
+  ebpf:
+    enable: false
+    audit_log_enable: false
+    dynamic_backend_enable: false

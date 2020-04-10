@@ -14,7 +14,6 @@ falco:
       - file: /srv/kubernetes/manifests/falco/values.yaml
       - cmd: falco-namespace
       - cmd: falco-fetch-charts
-    - onlyif: kubectl get storageclass | grep \(default\)
     - cwd: /srv/kubernetes/manifests/falco/falco
     - name: |
         helm repo update && \

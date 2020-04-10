@@ -33,7 +33,7 @@ kubeadm-join:
     - timeout: 600
     - unless: test -f /etc/kubernetes/admin.conf
     - name: |
-        sleep {{ range(15, 30) | random }} && \
+        sleep {{ range(15, 60) | random }} && \
         /usr/bin/kubeadm join --config /root/kubeadm-controlplane.yaml --ignore-preflight-errors=all --v=5
 
 /root/.kube:

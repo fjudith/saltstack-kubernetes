@@ -14,7 +14,7 @@ kubeadm-init:
     - context:
         tpldir: {{ tpldir }}
   cmd.run:
-    - watch: 
+    - watch:
       - file: /root/kubeadm-config.yaml
     - require:
       - pkg: kubelet

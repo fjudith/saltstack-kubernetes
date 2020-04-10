@@ -173,8 +173,16 @@ spec:
               properties:
                 enable:
                   type: boolean
+            cleanupPolicy:
+              properties:
+                deleteDataDirOnHosts:
+                  type: string
+                  pattern: ^$|^yes-really-destroy-data$
             placement: {}
             resources: {}
+  # somehow this is breaking the status, but let's keep this here so we don't forget it once we move to controller-runtime
+  # subresources:
+  #   status: {}
   additionalPrinterColumns:
     - name: DataDirHostPath
       type: string
@@ -222,6 +230,8 @@ spec:
           properties:
             caps:
               type: object
+  subresources:
+    status: {}
 # OLM: END CEPH CLIENT CRD
 # OLM: BEGIN CEPH FS CRD
 ---
@@ -264,6 +274,8 @@ spec:
                       minimum: 0
                       maximum: 10
                       type: integer
+                    requireSafeReplicaSize:
+                      type: boolean
                 erasureCoded:
                   properties:
                     dataChunks:
@@ -274,6 +286,14 @@ spec:
                       minimum: 0
                       maximum: 10
                       type: integer
+                compressionMode:
+                  type: string
+                  enum:
+                  - ""
+                  - none
+                  - passive
+                  - aggressive
+                  - force
             dataPools:
               type: array
               items:
@@ -286,6 +306,8 @@ spec:
                         minimum: 0
                         maximum: 10
                         type: integer
+                      requireSafeReplicaSize:
+                        type: boolean
                   erasureCoded:
                     properties:
                       dataChunks:
@@ -296,6 +318,14 @@ spec:
                         minimum: 0
                         maximum: 10
                         type: integer
+                  compressionMode:
+                    type: string
+                    enum:
+                    - ""
+                    - none
+                    - passive
+                    - aggressive
+                    - force
             preservePoolsOnDelete:
               type: boolean
   additionalPrinterColumns:
@@ -306,6 +336,8 @@ spec:
     - name: Age
       type: date
       JSONPath: .metadata.creationTimestamp
+  subresources:
+    status: {}
 # OLM: END CEPH FS CRD
 # OLM: BEGIN CEPH NFS CRD
 ---
@@ -342,6 +374,8 @@ spec:
                 annotations: {}
                 placement: {}
                 resources: {}
+  subresources:
+    status: {}
 # OLM: END CEPH NFS CRD
 # OLM: BEGIN CEPH OBJECT STORE CRD
 ---
@@ -392,6 +426,14 @@ spec:
                       type: integer
                     codingChunks:
                       type: integer
+                compressionMode:
+                  type: string
+                  enum:
+                  - ""
+                  - none
+                  - passive
+                  - aggressive
+                  - force
             dataPool:
               properties:
                 failureDomain:
@@ -406,8 +448,18 @@ spec:
                       type: integer
                     codingChunks:
                       type: integer
+                compressionMode:
+                  type: string
+                  enum:
+                  - ""
+                  - none
+                  - passive
+                  - aggressive
+                  - force
             preservePoolsOnDelete:
               type: boolean
+  subresources:
+    status: {}
 # OLM: END CEPH OBJECT STORE CRD
 # OLM: BEGIN CEPH OBJECT STORE USERS CRD
 ---
@@ -427,6 +479,8 @@ spec:
     - objectuser
   scope: Namespaced
   version: v1
+  subresources:
+    status: {}
 # OLM: END CEPH OBJECT STORE USERS CRD
 # OLM: BEGIN CEPH BLOCK POOL CRD
 ---
@@ -458,6 +512,8 @@ spec:
                   maximum: 9
                 targetSizeRatio:
                   type: number
+                requireSafeReplicaSize:
+                  type: boolean
             erasureCoded:
               properties:
                 dataChunks:
@@ -468,6 +524,16 @@ spec:
                   type: integer
                   minimum: 0
                   maximum: 9
+            compressionMode:
+              type: string
+              enum:
+              - ""
+              - none
+              - passive
+              - aggressive
+              - force
+  subresources:
+    status: {}
 # OLM: END CEPH BLOCK POOL CRD
 # OLM: BEGIN CEPH VOLUME POOL CRD
 ---
@@ -486,6 +552,8 @@ spec:
     - rv
   scope: Namespaced
   version: v1alpha2
+  subresources:
+    status: {}
 # OLM: END CEPH VOLUME POOL CRD
 # OLM: BEGIN OBJECTBUCKET CRD
 ---
@@ -577,29 +645,21 @@ metadata:
 rules:
 - apiGroups:
   - ""
+  - apps
+  - extensions
   resources:
   - secrets
   - pods
   - pods/log
   - services
   - configmaps
-  verbs:
-  - get
-  - list
-  - watch
-  - patch
-  - create
-  - update
-  - delete
-- apiGroups:
-  - apps
-  resources:
   - deployments
   - daemonsets
   verbs:
   - get
   - list
   - watch
+  - patch
   - create
   - update
   - delete
@@ -630,6 +690,7 @@ rules:
   - delete
 - apiGroups:
   - apps
+  - extensions
   resources:
   - daemonsets
   - statefulsets
@@ -641,6 +702,12 @@ rules:
   - create
   - update
   - delete
+- apiGroups:
+  - k8s.cni.cncf.io
+  resources:
+  - network-attachment-definitions
+  verbs:
+  - get
 ---
 # The cluster role for managing the Rook CRDs
 apiVersion: rbac.authorization.k8s.io/v1beta1
@@ -673,6 +740,7 @@ rules:
   # Node access is needed for determining nodes where mons should run
   - nodes
   - nodes/proxy
+  - services
   verbs:
   - get
   - list
@@ -727,6 +795,7 @@ rules:
 - apiGroups:
   - policy
   - apps
+  - extensions
   resources:
   # This is for the clusterdisruption controller
   - poddisruptionbudgets
@@ -879,7 +948,6 @@ kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
   name: rook-ceph-global
-  namespace: rook-ceph
   labels:
     operator: rook
     storage-backend: ceph
@@ -948,7 +1016,6 @@ kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
   name: rook-ceph-osd
-  namespace: rook-ceph
 rules:
 - apiGroups:
   - ""
@@ -963,7 +1030,6 @@ kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
   name: rook-ceph-mgr-system
-  namespace: rook-ceph
 aggregationRule:
   clusterRoleSelectors:
   - matchLabels:
@@ -974,7 +1040,6 @@ kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
   name: rook-ceph-mgr-system-rules
-  namespace: rook-ceph
   labels:
       rbac.ceph.rook.io/aggregate-to-rook-ceph-mgr-system: "true"
 rules:
@@ -999,10 +1064,12 @@ rules:
   resources:
   - pods
   - services
+  - pods/log
   verbs:
   - get
   - list
   - watch
+  - delete
 - apiGroups:
   - batch
   resources:

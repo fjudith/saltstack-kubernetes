@@ -6,9 +6,10 @@ metadata:
   name: nginx-ingress-certs
   namespace: ingress-nginx
 spec:
-  commonName: '*.{{ public_domain }}'
+  commonName: '{{ public_domain }}'
   dnsNames:
-  - {{ public_domain }}
+  - "*.{{ public_domain }}"
+  - "{{ public_domain }}"
   issuerRef:
     kind: ClusterIssuer
     name: letsencrypt-prod

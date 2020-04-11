@@ -1,5 +1,5 @@
 cert_manager:
-  version: 0.14.0
+  version: 0.14.2
   acme_email: user@example.com
   dns:
     enabled: False

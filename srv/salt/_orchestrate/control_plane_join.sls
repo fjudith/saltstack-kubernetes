@@ -7,21 +7,26 @@
 {% if masters|length > 1 %}
 control_plane_common_state:
   salt.state:
-    - tgt: "{{ master[:1] }}"
+    - tgt: "{{ masters[1:]|join(",") }}"
+    - tgt_type: "list"
     - sls: common
+    - queue: True
 
-control_plane_docker_state_{{ master }}:
+control_plane_docker_state:
   salt.state:
-    - tgt: "{{ master[:1] }}"
+    - tgt: "{{ masters[1:]|join(",") }}"
+    - tgt_type: "list"
     - sls: kubernetes.cri.docker
+    - queue: True
 
-{%- for master in masters[1:] %}
-control_plane_kubeadm_join_{{ master }}:
+control_plane_kubeadm_join_master:
   salt.state:
-    - tgt: "{{ master }}"
+    - tgt: "{{ masters[1:]|join(",") }}"
+    - tgt_type: "list"
     - sls: kubernetes.role.master.kubeadm
+    - queue: True
+    - batch: 1
     - require:
       - salt: control_plane_common_state
       - salt: control_plane_docker_state
-{%- endfor %}
 {% endif %}

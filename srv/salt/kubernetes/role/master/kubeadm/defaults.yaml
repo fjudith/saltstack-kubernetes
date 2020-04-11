@@ -11,8 +11,6 @@ kubeadm:
   certificateKey: "a7917e43ba7314a797bf7fa4de0154aca4582f7633867548606841e38e13e66c"
   etcd:
     local: true
-    imageRepository: "k8s.gcr.io"
-    imageTag: 3.4.3
     datadir: "/var/lib/etcd"
     port: 2379
     serverCertSANs: []

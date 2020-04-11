@@ -63,8 +63,6 @@ etcd:
   {%- if kubeadm.etcd.local %}
   # one of local or external
   local:
-    imageRepository: {{ kubeadm.etcd.imageRepository }}
-    imageTag: {{ kubeadm.etcd.imageTag }}
     dataDir: {{ kubeadm.etcd.datadir }}
     extraArgs:
       {%- for argument, value in (kubeadm.etcd.extraArgs).items() %}

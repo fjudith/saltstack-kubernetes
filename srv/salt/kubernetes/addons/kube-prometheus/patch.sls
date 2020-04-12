@@ -112,3 +112,28 @@ kube-prometheus-grafana:
     - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
+
+# Modified servicemonitors for https://k8slens.dev
+kube-prometheus-node-exporter:
+  file.managed:
+    - name: /srv/kubernetes/manifests/kube-prometheus/manifests/lens-node-exporter-servicemonitor.yaml
+    - watch:
+      - git: kube-prometheus-repo
+    - source: salt://{{ tpldir }}/patch/lens-node-exporter-servicemonitor.yaml
+    - user: root
+    - group: root
+    - mode: "0644"
+    - context:
+      tpldir: {{ tpldir }}
+
+kube-prometheus-kubelet:
+  file.managed:
+    - name: /srv/kubernetes/manifests/kube-prometheus/manifests/lens-kubelet-servicemonitor.yaml
+    - watch:
+      - git: kube-prometheus-repo
+    - source: salt://{{ tpldir }}/patch/lens-kubelet-servicemonitor.yaml
+    - user: root
+    - group: root
+    - mode: "0644"
+    - context:
+      tpldir: {{ tpldir }}

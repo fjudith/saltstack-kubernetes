@@ -1,0 +1,33 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: executor
+  namespace: fission
+spec:
+  namespaceSelector:
+    matchNames:
+      - fission
+  selector:
+    matchLabels:
+      svc: executor
+  endpoints:
+  - port: metrics
+    path: /metrics
+    interval: 5s
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: router
+  namespace: fission
+spec:
+  namespaceSelector:
+    matchNames:
+      - fission
+  selector:
+    matchLabels:
+      svc: router
+  endpoints:
+  - port: metrics
+    path: /metrics
+    interval: 5s

@@ -1,0 +1,5 @@
+fission:
+  version: 1.8.0
+  client_version: 1.8.0
+  workflows_version: 0.6.0
+  fluentd_version: 1.0.4

@@ -79,18 +79,22 @@ Solutions for Function as a Service.
   <tr align='center'>
     <th align='center'>Simple Serverless platform</th>
     <th align='center'>Advanced Serverless platform</th>
+    <th align='center'>Fast Serverless platform</th>
   </tr>
   <tr align='center'>
     <td align='center'><a ref='https://kubeless.io'>Kubeless<a></td>
     <td align='center'><a ref='https://openfaas.com'>OpenFaaS<a></td>
+    <td align='center'><a ref='https://fission.io'>Fission<a></td>
   </tr>
   <tr align='center'>
     <td align='center'><img src='media/kubeless.png' width="50px"></td>
     <td align='center'><img src='media/openfaas.png' width="50px"></td>
+    <td align='center'><img src='media/fission.png' width="50px"></td>
   </tr>
   <tr>
     <td align='center'>Python, Node, Java, Go, Ruby, .Net core, Berlina</p> <b>Trigger support:</b> NATS, Kafka, Cronjob, Kinesis and HTTP</td>
     <td align='center'>Any</p> <b>Trigger support:</b> NATS, Kafka, Cronjob, Kinesis, Redis, MQTT, SQS, CloudEvents...</td>
+    <td align='center'>Python, Node, Java, Go, Ruby, Binary/Scripts, Php 7, .NET 2.0, .NET, Perl</p> <b>Trigger support:</b> NATS, Kafka</td>
   </tr>
 </table>
 

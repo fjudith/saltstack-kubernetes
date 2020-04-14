@@ -44,7 +44,7 @@ defaults
 # listen instances
 #------------------
 listen stats
-    bind 0.0.0.0:58080
+    bind 0.0.0.0:{{ haproxy.stats_port }}
     mode http
     stats enable
     stats uri /admin?stats
@@ -56,7 +56,10 @@ listen stats
 #------------------
 frontend kubernetes-master
     bind        *:{{ haproxy.kubernetes_api_port }}
+    bind        127.0.0.1:{{ haproxy.kubernetes_api_port }}
     mode tcp
+    option tcplog
+    timeout client 300000
     default_backend kube-apiserver
 
 
@@ -66,6 +69,8 @@ frontend kubernetes-master
 #------------------
 backend kube-apiserver
     mode tcp
+    option tcplog
+    option tcp-check
     balance roundrobin
     timeout server 300000
     default-server downinter 5s  fall 2  inter 10s  maxconn 250  maxqueue 256  rise 2  slowstart 60s weight 100

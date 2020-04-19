@@ -230,3 +230,5 @@ kubernetes:
       ingress_host: openfaas
       username: admin
       password: V3ry1ns3cur3
+    falco:
+      enabled: False

@@ -100,6 +100,20 @@ openfaas-grafana:
       tpldir: {{ tpldir }}
 {% endif %}
 
+{% if charts.get('falco', {'enabled': False}).enabled %}
+falco-grafana:
+  file.managed:
+    - name: /srv/kubernetes/manifests/kube-prometheus/manifests/falco-grafana-dashboard-configmap.yaml
+    - watch:
+      - git: kube-prometheus-repo
+    - source: salt://{{ tpldir }}/patch/falco-grafana-dashboard-configmap.yaml
+    - user: root
+    - group: root
+    - mode: "0644"
+    - context:
+      tpldir: {{ tpldir }}
+{% endif %}
+
 kube-prometheus-grafana:
   file.managed:
     - name: /srv/kubernetes/manifests/kube-prometheus/manifests/grafana-deployment.yaml

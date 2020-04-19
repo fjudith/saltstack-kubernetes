@@ -1,0 +1,18 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import falco with context %}
+{%- from "kubernetes/map.jinja" import common with context -%}
+
+falco:
+  grpcHostname: falco-grpc.falco.svc.cluster.local
+
+# Allow falco to run on Kubernetes 1.6 masters.
+tolerations:
+  - effect: NoSchedule
+    key: node-role.kubernetes.io/master
+  - effect: NoSchedule
+    key: node-role.kubernetes.io
+    operator: Equal
+    value: ingress

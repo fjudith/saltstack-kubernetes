@@ -16,3 +16,15 @@
     - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
+
+/srv/kubernetes/manifests/falco/exporter-values.yaml:
+  file.managed:
+    - require:
+      - file:  /srv/kubernetes/manifests/falco
+    - source: salt://{{ tpldir }}/templates/exporter-values.yaml.j2
+    - template: jinja
+    - user: root
+    - group: root
+    - mode: "0644"
+    - context:
+      tpldir: {{ tpldir }}

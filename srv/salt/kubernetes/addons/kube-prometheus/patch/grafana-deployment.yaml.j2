@@ -158,6 +158,11 @@ spec:
           name: grafana-dashboard-openfaas
           readOnly: false
         {%- endif %}
+        {%- if charts.get('falco', {'enabled': False}).enabled %}
+        - mountPath: /grafana-dashboard-definitions/0/falco
+          name: grafana-dashboard-falco
+          readOnly: false
+        {%- endif %}
       nodeSelector:
         beta.kubernetes.io/os: linux
       securityContext:
@@ -279,4 +284,9 @@ spec:
       - configMap:
           name: grafana-dashboard-openfaas
         name: grafana-dashboard-openfaas
+      {%- endif %}
+      {%- if charts.get('falco', {'enabled': False}).enabled %}
+      - configMap:
+          name: grafana-dashboard-falco
+        name: grafana-dashboard-falco
       {%- endif %}

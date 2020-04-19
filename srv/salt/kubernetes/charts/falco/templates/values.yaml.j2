@@ -62,3 +62,17 @@ tolerations:
     key: node-role.kubernetes.io
     operator: Equal
     value: ingress
+
+
+falco:
+  # The gRPC server is secure by default (mutual TLS) so you need to generate certificates and update their paths here.
+  # By default the gRPC server is off.
+  # You can configure the address to bind and expose it.
+  # By modifying the threadiness configuration you can fine-tune the number of threads (and context) it will use.
+  grpc:
+    enabled: true
+
+  # By default it is off.
+  # By enabling this all the output events will be kept in memory until you read them with a gRPC client.
+  grpcOutput:
+    enabled: true

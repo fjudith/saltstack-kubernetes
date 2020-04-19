@@ -51,10 +51,14 @@ ebpf:
 integrations:
   natsOutput:
     enabled: true
-    natsUrl: "nats-cluster.nats-io:4222"
+    natsUrl: "nats://nats-cluster.nats-io:4222"
 {% endif %}
 
 # Allow falco to run on Kubernetes 1.6 masters.
 tolerations:
   - effect: NoSchedule
     key: node-role.kubernetes.io/master
+  - effect: NoSchedule
+    key: node-role.kubernetes.io
+    operator: Equal
+    value: ingress

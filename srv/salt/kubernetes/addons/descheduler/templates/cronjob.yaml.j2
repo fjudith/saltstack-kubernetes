@@ -7,7 +7,7 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: descheduler-cronjob
+  name: descheduler
   namespace: kube-system
 spec:
   schedule: "{{ descheduler.cron_schedule | safe }}"

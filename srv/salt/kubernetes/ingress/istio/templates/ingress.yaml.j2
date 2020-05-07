@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import istio with context %}
+
 {%- set public_domain = pillar['public-domain'] -%}
 {%- from "kubernetes/map.jinja" import common with context -%}
 {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
@@ -22,7 +28,7 @@ metadata:
     {%- endif %}
 spec:
   rules:
-  - host: {{ common.addons.istio.tracing_ingress_host }}.{{ public_domain }}
+  - host: {{ istio.tracing_ingress_host }}.{{ public_domain }}
     http:
       paths:
       - path: /
@@ -33,7 +39,7 @@ spec:
   tls:
   - secretName: tracing-prod-cert
     hosts:
-    - {{ common.addons.istio.tracing_ingress_host }}.{{ public_domain }}
+    - {{ istio.tracing_ingress_host }}.{{ public_domain }}
   {%- endif %}
 ---
 apiVersion: extensions/v1beta1
@@ -49,7 +55,7 @@ metadata:
     {%- endif %}
 spec:
   rules:
-  - host: {{ common.addons.istio.telemetry_ingress_host }}.{{ public_domain }}
+  - host: {{ istio.telemetry_ingress_host }}.{{ public_domain }}
     http:
       paths:
       - path: /
@@ -60,7 +66,7 @@ spec:
   tls:
   - secretName: telemetry-web-prod-cert
     hosts:
-    - {{ common.addons.istio.telemetry_ingress_host }}.{{ public_domain }}
+    - {{ istio.telemetry_ingress_host }}.{{ public_domain }}
   {%- endif %}
 ---
 apiVersion: extensions/v1beta1
@@ -76,7 +82,7 @@ metadata:
     {%- endif %}
 spec:
   rules:
-  - host: {{ common.addons.istio.prometheus_ingress_host }}.{{ public_domain }}
+  - host: {{ istio.prometheus_ingress_host }}.{{ public_domain }}
     http:
       paths:
       - path: /
@@ -87,7 +93,7 @@ spec:
   tls:
   - secretName: prometheus-web-prod-cert
     hosts:
-    - {{ common.addons.istio.prometheus_ingress_host }}.{{ public_domain }}
+    - {{ istio.prometheus_ingress_host }}.{{ public_domain }}
   {%- endif %}
 ---
 apiVersion: extensions/v1beta1
@@ -103,7 +109,7 @@ metadata:
     {%- endif %}
 spec:
   rules:
-  - host: {{ common.addons.istio.grafana_ingress_host }}.{{ public_domain }}
+  - host: {{ istio.grafana_ingress_host }}.{{ public_domain }}
     http:
       paths:
       - path: /
@@ -114,7 +120,7 @@ spec:
   tls:
   - secretName: grafana-prod-cert
     hosts:
-    - {{ common.addons.istio.grafana_ingress_host }}.{{ public_domain }}
+    - {{ istio.grafana_ingress_host }}.{{ public_domain }}
   {%- endif %}
 ---
 apiVersion: extensions/v1beta1
@@ -130,7 +136,7 @@ metadata:
     {%- endif %}
 spec:
   rules:
-  - host: {{ common.addons.istio.kiali_ingress_host }}.{{ public_domain }}
+  - host: {{ istio.kiali_ingress_host }}.{{ public_domain }}
     http:
       paths:
       - path: /kiali
@@ -141,6 +147,6 @@ spec:
   tls:
   - secretName: kiali-prod-cert
     hosts:
-    - {{ common.addons.istio.kiali_ingress_host }}.{{ public_domain }}
+    - {{ istio.kiali_ingress_host }}.{{ public_domain }}
   {%- endif %}
 ---

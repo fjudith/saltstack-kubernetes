@@ -72,15 +72,6 @@ kubernetes:
         enabled: true
       istio:
         enabled: True
-        version: 1.4.6
-        tracing: jaeger
-        prometheus_ingress_host: istio-prometheus
-        tracing_ingress_host: istio-tracing
-        telemetry_ingress_host: istio-telemetry
-        grafana_ingress_host: istio-grafana
-        kiali_ingress_host: istio-kiali
-        bookinfo_ingress_host: bookinfo
-        source_hash: 8d2adfa1524a89d0263b7feadf6541b6427a8aecf8aa930f0e5eeb796661dd7b
       cert_manager:
         enabled: True
         acme_email: user@example.com

@@ -1,6 +1,6 @@
 openfaas-ingress:
   file.managed:
-    - name: /srv/kubernetes/manifests/openfaas-ingress.yaml
+    - name: /srv/kubernetes/manifests/openfaas/ingress.yaml
     - source: salt://{{ tpldir }}/templates/ingress.yaml.j2
     - user: root
     - template: jinja
@@ -10,7 +10,7 @@ openfaas-ingress:
       tpldir: {{ tpldir }}
   cmd.run:
     - watch:
-      - file: /srv/kubernetes/manifests/openfaas-ingress.yaml
+      - file: /srv/kubernetes/manifests/openfaas/ingress.yaml
       - cmd: openfaas-namespace
     - runas: root
-    - name: kubectl apply -f /srv/kubernetes/manifests/openfaas-ingress.yaml
+    - name: kubectl apply -f /srv/kubernetes/manifests/openfaas/ingress.yaml

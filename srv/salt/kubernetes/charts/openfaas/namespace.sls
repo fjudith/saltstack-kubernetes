@@ -1,8 +1,3 @@
-# -*- coding: utf-8 -*-
-# vim: ft=jinja
-
-{% import_yaml tpldir ~ "/defaults.yaml" or {} as defaults %}
-
 openfaas-namespace:
   file.managed:
     - require:

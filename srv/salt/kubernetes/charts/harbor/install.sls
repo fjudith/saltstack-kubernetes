@@ -8,7 +8,6 @@
 
 harbor:
   cmd.run:
-    - runas: root
     - require:
       - file: /srv/kubernetes/manifests/harbor
     - watch:
@@ -16,13 +15,13 @@ harbor:
         - cmd: harbor-fetch-charts
         - file: /srv/kubernetes/manifests/harbor/values.yaml
     - cwd: /srv/kubernetes/manifests/harbor/harbor
-    - use_vt: true
+    - runas: root
     - name: |
         helm dependency update
         helm upgrade --install harbor \
           --namespace harbor \
           --values /srv/kubernetes/manifests/harbor/values.yaml \
-          "./" --wait --timeout 5m
+          "./" --wait --timeout 10m
 
 harbor-configure-oidc:
   file.managed:

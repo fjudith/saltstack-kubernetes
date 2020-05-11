@@ -20,3 +20,25 @@ fission-hello-world:
         fission function test --name hello &&  \
         fission env delete --name nodejs && \
         rm -f hello.js
+
+fission-fortunewhale-workflow:
+  cmd.run:
+    - require:
+      - file: /usr/local/bin/fission
+    - user: root
+    - group: root
+    - cwd: /tmp
+    - name: |
+        FISSION_ROUTER="http:// $(kubectl -n fission get svc router -o jsonpath='{.spec.clusterIP}')"
+        fission env create --name binary --image fission/binary-env && \
+        curl https://raw.githubusercontent.com/fission/fission-workflows/master/examples/whales/fortune.sh > fortune.sh && \
+        curl https://raw.githubusercontent.com/fission/fission-workflows/master/examples/whales/whalesay.sh > whalesay.sh && \
+        fission fn create --name whalesay --env binary --deploy ./whalesay.sh && \
+        fission fn create --name fortune --env binary --deploy ./fortune.sh && \
+        curl https://raw.githubusercontent.com/fission/fission-workflows/master/examples/whales/fortunewhale.wf.yaml > fortunewhale.wf.yaml && \
+        fission fn create --name fortunewhale --env workflow --src ./fortunewhale.wf.yaml && \
+        curl $FISSION_ROUTER/fission-function/fortunewhale && \
+        fission env delete --name binary && \
+        rm -f fortune.sh whalesay.sh fortunewhale.wf.yaml
+
+

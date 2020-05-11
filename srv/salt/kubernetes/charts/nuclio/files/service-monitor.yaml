@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: nuclio-system
+  namespace: nuclio
+spec:
+  namespaceSelector:
+    matchNames:
+      - nuclio
+  selector:
+    matchLabels:
+      nuclio.io/class: function
+  endpoints:
+  - port: "8090"
+    name: metrics
+    targetPort: "8090"
+    interval: 5s

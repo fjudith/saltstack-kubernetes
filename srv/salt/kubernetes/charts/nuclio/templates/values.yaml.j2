@@ -4,6 +4,7 @@
 {#- Get the `tplroot` from `tpldir` #}
 {% from tpldir ~ "/map.jinja" import nuclio with context %}
 {%- from "kubernetes/map.jinja" import charts with context -%}
+{%- from "kubernetes/map.jinja" import common with context -%}
 {%- set public_domain = pillar['public-domain'] -%}
 
 # if true, all components assume no internet connectivity
@@ -51,4 +52,38 @@ registry:
   {%- elif nuclio.registry.get('quay', {'enabled': False}).enabled %}
   secretName: registry-harbor
   pushPullUrl: {{ nuclio.registry.harbor.url }}/{{ nuclio.registry.harbor.project }}
+  {%- endif %}
+
+platform:
+  logger:
+    sinks:
+      humanReadableStdout:
+        kind: stdout
+        format: humanReadable
+    system:
+    - level: debug
+      sink: humanReadableStdout
+    functions:
+    - level: debug
+      sink: humanReadableStdout
+  {%- if common.addons.get('kube_prometheus', {'enabled': False}).enabled %}
+  metrics:
+    sinks:
+      prometheusPush:
+        kind: prometheusPush
+        url: http://prometheus-pushgateway.monitoring:9091
+        attributes:
+          jobName: nuclio-push-job
+          instanceName: nuclio-push-instance
+          interval: 10s
+      prometheusPull:
+        kind: prometheusPull
+        # url: :8090
+        # attributes:
+        #   jobName: nuclio-pull-job
+        #   instanceName: nuclio-pull-instance
+    system:
+    - prometheusPull
+    functions:
+    - prometheusPush
   {%- endif %}

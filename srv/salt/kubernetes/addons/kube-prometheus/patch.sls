@@ -151,3 +151,16 @@ kube-prometheus-kubelet:
     - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
+
+kube-prometheus-pushgateway:
+  file.managed:
+    - name: /srv/kubernetes/manifests/kube-prometheus/manifests/prometheus-pushgateway.yaml
+    - watch:
+      - git: kube-prometheus-repo
+    - source: salt://{{ tpldir }}/patch/prometheus-pushgateway.yaml.j2
+    - user: root
+    - template: jinja
+    - group: root
+    - mode: "0644"
+    - context:
+      tpldir: {{ tpldir }}

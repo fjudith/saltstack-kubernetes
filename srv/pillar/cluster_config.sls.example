@@ -217,9 +217,14 @@ kubernetes:
         keycloak:
           realm: default
     openfaas:
-      enabled: true
+      enabled: false
       ingress_host: openfaas
       username: admin
       password: V3ry1ns3cur3
     falco:
       enabled: False
+    fission:
+      enabled: False
+    nuclio:
+      enabled: False
+      ingress_host: nuclio

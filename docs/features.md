@@ -80,21 +80,25 @@ Solutions for Function as a Service.
     <th align='center'>Simple Serverless platform</th>
     <th align='center'>Advanced Serverless platform</th>
     <th align='center'>Fast Serverless platform</th>
+    <th align='center'>Datascience oriented Serverless platform</th>
   </tr>
   <tr align='center'>
     <td align='center'><a ref='https://kubeless.io'>Kubeless<a></td>
     <td align='center'><a ref='https://openfaas.com'>OpenFaaS<a></td>
     <td align='center'><a ref='https://fission.io'>Fission<a></td>
+    <td align='center'><a ref='https://nuclio.io'>Nuclio<a></td>
   </tr>
   <tr align='center'>
     <td align='center'><img src='media/kubeless.png' width="50px"></td>
     <td align='center'><img src='media/openfaas.png' width="50px"></td>
     <td align='center'><img src='media/fission.png' width="50px"></td>
+    <td align='center'><img src='media/nuclio.png' width="50px"></td>
   </tr>
   <tr>
     <td align='center'>Python, Node, Java, Go, Ruby, .Net core, Berlina</p> <b>Trigger support:</b> NATS, Kafka, Cronjob, Kinesis and HTTP</td>
-    <td align='center'>Any</p> <b>Trigger support:</b> NATS, Kafka, Cronjob, Kinesis, Redis, MQTT, SQS, CloudEvents...</td>
-    <td align='center'>Python, Node, Java, Go, Ruby, Binary/Scripts, Php 7, .NET 2.0, .NET, Perl</p> <b>Trigger support:</b> NATS, Kafka</td>
+    <td align='center'>Any</p> <b>Trigger support:</b> NATS, NATS Streamin, Kafka, Cronjob, Kinesis, Redis, MQTT, SQS, CloudEvents...</td>
+    <td align='center'>Python, Node, Java, Go, Ruby, Binary/Scripts, Php 7, .NET 2.0, .NET, Perl</p> <b>Trigger support:</b> NATS Streaming, Kafka</td>
+    <td align='center'>Python, Node, Java, Go, .Net core, Bianry</p> <b>Trigger support:</b>NATS, Kafka, Cronjob, Kinesis, RabbitMQ, v3ioStream, MQTT, EventHub and HTTP</td>
   </tr>
 </table>
 

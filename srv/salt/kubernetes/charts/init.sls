@@ -29,3 +29,6 @@ include:
 {%- if charts.get('falco', {'enabled': False}).enabled %}
   - kubernetes.charts.falco
 {%- endif -%}
+{%- if charts.get('nuclio', {'enabled': False}).enabled %}
+  - kubernetes.charts.nuclio
+{%- endif -%}

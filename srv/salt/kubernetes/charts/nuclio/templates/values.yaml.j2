@@ -1,0 +1,54 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import nuclio with context %}
+{%- from "kubernetes/map.jinja" import charts with context -%}
+{%- set public_domain = pillar['public-domain'] -%}
+
+# if true, all components assume no internet connectivity
+offline: false
+
+# Controller settings
+controller:
+  enabled: true
+  image:
+    tag: {{ nuclio.version }}-amd64
+  operator:
+    function:
+      numWorkers: {{ nuclio.function_worker }}
+    functionEvent:
+      numWorkers: {{ nuclio.event_worker }}
+    project:
+      numWorkers: {{ nuclio.project_worker }}
+
+dahsboard:
+  enabled: True
+  image:
+    tag: {{ nuclio.version }}-amd64
+  containerBuilderKind: "{{ nuclio.container_builder }}"
+
+autoscaler:
+  enabled: False
+  image:
+    tag: {{ nuclio.version }}-amd64
+
+dlx:
+  enabled: False
+  image:
+    tag: {{ nuclio.version }}-amd64
+
+registry:
+  {%- if charts.get('harbor', {'enabled': False}).enabled %}
+  secretName: registry-harbor-local
+  pushPullUrl: {{ charts.harbor.coreIngressHost }}.{{ public_domain }}/library
+  {%- elif nuclio.registry.get('dockerhub', {'enabled': False}).enabled %}
+  secretName: registry-dockerhub
+  pushPullUrl: {{ nuclio.registry.dockerhub.url }}/{{ nuclio.registry.dockerhub.organization }}
+  {%- elif nuclio.registry.get('quay', {'enabled': False}).enabled %}
+  secretName: registry-quay
+  pushPullUrl: {{ nuclio.registry.quay.url }}/{{ nuclio.registry.quay.organization }}
+  {%- elif nuclio.registry.get('quay', {'enabled': False}).enabled %}
+  secretName: registry-harbor
+  pushPullUrl: {{ nuclio.registry.harbor.url }}/{{ nuclio.registry.harbor.project }}
+  {%- endif %}

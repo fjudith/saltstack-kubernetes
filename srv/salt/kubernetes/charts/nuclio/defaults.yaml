@@ -1,0 +1,26 @@
+nuclio:
+  version: 1.4.5
+  function_worker: 4
+  event_worker: 2
+  project_worker: 2
+  container_builder: docker
+  ingress_host: nuclio
+  registry:
+    dockerhub:
+      enabled: false
+      url: docker.io
+      username: username
+      password: password
+      organization: organization
+    quay:
+      enabled: false
+      url: quay.io
+      username: username
+      password: password
+      organization: organization
+    harbor:
+      enabled: false
+      url: habor.example.com
+      username: username
+      password: password
+      project: project

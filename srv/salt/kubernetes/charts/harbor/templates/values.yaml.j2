@@ -263,12 +263,12 @@ persistence:
       accesskey: {{ harbor.s3.accesskey }}
       secretkey: {{ harbor.s3.secretkey }}
       regionendpoint: http://minio:9000
-      #encrypt: false
+      encrypt: false
       #keyid: mykeyid
-      #secure: true
-      #v4auth: true
-      #chunksize: "5242880"
-      #rootdirectory: /s3/object/name/prefix
+      secure: true
+      v4auth: true
+      chunksize: "5242880"
+      rootdirectory: /
       #storageclass: STANDARD
     {%- else -%}
     s3:

@@ -69,21 +69,21 @@ platform:
   {%- if common.addons.get('kube_prometheus', {'enabled': False}).enabled %}
   metrics:
     sinks:
-      prometheusPush:
+      pushSink:
         kind: prometheusPush
         url: http://prometheus-pushgateway.monitoring:9091
         attributes:
           jobName: nuclio-push-job
           instanceName: nuclio-push-instance
           interval: 10s
-      prometheusPull:
+      pullSink:
         kind: prometheusPull
-        # url: :8090
-        # attributes:
-        #   jobName: nuclio-pull-job
-        #   instanceName: nuclio-pull-instance
+        url: :8090
+        attributes:
+          jobName: nuclio-pull-job
+          instanceName: nuclio-pull-instance
     system:
-    - prometheusPull
+    - pullSink
     functions:
-    - prometheusPush
+    - pushSink
   {%- endif %}

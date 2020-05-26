@@ -1,5 +1,5 @@
 minio_operator:
-  image: docker.io/minio/k8s-operator:1.0.9
+  image: docker.io/minio/k8s-operator:2.0.2
   ingress_host: minio
   accesskey: minio
   secretkey: V3ry1nS3cur3P4ssw0rd

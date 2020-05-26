@@ -14,21 +14,7 @@ data:
   accesskey: {{ harbor.s3.accesskey | base64_encode }} # base 64 encoded "minio" (echo -n 'minio' | base64)
   secretkey: {{ harbor.s3.secretkey | base64_encode }} # based 64 encoded "minio123" (echo -n 'minio123' | base64)
 ---
-apiVersion: v1
-kind: Service
-metadata:
-  name: minio
-  namespace: harbor
-spec:
-  type: ClusterIP
-  ports:
-    - port: 9000
-      targetPort: 9000
-      protocol: TCP
-  selector:
-    app: minio
----
-apiVersion: miniocontroller.min.io/v1beta1
+apiVersion: operator.min.io/v1
 kind: MinIOInstance
 metadata:
   name: minio
@@ -48,13 +34,17 @@ spec:
       prometheus.io/scrape: "true"
   ## Registry location and Tag to download MinIO Server image
   image: {{ harbor.minio_image }}
+  ## A ClusterIP Service will be created with the given name
+  serviceName: minio
   ## Secret with credentials to be used by MinIO instance.
   credsSecret:
     name: minio-creds-secret
-  ## Supply number of replicas.
-  ## For standalone mode, supply 1. For distributed mode, supply 4 or more (should be even).
-  ## Note that the operator does not support upgrading from standalone to distributed mode.
-  replicas: 4
+  zones:
+    - name: "zone-0"
+      ## Number of MinIO servers/pods in this zone.
+      ## For standalone mode, supply 1. For distributed mode, supply 4 or more.
+      ## Note that the operator does not support upgrading from standalone to distributed mode.
+      servers: 4
   ## PodManagement policy for pods created by StatefulSet. Can be "OrderedReady" or "Parallel"
   ## Refer https://kubernetes.io/docs/tutorials/stateful-application/basic-stateful-set/#pod-management-policy
   ## for details. Defaults to "Parallel"

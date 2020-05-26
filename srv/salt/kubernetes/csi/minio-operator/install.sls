@@ -27,7 +27,7 @@ query-minio-operator-api:
   http.wait_for_successful_query:
     - watch:
       - cmd: minio-operator
-    - name: http://127.0.0.1:8080/apis/miniocontroller.min.io/v1beta1
+    - name: http://127.0.0.1:8080/apis/operator.min.io/v1
     - wait_for: 120
     - request_interval: 5
     - status: 200

@@ -30,6 +30,6 @@ query-harbor-minio:
       - cmd: harbor-minio
       - cmd: harbor-minio-ingress
     - name: https://{{ harbor.coreIngressHost }}-minio.{{ public_domain }}/minio/health/ready
-    - wait_for: 120
+    - wait_for: 240
     - request_interval: 5
     - status: 200

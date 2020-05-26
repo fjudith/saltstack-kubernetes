@@ -31,7 +31,7 @@ query-spinnaker-minio:
       - cmd: spinnaker-minio
       - cmd: spinnaker-ingress
     - name: https://{{ spinnaker.ingress_host }}-minio.{{ public_domain }}/minio/health/ready
-    - wait_for: 120
+    - wait_for: 240
     - request_interval: 5
     - status: 200
 

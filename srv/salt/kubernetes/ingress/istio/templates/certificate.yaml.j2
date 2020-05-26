@@ -9,7 +9,8 @@ metadata:
 spec:
   commonName: '*.{{ public_domain }}'
   dnsNames:
-  - {{ public_domain }}
+  - '{{ public_domain }}'
+  - '*.{{ public_domain }}'
   issuerRef:
     kind: ClusterIssuer
     name: letsencrypt-prod

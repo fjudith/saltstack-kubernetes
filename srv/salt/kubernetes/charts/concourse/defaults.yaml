@@ -4,7 +4,7 @@ concourse:
   db_password: V3ry1ns3sur3P4ssw0rd
   db_size: 8Gi
   version: 6.1.0
-  source_hash: bec8cd95e950d818ab8ae7eafeb0aef117c965eb
+  source_hash: adefba5e3e32517bba2161dbf3521d15f230d184
   ingress_host: concourse
   minio_image: docker.io/minio/minio:latest
   # oauth:

@@ -11,6 +11,6 @@ spec:
     matchLabels:
       app: concourse-web
   endpoints:
-  - port: http-metrics
-    path: /metrics
+  - port: prometheus
+    path: /
     interval: 5s

@@ -108,6 +108,8 @@ kubernetes:
         enabled: True
       descheduler:
         enabled: True
+      kube_scan:
+        enabled: True
   etcd:
     host: 127.0.0.1
     members:

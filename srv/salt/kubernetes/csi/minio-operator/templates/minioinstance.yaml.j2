@@ -27,8 +27,8 @@ spec:
   ## Add metadata to the all pods created by the StatefulSet
   metadata:
     ## Optionally pass labels to be applied to the statefulset pods
-    #labels:
-    #   app: minio
+    labels:
+      app: minio
     annotations:
       prometheus.io/path: /minio/prometheus/metrics
       prometheus.io/port: "9000"

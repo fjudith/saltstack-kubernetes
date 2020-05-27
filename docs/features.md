@@ -159,13 +159,14 @@ Solutions for monitoring, logging and tracing.
 <table>
   <tr align='center'>
     <th align='center'>kube-dashboard</th>
-    <th align='center' colspan='3'>kube-prometheus</th>
+    <th align='center' colspan='4'>kube-prometheus</th>
     <th align='center' colspan='3'>EFK</th>
     <th align='center'>Weave Scope</th>
     <th align='center'>Vistio</th>
   </tr>
   <tr align='center'>
     <td align='center'>Dashboard</td>
+    <td align='center'>Prometheus-Operator</td>
     <td align='center'>Grafana</td>
     <td align='center'>Prometheus</td>
     <td align='center'>Node Exporter</td>
@@ -177,6 +178,7 @@ Solutions for monitoring, logging and tracing.
   </tr>
   <tr align='center'>
     <td align='center'><img src='media/kubernetes.png' width="50px"></td>
+    <td align='center'><img src='media/prometheus.png' width="50px"></td>
     <td align='center'><img src='media/grafana.png' width="50px"></td>
     <td align='center'><img src='media/prometheus.png' width="50px"></td>
     <td align='center'><img src='media/export.png' width="50px"></td>
@@ -188,6 +190,7 @@ Solutions for monitoring, logging and tracing.
   </tr>
   <tr>
     <td align='center'>Cluster administration and monitoring</td>
+    <td align='center'>Prometheus platform orchestration</td>
     <td align='center'>Metrics visualisation</td>
     <td align='center'>Metrics collection</td>
     <td align='center'>Metrics export</td>

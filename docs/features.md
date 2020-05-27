@@ -109,15 +109,19 @@ Solutions for continuous security audit.
 <table>
   <tr align='center'>
     <th align='center'>Threat detection engine</th>
+    <th align='center'>Workload security assessment</th>
   </tr>
   <tr align='center'>
     <td align='center'><a ref='https://falco.org'>Falco<a></td>
+    <td align='center'><a ref='https://www.octarinesec.com/solution-item/kube-scan/'>Kube-Scan<a></td>
   </tr>
   <tr align='center'>
     <td align='center'><img src='media/falco.png' width="50px"></td>
+    <td align='center'><img src='media/octarinesec.png' width="50px"></td>
   </tr>
   <tr>
     <td align='center'>Detects unexpected applicaton behavioir and alerts on theats at runtime.</td>
+    <td align='center'>Scans the kubernetes workload and score the security of Kubernetes pods.</td>
   </tr>
 </table>
 

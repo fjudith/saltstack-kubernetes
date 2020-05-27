@@ -38,3 +38,6 @@ include:
   {%- if common.addons.get('descheduler', {'enabled': False}).enabled %}
   - kubernetes.addons.descheduler
   {%- endif %}
+  {%- if common.addons.get('kube_scan', {'enabled': False}).enabled %}
+  - kubernetes.addons.kube-scan
+  {%- endif %}

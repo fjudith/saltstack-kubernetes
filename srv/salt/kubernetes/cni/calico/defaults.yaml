@@ -1,10 +1,10 @@
 calico:
-  node_image: quay.io/calico/node:v3.10.0
-  typha_image: quay.io/calico/typha:v3.10.0
-  cni_image: quay.io/calico/cni:v3.10.0
-  controller_image: quay.io/calico/kube-controllers:v3.10.0
-  flexvol_image: calico/pod2daemon-flexvol:v3.10.0
-  version: 3.10.0
+  node_image: docker.io/calico/node:v3.14.1
+  typha_image: docker.io/calico/typha:v3.14.1
+  cni_image: docker.io/calico/cni:v3.14.1
+  controller_image: docker.io/calico/kube-controllers:v3.14.1
+  flexvol_image: docker.io/calico/pod2daemon-flexvol:v3.14.1
+  version: 3.14.1
   mtu: 1430
   ipv4:
     range: 10.244.0.0/16

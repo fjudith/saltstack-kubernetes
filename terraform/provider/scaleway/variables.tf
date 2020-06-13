@@ -19,7 +19,7 @@ variable "architecture" {
 }
 
 variable "image" {
-  default = "Ubuntu Bionic"
+  default = "Ubuntu Focal"
 }
 
 variable "apt_packages" {

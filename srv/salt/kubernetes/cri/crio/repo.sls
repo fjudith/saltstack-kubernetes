@@ -10,8 +10,8 @@ projectatomic-repo:
 flatpak-repo:
   pkgrepo.managed:
     - humanname: Flatpak PPA
-    - name: deb http://ppa.launchpad.net/alexlarsson/flatpak/ubuntu focal main
-    - dist: focal
+    - name: deb http://ppa.launchpad.net/alexlarsson/flatpak/ubuntu bionic main
+    - dist: bionic
     - file: /etc/apt/sources.list.d/flatpak.list
     - keyid: FA577F07
     - keyserver: keyserver.ubuntu.com

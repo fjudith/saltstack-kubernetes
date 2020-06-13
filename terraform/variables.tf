@@ -38,7 +38,7 @@ variable "architecture" {
 }
 
 variable "image" {
-  default = "Ubuntu Focal"
+  default = "Ubuntu Bionic"
 }
 
 variable "etcd_type" {

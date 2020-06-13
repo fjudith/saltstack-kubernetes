@@ -24,10 +24,7 @@ sudo apt-get install --no-install-recommends -yq \
   python3-croniter \
   python3-git \
   python3-pip \
-  python3-ioflo \
-  python3-raet \
   python3-setuptools \
-  python3-timelib \
   python3-netaddr \
   python3-pyinotify \
   python3-ws4py \

@@ -44,29 +44,29 @@ module "proxy-exception" {
   connections  = "${module.provider.private_ips}"
 }
 
-# module "dns" {
-#   source = "./dns/cloudflare"
-
-#   dns_count  = 1
-#   email      = "${var.cloudflare_email}"
-#   token      = "${var.cloudflare_token}"
-#   domain     = "${var.domain}"
-#   public_ips = "${module.provider.public_ip}"
-#   hostnames  = "${module.provider.edge_hostname}"
-# }
-
 module "dns" {
-  source = "./dns/ovh"
+  source = "./dns/cloudflare"
 
-  dns_count          = 1
-  endpoint           = "${var.ovh_endpoint}"
-  application_key    = "${var.ovh_application_key}"
-  application_secret = "${var.ovh_application_secret}"
-  consumer_key       = "${var.ovh_consumer_key}"
-  domain             = "${var.domain}"
-  public_ips         = "${module.provider.public_ip}"
-  hostnames          = "${module.provider.edge_hostname}"
+  dns_count  = 1
+  email      = "${var.cloudflare_email}"
+  token      = "${var.cloudflare_token}"
+  domain     = "${var.domain}"
+  public_ips = "${module.provider.public_ip}"
+  hostnames  = "${module.provider.edge_hostname}"
 }
+
+# module "dns" {
+#   source = "./dns/ovh"
+
+#   dns_count          = 1
+#   endpoint           = "${var.ovh_endpoint}"
+#   application_key    = "${var.ovh_application_key}"
+#   application_secret = "${var.ovh_application_secret}"
+#   consumer_key       = "${var.ovh_consumer_key}"
+#   domain             = "${var.domain}"
+#   public_ips         = "${module.provider.public_ip}"
+#   hostnames          = "${module.provider.edge_hostname}"
+# }
 
 module "wireguard" {
   source = "./security/wireguard"

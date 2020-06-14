@@ -25,7 +25,7 @@ hcloud_location = "nbg1"
 
 hcloud_ssh_keys = ["<ssh public key>"]
 
-image = "Ubuntu Focal"
+image = "Ubuntu Bionic"
 
 edge_count = "2"
 
@@ -54,7 +54,7 @@ node_type = "cx41"
 
 # architecture = "x86_64"
 
-# image = "Ubuntu Focal"
+# image = "Ubuntu Bionic"
 
 # edge_count = "2"
 

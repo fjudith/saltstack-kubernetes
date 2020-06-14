@@ -31,7 +31,7 @@ resource "null_resource" "wireguard" {
       "apt-get install -yqq libmnl-dev libelf-dev pkg-config software-properties-common build-essential",
       "add-apt-repository -y ppa:wireguard/wireguard",
       "apt-get update -yqq",
-      "apt-get install -yqq wireguard-linux-compat",
+      "apt-get install -yqq wireguard wireguard-linux-compat",
     ]
   }
 

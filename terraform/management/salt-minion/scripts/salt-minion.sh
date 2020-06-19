@@ -1,14 +1,14 @@
 #!/bin/bash
 set -e
 
-export SALT_VERSION=3000.3
+export SALT_VERSION=3001
 export DEBIAN_FRONTEND=noninteractive
 export SALT_USER=salt
 
 apt-get update -yqq && \
 apt-get install -yqq --no-install-recommends curl net-tools gnupg2  && \
-curl -fsSL http://repo.saltstack.com/py3/ubuntu/18.04/amd64/archive/${SALT_VERSION}/SALTSTACK-GPG-KEY.pub | sudo apt-key add - && \
-echo "deb http://repo.saltstack.com/py3/ubuntu/18.04/amd64/archive/${SALT_VERSION} bionic main" > /etc/apt/sources.list.d/saltstack.list && \
+curl -fsSL http://repo.saltstack.com/py3/ubuntu/20.04/amd64/archive/${SALT_VERSION}/SALTSTACK-GPG-KEY.pub | sudo apt-key add - && \
+echo "deb http://repo.saltstack.com/py3/ubuntu/20.04/amd64/archive/${SALT_VERSION} focal main" > /etc/apt/sources.list.d/saltstack.list && \
 echo "install salt-master and salt-api, dependencies" && \
 apt-get update -yqq && \
 apt-get install --no-install-recommends -yq \

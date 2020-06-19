@@ -62,14 +62,6 @@ net.bridge.bridge-nf-pass-vlan-input-dev:
     - dir_mode: "0750"
     - makedirs: True
 
-/usr/bin/mkdir:
-  file.symlink:
-    - target: /bin/mkdir
-
-/usr/bin/bash:
-  file.symlink:
-    - target: /bin/bash
-
 /etc/kubernetes/ssl/node.pem:
   file.symlink:
     - target: /etc/kubernetes/ssl/master.pem

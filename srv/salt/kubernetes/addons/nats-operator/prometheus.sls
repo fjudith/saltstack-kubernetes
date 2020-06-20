@@ -14,7 +14,6 @@ nats-operator-prometheus-rbac:
         - cmd: nats-operator-namespace
         - file: /srv/kubernetes/manifests/nats-operator/prometheus-k8s-rbac.yaml
     - runas: root
-    - use_vt: True
     - onlyif: curl --silent 'http://127.0.0.1:8080/healthz/'
     - name: kubectl apply -f /srv/kubernetes/manifests/nats-operator/prometheus-k8s-rbac.yaml
 
@@ -34,6 +33,5 @@ nats-operator-servicemonitor:
         - cmd: nats-operator-namespace
         - file: /srv/kubernetes/manifests/nats-operator/servicemonitor.yaml
     - runas: root
-    - use_vt: True
     - onlyif: curl --silent 'http://127.0.0.1:8080/healthz/'
     - name: kubectl apply -f /srv/kubernetes/manifests/nats-operator/servicemonitor.yaml

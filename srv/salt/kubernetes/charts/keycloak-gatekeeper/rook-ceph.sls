@@ -36,6 +36,5 @@ keycloak-rook-ceph:
       - file: /srv/kubernetes/manifests/keycloak-gatekeeper/rook-ceph.json
       - file: /srv/kubernetes/manifests/keycloak-gatekeeper/rook-ceph-protocolmapper.json
     - runas: root
-    - use_vt: true
     - name: |
         ./kcgk-injector.sh create-client-rook-ceph keycloak {{ keycloak_password }} https://{{ charts.keycloak.ingress_host }}.{{ public_domain }} {{ keycloak_gatekeeper.realm }} https://{{ storage.rook_ceph.ingress_host }}.{{ public_domain }}

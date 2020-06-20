@@ -9,7 +9,6 @@ rook-edgefs-iscsi-config:
     - require:
       - cmd: rook-edgefs-system-init
     - runas: root
-    - use_vt: True
     - timeout: 180
     - success_retcodes: [0, 1]
     - name: |

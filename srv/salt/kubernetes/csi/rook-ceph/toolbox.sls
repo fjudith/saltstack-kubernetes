@@ -29,7 +29,6 @@ rook-ceph-tools-wait:
     - require:
       - cmd: rook-ceph-tools
     - runas: root
-    - use_vt: True
     - timeout: {{ rook_ceph.timeout }}
     - name: |
         until kubectl -n rook-ceph get deployment rook-ceph-tools; do printf '.' && sleep 5 ; done

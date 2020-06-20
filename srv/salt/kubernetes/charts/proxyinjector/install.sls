@@ -4,7 +4,6 @@ proxyinjector:
       - file: /srv/kubernetes/manifests/proxyinjector/values.yaml
     - cwd: /srv/kubernetes/manifests/proxyinjector/helm/deployments/kubernetes/chart/proxyinjector
     - runas: root
-    - use_vt: true
     - name: |
         helm upgrade --install proxyinjector \
           --namespace default \
@@ -19,7 +18,6 @@ proxyinjector-demo:
       - file: /srv/kubernetes/manifests/proxyinjector/demo-values.yaml
     - cwd: /srv/kubernetes/manifests/proxyinjector/kubehttpbin/chart
     - runas: root
-    - use_vt: true
     - name: |
         helm upgrade --install demo \
           --namespace kubehttpbin \

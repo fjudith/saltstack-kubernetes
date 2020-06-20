@@ -14,7 +14,6 @@ kube-scan-namespace:
     - watch:
         - file: /srv/kubernetes/manifests/kube-scan/namespace.yaml
     - runas: root
-    - use_vt: True
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/kube-scan/namespace.yaml
     - onlyif: curl --silent 'http://127.0.0.1:8080/version/'

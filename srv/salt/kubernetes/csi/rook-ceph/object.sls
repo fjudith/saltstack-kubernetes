@@ -28,7 +28,6 @@ rook-ceph-rgw-my-store-wait:
     - require:
       - cmd: rook-ceph-rgw
     - runas: root
-    - use_vt: True
     - timeout: {{ rook_ceph.timeout }}
     - name: |
         until kubectl -n rook-ceph get deployment rook-ceph-rgw-my-store-a; do printf '.' && sleep 5 ; done

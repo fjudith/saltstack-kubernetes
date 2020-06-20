@@ -12,7 +12,6 @@ weave-scope-wait:
     - runas: root
     - name: |
         until kubectl -n weave get pods --field-selector=status.phase=Running --selector=app=weave-scope; do printf 'weave-scope is not Running' && sleep 5; done
-    - use_vt: True
     - timeout: 180
 
 query-weave-scope:

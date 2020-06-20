@@ -36,6 +36,5 @@ keycloak-weave-scope:
       - file: /srv/kubernetes/manifests/keycloak-gatekeeper/weave-scope.json
       - file: /srv/kubernetes/manifests/keycloak-gatekeeper/weave-scope-protocolmapper.json
     - runas: root
-    - use_vt: true
     - name: |
         ./kcgk-injector.sh create-client-weave-scope keycloak {{ keycloak_password }} https://{{ charts.keycloak.ingress_host }}.{{ public_domain }} {{ keycloak_gatekeeper.realm }} https://{{ common.addons.weave_scope.ingress_host }}.{{ public_domain }}

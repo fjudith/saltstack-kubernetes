@@ -18,7 +18,6 @@ minio-operator:
     - watch:
         - file: /srv/kubernetes/manifests/minio-operator/minio-operator.yaml
     - runas: root
-    - use_vt: True
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/minio-operator/minio-operator.yaml
     - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
@@ -39,7 +38,6 @@ minio-cluster:
     - watch:
         - file: /srv/kubernetes/manifests/minio-operator/minioinstance.yaml
     - runas: root    
-    - use_vt: True
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/minio-operator/minioinstance.yaml
     - onlyif: curl --silent 'http://127.0.0.1:8080/version/'

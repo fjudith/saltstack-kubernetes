@@ -29,7 +29,6 @@ fission:
         - cmd: fission-fetch-charts
         - file: /srv/kubernetes/manifests/fission/values.yaml
     - cwd: /srv/kubernetes/manifests/fission/fission-all
-    - use_vt: true
     - name: |
         helm dependency update
         helm upgrade --install fission \
@@ -46,7 +45,6 @@ fission-workflows:
         - cmd: fission-namespace
         - cmd: fission-fetch-charts
     - cwd: /srv/kubernetes/manifests/fission/fission-workflows
-    - use_vt: true
     - name: |
         helm dependency update
         helm upgrade --install fission-workflows \

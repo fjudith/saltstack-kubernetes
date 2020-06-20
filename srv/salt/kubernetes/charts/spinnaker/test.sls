@@ -45,5 +45,4 @@ spinnaker-front50-wait:
         do 
           printf 'spin-front50 is not Running' && sleep 5
         done
-    - use_vt: True
     - timeout: 600

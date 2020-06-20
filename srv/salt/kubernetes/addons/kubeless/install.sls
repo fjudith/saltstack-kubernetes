@@ -31,7 +31,6 @@ kubeless:
     - watch:
         - file: /srv/kubernetes/manifests/kubeless/kubeless.yaml
     - runas: root
-    - use_vt: True
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/kubeless/kubeless.yaml
     - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
@@ -41,7 +40,6 @@ kubeless-ui:
     - watch:
         - file: /srv/kubernetes/manifests/kubeless/kubeless-ui.yaml
     - runas: root
-    - use_vt: True
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/kubeless/kubeless-ui.yaml
     - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
@@ -51,7 +49,6 @@ kubeless-kafa-trigger:
     - watch:
         - file: /srv/kubernetes/manifests/kubeless/kafka-trigger.yaml
     - runas: root
-    - use_vt: True
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/kubeless/kafka-trigger.yaml
     - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
@@ -61,7 +58,6 @@ kubeless-kinesis-trigger:
     - watch:
         - file: /srv/kubernetes/manifests/kubeless/kinesis-trigger.yaml
     - runas: root
-    - use_vt: True
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/kubeless/kinesis-trigger.yaml
     - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
@@ -74,7 +70,6 @@ kubeless-nats-trigger:
     - watch:
         - file: /srv/kubernetes/manifests/kubeless/nats-trigger.yaml
     - runas: root
-    - use_vt: True
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/kubeless/nats-trigger.yaml
     - onlyif: curl --silent 'http://127.0.0.1:8080/version/'

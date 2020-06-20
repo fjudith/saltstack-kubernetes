@@ -29,17 +29,6 @@
     - group: root
     - dir_mode: "0750"
 
-/srv/kubernetes/manifests/calico/calico-rbac-kkd.yaml:
-    file.managed:
-    - watch:
-      - file: /srv/kubernetes/manifests/calico
-    - source: salt://{{ tpldir }}/files/calico-rbac-kkd.yaml
-    - user: root
-    - group: root
-    - mode: "0644"
-    - context:
-      tpldir: {{ tpldir }}
-
 /srv/kubernetes/manifests/calico/calico-typha.yaml:
     file.managed:
     - watch:

@@ -82,14 +82,6 @@ net.bridge.bridge-nf-pass-vlan-input-dev:
     - dir_mode: "0750"
     - makedirs: True
 
-/usr/bin/mkdir:
-  file.symlink:
-    - target: /bin/mkdir
-
-/usr/bin/bash:
-  file.symlink:
-    - target: /bin/bash
-
 {% if common.cni.calico.ipv6.enable == true %}
 net.ipv6.conf.all.forwarding:
   sysctl.present:

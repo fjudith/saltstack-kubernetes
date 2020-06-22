@@ -110,7 +110,7 @@ write_files:
       description=fast and powerful configuration management and remote execution
       ports=4505,4506/tcp
 
-      # https://docs.projectcalico.org/master/getting-started/kubernetes/requirements
+      # https://docs.projectcalico.org/getting-started/kubernetes/requirementss
       [etcd]
       title=Etcd
       description=Etcd client request

@@ -6,7 +6,7 @@ title=salt
 description=fast and powerful configuration management and remote execution
 ports=4505,4506/tcp
 
-# https://docs.projectcalico.org/master/getting-started/kubernetes/requirement
+# https://docs.projectcalico.org/getting-started/kubernetes/requirements
 [calico-bgp]
 title=calico
 description=Cloud native connectivity and network policy

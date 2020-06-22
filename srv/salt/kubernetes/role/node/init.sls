@@ -64,9 +64,6 @@ net.bridge.bridge-nf-pass-vlan-input-dev:
   sysctl.present:
     - value: 0
 
-/usr/sbin/modprobe:
-  file.symlink:
-    - target: /sbin/modprobe
 
 /usr/lib/coreos:
   file.directory:

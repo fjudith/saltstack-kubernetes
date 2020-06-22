@@ -11,7 +11,7 @@ items:
       labels:
         name: weave-net
       namespace: kube-system
-  - apiVersion: rbac.authorization.k8s.io/v1beta1
+  - apiVersion: rbac.authorization.k8s.io/v1
     kind: ClusterRole
     metadata:
       name: weave-net
@@ -51,7 +51,7 @@ items:
         verbs:
         - patch
         - update
-  - apiVersion: rbac.authorization.k8s.io/v1beta1
+  - apiVersion: rbac.authorization.k8s.io/v1
     kind: ClusterRoleBinding
     metadata:
       name: weave-net
@@ -65,7 +65,7 @@ items:
       - kind: ServiceAccount
         name: weave-net
         namespace: kube-system
-  - apiVersion: rbac.authorization.k8s.io/v1beta1
+  - apiVersion: rbac.authorization.k8s.io/v1
     kind: Role
     metadata:
       name: weave-net
@@ -88,7 +88,7 @@ items:
           - configmaps
         verbs:
           - create
-  - apiVersion: rbac.authorization.k8s.io/v1beta1
+  - apiVersion: rbac.authorization.k8s.io/v1
     kind: RoleBinding
     metadata:
       name: weave-net
@@ -103,7 +103,7 @@ items:
       - kind: ServiceAccount
         name: weave-net
         namespace: kube-system
-  - apiVersion: extensions/v1beta1
+  - apiVersion: apps/v1
     kind: DaemonSet
     metadata:
       name: weave-net
@@ -112,6 +112,9 @@ items:
       namespace: kube-system
     spec:
       # Wait 5 seconds to let pod connect before rolling next pod
+      selector:
+        matchLabels:
+          name: weave-net
       minReadySeconds: 5
       template:
         metadata:
@@ -123,28 +126,29 @@ items:
               command:
                 - /home/weave/launch.sh
               env:
-                - name: IPALLOC_RANGE
-                  value: {{ kubeadm.networking.serviceSubnet }}
-                - name: WEAVE_PASSWORD
-                  valueFrom:
-                    secretKeyRef:
-                      name: weave-net
-                      key: WEAVE_PASSWORD
                 - name: HOSTNAME
                   valueFrom:
                     fieldRef:
                       apiVersion: v1
                       fieldPath: spec.nodeName
+                - name: IPALLOC_RANGE
+                  value: {{ kubeadm.networking.serviceSubnet }}
+                {%- if weave.password is defined %}
+                - name: WEAVE_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: weave-net
+                      key: WEAVE_PASSWORD
+                {%- endif %}          
               image: '{{ weave.weave_image }}'
-              livenessProbe:
+              readinessProbe:
                 httpGet:
                   host: 127.0.0.1
                   path: /status
                   port: 6784
-                initialDelaySeconds: 30
               resources:
                 requests:
-                  cpu: 10m
+                  cpu: 50m
               securityContext:
                 privileged: true
               volumeMounts:
@@ -171,9 +175,10 @@ items:
                       apiVersion: v1
                       fieldPath: spec.nodeName
               image: '{{ weave.npc_image }}'
+#npc-args
               resources:
                 requests:
-                  cpu: 10m
+                  cpu: 50m
               securityContext:
                 privileged: true
               volumeMounts:
@@ -181,6 +186,7 @@ items:
                   mountPath: /run/xtables.lock
                   readOnly: false
           hostNetwork: true
+          dnsPolicy: ClusterFirstWithHostNet
           hostPID: true
           restartPolicy: Always
           securityContext:
@@ -188,6 +194,8 @@ items:
           serviceAccountName: weave-net
           tolerations:
             - effect: NoSchedule
+              operator: Exists
+            - effect: NoExecute
               operator: Exists
           volumes:
             - name: weavedb
@@ -212,8 +220,10 @@ items:
               hostPath:
                 path: /run/xtables.lock
                 type: FileOrCreate
+          priorityClassName: system-node-critical
       updateStrategy:
         type: RollingUpdate
+  {%- if weave.password is defined %}
   - apiVersion: v1
     kind: Secret
     metadata:
@@ -221,3 +231,4 @@ items:
       namespace: kube-system
     data:
       WEAVE_PASSWORD: "{{ weave.password | base64_encode }}"
+  {%- endif %}

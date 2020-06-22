@@ -3691,7 +3691,7 @@ spec:
               value: "{{ calico.ipv4.ip_in_ip }}"
             # Enable or Disable VXLAN on the default IP pool.
             - name: CALICO_IPV4POOL_VXLAN
-              value: "Never"
+              value: "{{ calico.ipv4.vxlan }}"
             # Set MTU for tunnel device used if ipip is enabled
             - name: FELIX_IPINIPMTU
               valueFrom:
@@ -3738,11 +3738,13 @@ spec:
             - name: CALICO_IPV4POOL_CIDR
               value: "{{ kubeadm.networking.podSubnet }}"
             - name: IP_AUTODETECTION_METHOD
-              value: "interface={{ calico.ipv4.interface }}"
+              value: "interface={{ calico.ipv4.autodetection_method }}"
             - name: CALICO_IPV6POOL_CIDR
               value: "{{ calico.ipv6.range }}"
             - name: IP6_AUTODETECTION_METHOD
-              value: "interface={{ calico.ipv6.interface }}"
+              value: "interface={{ calico.ipv6.autodetection_method }}"
+            - name: CALICO_STARTUP_LOGLEVEL
+              value: "{{ calico.startup_loglevel }}"
           securityContext:
             privileged: true
           resources:

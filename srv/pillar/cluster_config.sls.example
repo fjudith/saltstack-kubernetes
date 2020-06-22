@@ -28,10 +28,10 @@ kubernetes:
       provider: calico
       calico:
         ipv4:
-          interface: ens10
+          autodetection_method: interface=en.*
         ipv6:
           enable: false
-          interface: ens10
+          autodetection_method: interface=en.*
       flannel:
         interface: ens10
       weave:

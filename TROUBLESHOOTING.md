@@ -99,7 +99,7 @@ PV_NAME="annoying persistentvolume"
 kubectl patch pv ${PV_NAME}  -p '{"metadata":{"finalizers":null}}'
 ```
 
-## Restore kubadmo configuration
+## Restore kubeadm configuration
 
 The following commands aims to restore the configuration required for further control-plane nodes to join when the 24 hours grace period expired.
 

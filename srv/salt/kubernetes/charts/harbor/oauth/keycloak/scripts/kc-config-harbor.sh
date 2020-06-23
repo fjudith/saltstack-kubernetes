@@ -1,6 +1,6 @@
 #! /bin/bash
 
-set -ex
+set -e
 
 ACTION=${ACTION:-$1}
 USERNAME=${USERNAME:-$2}

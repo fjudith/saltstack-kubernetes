@@ -67,6 +67,7 @@ keycloak-kubernetes-dashboard:
       - file: /srv/kubernetes/manifests/keycloak-gatekeeper/kubernetes-dashboard-protocolmapper.json
       - file: /srv/kubernetes/manifests/keycloak-gatekeeper/groups-protocolmapper.json
       - file: /srv/kubernetes/manifests/keycloak-gatekeeper/files/keycloak-kubernetes-rbac.yaml
+    - use_vt: True
     - runas: root
     - name: |
         ./kcgk-injector.sh create-client-kubernetes keycloak {{ keycloak_password }} https://{{ charts.keycloak.ingress_host }}.{{ public_domain }} {{ keycloak_gatekeeper.realm }} https://{{ common.addons.dashboard.ingress_host }}.{{ public_domain }}

@@ -35,6 +35,7 @@ keycloak-alertmanager:
       - cmd: keycloak-create-groups
       - file: /srv/kubernetes/manifests/keycloak-gatekeeper/alertmanager.json
       - file: /srv/kubernetes/manifests/keycloak-gatekeeper/alertmanager-protocolmapper.json
+    - use_vt: True
     - runas: root
     - name: |
         ./kcgk-injector.sh create-client-alertmanager keycloak {{ keycloak_password }} https://{{ charts.keycloak.ingress_host }}.{{ public_domain }} {{ keycloak_gatekeeper.realm }} https://{{ common.addons.kube_prometheus.alertmanager_ingress_host }}.{{ public_domain }}
@@ -66,6 +67,7 @@ keycloak-prometheus:
       - cmd: keycloak-create-groups
       - file: /srv/kubernetes/manifests/keycloak-gatekeeper/prometheus.json
       - file: /srv/kubernetes/manifests/keycloak-gatekeeper/prometheus-protocolmapper.json
+    - use_vt: True
     - runas: root
     - name: |
         ./kcgk-injector.sh create-client-prometheus keycloak {{ keycloak_password }} https://{{ charts.keycloak.ingress_host }}.{{ public_domain }} {{ keycloak_gatekeeper.realm }} https://{{ common.addons.kube_prometheus.prometheus_ingress_host }}.{{ public_domain }}

@@ -12,6 +12,7 @@ keycloak-create-realm:
     - cwd: /srv/kubernetes/manifests/keycloak-gatekeeper
     - watch: 
       - file: /srv/kubernetes/manifests/keycloak-gatekeeper/realms.json
+    - use_vt: True
     - runas: root
     - name: |
         ./kcgk-injector.sh create-realm keycloak {{ keycloak_password }} https://{{ charts.keycloak.ingress_host }}.{{ public_domain }} {{ keycloak_gatekeeper.realm }}
@@ -23,6 +24,7 @@ keycloak-create-groups:
       - cmd: keycloak-create-realm
       - file: /srv/kubernetes/manifests/keycloak-gatekeeper/keycloak-kubernetes-admins-group.json
       - file: /srv/kubernetes/manifests/keycloak-gatekeeper/keycloak-kubernetes-users-group.json
+    - use_vt: True
     - runas: root
     - name: |
         ./kcgk-injector.sh create-groups keycloak {{ keycloak_password }} https://{{ charts.keycloak.ingress_host }}.{{ public_domain }} {{ keycloak_gatekeeper.realm }}
@@ -33,6 +35,7 @@ keycloak-create-client-scopes:
     - watch: 
       - cmd: keycloak-create-realm
       - file: /srv/kubernetes/manifests/keycloak-gatekeeper/client-scopes.json  
+    - use_vt: True
     - runas: root
     - name: |
         ./kcgk-injector.sh create-client-scopes keycloak {{ keycloak_password }} https://{{ charts.keycloak.ingress_host }}.{{ public_domain }} {{ keycloak_gatekeeper.realm }}

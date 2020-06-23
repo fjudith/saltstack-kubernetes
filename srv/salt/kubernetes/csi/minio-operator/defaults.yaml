@@ -5,7 +5,7 @@ minio_operator:
   secretkey: V3ry1nS3cur3P4ssw0rd
   # head -c 32 /dev/urandom | xxd -c 32 -ps
   ssekey: minio:807f9c825b410c4132cfe3b756ef04d7f40f60d37df8225b92c8544e970f0769
-  minio_image: docker.io/minio/minio:RELEASE.2020-05-16T01-33-21Z
+  minio_image: docker.io/minio/minio:RELEASE.2020-06-22T03-12-50Z
   # https://dl.min.io/client/mc/release/linux-amd64/mc.sha256sum
   client_version: RELEASE.2020-05-16T01-44-37Z
   source_hash : e011de80e5a5cf23aa54207f4dbe68edd8d39e71783683ca9befc0345c9cf69d

@@ -3738,11 +3738,11 @@ spec:
             - name: CALICO_IPV4POOL_CIDR
               value: "{{ kubeadm.networking.podSubnet }}"
             - name: IP_AUTODETECTION_METHOD
-              value: "interface={{ calico.ipv4.autodetection_method }}"
+              value: "{{ calico.ipv4.autodetection_method }}"
             - name: CALICO_IPV6POOL_CIDR
               value: "{{ calico.ipv6.range }}"
             - name: IP6_AUTODETECTION_METHOD
-              value: "interface={{ calico.ipv6.autodetection_method }}"
+              value: "{{ calico.ipv6.autodetection_method }}"
             - name: CALICO_STARTUP_LOGLEVEL
               value: "{{ calico.startup_loglevel }}"
           securityContext:

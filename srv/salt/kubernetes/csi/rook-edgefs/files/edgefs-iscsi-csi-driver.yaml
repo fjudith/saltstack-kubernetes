@@ -39,7 +39,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: edgefs-iscsi-csi-controller-service-account
-  namespace: default # replace with non-default namespace name if needed
+  namespace: rook-edgefs # replace with non-default namespace name if needed
 ---
 
 kind: ClusterRole
@@ -103,7 +103,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: edgefs-iscsi-csi-controller-service-account
-    namespace: default # replace with non-default namespace name if needed
+    namespace: rook-edgefs # replace with non-default namespace name if needed
 roleRef:
   kind: ClusterRole
   name: edgefs-iscsi-csi-controller-cluster-role
@@ -114,6 +114,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: edgefs-iscsi-csi-controller
+  namespace: rook-edgefs
   labels:
     app: edgefs-iscsi-csi-controller
 spec:
@@ -128,6 +129,7 @@ kind: StatefulSet
 apiVersion: apps/v1
 metadata:
   name: edgefs-iscsi-csi-controller
+  namespace: rook-edgefs
 spec:
   selector:
     matchLabels:
@@ -213,7 +215,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: edgefs-iscsi-csi-node-service-account
-  namespace: default # replace with non-default namespace name if needed
+  namespace: rook-edgefs # replace with non-default namespace name if needed
 ---
 
 kind: ClusterRole
@@ -236,7 +238,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: edgefs-iscsi-csi-node-service-account
-    namespace: default # replace with non-default namespace name if needed
+    namespace: rook-edgefs # replace with non-default namespace name if needed
 roleRef:
   kind: ClusterRole
   name: edgefs-iscsi-csi-node-cluster-role
@@ -249,6 +251,7 @@ kind: DaemonSet
 apiVersion: apps/v1
 metadata:
   name: edgefs-iscsi-csi-node
+  namespace: rook-edgefs
 spec:
   selector:
     matchLabels:

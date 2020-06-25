@@ -59,8 +59,8 @@ rook-edgefs-nfs-driver-config:
       - file: /srv/kubernetes/manifests/rook-edgefs/edgefs-nfs-csi-driver-config.yaml
     - runas: root
     - name: |  
-        kubectl get secret edgefs-nfs-csi-driver-config || \
-        kubectl create secret generic edgefs-nfs-csi-driver-config --from-file=/srv/kubernetes/manifests/rook-edgefs/edgefs-nfs-csi-driver-config.yaml
+        kubectl -n rook-edgefs get secret edgefs-nfs-csi-driver-config || \
+        kubectl -n rook-edgefs create secret generic edgefs-nfs-csi-driver-config --from-file=/srv/kubernetes/manifests/rook-edgefs/edgefs-nfs-csi-driver-config.yaml
 
 rook-edgefs-nfs-driver:
   file.managed:

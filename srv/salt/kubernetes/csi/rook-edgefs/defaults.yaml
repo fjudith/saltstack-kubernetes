@@ -16,6 +16,9 @@ rook_edgefs:
   swift_service: swift0
   isgw_service: isgw0
   iscsi_fstype: ext4
+  mount_options:
+    - vers=4
+    - tcp
   network:
     provider: host
     server: eth0

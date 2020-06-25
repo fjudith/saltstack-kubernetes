@@ -9,7 +9,7 @@
 # $ kubectl create secret generic edgefs-nfs-csi-driver-config --from-file=./edgefs-nfs-csi-driver-config.yaml
 #
 
-#Edgefs k8s cluster options
+# Edgefs k8s cluster options
 k8sEdgefsNamespaces: ["rook-edgefs"] # element 0 is a default edgefs cluster namespace, add more when needed
 k8sEdgefsMgmtPrefix: rook-edgefs-mgr # edgefs cluster management prefix
 
@@ -21,3 +21,6 @@ tenant: {{ rook_edgefs.tenant }}    #substitution edgefs tenant name for csi ope
 # Edgefs connnection options
 username: admin #edgefs k8s cluster grpc connection username
 password: admin #edgefs k8s cluster  grpc connection password
+
+# Edgefs nfs mount options (default "vers=3,tcp")
+mountOptions: "{{ rook_edgefs.mount_options | join(',') }}"

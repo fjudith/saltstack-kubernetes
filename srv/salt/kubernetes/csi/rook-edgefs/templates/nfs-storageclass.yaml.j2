@@ -14,3 +14,7 @@ parameters:
   service: {{ rook_edgefs.nfs_service }}
   tenant: {{ rook_edgefs.tenant }}
   encryption: "false"
+mountOptions:
+  {%- for parameter in rook_edgefs.mount_options %}
+  - {{ parameter }}
+  {%- endfor %}

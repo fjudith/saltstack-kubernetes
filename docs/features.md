@@ -109,15 +109,19 @@ Solutions for continuous security audit.
 <table>
   <tr align='center'>
     <th align='center'>Threat detection engine</th>
+    <th align='center'>Workload security assessment</th>
   </tr>
   <tr align='center'>
     <td align='center'><a ref='https://falco.org'>Falco<a></td>
+    <td align='center'><a ref='https://www.octarinesec.com/solution-item/kube-scan/'>Kube-Scan<a></td>
   </tr>
   <tr align='center'>
     <td align='center'><img src='media/falco.png' width="50px"></td>
+    <td align='center'><img src='media/octarinesec.png' width="50px"></td>
   </tr>
   <tr>
     <td align='center'>Detects unexpected applicaton behavioir and alerts on theats at runtime.</td>
+    <td align='center'>Scans the kubernetes workload and score the security of Kubernetes pods.</td>
   </tr>
 </table>
 
@@ -155,13 +159,14 @@ Solutions for monitoring, logging and tracing.
 <table>
   <tr align='center'>
     <th align='center'>kube-dashboard</th>
-    <th align='center' colspan='3'>kube-prometheus</th>
+    <th align='center' colspan='4'>kube-prometheus</th>
     <th align='center' colspan='3'>EFK</th>
     <th align='center'>Weave Scope</th>
     <th align='center'>Vistio</th>
   </tr>
   <tr align='center'>
     <td align='center'>Dashboard</td>
+    <td align='center'>Prometheus-Operator</td>
     <td align='center'>Grafana</td>
     <td align='center'>Prometheus</td>
     <td align='center'>Node Exporter</td>
@@ -173,6 +178,7 @@ Solutions for monitoring, logging and tracing.
   </tr>
   <tr align='center'>
     <td align='center'><img src='media/kubernetes.png' width="50px"></td>
+    <td align='center'><img src='media/prometheus.png' width="50px"></td>
     <td align='center'><img src='media/grafana.png' width="50px"></td>
     <td align='center'><img src='media/prometheus.png' width="50px"></td>
     <td align='center'><img src='media/export.png' width="50px"></td>
@@ -184,6 +190,7 @@ Solutions for monitoring, logging and tracing.
   </tr>
   <tr>
     <td align='center'>Cluster administration and monitoring</td>
+    <td align='center'>Prometheus platform orchestration</td>
     <td align='center'>Metrics visualisation</td>
     <td align='center'>Metrics collection</td>
     <td align='center'>Metrics export</td>
@@ -230,7 +237,7 @@ Solutions to provide storage persistence to stateful applications.
 
 <table>
   <tr align='center'>
-    <th align='center' colspan='3'>Distributed storage</th>
+    <th align='center' colspan='4'>Distributed storage</th>
     <th>S3 compatible storage</th>
     <th align='center'>Distributed database</th>
   </tr>
@@ -238,6 +245,7 @@ Solutions to provide storage persistence to stateful applications.
     <td align='center'>Rook</td>
     <td align='center'>Rook-Ceph</td>
     <td align='center'>Rook-EdgeFS</td>
+    <td align='center'>Longhorn</td>
     <td align='center'>Minio</td>
     <td align='center'>Rook-CockroachDB</td>
   </tr>
@@ -245,13 +253,15 @@ Solutions to provide storage persistence to stateful applications.
     <td align='center'><img src='media/rook.png' width="50px"></td>
     <td align='center'><img src='media/ceph.png' width="50px"></td>
     <td align='center'><img src='media/edgefs.png' width="50px"></td>
+    <td align='center'><img src='media/longhorn.png' width="50px"></td>
     <td align='center'><img src='media/minio.png' width="50px"></td>
     <td align='center'><img src='media/cockroach_labs.png' width="50px"></td>
   </tr>
   <tr>
-    <td align='center'>Storage infrastructure deployment</td>
+    <td align='center'>Storage infrastructure management</td>
     <td align='center'><b>Local</b> Block, Object and File storage</td>
     <td align='center'><b>Geo-Distributed</b> Block, Object and File storage</td>
+    <td align='center'><b>Local</b> Block storage</td>
     <td align='center'>Object storage</td>
     <td align='center'>Distributed SQL database</td>
   </tr>

@@ -24,7 +24,6 @@ test-kubeless-nats-pubsub:
         - http: query-kubeless-ui
         - cmd: kubeless-nats-trigger
     - runas: root
-    - use_vt: True
     - cwd: /srv/kubernetes/manifests/kubeless/
     - timeout: 120
     - name: |

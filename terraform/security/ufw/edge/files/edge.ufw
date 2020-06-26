@@ -27,7 +27,7 @@ title=Etcd cluster
 description=Etcd cluster peering
 ports=2380/tcp
 
-# https://docs.projectcalico.org/master/getting-started/kubernetes/requirement
+# https://docs.projectcalico.org/getting-started/kubernetes/requirements
 [calico-bgp]
 title=calico
 description=Cloud native connectivity and network policy

@@ -1,0 +1,4 @@
+etcd:
+  etcdadm_version: 0.12.0
+  etcdctl_verison: 3.4.0
+  

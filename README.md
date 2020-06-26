@@ -1,4 +1,5 @@
-[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/2188/badge)](https://bestpractices.coreinfrastructure.org/projects/2188)[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Ffjudith%2Fsaltstack-kubernetes.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Ffjudith%2Fsaltstack-kubernetes?ref=badge_shield)
+[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/2188/badge)](https://bestpractices.coreinfrastructure.org/projects/2188)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Ffjudith%2Fsaltstack-kubernetes.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Ffjudith%2Fsaltstack-kubernetes?ref=badge_shield)
 
 
 <img src="https://i.imgur.com/SJAtDZk.png" width="460" height="125" >
@@ -45,9 +46,9 @@ The solution design carries the following requirements:
   <tr>
     <td><ul><li><b>hetzner</b></li><li>scaleway</li></ul></td>
     <td><ul><li><b>cloudflare</b></li></ul></td>
-    <td><ul><li>1.16.3<li><b>1.17.4</b></li></ul></td>
-    <td><ul><li><b>docker 18.09.8</b></li><li>containerd 1.2.6</li><li>cri-o 1.15</li></ul></td>
-    <td><ul><li><b>cni 0.7.5</b></li><li>calico 3.10.0</li><li>canal 3.2.1 (flannel 0.9.1)</li><li>flannel 0.1.0</li><li>weave 2.5.1</li><li>Cillium 1.30.0</li></ul></td>
+    <td><ul><li>1.16.8</li><li>1.17.4<li><b>1.18.4</b></li></li></ul></td>
+    <td><ul><li><b>docker 18.09.8</b></li><li>containerd v1.2.6</li><li>cri-o 1.15</li></ul></td>
+    <td><ul><li><b>cni 0.7.5</b></li><li>calico 3.15.0</li><li>canal 3.2.1 (flannel 0.9.1)</li><li>flannel 0.1.0</li><li>weave 2.6.5</li><li>Cillium 1.30.0</li></ul></td>
   </tr>
 </table>
 

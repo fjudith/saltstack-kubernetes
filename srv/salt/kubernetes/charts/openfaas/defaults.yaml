@@ -1,6 +1,6 @@
 openfaas:
-  client_version: 0.11.7
-  client_source_hash: 5a317febb7a13be535f7db9b727f9ce9737a61d3718ac8e8c82713717cd73fc7
+  client_version: 0.12.4
+  client_source_hash: e31fd403a370f5fb668294a1b07b4307feeb724908c0618675ed342c66768359
   oauth2_image: alexellis2/openfaas-oidc-plugin:0.2.4
   nats_connector_image: openfaas/nats-connector:0.2.0
   ingress_host: openfaas

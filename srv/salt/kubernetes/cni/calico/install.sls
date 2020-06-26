@@ -37,5 +37,4 @@ calico-install:
       - file: /srv/kubernetes/manifests/calico/calico-typha.yaml
     - runas: root
     - name: |
-        kubectl apply -f /srv/kubernetes/manifests/calico/calico-rbac-kkd.yaml 
         kubectl apply -f /srv/kubernetes/manifests/calico/calico-typha.yaml

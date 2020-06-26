@@ -28,7 +28,6 @@ rook-ceph-mds-myfs-wait:
     - require:
       - cmd: rook-ceph-mds
     - runas: root
-    - use_vt: True
     - timeout: {{ rook_ceph.timeout }}
     - name: |
         until kubectl -n rook-ceph get deployment rook-ceph-mds-myfs-a; do printf '.' && sleep 5 ; done

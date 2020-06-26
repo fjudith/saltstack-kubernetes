@@ -36,7 +36,6 @@ rook-ceph-operator-wait:
     - require:
       - cmd: rook-ceph-operator
     - runas: root
-    - use_vt: True
     - timeout: {{ rook_ceph.timeout }}
     - name: |
         until kubectl -n rook-ceph get deployment rook-ceph-operator; do printf '.' && sleep 5 ; done
@@ -55,7 +54,6 @@ rook-ceph-discover-wait:
     - require:
       - cmd: rook-ceph-operator
     - runas: root
-    - use_vt: True
     - timeout: {{ rook_ceph.timeout }}
     - name: |
         until kubectl -n rook-ceph get daemonset rook-discover; do printf '.' && sleep 5 ; done
@@ -84,7 +82,6 @@ rook-ceph-mgr-a-wait:
     - require:
       - cmd: rook-ceph-cluster
     - runas: root
-    - use_vt: True
     - timeout: {{ rook_ceph.timeout }}
     - name: |
         until kubectl -n rook-ceph get deployment rook-ceph-mgr-a; do printf '.' && sleep 5 ; done
@@ -103,7 +100,6 @@ rook-ceph-mon-a-wait:
     - require:
       - cmd: rook-ceph-cluster
     - runas: root
-    - use_vt: True
     - timeout: {{ rook_ceph.timeout }}
     - name: |
         until kubectl -n rook-ceph get deployment rook-ceph-mon-a; do printf '.' && sleep 5 ; done
@@ -122,7 +118,6 @@ rook-ceph-osd-0-wait:
     - require:
       - cmd: rook-ceph-mon-a-wait
     - runas: root
-    - use_vt: True
     - timeout: {{ rook_ceph.timeout }}
     - name: |
         until kubectl -n rook-ceph get deployment rook-ceph-osd-0; do printf '.' && sleep 5 ; done

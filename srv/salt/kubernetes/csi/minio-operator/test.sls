@@ -12,6 +12,6 @@ query-minio-ui:
       - cmd: minio-operator
       - cmd: minio-ingress
     - name: https://{{ minio_operator.ingress_host }}.{{ public_domain }}/minio/health/ready
-    - wait_for: 120
+    - wait_for: 240
     - request_interval: 5
     - status: 200

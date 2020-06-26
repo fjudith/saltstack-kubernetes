@@ -64,9 +64,6 @@ net.bridge.bridge-nf-pass-vlan-input-dev:
   sysctl.present:
     - value: 0
 
-/usr/sbin/modprobe:
-  file.symlink:
-    - target: /sbin/modprobe
 
 /usr/lib/coreos:
   file.directory:
@@ -81,14 +78,6 @@ net.bridge.bridge-nf-pass-vlan-input-dev:
     - group: root
     - dir_mode: "0750"
     - makedirs: True
-
-/usr/bin/mkdir:
-  file.symlink:
-    - target: /bin/mkdir
-
-/usr/bin/bash:
-  file.symlink:
-    - target: /bin/bash
 
 /usr/libexec/kubernetes/kubelet-plugins/volume/exec:
   file.directory:

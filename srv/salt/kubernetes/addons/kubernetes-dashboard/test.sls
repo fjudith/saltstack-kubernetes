@@ -6,7 +6,6 @@ kubernetes-dashboard-wait:
     - name: |
         until kubectl -n kubernetes-dashboard get pods --field-selector=status.phase=Running --selector=k8s-app=kubernetes-dashboard; do printf 'kubernetes-dashboard is not Running' && sleep 5; done
         until kubectl -n kubernetes-dashboard get pods --field-selector=status.phase=Running --selector=k8s-app=dashboard-metrics-scraper; do printf 'dashboard-metrics-scraper is not Running' && sleep 5; done
-    - use_vt: True
     - timeout: 180
 
 query-kubernetes-dashboard:

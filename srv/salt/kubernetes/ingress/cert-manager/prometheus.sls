@@ -14,7 +14,6 @@ cert-manager-prometheus-rbac:
         - cmd: cert-manager-namespace
         - file: /srv/kubernetes/manifests/cert-manager/prometheus-k8s-rbac.yaml
     - runas: root
-    - use_vt: True
     - onlyif: curl --silent 'http://127.0.0.1:8080/healthz/'
     - name: kubectl apply -f /srv/kubernetes/manifests/cert-manager/prometheus-k8s-rbac.yaml
 
@@ -34,6 +33,5 @@ cert-manager-servicemonitor:
         - cmd: cert-manager-namespace
         - file: /srv/kubernetes/manifests/cert-manager/servicemonitor.yaml
     - runas: root
-    - use_vt: True
     - onlyif: curl --silent 'http://127.0.0.1:8080/healthz/'
     - name: kubectl apply -f /srv/kubernetes/manifests/cert-manager/servicemonitor.yaml

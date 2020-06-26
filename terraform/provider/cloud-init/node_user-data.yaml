@@ -28,10 +28,10 @@ users:
 apt:
   sources:
     wireguard.list: 
-      source: "deb http://ppa.launchpad.net/wireguard/wireguard/ubuntu bionic main"
+      source: "deb http://ppa.launchpad.net/wireguard/wireguard/ubuntu focal main"
       keyid: "e1b39b6ef6ddb96564797591ae33835f504a1a25"
     saltstack.list:
-      source: "deb http://repo.saltstack.com/py3/ubuntu/18.04/amd64/archive/2019.2.2 bionic main"
+      source: "deb http://repo.saltstack.com/py3/ubuntu/20.04/amd64/archive/3001 focal main"
       key: |
         -----BEGIN PGP PUBLIC KEY BLOCK-----
         Version: GnuPG v2
@@ -84,10 +84,7 @@ packages:
   - python3-croniter
   - python3-git
   - python3-pip
-  - python3-ioflo
-  - python3-raet
   - python3-setuptools
-  - python3-timelib
   - python3-netaddr
   - python3-pyinotify
   - python3-ws4py
@@ -113,7 +110,7 @@ write_files:
       description=fast and powerful configuration management and remote execution
       ports=4505,4506/tcp
 
-      # https://docs.projectcalico.org/master/getting-started/kubernetes/requirement
+      # https://docs.projectcalico.org/getting-started/kubernetes/requirements
       [calico-bgp]
       title=calico
       description=Cloud native connectivity and network policy

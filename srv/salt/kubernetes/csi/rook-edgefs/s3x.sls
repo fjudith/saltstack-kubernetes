@@ -10,7 +10,6 @@ rook-edgefs-s3x-config:
     - require:
       - cmd: rook-edgefs-system-init
     - runas: root
-    - use_vt: True
     - timeout: 180
     - name: |
         kubectl exec -it -n rook-edgefs $(kubectl -n rook-edgefs -l app=rook-edgefs-mgr get po -o jsonpath='{range .items[*]}{.metadata.name}') -- toolbox \

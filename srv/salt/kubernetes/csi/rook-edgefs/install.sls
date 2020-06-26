@@ -27,7 +27,6 @@ rook-edgefs-operator-wait:
     - require:
       - cmd: rook-edgefs-operator
     - runas: root
-    - use_vt: True
     - timeout: 180
     - name: |
         until kubectl -n rook-edgefs-system get deployment rook-edgefs-operator; do printf '.' && sleep 5 ; done
@@ -51,7 +50,6 @@ rook-edgefs-discover-wait:
     - require:
       - cmd: rook-edgefs-operator
     - runas: root
-    - use_vt: True
     - timeout: 180
     - name: |
         until kubectl -n rook-edgefs-system get daemonset rook-discover; do printf '.' && sleep 5 ; done
@@ -95,7 +93,6 @@ rook-edgefs-mgr-wait:
     - require:
       - cmd: rook-edgefs-cluster
     - runas: root
-    - use_vt: True
     - timeout: 180
     - name: |
         until kubectl -n rook-edgefs get deployment rook-edgefs-mgr; do printf '.' && sleep 5 ; done
@@ -118,7 +115,6 @@ rook-edgefs-target-wait:
     - require:
       - cmd: rook-edgefs-mgr-wait
     - runas: root
-    - use_vt: True
     - timeout: 180
     - name: |
         until kubectl -n rook-edgefs get statefulset rook-edgefs-target; do printf '.' && sleep 5 ; done
@@ -141,7 +137,6 @@ rook-edgefs-system-init:
     - require:
       - cmd: rook-edgefs-target-wait
     - runas: root
-    - use_vt: True
     - timeout: 180
     - success_retcodes: [0, 1]
     - name: | 

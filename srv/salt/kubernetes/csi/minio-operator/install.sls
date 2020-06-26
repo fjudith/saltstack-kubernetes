@@ -18,7 +18,6 @@ minio-operator:
     - watch:
         - file: /srv/kubernetes/manifests/minio-operator/minio-operator.yaml
     - runas: root
-    - use_vt: True
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/minio-operator/minio-operator.yaml
     - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
@@ -27,7 +26,7 @@ query-minio-operator-api:
   http.wait_for_successful_query:
     - watch:
       - cmd: minio-operator
-    - name: http://127.0.0.1:8080/apis/miniocontroller.min.io/v1beta1
+    - name: http://127.0.0.1:8080/apis/operator.min.io/v1
     - wait_for: 120
     - request_interval: 5
     - status: 200
@@ -39,7 +38,6 @@ minio-cluster:
     - watch:
         - file: /srv/kubernetes/manifests/minio-operator/minioinstance.yaml
     - runas: root    
-    - use_vt: True
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/minio-operator/minioinstance.yaml
     - onlyif: curl --silent 'http://127.0.0.1:8080/version/'

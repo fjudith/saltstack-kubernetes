@@ -1,0 +1,4 @@
+kube_scan:
+  scanner_image: octarinesec/kubescan-scanner:20.5
+  ui_image: octarinesec/kubescan-scanner-ui:20.5
+  ingress_host: kube-scan

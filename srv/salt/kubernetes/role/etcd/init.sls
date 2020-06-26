@@ -20,14 +20,6 @@
     - dir_mode: "0750"
     - makedirs: True
 
-/usr/bin/mkdir:
-  file.symlink:
-    - target: /bin/mkdir
-
-/usr/bin/bash:
-  file.symlink:
-    - target: /bin/bash
-
 etcd-latest-archive:
   archive.extracted:
     - name: /opt/

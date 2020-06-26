@@ -1,5 +1,5 @@
 weave:
   interface: eth0
-  weave_image: weaveworks/weave-kube:2.5.2
-  npc_image: weaveworks/weave-npc:2.5.2
+  weave_image: weaveworks/weave-kube:2.6.5
+  npc_image: weaveworks/weave-npc:2.6.5
   # password: 0123456789abcdefghij

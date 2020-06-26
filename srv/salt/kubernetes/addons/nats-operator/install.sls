@@ -6,7 +6,6 @@ nats-operator:
         - file: /srv/kubernetes/manifests/nats-operator/00-prereqs.yaml
         - file: /srv/kubernetes/manifests/nats-operator/nats-operator-deployment.yaml
     - runas: root    
-    - use_vt: True
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/nats-operator/00-prereqs.yaml
         kubectl apply -f /srv/kubernetes/manifests/nats-operator/nats-operator-deployment.yaml
@@ -29,7 +28,6 @@ nats-cluster:
     - watch:
         - file: /srv/kubernetes/manifests/nats-operator/nats-cluster.yaml
     - runas: root    
-    - use_vt: True
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/nats-operator/nats-cluster.yaml
     - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
@@ -40,7 +38,6 @@ stan-operator:
         - file: /srv/kubernetes/manifests/nats-operator/default-rbac.yaml
         - file: /srv/kubernetes/manifests/nats-operator/stan-operator-deployment.yaml
     - runas: root    
-    - use_vt: True
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/nats-operator/default-rbac.yaml
         kubectl apply -f /srv/kubernetes/manifests/nats-operator/stan-operator-deployment.yaml
@@ -62,7 +59,6 @@ stan-cluster:
     - watch:
         - file: /srv/kubernetes/manifests/nats-operator/stan-cluster.yaml
     - runas: root
-    - use_vt: True
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/nats-operator/stan-cluster.yaml
     - onlyif: curl --silent 'http://127.0.0.1:8080/version/'

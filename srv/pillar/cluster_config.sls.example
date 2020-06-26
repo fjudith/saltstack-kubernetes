@@ -136,6 +136,12 @@ kubernetes:
       default_storageclass:
         enabled: False
         name: edgefs-iscsi-csi-storageclass
+    longhorn:
+      enabled: false
+      ingress_host: longhorn
+      default_storageclass:
+        enabled: false
+        name: longhorn
   charts:
     concourse:
       enabled: true

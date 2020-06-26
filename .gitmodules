@@ -1,0 +1,3 @@
+[submodule "iscsi"]
+	path = srv/salt/iscsi
+	url = https://github.com/saltstack-formulas/iscsi-formula

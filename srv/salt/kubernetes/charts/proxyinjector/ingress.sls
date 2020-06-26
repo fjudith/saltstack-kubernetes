@@ -12,7 +12,7 @@ proxyinjector-demo-ingress:
       tpldir: {{ tpldir }}
   cmd.run:
     - require:
-      - cmd: proxyinjector-namespace
+      - cmd: proxyinjector-demo-namespace
     - watch:
       - file:  /srv/kubernetes/manifests/proxyinjector/ingress.yaml
     - runas: root

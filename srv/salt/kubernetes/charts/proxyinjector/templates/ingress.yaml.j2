@@ -16,8 +16,8 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: demo
-  namespace: demo
+  name: kubehttpbin
+  namespace: kubehttpbin
   annotations:
     kubernetes.io/ingress.class: {{ controller }}
     ingress.kubernetes.io/ssl-redirect: 'true'
@@ -33,11 +33,11 @@ spec:
       paths:
       - path: /
         backend:
-          serviceName: spin-deck
-          servicePort: 9000
+          serviceName: kubehttpbin
+          servicePort: 80
   {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
   tls:
-  - secretName: demo-prod-cert
+  - secretName: kubehttpbin-prod-cert
     hosts:
     - {{ proxyinjector.ingress_host }}.{{ public_domain }}
   {%- endif %}

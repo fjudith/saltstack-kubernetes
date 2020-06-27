@@ -1,0 +1,20 @@
+loopback_iscsi:
+  path: /var/lib/devices
+  initiator_address: 127.0.0.1
+  iqn: iqn.0000-00.target.local
+  incominguser:
+    username: iscsi-user
+    password: random_password
+  outgoinguser:
+    username: iscsi-target
+    password: random_password_out
+  files:
+    - name: disk-000.img
+      size: 32GB
+      lun_name: lun0
+    - name: disk-001.img
+      size: 32GB
+      lun_name: lun1      
+    - name: disk-002.img
+      size: 32GB
+      lun_name: lun2

@@ -1,0 +1,4 @@
+include:
+  - .osprep
+  - .config
+  - .install

@@ -1,0 +1,11 @@
+{%- from tpldir ~ "/map.jinja" import loopback_iscsi with context -%}
+
+{%- for file in loopback_iscsi.files %}
+<target {{ loopback_iscsi.iqn }}:{{ file.lun_name }}>
+    # Provided device as an iSCSI target
+    backing-store {{ loopback_iscsi.path }}/{{ file.name }}                             
+    initiator-address {{ loopback_iscsi.initiator_address }}
+    incominguser {{ loopback_iscsi.incominguser.username }} {{ loopback_iscsi.incominguser.password }}
+    outgoinguser {{ loopback_iscsi.outgoinguser.username }} {{ loopback_iscsi.outgoinguser.password }}
+</target>
+{%- endfor -%}

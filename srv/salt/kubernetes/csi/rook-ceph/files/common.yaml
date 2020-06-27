@@ -122,7 +122,7 @@ spec:
                             type: string
                           storeType:
                             type: string
-                            pattern: ^(filestore|bluestore)$
+                            pattern: ^(bluestore)$
                           databaseSizeMB:
                             type: string
                           walSizeMB:
@@ -175,7 +175,7 @@ spec:
                   type: boolean
             cleanupPolicy:
               properties:
-                deleteDataDirOnHosts:
+                confirmation:
                   type: string
                   pattern: ^$|^yes-really-destroy-data$
             placement: {}
@@ -420,6 +420,8 @@ spec:
                   properties:
                     size:
                       type: integer
+                    requireSafeReplicaSize:
+                      type: boolean
                 erasureCoded:
                   properties:
                     dataChunks:
@@ -442,6 +444,8 @@ spec:
                   properties:
                     size:
                       type: integer
+                    requireSafeReplicaSize:
+                      type: boolean
                 erasureCoded:
                   properties:
                     dataChunks:
@@ -532,6 +536,8 @@ spec:
               - passive
               - aggressive
               - force
+            parameters:
+              type: object
   subresources:
     status: {}
 # OLM: END CEPH BLOCK POOL CRD
@@ -1227,7 +1233,12 @@ subjects:
 apiVersion: policy/v1beta1
 kind: PodSecurityPolicy
 metadata:
-  name: rook-privileged
+  # Note: Kubernetes matches PSPs to deployments alphabetically. In some environments, this PSP may
+  # need to be renamed with a value that will match before others.
+  name: 00-rook-privileged
+  annotations:
+    seccomp.security.alpha.kubernetes.io/allowedProfileNames: 'runtime/default'
+    seccomp.security.alpha.kubernetes.io/defaultProfileName:  'runtime/default'
 spec:
   privileged: true
   allowedCapabilities:
@@ -1303,7 +1314,7 @@ rules:
     resources:
       - podsecuritypolicies
     resourceNames:
-      - rook-privileged
+      - 00-rook-privileged
     verbs:
       - use
 ---

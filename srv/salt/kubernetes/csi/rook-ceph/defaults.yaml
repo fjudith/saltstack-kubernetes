@@ -1,7 +1,7 @@
 
 rook_ceph:
-  image: rook/ceph:v1.2.7
-  ceph_image: ceph/ceph:v14.2.8
+  image: docker.io/rook/ceph:v1.3.5
+  ceph_image: docker.io/ceph/ceph:v14.2.9
   exporter_image: digitalocean/ceph_exporter:latest
   ingress_host: ceph
   store_type: filestore

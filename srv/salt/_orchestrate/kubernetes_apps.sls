@@ -63,6 +63,7 @@ loopback_iscsi_state:
   salt.state:
     - tgt: 'G@role:node'
     - tgt_type: compound
+    - sls: loopback-iscsi
     - queue: True
     - require:
       - salt: cni_state

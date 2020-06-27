@@ -59,6 +59,16 @@ ingress_state:
       - salt: metrics-server_state
       - salt: kube-prometheus_state
 
+loopback_iscsi_state:
+  salt.state:
+    - tgt: 'G@role:node'
+    - tgt_type: compound
+    - queue: True
+    - require:
+      - salt: cni_state
+      - salt: metrics-server_state
+      - salt: kube-prometheus_state
+
 csi_state:
   salt.state:
     - tgt: "{{ masters|first }}"
@@ -68,6 +78,7 @@ csi_state:
       - salt: cni_state
       - salt: metrics-server_state
       - salt: kube-prometheus_state
+      - salt: loopback_iscsi_state
 
 
 addons_state:

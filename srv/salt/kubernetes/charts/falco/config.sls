@@ -5,6 +5,13 @@
     - dir_mode: "0750"
     - makedirs: True
 
+/srv/kubernetes/manifests/falco/certs:
+  file.directory:
+    - user: root
+    - group: root
+    - dir_mode: "0750"
+    - makedirs: True
+
 /srv/kubernetes/manifests/falco/values.yaml:
   file.managed:
     - require:

@@ -8,15 +8,15 @@
 image:
   tag: {{ falco.version }}
 
-{% if common.cri.provider == "docker" %}
+{%- if common.cri.provider == "docker" %}
 docker:
   enabled: true
   socket: /var/run/docker.sock
-{% elif common.cri.provider == "containerd" %}
+{%- elif common.cri.provider == "containerd" %}
  containerd:
    enabled: true
    socket: /run/containerd/containerd.sock
-{% endif %}
+{%- endif %}
 
 rbac:
   # Create and use rbac resources
@@ -35,24 +35,24 @@ ebpf:
   # Enable eBPF support for Falco
   {%- if common.cni.provider == "cilium" %}
   enabled: true
-  {%- else -%}
+  {%- else %}
   enabled: {{ falco.ebpf.enable }}
   {%- endif %}
   
-  auditLog: 
-    # true here activates the K8s Audit Log feature for Falco
-    enabled: {{ falco.ebpf.audit_log_enable }}
+auditLog: 
+  # true here activates the K8s Audit Log feature for Falco
+  enabled: {{ falco.audit_log.enable }}
   
   dynamicBackend:
     # true here configures an AuditSink who will receive the K8s audit logs
-    enabled: {{ falco.ebpf.dynamic_backend_enable }}
+    enabled: {{ falco.audit_log.dynamic_backend_enable }}
 
-{% if common.addons.get('nats_operator', {'enabled': False}).enabled %}
+{%- if common.addons.get('nats_operator', {'enabled': False}).enabled %}
 integrations:
   natsOutput:
     enabled: true
     natsUrl: "nats://nats-cluster.nats-io:4222"
-{% endif %}
+{%- endif %}
 
 # Allow falco to run on Kubernetes 1.6 masters.
 tolerations:
@@ -62,7 +62,6 @@ tolerations:
     key: node-role.kubernetes.io
     operator: Equal
     value: ingress
-
 
 falco:
   # The gRPC server is secure by default (mutual TLS) so you need to generate certificates and update their paths here.

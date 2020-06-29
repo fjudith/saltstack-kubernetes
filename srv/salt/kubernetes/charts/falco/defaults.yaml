@@ -1,11 +1,12 @@
 falco:
-  version: 0.22.1
-  exporter_version: 0.1.0
+  version: 0.23.0
+  exporter_version: 0.2.0
   pod_security_policy: false
   http_proxy: ""
   https_proxy: ""
   no_proxy: ""
   ebpf:
     enable: false
-    audit_log_enable: false
+  audit_log:
+    enable: false
     dynamic_backend_enable: false

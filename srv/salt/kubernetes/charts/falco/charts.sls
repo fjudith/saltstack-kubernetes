@@ -16,7 +16,8 @@ falco-fetch-charts:
       - file: /srv/kubernetes/manifests/falco
     - cwd: /srv/kubernetes/manifests/falco
     - name: |
-        helm fetch --untar stable/falco
+        helm repo add falcosecurity https://falcosecurity.github.io/charts
+        helm fetch --untar falcosecurity/falco
 
 falco-exporter-fetch-charts:
   git.latest:

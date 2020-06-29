@@ -44,7 +44,7 @@ concourse:
 
     {% if charts.get('keycloak', {'enabled': False}).enabled %}
     {%- set keycloak_url = 'https://' + charts.get('keycloak', {}).get('ingress_host') + '.' + pillar['public-domain'] -%}
-    {%- set keycloak_password = salt['cmd.shell']("kubectl get secret --namespace keycloak keycloak-http -o jsonpath='{.data.password}' | base64 --decode; echo") -%}
+    {%- set keycloak_password = charts.get('keycloak', {}).get('password') -%}
     {%- set client_secret     = salt['cmd.shell']('/srv/kubernetes/manifests/concourse/kc-clientsecret-concourse.sh' + ' ' + 'keycloak' + ' ' + keycloak_password + ' ' + keycloak_url + ' ' + concourse.oauth.keycloak.realm) -%}
     {%- set realm = concourse.oauth.get('keycloak', {}).get('realm') -%}
 

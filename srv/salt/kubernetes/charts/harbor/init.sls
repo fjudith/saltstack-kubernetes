@@ -3,15 +3,16 @@
 {%- from "kubernetes/map.jinja" import storage with context -%}
 
 include:
-  - kubernetes.charts.harbor.config
-  - kubernetes.charts.harbor.charts
-  - kubernetes.charts.harbor.namespace
+  - .config
+  - .charts
+  - .namespace
   {%- if charts.get('keycloak', {'enabled': False}).enabled %}
-  - kubernetes.charts.harbor.oauth
+  - .oauth
   {%- endif %}
   {%- if storage.get('minio_operator', {'enabled': False}).enabled %}
-  - kubernetes.charts.harbor.minio
+  - .minio
   {%- endif %}
-  - kubernetes.charts.harbor.install
-  - kubernetes.charts.harbor.ingress
-  - kubernetes.charts.harbor.test
+  - .install
+  - .ingress
+  - .test
+  - .finalize

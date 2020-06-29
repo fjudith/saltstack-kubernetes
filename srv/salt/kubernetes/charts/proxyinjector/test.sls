@@ -22,7 +22,7 @@ proxyinjector-demo:
 
         {% if charts.get('keycloak', {'enabled': False}).enabled -%}
         {%- set keycloak_url = 'https://' + charts.get('keycloak', {}).get('ingress_host') + '.' + pillar['public-domain'] -%}
-        {%- set keycloak_password = salt['cmd.shell']("kubectl get secret --namespace keycloak keycloak-http -o jsonpath='{.data.password}' | base64 --decode; echo") -%}
+        {%- set keycloak_password = charts.get('keycloak', {}).get('password') -%}
         {%- set client_secret     = salt['cmd.shell']('/srv/kubernetes/manifests/proxyinjector/kc-clientsecret-demo.sh' + ' ' + 'keycloak' + ' ' + keycloak_password + ' ' + keycloak_url + ' ' + charts.proxyinjector.oauth.keycloak.realm) -%}
         {%- set realm = charts.spinnaker.oauth.get('keycloak', {}).get('realm') -%}
         kubectl -n kubehttpbin annotate deployment/kubehttpbin \

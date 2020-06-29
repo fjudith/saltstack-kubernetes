@@ -23,6 +23,15 @@ harbor:
           --values /srv/kubernetes/manifests/harbor/values.yaml \
           "./" --wait --timeout 10m
 
+query-harbor-api:
+  http.wait_for_successful_query:
+    - watch:
+      - cmd: harbor
+    - name: https://{{ harbor.coreIngressHost }}.{{ public_domain }}/harbor
+    - wait_for: 120
+    - request_interval: 5
+    - status: 200
+
 harbor-configure-oidc:
   file.managed:
     - watch:
@@ -36,6 +45,8 @@ harbor-configure-oidc:
     - context:
       tpldir: {{ tpldir }}
   cmd.run:
+    - require:
+      - http: query-harbor-api
     - watch:
       - file: /srv/kubernetes/manifests/harbor/auth-oidc.json
     - runas: root

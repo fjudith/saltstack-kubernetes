@@ -1,6 +1,7 @@
 loopback_iscsi:
   path: /var/lib/devices
   initiator_address: 127.0.0.1
+  initiator_port: 53260
   iqn: iqn.0000-00.target.local
   incominguser:
     username: iscsi-user

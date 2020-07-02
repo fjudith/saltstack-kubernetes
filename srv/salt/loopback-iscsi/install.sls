@@ -17,6 +17,7 @@ tgt.service:
   service.running:
     - watch:
       - file: /etc/tgt/conf.d/loopback-iscsi.conf
+      - file: /etc/systemd/system/tgt.service
     - enable: True
     - reload: True
 
@@ -25,7 +26,7 @@ iscsi-discovery:
     - onchanges:
       - service: tgt.service
     - user: root
-    - name: iscsiadm -m discovery -t st -p {{ loopback_iscsi.initiator_address }}
+    - name: iscsiadm -m discovery -t st -p {{ loopback_iscsi.initiator_address }}:{{ loopback_iscsi.initiator_port }}
 
 {%- for file in loopback_iscsi.files %}
 {{ file.lun_name }}-authmethod:
@@ -33,7 +34,7 @@ iscsi-discovery:
     - watch:
       - file: /etc/tgt/conf.d/loopback-iscsi.conf
       - service: tgt.service
-    - name: /etc/iscsi/nodes/{{ loopback_iscsi.iqn }}:{{ file.lun_name }}/{{ loopback_iscsi.initiator_address }},3260,1/default
+    - name: /etc/iscsi/nodes/{{ loopback_iscsi.iqn }}:{{ file.lun_name }}/{{ loopback_iscsi.initiator_address }},{{ loopback_iscsi.initiator_port }},1/default
     - pattern: '^(node.session.auth.authmethod = )None$'
     - repl: '\1CHAP'
 
@@ -42,7 +43,7 @@ iscsi-discovery:
     - watch:
       - file: /etc/tgt/conf.d/loopback-iscsi.conf
       - service: tgt.service
-    - name: /etc/iscsi/nodes/{{ loopback_iscsi.iqn }}:{{ file.lun_name }}/{{ loopback_iscsi.initiator_address }},3260,1/default
+    - name: /etc/iscsi/nodes/{{ loopback_iscsi.iqn }}:{{ file.lun_name }}/{{ loopback_iscsi.initiator_address }},{{ loopback_iscsi.initiator_port }},1/default
     - text: |
         node.session.auth.username = {{ loopback_iscsi.incominguser.username }}
         node.session.auth.password = {{ loopback_iscsi.incominguser.password }}
@@ -54,7 +55,7 @@ iscsi-discovery:
     - watch:
       - file: /etc/tgt/conf.d/loopback-iscsi.conf
       - service: tgt.service
-    - name: /etc/iscsi/nodes/{{ loopback_iscsi.iqn }}:{{ file.lun_name }}/{{ loopback_iscsi.initiator_address }},3260,1/default
+    - name: /etc/iscsi/nodes/{{ loopback_iscsi.iqn }}:{{ file.lun_name }}/{{ loopback_iscsi.initiator_address }},{{ loopback_iscsi.initiator_port }},1/default
     - pattern: '^(node.startup = )manual$'
     - repl: '\1automatic'
 {%- endfor %}
@@ -63,7 +64,7 @@ open-iscsi.service:
   service.running:
     - watch:
       {%- for file in loopback_iscsi.files %}
-      - file: /etc/iscsi/nodes/{{ loopback_iscsi.iqn }}:{{ file.lun_name }}/{{ loopback_iscsi.initiator_address }},3260,1/default
+      - file: /etc/iscsi/nodes/{{ loopback_iscsi.iqn }}:{{ file.lun_name }}/{{ loopback_iscsi.initiator_address }},{{ loopback_iscsi.initiator_port }},1/default
       {%- endfor %}
     - enable: True
     - reload: True

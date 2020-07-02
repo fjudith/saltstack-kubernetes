@@ -121,6 +121,19 @@ kubernetes:
         name: etcd03
     version: v3.3.15
   storage:
+    loopback_iscsi:
+      enabled: True
+      initiator_port: 53260
+      files:
+        - name: disk-000.img
+          size: 8GB
+          lun_name: ceph0
+        - name: disk-001.img
+          size: 8GB
+          lun_name: ceph1      
+        - name: disk-002.img
+          size: 8GB
+          lun_name: ceph2
     minio_operator:
       enabled: True
       ingress_host: minio

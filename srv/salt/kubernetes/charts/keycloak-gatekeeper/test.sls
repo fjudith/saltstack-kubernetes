@@ -2,7 +2,7 @@
 {%- from "kubernetes/map.jinja" import common with context -%}
 {%- from "kubernetes/map.jinja" import storage with context -%}
 {%- from "kubernetes/map.jinja" import charts with context -%}
-{%- set keycloak_password = salt['cmd.shell']("kubectl get secret --namespace keycloak keycloak-http -o jsonpath='{.data.password}' | base64 --decode; echo") -%}
+{%- set keycloak_password = charts.get('keycloak', {}).get('password') -%}
 
 {% if common.addons.get('dashboard', {'enabled': False}).enabled %}
 query-kgk-kubernetes-dashboard:

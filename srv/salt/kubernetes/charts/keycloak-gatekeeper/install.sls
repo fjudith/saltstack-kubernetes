@@ -5,7 +5,7 @@
 {% from tpldir ~ "/map.jinja" import keycloak_gatekeeper with context %}
 {%- set public_domain = pillar['public-domain'] -%}
 {%- from "kubernetes/map.jinja" import charts with context -%}
-{%- set keycloak_password = salt['cmd.shell']("kubectl get secret --namespace keycloak keycloak-http -o jsonpath='{.data.password}' | base64 --decode; echo") -%}
+{%- set keycloak_password = charts.get('keycloak', {}).get('password') -%}
 
 keycloak-create-realm:
   cmd.run:

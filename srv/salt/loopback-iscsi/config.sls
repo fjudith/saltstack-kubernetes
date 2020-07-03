@@ -16,13 +16,3 @@
     - template: jinja
     - context:
       tpldir: {{ tpldir }}
-
-/etc/systemd/system/tgt.service:
-  file.managed:
-    - source: salt://{{ tpldir }}/templates/tgt.service.j2
-    - user: root
-    - group: root
-    - mode: "0755"
-    - template: jinja
-    - context:
-      tpldir: {{ tpldir }}

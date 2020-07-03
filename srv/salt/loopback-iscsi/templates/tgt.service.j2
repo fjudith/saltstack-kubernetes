@@ -11,9 +11,11 @@ TasksMax=infinity
 ExecStart=/usr/sbin/tgtd -f
 ExecStartPost=/usr/sbin/tgtadm --op update --mode sys --name State -v offline
 ExecStartPost=/usr/sbin/tgt-admin -e -c /etc/tgt/targets.conf
+
 ExecStartPost=/usr/sbin/tgtadm --mode portal --op delete --mode portal --param portal=0.0.0.0:3260
 ExecStartPost=/usr/sbin/tgtadm --mode portal --op delete --mode portal --param portal=[::]:3260
 ExecStartPost=/usr/sbin/tgtadm --mode portal --op new --mode portal --param portal={{ loopback_iscsi.initiator_address }}:{{ loopback_iscsi.initiator_port }}
+
 ExecStartPost=/usr/sbin/tgtadm --op update --mode sys --name State -v ready
 
 ExecStop=/usr/sbin/tgtadm --op update --mode sys --name State -v offline

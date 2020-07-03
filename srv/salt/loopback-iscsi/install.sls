@@ -78,4 +78,4 @@ open-iscsi.service:
       - file: /etc/iscsi/nodes/{{ loopback_iscsi.iqn }}:{{ file.lun_name }}/{{ loopback_iscsi.initiator_address }},{{ loopback_iscsi.initiator_port }},1/default
       {%- endfor %}
     - enable: True
-    - reload: True
+    - reload: False

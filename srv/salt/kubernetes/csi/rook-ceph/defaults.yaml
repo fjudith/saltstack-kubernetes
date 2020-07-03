@@ -1,5 +1,9 @@
 
 rook_ceph:
+  replication: 3
+  block_replication: 3
+  object_replication: 3
+  filesystem_replication: 3
   image: docker.io/rook/ceph:v1.3.5
   ceph_image: docker.io/ceph/ceph:v14.2.9
   exporter_image: digitalocean/ceph_exporter:latest

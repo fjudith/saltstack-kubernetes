@@ -9,7 +9,8 @@ rook-ceph-mds:
     - require:
       - file: /srv/kubernetes/manifests/rook-ceph
     - name: /srv/kubernetes/manifests/rook-ceph/filesystem.yaml
-    - source: salt://{{ tpldir }}/files/filesystem.yaml
+    - source: salt://{{ tpldir }}/templates/filesystem.yaml
+    - template: jinja
     - user: root
     - group: root
     - mode: "0644"

@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import rook_ceph with context %}
+
 #################################################################################################################
 # Create an object store with settings for replication in a production environment. A minimum of 3 hosts with
 # OSDs are required in this example.
@@ -14,7 +20,7 @@ spec:
   metadataPool:
     failureDomain: host
     replicated:
-      size: 3
+      size: {{ rook_ceph.object_replication }}
       # Disallow setting pool with replica 1, this could lead to data loss without recovery.
       # Make sure you're *ABSOLUTELY CERTAIN* that is what you want
       requireSafeReplicaSize: true
@@ -25,7 +31,7 @@ spec:
   dataPool:
     failureDomain: host
     replicated:
-      size: 3
+      size: {{ rook_ceph.object_replication }}
       # Disallow setting pool with replica 1, this could lead to data loss without recovery.
       # Make sure you're *ABSOLUTELY CERTAIN* that is what you want
       requireSafeReplicaSize: true

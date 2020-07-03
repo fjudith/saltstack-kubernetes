@@ -9,7 +9,8 @@ rook-ceph-rgw:
     - require:
       - file: /srv/kubernetes/manifests/rook-ceph
     - name: /srv/kubernetes/manifests/rook-ceph/object.yaml
-    - source: salt://{{ tpldir }}/files/object.yaml
+    - source: salt://{{ tpldir }}/templates/object.yaml
+    - template: jinja
     - user: root
     - group: root
     - mode: "0644"

@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import rook_ceph with context %}
+
 #################################################################################################################
 # Create a filesystem with settings with replication enabled for a production environment.
 # A minimum of 3 OSDs on different nodes are required in this example.
@@ -13,7 +19,7 @@ spec:
   # The metadata pool spec. Must use replication.
   metadataPool:
     replicated:
-      size: 3
+      size: {{ rook_ceph.filesystem_replication }}
       requireSafeReplicaSize: true
     parameters:
       # Inline compression mode for the data pool
@@ -26,7 +32,7 @@ spec:
   dataPools:
     - failureDomain: host
       replicated:
-        size: 3
+        size: {{ rook_ceph.filesystem_replication }}
         # Disallow setting pool with replica 1, this could lead to data loss without recovery.
         # Make sure you're *ABSOLUTELY CERTAIN* that is what you want
         requireSafeReplicaSize: true

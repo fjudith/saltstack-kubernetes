@@ -52,4 +52,4 @@ kubectl-label-node:
     - name: |
         kubectl label node {{ hostname }} node-role.kubernetes.io/node=true --overwrite
         kubectl label node {{ hostname }} role=storage-node --overwrite
-        kubectl label ndoe {{ hostname }} node.longhorn.io/create-default-disk=true --overwrite
+        kubectl label node {{ hostname }} node.longhorn.io/create-default-disk=true --overwrite

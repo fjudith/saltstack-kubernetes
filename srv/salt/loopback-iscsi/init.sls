@@ -6,4 +6,5 @@ include:
   - .install
   {%- if storage.get('longhorn', {'enabled': False}).enabled %}
   - .mount
+  - .node_label
   {%- endif %}

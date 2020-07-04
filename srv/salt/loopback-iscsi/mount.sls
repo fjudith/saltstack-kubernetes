@@ -1,5 +1,4 @@
 {%- from tpldir ~ "/map.jinja" import loopback_iscsi with context -%}
-{%- from "kubernetes/map.jinja" import storage with context -%}
 
 
 {%- for file in loopback_iscsi.files %}

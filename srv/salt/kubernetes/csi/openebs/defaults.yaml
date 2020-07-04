@@ -1,0 +1,31 @@
+openebs:
+  maya_apiserver_image: quay.io/openebs/m-apiserver:1.11.0
+  jiva_image: quay.io/openebs/jiva:1.11.0
+  cstor_target_image: quay.io/openebs/cstor-istgt:1.11.0
+  cstor_pool_image: quay.io/openebs/cstor-pool:1.11.0
+  cstor_pool_management_image: quay.io/openebs/cstor-pool-mgmt:1.11.0
+  cstor_volume_management_image: quay.io/openebs/cstor-volume-mgmt:1.11.0
+  exporter_image: quay.io/openebs/m-exporter:1.11.0
+  provisioner_image: quay.io/openebs/openebs-k8s-provisioner:1.11.0
+  snapshot_controller_image: quay.io/openebs/snapshot-controller:1.11.0
+  snapshot_provisioner_image: quay.io/openebs/snapshot-provisioner:1.11.0
+  node_disk_manager_image: quay.io/openebs/node-disk-manager-amd64:0.6.0
+  node_disk_operator_image: quay.io/openebs/node-disk-operator-amd64:0.6.0
+  admission_image: quay.io/openebs/admission-server:1.11.0
+  localpv_image: quay.io/openebs/provisioner-localpv:1.11.0
+  linux_utils_image: quay.io/openebs/linux-utils:1.11.0
+  csi:
+    cstror:
+      resizer_image: quay.io/k8scsi/csi-resizer:v0.4.0
+      snapshotter_image: quay.io/k8scsi/csi-snapshotter:v2.0.1
+      snapshot_controller_image: quay.io/k8scsi/snapshot-controller:v2.0.1
+      provisioner_image: quay.io/k8scsi/csi-provisioner:v1.6.0
+      attacher_image: quay.io/k8scsi/csi-attacher:v2.0.0
+      cluster_driver_registrar: quay.io/k8scsi/csi-cluster-driver-registrar:v1.0.1
+      plugin_image: quay.io/openebs/cstor-csi-driver:ci
+      node_driver_registrar: quay.io/k8scsi/csi-node-driver-registrar:v1.0.1
+
+
+
+
+  

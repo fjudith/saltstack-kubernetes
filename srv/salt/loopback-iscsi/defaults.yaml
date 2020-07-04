@@ -13,9 +13,12 @@ loopback_iscsi:
     - name: disk-000.img
       size: 32GB
       lun_name: lun0
+      fs_type: ext4
     - name: disk-001.img
       size: 32GB
-      lun_name: lun1      
+      lun_name: lun1
+      fs_type: ext4     
     - name: disk-002.img
       size: 32GB
+      fs_type: ext4
       lun_name: lun2

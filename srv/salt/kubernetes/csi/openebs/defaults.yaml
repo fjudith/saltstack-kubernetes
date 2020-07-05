@@ -1,4 +1,12 @@
 openebs:
+  mayastor_nbd_replication: 3
+  mayastor_iscsi_replication: 3
+  mayastor_nvmf_replication: 3
+  csi_driver: https://raw.githubusercontent.com/kubernetes/csi-api/release-1.14/pkg/crd/manifests/csidriver.yaml
+  csi_nodeinfo: https://raw.githubusercontent.com/kubernetes/csi-api/release-1.14/pkg/crd/manifests/csinodeinfo.yaml
+  default_storageclass:
+    enabled: False
+    name: mayastor-iscsi
   maya_apiserver_image: quay.io/openebs/m-apiserver:1.11.0
   jiva_image: quay.io/openebs/jiva:1.11.0
   cstor_target_image: quay.io/openebs/cstor-istgt:1.11.0
@@ -15,16 +23,25 @@ openebs:
   localpv_image: quay.io/openebs/provisioner-localpv:1.11.0
   linux_utils_image: quay.io/openebs/linux-utils:1.11.0
   csi:
-    cstror:
+    cstor:
       resizer_image: quay.io/k8scsi/csi-resizer:v0.4.0
       snapshotter_image: quay.io/k8scsi/csi-snapshotter:v2.0.1
       snapshot_controller_image: quay.io/k8scsi/snapshot-controller:v2.0.1
       provisioner_image: quay.io/k8scsi/csi-provisioner:v1.6.0
       attacher_image: quay.io/k8scsi/csi-attacher:v2.0.0
-      cluster_driver_registrar: quay.io/k8scsi/csi-cluster-driver-registrar:v1.0.1
-      plugin_image: quay.io/openebs/cstor-csi-driver:ci
-      node_driver_registrar: quay.io/k8scsi/csi-node-driver-registrar:v1.0.1
-
+      cluster_driver_registrar_image: quay.io/k8scsi/csi-cluster-driver-registrar:v1.0.1
+      plugin_image: quay.io/openebs/cstor-csi-driver:1.11.0
+      node_driver_registrar_image: quay.io/k8scsi/csi-node-driver-registrar:v1.0.1
+    jiva:
+      resizer_image: quay.io/k8scsi/csi-resizer:v0.3.0
+      provisioner_image: quay.io/k8scsi/csi-provisioner:v1.5.0
+      attacher_image: quay.io/k8scsi/csi-attacher:v2.0.0
+      node_driver_registrar_image: quay.io/k8scsi/csi-node-driver-registrar:v1.2.0
+    mayastor:
+      image: mayadata/mayastor:v0.2.0
+      plugin_image: mayadata/mayastor-csi:v0.2.0
+      node_driver_registrar_image: quay.io/k8scsi/csi-node-driver-registrar:v1.3.0
+      nats_image: amd64/nats:2.1-alpine3.11
 
 
 

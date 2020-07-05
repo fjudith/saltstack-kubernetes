@@ -3,7 +3,6 @@
 
 {#- Get the `tplroot` from `tpldir` #}
 {% from tpldir ~ "/map.jinja" import openebs with context %}
-{%- from "kubernetes/map.jinja" import storage with context -%}
 
 # This manifest deploys the OpenEBS CSI control plane components,
 # with associated CRs & RBAC rules. This manifest has been verified
@@ -901,7 +900,7 @@ spec:
       hostNetwork: true
       containers:
         - name: csi-node-driver-registrar
-          image: {{ openebs.csi.cstor.node_driver_registrar }}
+          image: {{ openebs.csi.cstor.node_driver_registrar_image }}
           imagePullPolicy: IfNotPresent
           args:
             - "--v=5"
@@ -998,4 +997,3 @@ spec:
           hostPath:
             path: /lib/x86_64-linux-gnu/libisns-nocrypto.so.0
             type: File
----

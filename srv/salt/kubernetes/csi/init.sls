@@ -10,6 +10,9 @@ include:
   {%- if storage.get('longhorn', {'enabled': False}).enabled %}
   - kubernetes.csi.longhorn
   {%- endif %}
+  {%- if storage.get('openebs', {'enabled': False}).enabled %}
+  - kubernetes.csi.openebs
+  {%- endif %}
   {%- if storage.get('minio_operator', {'enabled': False}).enabled %}
   - kubernetes.csi.minio-operator
   {%- endif %}

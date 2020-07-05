@@ -32,6 +32,20 @@ bridge-utils:
 socat:
   pkg.latest
 
+kernel-modules:
+  kmod.present:
+    - mods:
+      - nbd
+
+/sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages:
+  file.append:
+    - text: |
+        512
+
+vm.nr_hugepages:
+  sysctl.present:
+    - value: 512
+
 net.ipv4.ip_forward:
   sysctl.present:
     - value: 1

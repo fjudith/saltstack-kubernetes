@@ -55,7 +55,7 @@ nodeRegistration:
 localAPIEndpoint:
   advertiseAddress: {{ localIpAddress[0] }}
   bindPort: {{ kubeadm.bindPort }}
-certificateKey: {{ kubeadm.certificateKey }}
+certificateKey: "{{ kubeadm.certificateKey }}"
 ---
 apiVersion: kubeadm.k8s.io/v1beta2
 kind: ClusterConfiguration
@@ -87,7 +87,7 @@ etcd:
       - etcd.kube-system.svc
       - etcd.kube-system
       - etcd
-  {%- else -%}
+  {%- else %}
   external:
     endpoints:
       {%- for server, addrs in salt['mine.get'](tgt='role:etcd', fun='network.ip_addrs', tgt_type='grain').items() %}
@@ -108,9 +108,9 @@ apiServer:
     apiserver-count: "{{ apiserverCount|length }}"
     {%- if storage.get('rook_ceph', {'enabled': False}).enabled or storage.get('rook_edgefs', {'enabled': False}).enabled %}
     feature-gates: VolumeSnapshotDataSource=true,CSIDriverRegistry=true
-    allow-privileged: "true"
-    {%- else -%}
-    allow-privileged: "{{ kubeadm.apiserver.allowPrivileged }}"
+    # allow-privileged: "true"
+    {%- else %}
+    allow-privileged: "{{ kubeadm.apiServer.allowPrivileged }}"
     {%- endif %}
     {%- if charts.get('keycloak', {'enabled': False}).enabled %}
     oidc-client-id: kubernetes

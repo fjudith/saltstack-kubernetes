@@ -21,14 +21,13 @@ kubeadm:
       heartbeat-interval: "250"
       auto-compaction-retention: "8"
       snapshot-count: "10000"
-
   networking:
     serviceSubnet: "10.96.0.0/12"
     podSubnet: "10.244.0.0/16"
     dnsDomain: "cluster.local"
   clusterDNSIP: "10.96.0.10"
   apiServer:
-    allowPrivileged: "false"
+    allowPrivileged: "true"
     extraArgs:
       authorization-mode: "Node,RBAC"
       anonymous-auth: "true"

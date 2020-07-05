@@ -29,4 +29,5 @@ control_plane_kubeadm_join_master:
     - require:
       - salt: control_plane_common_state
       - salt: control_plane_docker_state
+      - salt: control_plane_primary_kubeadm_init
 {% endif %}

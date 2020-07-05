@@ -23,3 +23,4 @@ edge_kubeadm_join_edge:
     - require:
       - salt: edge_common_state
       - salt: edge_docker_state
+      - salt: compute_kubeadm_join_node

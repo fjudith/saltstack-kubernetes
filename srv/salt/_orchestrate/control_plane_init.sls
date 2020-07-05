@@ -28,3 +28,4 @@ control_plane_primary_kubeadm_init:
     - require:
       - salt: control_plane_primary_common_state
       - salt: control_plane_primary_docker_state
+      - salt: etcd_state

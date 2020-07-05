@@ -23,3 +23,4 @@ compute_kubeadm_join_node:
     - require:
       - salt: compute_common_state
       - salt: compute_docker_state
+      - salt: control_plane_kubeadm_join_master

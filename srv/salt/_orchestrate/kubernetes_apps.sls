@@ -1,5 +1,4 @@
 {%- from "kubernetes/map.jinja" import common with context -%}
-{%- from "kubernetes/map.jinja" import storage with context -%}
 {%- set node_name = salt['pillar.get']('event_originator') -%}
 {%- set masters = [] -%}
 {%- for key, value in salt["saltutil.runner"]('mine.get', tgt="role:master", fun="network.get_hostname", tgt_type="grain")|dictsort(false, 'value') -%}
@@ -11,8 +10,6 @@ cni_state:
     - tgt: "{{ masters|first }}"
     - sls: kubernetes.cni.{{ common.cni.provider }}
     - queue: True
-    - require:
-      - salt: compute_kubeadm_join_node
 
 metrics-server_state:
   salt.state:
@@ -73,16 +70,6 @@ loopback_iscsi_state:
       - salt: metrics-server_state
       - salt: kube-prometheus_state
 
-{%- if storage.get('longhorn', {'enabled': False}).enabled %}
-longhorn-node-label_state:
-  salt.state:
-    - tgt: "{{ masters|first }}"
-    - sls: loopback_iscsi_state.node_label
-    - queue: True
-    - require:
-      - salt: loopback_iscsi_state
-{%- endif %}
-
 csi_state:
   salt.state:
     - tgt: "{{ masters|first }}"
@@ -93,10 +80,6 @@ csi_state:
       - salt: metrics-server_state
       - salt: kube-prometheus_state
       - salt: loopback_iscsi_state
-      {%- if storage.get('longhorn', {'enabled': False}).enabled %}
-      - salt: longhorn-node-label_state
-      {%- endif %}
-
 
 {# addons_state:
   salt.state:

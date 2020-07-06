@@ -3,4 +3,5 @@ include:
   - .namespace
   - .install
   - .ingress
+  - .node-label
   - .storageclass

@@ -3,8 +3,3 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: openebs
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: mayastor

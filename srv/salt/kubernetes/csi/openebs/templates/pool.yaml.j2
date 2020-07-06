@@ -19,6 +19,6 @@ metadata:
   namespace: mayastor
 spec:
   node: {{ node }}
-  disks: ["ip-{{ storage.loopback_iscsi.initiator_address }}:{{ storage.loopback_iscsi.initiator_port }}-iscsi-iqn.0000-00.target.local:{{ file.lun_name }}-lun-1"]
+  disks: ["/dev/disk/by-path/ip-{{ storage.loopback_iscsi.initiator_address }}:{{ storage.loopback_iscsi.initiator_port }}-iscsi-iqn.0000-00.target.local:{{ file.lun_name }}-lun-1"]
 {%- endfor %}
 {%- endfor %}

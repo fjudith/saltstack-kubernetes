@@ -158,7 +158,7 @@ kubernetes:
         name: longhorn
     openebs:
       enabled: false
-      maystor:
+      mayastor:
         enabled: false
       default_storageclass:
         enabled: false

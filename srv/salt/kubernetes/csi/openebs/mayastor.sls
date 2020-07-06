@@ -158,7 +158,7 @@ openebs-mayastor:
 openebs-mayastor-wait:
   cmd.run:
     - require:
-      - cmd: openebs
+      - cmd: openebs-mayastor
     - runas: root
     - timeout: 180
     - name: |

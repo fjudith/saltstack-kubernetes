@@ -1,3 +1,5 @@
+{%- from "kubernetes/map.jinja" import storage with context -%}
+
 include:
   - .driver
   - .config

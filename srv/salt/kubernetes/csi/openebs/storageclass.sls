@@ -18,9 +18,6 @@ openebs-storageclass:
       tpldir: {{ tpldir }}
   cmd.run:
     - require:
-      - cmd: openebs
-      - cmd: openebs-cstor
-      - cmd: openebs-jiva
       - cmd: openebs-mayastor
     - watch:
       - file: /srv/kubernetes/manifests/openebs/storage-class.yaml

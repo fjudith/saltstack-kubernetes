@@ -38,8 +38,10 @@ kernel-modules:
       - nbd
 
 /sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages:
-  file.append:
-    - text: |
+  file.line:
+    - mode: insert
+    - location: before
+    - content: |
         512
 
 vm.nr_hugepages:

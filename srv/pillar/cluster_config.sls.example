@@ -156,6 +156,13 @@ kubernetes:
       default_storageclass:
         enabled: false
         name: longhorn
+    openebs:
+      enabled: false
+      maystor:
+        enabled: false
+      default_storageclass:
+        enabled: false
+        name: mayastor-nvmf
   charts:
     concourse:
       enabled: true

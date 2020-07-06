@@ -38,8 +38,8 @@ openebs:
       attacher_image: quay.io/k8scsi/csi-attacher:v2.0.0
       node_driver_registrar_image: quay.io/k8scsi/csi-node-driver-registrar:v1.2.0
     mayastor:
-      image: mayadata/mayastor:v0.2.0
-      plugin_image: mayadata/mayastor-csi:v0.2.0
+      image: docker.io/mayadata/mayastor:v0.2.0
+      plugin_image: docker.io/mayadata/mayastor-csi:v0.2.0
       node_driver_registrar_image: quay.io/k8scsi/csi-node-driver-registrar:v1.3.0
       nats_image: amd64/nats:2.1-alpine3.11
 

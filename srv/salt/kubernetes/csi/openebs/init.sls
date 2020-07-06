@@ -1,5 +1,4 @@
 include:
-  - .osprep
   - .driver
   - .config
   - .namespace

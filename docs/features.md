@@ -237,32 +237,41 @@ Solutions to provide storage persistence to stateful applications.
 
 <table>
   <tr align='center'>
-    <th align='center' colspan='4'>Distributed storage</th>
+    <th align='center' colspan='6'>Distributed storage</th>
     <th>S3 compatible storage</th>
-    <th align='center'>Distributed database</th>
+    <th align='center' colspan='2'>Distributed database</th>
   </tr>
   <tr align='center'>
     <td align='center'>Rook</td>
     <td align='center'>Rook-Ceph</td>
     <td align='center'>Rook-EdgeFS</td>
     <td align='center'>Longhorn</td>
+    <td align='center'>OpenEBS Cstor/Jiva</td>
+    <td align='center'>OpenEBS Mayastor</td>
     <td align='center'>Minio</td>
     <td align='center'>Rook-CockroachDB</td>
+    <td align='center'>Rook-YugabyteDB</td>
   </tr>
   <tr align='center'>
     <td align='center'><img src='media/rook.png' width="50px"></td>
     <td align='center'><img src='media/ceph.png' width="50px"></td>
     <td align='center'><img src='media/edgefs.png' width="50px"></td>
     <td align='center'><img src='media/longhorn.png' width="50px"></td>
+    <td align='center'><img src='media/openebs.png' width="50px"></td>
+    <td align='center'><img src='media/openebs.png' width="50px"></td>
     <td align='center'><img src='media/minio.png' width="50px"></td>
     <td align='center'><img src='media/cockroach_labs.png' width="50px"></td>
+    <td align='center'><img src='media/yugabytedb.png' width="50px"></td>
   </tr>
   <tr>
     <td align='center'>Storage infrastructure management</td>
     <td align='center'><b>Local</b> Block, Object and File storage</td>
     <td align='center'><b>Geo-Distributed</b> Block, Object and File storage</td>
     <td align='center'><b>Local</b> Block storage</td>
+    <td align='center'><b>Local</b> Block storage</td>
+    <td align='center'><b>Local</b> NVME/NVMF Block storage</td>
     <td align='center'>Object storage</td>
+    <td align='center'>Distributed SQL database</td>
     <td align='center'>Distributed SQL database</td>
   </tr>
 </table>

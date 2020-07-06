@@ -181,8 +181,8 @@ openebs-mayastor-pool:
   file.managed:
     - require:
       - file: /srv/kubernetes/manifests/openebs
-    - name: /srv/kubernetes/manifests/openebs/pool.yaml
-    - source: salt://{{ tpldir }}/templates/pool.yaml.j2
+    - name: /srv/kubernetes/manifests/openebs/mayastor-pool.yaml
+    - source: salt://{{ tpldir }}/templates/mayastor-pool.yaml.j2
     - template: jinja
     - user: root
     - group: root
@@ -191,8 +191,8 @@ openebs-mayastor-pool:
       tpldir: {{ tpldir }}
   cmd.run:
     - watch:
-      - file: /srv/kubernetes/manifests/openebs/pool.yaml
+      - file: /srv/kubernetes/manifests/openebs/mayastor-pool.yaml
       - cmd: openebs-mayastor-wait
     - runas: root
     - name: |
-        kubectl apply -f /srv/kubernetes/manifests/openebs/pool.yaml
+        kubectl apply -f /srv/kubernetes/manifests/openebs/mayastor-pool.yaml

@@ -22,6 +22,12 @@ openebs:
   admission_image: quay.io/openebs/admission-server:1.11.0
   localpv_image: quay.io/openebs/provisioner-localpv:1.11.0
   linux_utils_image: quay.io/openebs/linux-utils:1.11.0
+  mayastor:
+    enabled: False
+    image: docker.io/mayadata/mayastor:v0.2.0
+    grpc_image: docker.io/mayadata/mayastor-grpc:v0.2.0
+    node_driver_registrar_image: quay.io/k8scsi/csi-node-driver-registrar:v1.3.0
+    nats_image: docker.io/amd64/nats:2.1-alpine3.11
   csi:
     cstor:
       resizer_image: quay.io/k8scsi/csi-resizer:v0.4.0
@@ -37,8 +43,4 @@ openebs:
       provisioner_image: quay.io/k8scsi/csi-provisioner:v1.5.0
       attacher_image: quay.io/k8scsi/csi-attacher:v2.0.0
       node_driver_registrar_image: quay.io/k8scsi/csi-node-driver-registrar:v1.2.0
-    mayastor:
-      image: docker.io/mayadata/mayastor:v0.2.0
-      grpc_image: docker.io/mayadata/mayastor-grpc:v0.2.0
-      node_driver_registrar_image: quay.io/k8scsi/csi-node-driver-registrar:v1.3.0
-      nats_image: docker.io/amd64/nats:2.1-alpine3.11
+    

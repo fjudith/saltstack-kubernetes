@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
         - name: nats
-          image: {{ openebs.csi.mayastor.nats_image }}
+          image: {{ openebs.mayastor.nats_image }}
           imagePullPolicy: "IfNotPresent"
           ports:
             - containerPort: 4222

@@ -35,7 +35,7 @@ spec:
       # the same.
       containers:
       - name: mayastor
-        image: {{ openebs.csi.mayastor.image }}
+        image: {{ openebs.mayastor.image }}
         imagePullPolicy: Always
         env:
         - name: MY_POD_IP
@@ -62,7 +62,7 @@ spec:
             memory: "500Mi"
             hugepages-2Mi: "1Gi"
       - name: mayastor-grpc
-        image: {{ openebs.csi.mayastor.grpc_image }}
+        image: {{ openebs.mayastor.grpc_image }}
         imagePullPolicy: Always
         # we need privileged because we mount filesystems and use mknod
         securityContext:

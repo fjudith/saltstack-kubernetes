@@ -180,10 +180,10 @@ openebs-mayastor-wait:
 openebs-mayastor-pool:
   file.managed:
     - require:
-      - cmd: openebs-mayastor-wait
       - file: /srv/kubernetes/manifests/openebs
     - name: /srv/kubernetes/manifests/openebs/pool.yaml
-    - source: salt://{{ tpldir }}/files/pool.yaml
+    - source: salt://{{ tpldir }}/templates/pool.yaml.j2
+    - template: jinja
     - user: root
     - group: root
     - mode: "0644"

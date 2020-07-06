@@ -26,8 +26,6 @@ spec:
         app: mayastor
     spec:
       hostNetwork: true
-      # To resolve services from mayastor namespace
-      dnsPolicy: ClusterFirstWithHostNet
       nodeSelector:
         openebs.io/engine: mayastor
         kubernetes.io/arch: amd64
@@ -40,18 +38,11 @@ spec:
         image: {{ openebs.csi.mayastor.image }}
         imagePullPolicy: Always
         env:
-        - name: MY_NODE_NAME
-          valueFrom:
-            fieldRef:
-              fieldPath: spec.nodeName
         - name: MY_POD_IP
           valueFrom:
             fieldRef:
               fieldPath: status.podIP
-        args:
-        - "-N$(MY_NODE_NAME)"
-        - "-g$(MY_POD_IP)"
-        - "-nnats"
+        args: ["-r", "/mayastor/mayastor.sock"]
         securityContext:
           privileged: true
         volumeMounts:
@@ -70,8 +61,8 @@ spec:
             cpu: "1"
             memory: "500Mi"
             hugepages-2Mi: "1Gi"
-      - name: mayastor-csi
-        image: {{ openebs.csi.mayastor.plugin_image }}
+      - name: mayastor-grpc
+        image: {{ openebs.csi.mayastor.grpc_image }}
         imagePullPolicy: Always
         # we need privileged because we mount filesystems and use mknod
         securityContext:
@@ -81,19 +72,21 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: spec.nodeName
+        - name: MY_POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
         - name: RUST_BACKTRACE
           value: "1"
         args:
         - "--csi-socket=/csi/csi.sock"
+        - "--mayastor-socket=/mayastor/mayastor.sock"
         - "--node-name=$(MY_NODE_NAME)"
+        - "--address=$(MY_POD_IP)"
         - "-v"
         volumeMounts:
         - name: device
           mountPath: /dev
-        - name: sys
-          mountPath: /sys
-        - name: run-udev
-          mountPath: /run/udev
         - name: host-root
           mountPath: /host
         - name: mayastor-dir
@@ -115,7 +108,7 @@ spec:
           protocol: TCP
           name: mayastor
       - name: csi-driver-registrar
-        image: {{ openebs.csi.mayastor.node_driver_registrar_image }}
+        image: quay.io/k8scsi/csi-node-driver-registrar:v1.3.0
         args:
         - "--csi-address=/csi/csi.sock"
         - "--kubelet-registration-path=/var/lib/kubelet/plugins/mayastor.openebs.io/csi.sock"
@@ -140,14 +133,6 @@ spec:
       - name: device
         hostPath:
           path: /dev
-          type: Directory
-      - name: sys
-        hostPath:
-          path: /sys
-          type: Directory
-      - name: run-udev
-        hostPath:
-          path: /run/udev
           type: Directory
       - name: host-root
         hostPath:

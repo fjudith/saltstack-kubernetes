@@ -123,6 +123,7 @@ kubernetes:
   storage:
     loopback_iscsi:
       enabled: True
+      initiator_address: 127.0.0.1
       initiator_port: 53260
       files:
         - name: disk-000.img

@@ -162,7 +162,8 @@ kubernetes:
         enabled: false
       default_storageclass:
         enabled: false
-        name: mayastor-nvmf
+        name: openebs-sc-statefulset
+        # name: mayastor-nvmf
   charts:
     concourse:
       enabled: true

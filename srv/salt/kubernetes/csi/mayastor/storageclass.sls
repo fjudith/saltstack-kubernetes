@@ -9,7 +9,7 @@ mayastor-storageclass:
     - require:
       - file: /srv/kubernetes/manifests/mayastor
     - name: /srv/kubernetes/manifests/mayastor/storage-class.yaml
-    - source: salt://{{ tpldir }}/mayastor/storage-class.yaml.j2
+    - source: salt://{{ tpldir }}/templates/storage-class.yaml.j2
     - template: jinja
     - user: root
     - group: root

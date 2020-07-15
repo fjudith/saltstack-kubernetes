@@ -5,11 +5,11 @@
     - dir_mode: "0750"
     - makedirs: True
 
-/srv/kubernetes/manifests/openebs/operator.yaml:
+/srv/kubernetes/manifests/openebs/openebs-operator.yaml:
   file.managed:
     - require:
       - file: /srv/kubernetes/manifests/openebs
-    - source: salt://{{ tpldir }}/templates/operator.yaml.j2
+    - source: salt://{{ tpldir }}/templates/openebs-operator.yaml.j2
     - template: jinja
     - user: root
     - group: root

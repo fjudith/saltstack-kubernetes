@@ -1,0 +1,47 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import openebs with context %}
+
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: openebs-sc-statefulset
+  annotations:
+    openebs.io/cas-type: cstor
+    cas.openebs.io/config: |
+      - name: StoragePoolClaim
+        value: "cstor-disk-pool"
+      - name: VolumeMonitor
+        enabled: "true"
+      - name: TargetNodeSelector
+        value: |-
+            role: storage-node
+      - name: TargetResourceLimits
+        value: |-
+            memory: 1Gi
+            cpu: 100m
+      - name: TargetResourceRequests
+        value: |-
+            ephemeral-storage: "100Mi"
+      - name:  AuxResourceLimits
+        value: |-
+            memory: 0.5Gi
+            cpu: 100m
+      - name: AuxResourceRequests
+        value: |-
+            memory: 0.5Gi
+            cpu: 100m
+            ephemeral-storage: "100Mi"
+      - name: ReplicaCount
+        value: "{{ openebs.cstor_replication }}"
+      - name: VolumeControllerImage
+        value: {{ openebs.cstor_volume_management_image }}
+      - name: VolumeTargetImage
+        value: {{ openebs.cstor_target_image }}
+      - name: VolumeMonitorImage
+        value: {{ openebs.exporter_image }}
+      - name: FSType
+        value: {{ openebs.cstor_fstype }}
+provisioner: openebs.io/provisioner-iscsi

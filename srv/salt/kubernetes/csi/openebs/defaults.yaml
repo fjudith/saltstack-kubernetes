@@ -1,12 +1,17 @@
 openebs:
+  cstor_replication: 3
   mayastor_nbd_replication: 3
   mayastor_iscsi_replication: 3
   mayastor_nvmf_replication: 3
   csi_driver: https://raw.githubusercontent.com/kubernetes/csi-api/release-1.14/pkg/crd/manifests/csidriver.yaml
   csi_nodeinfo: https://raw.githubusercontent.com/kubernetes/csi-api/release-1.14/pkg/crd/manifests/csinodeinfo.yaml
+  cstor_fstype: ext4
   default_storageclass:
     enabled: False
     name: mayastor-iscsi
+  cspc_operator_image: quay.io/openebs/cspc-operator:1.10.0
+  cspi_mgmt_image: quay.io/openebs/cspi-mgmt:1.10.0
+  cvc_operator_image: quay.io/openebs/cvc-operator:1.10.0
   maya_apiserver_image: quay.io/openebs/m-apiserver:1.11.0
   jiva_image: quay.io/openebs/jiva:1.11.0
   cstor_target_image: quay.io/openebs/cstor-istgt:1.11.0

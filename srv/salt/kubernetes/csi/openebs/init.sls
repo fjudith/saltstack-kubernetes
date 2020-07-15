@@ -4,14 +4,11 @@ include:
   - .driver
   - .config
   - .namespace
-  {%- if storage.openebs.get('mayastor', {'enabled': False}).enabled %}
-  - .mayastor
-  - .storageclass
-  {%- else %}
   - .install
+  # - .blockdevice
   - .cstor
   - .jiva
-  {%- endif %}
+  - .cstor-storageclass
   # - .ingress
   
 

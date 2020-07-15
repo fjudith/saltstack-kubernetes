@@ -8,11 +8,11 @@
 openebs:
   cmd.run:
     - watch:
-      - file: /srv/kubernetes/manifests/openebs/operator.yaml
+      - file: /srv/kubernetes/manifests/openebs/openebs-operator.yaml
     - runas: root
     - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
     - name: |
-        kubectl apply -f /srv/kubernetes/manifests/openebs/operator.yaml
+        kubectl apply -f /srv/kubernetes/manifests/openebs/openebs-operator.yaml
 
 openebs-maya-apiserver-wait:
   cmd.run:

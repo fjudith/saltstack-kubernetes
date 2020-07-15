@@ -12,7 +12,7 @@ imageTag: "{{ concourse.version }}"
 rbac:
   create: True
 
-{% if storage.get('rook_ceph', {'enabled': False}).enabled or storage.get('rook_edgefs', {'enabled': False}).enabled %}
+{% if storage.get('rook_ceph', {'enabled': False}).enabled or storage.get('rook_edgefs', {'enabled': False}).enabled or storage.get('portworx', {'enabled': False}).enabled %}
 persistence:
   enabled: True
   worker:
@@ -22,7 +22,7 @@ persistence:
 postgresql:
   enable: True
   password: {{ concourse.db_password }}
-  {%- if storage.get('rook_ceph', {'enabled': False}).enabled or storage.get('rook_edgefs', {'enabled': False}).enabled %}
+  {%- if storage.get('rook_ceph', {'enabled': False}).enabled or storage.get('rook_edgefs', {'enabled': False}).enabled or storage.get('portworx', {'enabled': False}).enabled %}
   persistence:
     enabled: True
     size: {{ concourse.db_size }}

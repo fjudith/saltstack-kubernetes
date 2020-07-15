@@ -22,6 +22,8 @@ vistio:
           --set api.storage.class=rook-ceph-block \
           {%- elif storage.get('rook_edgefs', {'enabled': False}).enabled %}
           --set api.storage.class=edgefs-iscsi-csi-storageclass \
+          {%- elif storage.get('portworx', {'enabled': False}).enabled %}
+          --set api.storage.class=px-dedicated-sc \
           {%- endif %}
           "helm/vistio"
 

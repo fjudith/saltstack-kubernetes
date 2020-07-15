@@ -35,7 +35,7 @@ concourse:
             --set imageTag="{{ concourse.version }}" \
             --set postgresql.enabled=true \
             --set postgresql.password={{ concourse.db_password }} \
-            {%- if storage.get('rook_ceph', {'enabled': False}).enabled or storage.get('rook_edgefs', {'enabled': False}).enabled %}
+            {%- if storage.get('rook_ceph', {'enabled': False}).enabled or storage.get('rook_edgefs', {'enabled': False}).enabled or storage.get('portworx', {'enabled': False}).enabled %}
             --values /srv/kubernetes/manifests/concourse/values.yaml \
             {%- endif %}
             "./" --wait --timeout 5m

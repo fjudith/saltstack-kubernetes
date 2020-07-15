@@ -1,4 +1,5 @@
 include:
+  - .common
   - .edge_install
   - .etcd_install
   - .control_plane_init

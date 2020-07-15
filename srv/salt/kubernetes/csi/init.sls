@@ -13,6 +13,12 @@ include:
   {%- if storage.get('openebs', {'enabled': False}).enabled %}
   - kubernetes.csi.openebs
   {%- endif %}
+  {%- if storage.get('mayastor', {'enabled': False}).enabled %}
+  - kubernetes.csi.mayastor
+  {%- endif %}
+  {%- if storage.get('portworx', {'enabled': False}).enabled %}
+  - kubernetes.csi.portworx
+  {%- endif %}
   {%- if storage.get('minio_operator', {'enabled': False}).enabled %}
   - kubernetes.csi.minio-operator
   {%- endif %}

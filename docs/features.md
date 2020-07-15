@@ -237,7 +237,7 @@ Solutions to provide storage persistence to stateful applications.
 
 <table>
   <tr align='center'>
-    <th align='center' colspan='6'>Distributed storage</th>
+    <th align='center' colspan='7'>Distributed storage</th>
     <th>S3 compatible storage</th>
     <th align='center' colspan='2'>Distributed database</th>
   </tr>
@@ -248,6 +248,7 @@ Solutions to provide storage persistence to stateful applications.
     <td align='center'>Longhorn</td>
     <td align='center'>OpenEBS Cstor/Jiva</td>
     <td align='center'>OpenEBS Mayastor</td>
+    <td align='center'>Portworx</td>
     <td align='center'>Minio</td>
     <td align='center'>Rook-CockroachDB</td>
     <td align='center'>Rook-YugabyteDB</td>
@@ -259,6 +260,7 @@ Solutions to provide storage persistence to stateful applications.
     <td align='center'><img src='media/longhorn.png' width="50px"></td>
     <td align='center'><img src='media/openebs.png' width="50px"></td>
     <td align='center'><img src='media/openebs.png' width="50px"></td>
+    <td align='center'><img src='media/portworx.png' width="50px"></td>
     <td align='center'><img src='media/minio.png' width="50px"></td>
     <td align='center'><img src='media/cockroach_labs.png' width="50px"></td>
     <td align='center'><img src='media/yugabytedb.png' width="50px"></td>
@@ -270,6 +272,7 @@ Solutions to provide storage persistence to stateful applications.
     <td align='center'><b>Local</b> Block storage</td>
     <td align='center'><b>Local</b> Block storage</td>
     <td align='center'><b>Local</b> NVME/NVMF Block storage</td>
+    <td align='center'><b>Geo-Distributed</b> Block and File storage</td>
     <td align='center'>Object storage</td>
     <td align='center'>Distributed SQL database</td>
     <td align='center'>Distributed SQL database</td>

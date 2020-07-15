@@ -1,0 +1,13 @@
+mayastor:
+  mayastor_nbd_replication: 3
+  mayastor_iscsi_replication: 3
+  mayastor_nvmf_replication: 3
+  csi_driver: https://raw.githubusercontent.com/kubernetes/csi-api/release-1.14/pkg/crd/manifests/csidriver.yaml
+  csi_nodeinfo: https://raw.githubusercontent.com/kubernetes/csi-api/release-1.14/pkg/crd/manifests/csinodeinfo.yaml
+  default_storageclass:
+    enabled: False
+    name: mayastor-iscsi
+  image: docker.io/mayadata/mayastor:v0.2.0
+  grpc_image: docker.io/mayadata/mayastor-grpc:v0.2.0
+  node_driver_registrar_image: quay.io/k8scsi/csi-node-driver-registrar:v1.3.0
+  nats_image: docker.io/amd64/nats:2.1-alpine3.11

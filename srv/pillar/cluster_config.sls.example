@@ -157,13 +157,15 @@ kubernetes:
         enabled: false
         name: longhorn
     openebs:
-      enabled: false
-      mayastor:
-        enabled: false
+      enabled: False
       default_storageclass:
-        enabled: false
+        enabled: True
         name: openebs-sc-statefulset
-        # name: mayastor-nvmf
+    mayastor:
+      enabled: False
+      default_storageclass:
+        enabled: True
+        name: mayastor-iscsi
   charts:
     concourse:
       enabled: true

@@ -1,0 +1,32 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import mayastor with context %}
+
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: mayastor
+parameters:
+  repl: '{{ mayastor.mayastor_nbd_replication }}'
+  protocol: 'nbd'
+provisioner: io.openebs.csi-mayastor
+---
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: mayastor-iscsi
+parameters:
+  repl: '{{ mayastor.mayastor_iscsi_replication }}'
+  protocol: 'iscsi'
+provisioner: io.openebs.csi-mayastor
+---
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: mayastor-nvmf
+parameters:
+  repl: '{{ mayastor.mayastor_nvmf_replication }}'
+  protocol: 'nvmf'
+provisioner: io.openebs.csi-mayastor

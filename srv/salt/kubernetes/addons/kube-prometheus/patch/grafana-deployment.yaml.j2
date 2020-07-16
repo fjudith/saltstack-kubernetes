@@ -133,6 +133,11 @@ spec:
           name: grafana-dashboard-rook-edgefs
           readOnly: false
         {%- endif %}
+        {%- if storage.get('portworx', {'enabled': False}).enabled %}
+        - mountPath: /grafana-dashboard-definitions/0/portworx
+          name: grafana-dashboard-portworx
+          readOnly: false
+        {%- endif %}
         {%- if common.addons.get('traefik', {'enabled': False}).enabled %}
         - mountPath: /grafana-dashboard-definitions/0/traefik
           name: grafana-dashboard-traefik
@@ -259,6 +264,11 @@ spec:
       - configMap:
           name: grafana-dashboard-rook-edgefs
         name: grafana-dashboard-rook-edgefs
+      {%- endif %}
+      {%- if storage.get('portworx', {'enabled': False}).enabled %}
+      - configMap:
+          name: grafana-dashboard-portworx
+        name: grafana-dashboard-portworx
       {%- endif %}
       {%- if common.addons.get('traefik', {'enabled': False}).enabled %}
       - configMap:

@@ -24,3 +24,47 @@ portworx:
     - runas: root
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/portworx/portworx.yaml
+
+portworx-api-wait:
+  cmd.run:
+    - require:
+      - cmd: portworx
+    - runas: root
+    - timeout: 600
+    - name: |
+        until kubectl -n kube-system get daemonset portworx-api; do printf '.' && sleep 5 ; done
+        echo "" && \
+
+        REPLICAS=$(kubectl -n kube-system get daemonset portworx-api -o jsonpath='{.status.desiredNumberScheduled}') && \
+        
+        echo "Waiting for portworx-api to be up and running" && \
+        
+        while [ "$(kubectl -n kube-system get daemonset portworx-api -o jsonpath='{.status.numberReady}')" != "${REPLICAS}" ]
+        do
+          printf '.' && sleep 5
+        done && \
+        echo "" && \
+
+        kubectl -n kube-system get daemonset portworx-api
+
+portworx-wait:
+  cmd.run:
+    - require:
+      - cmd: portworx
+    - runas: root
+    - timeout: 600
+    - name: |
+        until kubectl -n kube-system get daemonset portworx; do printf '.' && sleep 5 ; done
+        echo "" && \
+
+        REPLICAS=$(kubectl -n kube-system get daemonset portworx -o jsonpath='{.status.desiredNumberScheduled}') && \
+        
+        echo "Waiting for portworx to be up and running" && \
+        
+        while [ "$(kubectl -n kube-system get daemonset portworx -o jsonpath='{.status.numberReady}')" != "${REPLICAS}" ]
+        do
+          printf '.' && sleep 5
+        done && \
+        echo "" && \
+
+        kubectl -n kube-system get daemonset portworx

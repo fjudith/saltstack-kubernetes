@@ -30,6 +30,20 @@ edgefs-grafana:
       tpldir: {{ tpldir }}
 {% endif %}
 
+{% if storage.get('portworx', {'enabled': False}).enabled %}
+portworx-grafana:
+  file.managed:
+    - name: /srv/kubernetes/manifests/kube-prometheus/manifests/portworx-grafana-dashboard-configmap.yaml
+    - watch:
+      - git: kube-prometheus-repo
+    - source: salt://{{ tpldir }}/patch/portworx-grafana-dashboard-configmap.yaml
+    - user: root
+    - group: root
+    - mode: "0644"
+    - context:
+      tpldir: {{ tpldir }}
+{% endif %}
+
 {% if common.addons.get('nats_operator', {'enabled': False}).enabled %}
 nats-grafana:
   file.managed:

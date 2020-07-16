@@ -8,13 +8,17 @@ metadata:
 spec:
   selector:
     matchLabels:
-      name: portworx-api
+      name: portworx
   namespaceSelector:
     matchNames:
       - kube-system
   endpoints:
-  - port: portworx-api
+  - port: px-api
     targetPort: 9001
+    # path: /metrics
+    # interval: 5s
+  - port: px-kvdb
+    targetPort: 9019
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
@@ -32,3 +36,5 @@ spec:
       - kube-system
   endpoints:
     - port: autopilot
+      # path: /metrics
+      # interval: 5s

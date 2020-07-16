@@ -154,6 +154,44 @@ write_files:
       description=Weave Net monitoring
       ports=6781,6782/tcp
 
+      # https://docs.portworx.com/start-here-installation
+      [portworx-svc]
+      title=portworx
+      description=Portworx Service
+      ports=9001-9022/tcp
+
+      [portworx]
+      title=portworx-api
+      description=Portworx
+      ports=9002/udp
+
+      [portworx-kvdb]
+      title=portworx-kvdb
+      description=Portworx ETCd
+      ports=2379,2380/tcp
+
+      # ISCSI
+      [iscsi-tcp]
+      title=iscsi-tcp
+      description=ISCSI target TCP
+      ports=3260/tcp
+
+      [iscsi-udp]
+      title=iscsi-udp
+      description=ISCSI UDP
+      ports=3260/udp
+
+      # NFS
+      [nfs-tcp]
+      title=nfs-tcp
+      description=NFS server TCP ports
+      ports=111,2049,20048,20049/tcp
+
+      [nfs-udp]
+      title=nfs-udp
+      description=NFS server UDP ports
+      ports=111,2049,20048,20049/udp
+
 bootcmd:
   # Network tuning
   - [cloud-init-per, once, modprobe_ip_conntrack, sh, -c, "modprobe ip_conntrack"]

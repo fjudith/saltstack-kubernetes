@@ -10,10 +10,10 @@ spec:
   - targetPort: 9402
     path: /metrics
     interval: 60s
-    strapeTimeout: 30s
+    scrapeTimeout: 30s
   selector:
-    matchNames:
-      - cert-manager
+    matchLabels:
+      app: cert-manager
   namespaceSelector:
     matchNames:
       - cert-manager

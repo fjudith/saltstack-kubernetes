@@ -81,7 +81,7 @@ csi_state:
       - salt: kube-prometheus_state
       - salt: loopback_iscsi_state
 
-{# addons_state:
+addons_state:
   salt.state:
     - tgt: "{{ masters|first }}"
     - sls: kubernetes.addons
@@ -103,4 +103,4 @@ charts_state:
       - salt: metrics-server_state
       - salt: kube-prometheus_state
       - salt: csi_state
-{% endif %} #}
+{% endif %}

@@ -9,22 +9,132 @@ apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
   name: px-dedicated-sc
-provisioner: kubernetes.io/portworx-volume
+provisioner: pxd.portworx.com
 parameters:
+  ## Filesystem to be laid out: xfs|ext4
+  fs: "{{ portworx.fs_type }}"
+  ## Block size
+  block_size: "32k"
+  ## Replication factor for the volume: 1|2|3
   repl: "{{ portworx.dedicated_replication }}"
+  ## Flag to create a globally shared namespace volume which can be used by multiple pods
+  shared: "false"
+  ## IO Priority: low|medium|high
   priority_io: "high"
-  fg: "true"
-  group: "dbench_rwo_vg"
+  ## Overrides the I/O algorithm Portworx uses for a volume. db|sequential|random|cms|sync_shared
+  io_profile: "db"
+  ## The group a volume should belong too. 
+  ## Portworx will restrict replication sets of volumes of the same group on different nodes.
+  ## If the force group option ‘fg’ is set to true, the volume group rule will be strictly enforced.
+  ## By default, it’s not strictly enforced.
+  # group: "volgroup1"
+  ## This option enforces volume group policy. 
+  ## If a volume belonging to a group cannot find nodes for it’s replication sets which don’t have other volumes of same group, the volume creation will fail.
+  fg: "false"
+  ## List of comma-separated name=value pairs to apply to the Portworx volume
+  # label: "name=mypxvol"
+  ## Comma-separated Portworx Node ID’s to use for replication sets of the volume
+  # nodes: "minion1,minion2"
+  ## Specifies the number of replication sets the volume can be aggregated from
+  # aggregation_level: 2
+  ## Snapshot schedule. Following are the accepted formats:
+  ## - periodic=mins,snaps-to-keep
+  ## - daily=hh:mm,snaps-to-keep
+  ## - weekly=weekday@hh:mm,snaps-to-keep
+  ## - monthly=day@hh:mm,snaps-to-keep
+  ## snaps-to-keep is optional.
+  ## Periodic, Daily, Weekly and Monthly keep last 5, 7, 5 and 12 snapshots by default respectively.
+  # snap_schedule: periodic=60,10
+  # snap_schedule: daily=12:00,4
+  # snap_schedule: weekly=sunday@12:00,2
+  # snap_schedule: monthly=15@12:00
+  ## Snapshot interval in minutes. 0 disables snaps. Minimum value: 60.
+  ## It is recommended to use snap_schedule above.
+  # snap_interval: "120"
+  ## Flag to create sticky volumes that cannot be deleted until the flag is disabled
+  sticky: "false"
+  ## Flag to indicate if you want to use journal device for the volume’s data.
+  ## This will use the journal device that you used when installing Portworx.
+  ## This is useful to absorb frequent syncs from short bursty workloads.
+  ## Default: false
+  journal: "false"
+  ## Flag to create an encrypted volume.
+  ## For details about how you can create encrypted volumes, see the Create encrypted PVCs page.
+  secure: "false"
+  ## Flag to create scheduled snapshots with Stork.
+  ## For details about how you can create scheduled snapshots with Stork, see the Scheduled snapshots page.
+  # snapshotschedule.stork.libopenstorage.org/weekly-schedule: |
+  #  schedulePolicyName: weekly
+  #  annotations:
+  #    portworx/snapshot-type: cloud
+  #    portworx/cloud-cred-id: <credential-uuid>
+  ## This flag enforces a pod to be scheduled on the same node as a replica.
+  # stork.libopenstorage.org/preferLocalNodeOnly: "True"
 allowVolumeExpansion: true
 ---
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
   name: px-shared-sc
-provisioner: kubernetes.io/portworx-volume
+provisioner: pxd.portworx.com
 parameters:
+  ## Filesystem to be laid out: xfs|ext4
+  fs: "{{ portworx.fs_type }}"
+  ## Block size
+  block_size: "32k"
+  ## Replication factor for the volume: 1|2|3
   repl: "{{ portworx.shared_replication }}"
+  ## Flag to create a globally shared namespace volume which can be used by multiple pods
   shared: "true"
-  fg: "true"
-  group: "dbench_rwm_vg"
+  ## IO Priority: low|medium|high
+  priority_io: "high"
+  ## Overrides the I/O algorithm Portworx uses for a volume. db|sequential|random|cms|sync_shared
+  io_profile: "cms"
+  ## The group a volume should belong too. 
+  ## Portworx will restrict replication sets of volumes of the same group on different nodes.
+  ## If the force group option ‘fg’ is set to true, the volume group rule will be strictly enforced.
+  ## By default, it’s not strictly enforced.
+  # group: "volgroup1"
+  ## This option enforces volume group policy. 
+  ## If a volume belonging to a group cannot find nodes for it’s replication sets which don’t have other volumes of same group, the volume creation will fail.
+  fg: "false"
+  ## List of comma-separated name=value pairs to apply to the Portworx volume
+  # label: "name=mypxvol"
+  ## Comma-separated Portworx Node ID’s to use for replication sets of the volume
+  # nodes: "minion1,minion2"
+  ## Specifies the number of replication sets the volume can be aggregated from
+  # aggregation_level: 2
+  ## Snapshot schedule. Following are the accepted formats:
+  ## - periodic=mins,snaps-to-keep
+  ## - daily=hh:mm,snaps-to-keep
+  ## - weekly=weekday@hh:mm,snaps-to-keep
+  ## - monthly=day@hh:mm,snaps-to-keep
+  ## snaps-to-keep is optional.
+  ## Periodic, Daily, Weekly and Monthly keep last 5, 7, 5 and 12 snapshots by default respectively.
+  # snap_schedule: periodic=60,10
+  # snap_schedule: daily=12:00,4
+  # snap_schedule: weekly=sunday@12:00,2
+  # snap_schedule: monthly=15@12:00
+  ## Snapshot interval in minutes. 0 disables snaps. Minimum value: 60.
+  ## It is recommended to use snap_schedule above.
+  # snap_interval: "120"
+  ## Flag to create sticky volumes that cannot be deleted until the flag is disabled
+  sticky: "false"
+  ## Flag to indicate if you want to use journal device for the volume’s data.
+  ## This will use the journal device that you used when installing Portworx.
+  ## This is useful to absorb frequent syncs from short bursty workloads.
+  ## Default: false
+  journal: "false"
+  ## Flag to create an encrypted volume.
+  ## For details about how you can create encrypted volumes, see the Create encrypted PVCs page.
+  secure: "false"
+  ## Flag to create scheduled snapshots with Stork.
+  ## For details about how you can create scheduled snapshots with Stork, see the Scheduled snapshots page.
+  # snapshotschedule.stork.libopenstorage.org/weekly-schedule: |
+  #  schedulePolicyName: weekly
+  #  annotations:
+  #    portworx/snapshot-type: cloud
+  #    portworx/cloud-cred-id: <credential-uuid>
+  ## This flag enforces a pod to be scheduled on the same node as a replica.
+  # stork.libopenstorage.org/preferLocalNodeOnly: "True"
 allowVolumeExpansion: true

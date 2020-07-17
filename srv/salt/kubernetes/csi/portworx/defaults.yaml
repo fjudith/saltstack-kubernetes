@@ -1,7 +1,8 @@
 portworx:
   manifest_url: https://install.portworx.com/...
-  dedicated_replication: 1
-  shared_replication: 1
+  dedicated_replication: 3
+  shared_replication: 3
+  fs_type: ext4
   default_storageclass:
     enabled: False
     name: px-dedicated-sc

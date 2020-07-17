@@ -29,4 +29,6 @@ kubectl exec -it $PX_POD -n kube-system -- /opt/pwx/bin/pxctl status
 * <https://portworx.com>
 * <https://docs.portworx.com/install-with-other/operate-and-maintain/monitoring/>
 * <https://docs.portworx.com/start-here-installation/>
+* <https://docs.portworx.com/portworx-install-with-kubernetes/storage-operations/create-pvcs/dynamic-provisioning/>
+* <https://docs.portworx.com/portworx-install-with-kubernetes/px-k8s-spec-curl/>
 * <https://central.portworx.com>

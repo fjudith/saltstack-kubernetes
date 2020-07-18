@@ -17,11 +17,30 @@
       - salt: common_state
       - salt: docker_state #}
 
-etcd_init:
+{# etcd_init:
   salt.state:
     - tgt: "{{ etcds|first }}"
     - sls: kubernetes.role.etcd
     - queue: True
-    {# - require:
+    - require:
       - salt: common_state
       - salt: docker_state #}
+
+etcd_ca:
+  salt.state:
+    - tgt: '{{ etcds|first }}'
+    - tgt_type: list
+    - sls: kubernetes.role.etcd.ca
+    - queue: True
+
+etcd_install:
+  salt.state:
+    - tgt: '{{ etcds|join(",") }}'
+    - tgt_type: list
+    - sls: kubernetes.role.etcd
+    - queue: True
+    - require:
+      - salt: etcd_ca
+      {# - salt: common_state
+      - salt: docker_state
+      - salt: etcd_init #}

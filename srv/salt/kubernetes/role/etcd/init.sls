@@ -5,10 +5,6 @@
 
 include:
   - .config
-  {%- if grains['id'] == etcds|first %}
-  - .ca
-  {%- else %}
   - .cert
-  {%- endif %}
   - .install
   - .test

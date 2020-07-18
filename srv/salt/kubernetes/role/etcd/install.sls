@@ -54,3 +54,4 @@ etcd.service:
       - file: /etc/systemd/system/etcd.service
       - file: /etc/etcd/etcd.env
     - enable: True
+    - reload: True

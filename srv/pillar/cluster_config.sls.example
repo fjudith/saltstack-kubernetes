@@ -110,16 +110,6 @@ kubernetes:
         enabled: True
       kube_scan:
         enabled: True
-  etcd:
-    host: 127.0.0.1
-    members:
-      - host: 172.17.4.51
-        name: etcd01
-      - host: 172.17.4.52
-        name: etcd02
-      - host: 172.17.4.53
-        name: etcd03
-    version: v3.3.15
   storage:
     loopback_iscsi:
       enabled: True

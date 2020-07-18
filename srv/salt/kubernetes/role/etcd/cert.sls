@@ -47,7 +47,7 @@
     - days_valid: 3649
     - days_remaining: 30
     - backup: True
-    - subjectAltName: 'IP:127.0.0.1, DNS:{{ hostname }}, IP:{{ localIpAddress[0] }}'
+    - subjectAltName: 'IP:127.0.0.1, DNS:{{ hostname }}, IP:{{ localIpAddress[0] }}, DNS:etcd, DNS:etcd.kube-system, DNS:etcd.kube-system.svc, DNS:etcd.kube-system.svc.{{ salt['pillar.get']('kubeadm:networking:dnsDomain', default='cluster.local') }}'
     - require:
       - x509: /etc/etcd/pki/ca.key
       - x509: /etc/etcd/pki/ca.crt
@@ -78,7 +78,7 @@
     - days_valid: 3649
     - days_remaining: 30
     - backup: True
-    - subjectAltName: 'IP:{{ localIpAddress[0] }}'
+    - subjectAltName: 'IP:{{ localIpAddress[0] }}, DNS:etcd, DNS:etcd.kube-system, DNS:etcd.kube-system.svc, DNS:etcd.kube-system.svc.{{ salt['pillar.get']('kubeadm:networking:dnsDomain', default='cluster.local') }}'
     - require:
       - x509: /etc/etcd/pki/ca.key
       - x509: /etc/etcd/pki/ca.crt

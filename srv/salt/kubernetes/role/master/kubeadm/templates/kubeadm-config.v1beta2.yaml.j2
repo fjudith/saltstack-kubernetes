@@ -60,7 +60,7 @@ certificateKey: "{{ kubeadm.certificateKey }}"
 apiVersion: kubeadm.k8s.io/v1beta2
 kind: ClusterConfiguration
 etcd:
-  {%- if kubeadm.etcd.local %}
+  {%- if not kubeadm.etcd.external %}
   # one of local or external
   local:
     dataDir: {{ kubeadm.etcd.datadir }}
@@ -91,11 +91,11 @@ etcd:
   external:
     endpoints:
       {%- for server, addrs in salt['mine.get'](tgt='role:etcd', fun='network.ip_addrs', tgt_type='grain').items() %}
-      - {{ addrs[0] }}:{{ kubeadm.etcd.port }}
+      - https://{{ addrs[0] }}:{{ kubeadm.etcd.port }}
       {%- endfor %}
-    caFile: /etcd/kubernetes/pki/etcd/etcd-ca.crt
-    certFile: /etcd/kubernetes/pki/etcd/etcd.crt
-    keyFile: /etcd/kubernetes/pki/etcd/etcd.key
+    caFile: /etc/etcd/pki/ca.crt
+    certFile: /etc/etcd/pki/kube-apiserver-client.crt
+    keyFile: /etc/etcd/pki/kube-apiserver-client.key
   {%- endif %}
 networking:
   serviceSubnet: {{ kubeadm.networking.serviceSubnet }}

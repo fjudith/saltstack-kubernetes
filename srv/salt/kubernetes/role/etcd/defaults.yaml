@@ -1,0 +1,3 @@
+etcd:
+  version: 3.4.10
+  initial_cluster_token: b1483289

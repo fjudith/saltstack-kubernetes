@@ -1,12 +1,14 @@
-{%- set etcd = [] -%}
+{%- set etcds = [] -%}
 {%- for key, value in salt["mine.get"](tgt="role:etcd", fun="network.get_hostname", tgt_type="grain")|dictsort(false, 'value') -%}
-  {%- do etcd.append(value) -%}
+  {%- do etcds.append(value) -%}
 {%- endfor -%}
 
 include:
-  - install
-  {%- if grains['id'] == etcd|first %}
-  - .kubeadm-init
+  - .config
+  - .install
+  {%- if grains['id'] == etcds|first %}
+  - .etcdadm-init
   {% else %}
-  - .kubeadm-join
+  - .etcdadm-join
   {%- endif %}
+  - .patch

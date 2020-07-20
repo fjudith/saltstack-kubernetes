@@ -1,6 +1,6 @@
 nginx-remove-charts:
   file.absent:
-    - name: /srv/kubernetes/manifests/nginx/nginx-ingress
+    - name: /srv/kubernetes/manifests/nginx/ingress-nginx
 
 nginx-fetch-charts:
   cmd.run:
@@ -10,4 +10,5 @@ nginx-fetch-charts:
       - file: nginx-remove-charts
     - cwd: /srv/kubernetes/manifests/nginx
     - name: |
-        helm fetch --untar stable/nginx-ingress
+        helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+        helm fetch --untar ingress-nginx/ingress-nginx

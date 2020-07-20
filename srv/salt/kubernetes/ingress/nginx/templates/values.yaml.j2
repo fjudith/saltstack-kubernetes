@@ -6,16 +6,18 @@
 {%- from "kubernetes/map.jinja" import charts with context -%}
 controller:
   image:
-    tag: {{ nginx.version }}
-  daemonset:
-    useHostPort: true
-    hostPorts:
-      http: 80
-      https: 443
-      {%- if charts.get('mailhog', {'enabled': False}).enabled %}
-      smtp: 25
-      {%- endif %}
-  kind: DaemonSet
+    repository: {{ nginx.repository }}
+    tag: v{{ nginx.version }}
+  containerPort:
+    http: 80
+    https: 443
+    {%- if charts.get('mailhog', {'enabled': False}).enabled %}
+    smtp: 25
+    {%- endif %}
+  {%- if charts.get('mailhog', {'enabled': False}).enabled %}
+  tcp:
+    25: "mailhog/mailhog:1025"
+  {%- endif %}
   config:
     enable-vts-status: "true"
     proxy-body-size: 4096m
@@ -29,19 +31,30 @@ controller:
     # server-tokens: "false"
     worker-shutdown-timeout: 3600s
     use-forwarded-headers: "true"
-  nodeSelector:
-    node-role.kubernetes.io/ingress: "true"
+  hostNetwork: false
+  hostPort:
+    enabled: True
+    http: 80
+    https: 443
+    {%- if charts.get('mailhog', {'enabled': False}).enabled %}
+    smtp: 25
+    {%- endif %}
+  kind: DaemonSet
   tolerations:
     - key: node-role.kubernetes.io
       operator: Equal
       value: ingress
       effect: NoSchedule
-  stats:
-    enabled: true
+  nodeSelector:
+    node-role.kubernetes.io/ingress: "true"
+ 
   metrics:
     enabled: true
     serviceMonitor:
       enabled: true
+  
+
+
 defaultBackend:
   enabled: true
   image:
@@ -51,7 +64,3 @@ rbac:
   create: true
 serviceAccount:
   create: true
-{% if charts.get('mailhog', {'enabled': False}).enabled %}
-tcp:
-  25: "mailhog/mailhog:1025"
-{% endif %}

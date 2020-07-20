@@ -3,7 +3,7 @@ nginx-ingress-install:
     - watch:
       - file: /srv/kubernetes/manifests/nginx/values.yaml
       - cmd: nginx-ingress-namespace
-    - cwd: /srv/kubernetes/manifests/nginx/nginx-ingress
+    - cwd: /srv/kubernetes/manifests/nginx/ingress-nginx
     - name: |
         helm dependency update && \
         helm upgrade --install nginx --namespace ingress-nginx \

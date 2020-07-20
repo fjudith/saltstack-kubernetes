@@ -156,7 +156,7 @@ write_files:
 
       # https://docs.portworx.com/start-here-installation
       [portworx-svc]
-      title=portworx
+      title=portworx-svc
       description=Portworx Service
       ports=9001-9022/tcp
 

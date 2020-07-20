@@ -67,7 +67,7 @@ portworx-secret:
       - x509: /etc/etcd/pki/kvdb.key
     - runas: root
     - name: |
-        kubectl -n kube-system delete secret px-kvdb-auth || \
+        kubectl -n kube-system delete secret px-kvdb-auth
         kubectl -n kube-system create secret generic px-kvdb-auth \
         --from-file=/etc/etcd/pki/kvdb-ca.crt \
         --from-file=/etc/etcd/pki/kvdb.crt \

@@ -155,15 +155,10 @@ write_files:
       ports=6781,6782/tcp
 
       # https://docs.portworx.com/start-here-installation
-      [portworx-svc]
-      title=portworx-svc
-      description=Portworx Service
-      ports=9001-9022/tcp
-
       [portworx]
-      title=portworx-api
-      description=Portworx
-      ports=9002/udp
+      title=portworx
+      description=Portworx Service
+      ports=9001:9022/tcp|9002/udp
 
       [portworx-kvdb]
       title=portworx-kvdb

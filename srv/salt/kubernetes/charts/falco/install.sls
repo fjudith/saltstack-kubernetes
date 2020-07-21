@@ -151,8 +151,8 @@ falco-exporter:
       - cmd: falco-client-cert
       - file: /srv/kubernetes/manifests/falco/exporter-values.yaml
       - cmd: falco-namespace
-      - git: falco-exporter-fetch-charts
-    - cwd: /srv/kubernetes/manifests/falco/falco-exporter/deploy/helm/falco-exporter
+      - cmd: falco-exporter-fetch-charts
+    - cwd: /srv/kubernetes/manifests/falco/falco-exporter
     - name: |
         helm repo update && \
         helm upgrade --install falco-exporter --namespace falco \

@@ -1,0 +1,16 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: argo-web
+  namespace: argo
+spec:
+  namespaceSelector:
+    matchNames:
+      - argo
+  selector:
+    matchLabels:
+      app: argo-web
+  endpoints:
+  - port: prometheus
+    path: /
+    interval: 5s

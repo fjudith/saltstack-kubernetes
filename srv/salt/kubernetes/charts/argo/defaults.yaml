@@ -1,0 +1,13 @@
+argo:
+  version: 2.9.3
+  ingress_host: argo
+  cd_version:
+  minio_image: docker.io/minio/minio:latest
+  # oauth:
+  #   provider: keycloak
+  #   keycloak:
+  #     realm: default
+  # s3:
+  #   accesskey: argo
+  #   secretkey: P4ssw0rd
+  #   bucket: argo-artifacts

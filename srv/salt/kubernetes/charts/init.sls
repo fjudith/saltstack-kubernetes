@@ -20,6 +20,9 @@ include:
 {%- if charts.get('concourse', {'enabled': False}).enabled %}
   - kubernetes.charts.concourse
 {%- endif -%}
+{%- if charts.get('argo', {'enabled': False}).enabled %}
+  - kubernetes.charts.argo
+{%- endif -%}
 {%- if charts.get('spinnaker', {'enabled': False}).enabled %}
   - kubernetes.charts.spinnaker
 {%- endif -%}

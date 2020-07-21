@@ -3,6 +3,8 @@ portworx:
   dedicated_replication: 3
   shared_replication: 3
   fs_type: ext4
+  dataplane_interface: ens10
+  management_interface: wg0
   default_storageclass:
     enabled: False
     name: px-dedicated-sc

@@ -156,6 +156,14 @@ kubernetes:
       default_storageclass:
         enabled: True
         name: mayastor-iscsi
+    portworx:
+      enabled: False
+      manifest_url: <url>
+      dataplane_interface: eth0
+      management_interface: eth0
+      default_storageclass:
+        enabled: True
+        name: px-dedicated-sc
   charts:
     concourse:
       enabled: true

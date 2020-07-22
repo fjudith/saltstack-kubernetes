@@ -43,7 +43,7 @@ test-workflow:
       - cmd: argo-minio-bucket
     - runas: root
     - name: |
-        argo submit -n argo --watch https://raw.githubusercontent.com/argoproj/argo/master/examples/hello-world.yaml
+        argo submit -n argo --watch https://raw.githubusercontent.com/argoproj/argo/stable/examples/nested-workflow.yaml
         argo list -n argo
         argo get -n argo @latest
         argo logs -n argo @latest

@@ -1,4 +1,4 @@
 coredns:
-  image: coredns/coredns:1.6.5
+  image: coredns/coredns:1.7.0
   domain: cluster.local
   server: 10.96.0.10 

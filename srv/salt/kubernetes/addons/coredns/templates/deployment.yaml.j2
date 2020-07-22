@@ -57,20 +57,35 @@ data:
   Corefile: |
     .:53 {
         errors
-        health
+        health {
+          lameduck 5s
+        }
         ready
         kubernetes {{ coredns.domain }} in-addr.arpa ip6.arpa {
             pods insecure
-            upstream
             fallthrough in-addr.arpa ip6.arpa
             ttl 30
         }
         prometheus :9153
-        forward . /etc/resolv.conf
+        forward . /etc/resolv.conf 127.0.0.1:5301 127.0.0.1:5302 {
+          max_concurrent 1000
+        }
         cache 30
         loop
         reload
         loadbalance
+    }
+    .:5301 {
+      cache
+      forward . 8.8.8.8 8.8.4.4 {
+        tls_servername dns.google
+      }
+    }
+    .:5302 {
+      cache
+      forward . 1.1.1.1 1.0.0.1 {
+        tls_servername cloudflare-dns.com
+      }
     }
 ---
 apiVersion: apps/v1

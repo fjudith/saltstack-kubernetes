@@ -14,7 +14,10 @@ controller:
   serviceMonitor:
     enabled: true
 
+useDefaultArtifactRepo: True
+useStaticCredentials: True
 artifactRepository:
+  archiveLogs: True
   {%- if storage.get('minio_operator', {'enabled': False}).enabled %}
   s3:
     accessKeySecret:
@@ -25,7 +28,7 @@ artifactRepository:
       key: secretkey
     insecure: true
     bucket: {{ argo.s3.bucket }}
-    endpoint: http://minio.argo:9000
+    endpoint: minio:9000
   {%- endif %}
 
 {%- if not storage.get('minio_operator', {'enabled': False}).enabled %}

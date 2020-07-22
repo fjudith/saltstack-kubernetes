@@ -16,3 +16,14 @@
     - template: jinja
     - context:
       tpldir: {{ tpldir }}
+
+/srv/kubernetes/manifests/argo/workflow-rbac.yaml:
+  file.managed:
+    - require:
+      - file:  /srv/kubernetes/manifests/argo
+    - source: salt://{{ tpldir }}/files/workflow-rbac.yaml
+    - user: root
+    - group: root
+    - mode: "0755"
+    - context:
+      tpldir: {{ tpldir }}

@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: EventSource
+metadata:
+  name: webhook-event-source
+spec:
+  type: webhook
+  webhook:
+    # gateway can run multiple HTTP servers. Simply define a unique port to start a new HTTP server
+    default:
+      # port to run HTTP server on
+      port: "12000"
+      # endpoint to listen to
+      endpoint: /default
+      # HTTP request method to allow. In this case, only POST requests are accepted
+      method: POST
+
+#    example-foo:
+#      port: "12000"
+#      endpoint: /example2
+#      method: POST
+
+# Uncomment to use secure webhook
+#    example-secure:
+#      port: "13000"
+#      endpoint: "/secure"
+#      method: "POST"
+#      # path to file that is mounted in gateway pod which contains certs
+#      serverCertPath: "/bin/webhook-secure/crt"
+#      # path to file that is mounted in gateway pod which contains private key
+#      serverKeyPath: "/bin/webhook-secure/key"

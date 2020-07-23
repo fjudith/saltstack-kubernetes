@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import argo with context %}
 {%- set public_domain = pillar['public-domain'] -%}
 {%- from "kubernetes/map.jinja" import charts with context -%}
 {%- from "kubernetes/map.jinja" import storage with context -%}
@@ -19,4 +24,8 @@ include:
   - .prometheus
   {%- endif %}
   - .test
+  {%- if argo.get('events', {'enabled': False}).enabled %}
+  - .events-namespace
+  - .events
+  {%- endif %}
   

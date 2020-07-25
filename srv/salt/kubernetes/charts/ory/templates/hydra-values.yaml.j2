@@ -1,0 +1,30 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import ory with context %}
+{%- set public_domain = pillar['public-domain'] -%}
+
+image:
+  tag: v{{ ory.hydra.version }}
+
+hydra:
+  existingSecret: hydra-secret
+  config:
+    serve:
+      tls:
+        allow_termination_from:
+        - 10.0.0.0/8
+        - 172.16.0.0/12
+        - 192.168.0.0/16
+    urls:
+      self:
+        issuer: https://{{ ory.hydra.ingress_host }}-admin.{{ public_domain }}
+      login: https://{{ ory.hydra.ingress_host }}.{{ public_domain }}/login
+      consent: https://{{ ory.hydra.ingress_host }}.{{ public_domain }}/consent
+        
+  autoMigration: False
+  dangerousForceHttp: False
+
+maester:
+  enabled: true

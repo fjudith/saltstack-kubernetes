@@ -90,7 +90,7 @@ velero-backup-portworx-test:
 velero-restore-portworx-test:
   cmd.run:
     - require:
-      - cmd: velero-portworx-backup-test
+      - cmd: velero-backup-portworx-test
     - runas: root
     - cwd: /opt/velero-linux-amd64-v{{ velero.version }}/velero-v{{ velero.version }}-linux-amd64
     - timeout: 120

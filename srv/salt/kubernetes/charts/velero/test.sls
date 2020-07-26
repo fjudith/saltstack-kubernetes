@@ -53,20 +53,56 @@ velero-backup-test:
         velero backup logs nginx-backup
         velero backup get
 
-{%- if storage.get('portworx', {'enabled': False}).enabled %}
-velero-portworx-test:
+velero-restore-test:
   cmd.run:
     - require:
       - cmd: velero-backup-test
     - runas: root
+    - cwd: /opt/velero-linux-amd64-v{{ velero.version }}/velero-v{{ velero.version }}-linux-amd64
+    - timeout: 120
+    - name: |
+        kubectl delete -f examples/nginx-app/with-pv.yaml
+        
+        velero restore create --from-backup=nginx-backup
+        velero restore get 
+        
+        sleep 60
+
+        kubectl get po -n nginx-example
+
+{%- if storage.get('portworx', {'enabled': False}).enabled %}
+velero-backup-portworx-test:
+  cmd.run:
+    - require:
+      - cmd: velero-restore-test
+    - runas: root
     - timeout: 180
     - name: |
+        velero snapshot-location get portworx-local || \
         velero snapshot-location create portworx-local --provider portworx.io/portworx
+        
         velero backup create nginx-backup-portworx \
         --include-namespaces=nginx-example \
         --snapshot-volumes \
         --volume-snapshot-locations portworx-local \
         --selector app=nginx --wait
+
+velero-restore-portworx-test:
+  cmd.run:
+    - require:
+      - cmd: velero-portworx-backup-test
+    - runas: root
+    - cwd: /opt/velero-linux-amd64-v{{ velero.version }}/velero-v{{ velero.version }}-linux-amd64
+    - timeout: 120
+    - name: |
+        kubectl delete -f examples/nginx-app/with-pv.yaml
+        
+        velero restore create --from-backup=nginx-backup-portworx
+        velero restore get 
+        
+        sleep 60
+
+        kubectl get po -n nginx-example
 {%- endif %}
 
     

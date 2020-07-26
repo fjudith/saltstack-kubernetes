@@ -1,0 +1,133 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import velero with context %}
+{% from "kubernetes/map.jinja" import storage with context %}
+{%- set public_domain = pillar['public-domain'] -%}
+  
+##
+## Configuration settings that directly affect the Velero deployment YAML.
+##
+
+# Details of the container image to use in the Velero deployment & daemonset (if
+# enabling restic). Required.
+image:
+  tag: v{{ velero.version }}
+
+# Settings for Velero's prometheus metrics. Enabled by default.
+metrics:
+  enabled: True
+
+  serviceMonitor:
+    enabled: True
+
+# Install CRDs as a templates. Enabled by default.
+installCRDs: False
+
+##
+## Parameters for the `default` BackupStorageLocation and VolumeSnapshotLocation,
+## and additional server settings.
+##
+initContainers:
+- name: velero-plugin-for-aws
+  image: {{ velero.provider.aws_image }}
+  imagePullPolicy: IfNotPresent
+  volumeMounts:
+    - mountPath: /target
+      name: plugins
+{%- if storage.get('portworx', {'enabled': False}).enabled %}
+- name: velero-plugin-for-portworx
+  image: {{ velero.provider.portworx_image }}
+  imagePullPolicy: IfNotPresent
+  volumeMounts:
+    - mountPath: /target
+      name: plugins
+{%- endif %}
+{%- if storage.get('openebs', {'enabled': False}).enabled %}
+- name: velero-plugin-for-openebs
+  image: {{ velero.provider.openebs_image }}
+  imagePullPolicy: IfNotPresent
+  volumeMounts:
+    - mountPath: /target
+      name: plugins
+{%- endif %}
+
+{%- if storage.get('minio_operator', {'enabled': False}).enabled %}
+configuration:
+  provider: aws
+  # Parameters for the `default` BackupStorageLocation. See
+  # https://velero.io/docs/v1.0.0/api-types/backupstoragelocation/
+  backupStorageLocation:
+    # Cloud provider where backups should be stored. Usually should
+    # match `configuration.provider`. Required.
+    name: default
+    # Provider for the backup storage location. If omitted
+    # `configuration.provider` will be used instead.
+    provider: aws
+    # Bucket to store backups in. Required.
+    bucket: {{ velero.s3.bucket }}
+    # Prefix within bucket under which to store backups. Optional.
+    prefix:
+    # Additional provider-specific configuration. See link above
+    # for details of required/optional fields for your provider.
+    config:
+      region: {{ velero.s3.region }}
+      s3ForcePathStyle: "{{ velero.s3.force_path_style }}"
+      publicUrl: https://{{ velero.ingress_host }}-minio.{{ public_domain }}
+      s3Url: {{ velero.s3.url }}
+
+  volumeSnapshotLocation:
+    # Cloud provider where volume snapshots are being taken. Usually
+    # should match `configuration.provider`. Required.,
+    name: default
+    # Provider for the backup storage location. If omitted
+    # `configuration.provider` will be used instead.
+    provider: aws
+    # Additional provider-specific configuration. See link above
+    # for details of required/optional fields for your provider.
+    config: {}
+      # region:
+      # apitimeout:
+      # resourceGroup:
+      # The ID of the subscription where volume snapshots should be stored, if different from the cluster’s subscription. If specified, also requires `configuration.volumeSnapshotLocation.config.resourceGroup`to be set. (Azure only)
+      # subscriptionId:
+      # snapshotLocation:
+      # project:
+{%- endif %}
+# Info about the secret to be used by the Velero deployment, which
+# should contain credentials for the cloud provider IAM account you've
+# set up for Velero.
+credentials:
+  useSecret: True
+  # Name of a pre-existing secret (if any) in the Velero namespace
+  # that should be used to get IAM account credentials. Optional.
+  # existingSecret: cloud-credentials
+
+  # Data to be stored in the Velero secret, if `useSecret` is
+  # true and `existingSecret` is empty. This should be the contents
+  # of your IAM credentials file.
+  secretContents:
+    cloud: |
+      [default]
+      aws_access_key_id = {{ velero.s3.accesskey }}
+      aws_secret_access_key = {{ velero.s3.secretkey }}
+    
+
+# Whether to create backupstoragelocation crd, if false => do not create a default backup location
+backupsEnabled: true
+# Whether to create volumesnapshotlocation crd, if false => disable snapshot feature
+snapshotsEnabled: false
+
+schedules:
+  hourly-backup:
+    schedule: "1 * * * *"
+    template:
+      includeClusterResources: true
+      includedNamespaces:
+      - '*'
+      includedResources:
+      - '*'
+      storageLocation: default
+      snapshotVolumes: true      
+      ttl: 720h0m0s

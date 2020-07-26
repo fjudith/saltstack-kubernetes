@@ -241,11 +241,13 @@ Solutions to provide storage persistence to stateful applications.
 
 <table>
   <tr align='center'>
+    <th align='center'>Backup & Recovery</th>
     <th align='center' colspan='7'>Distributed storage</th>
     <th>S3 compatible storage</th>
     <th align='center' colspan='2'>Distributed database</th>
   </tr>
   <tr align='center'>
+    <td align='center'>Velero</td>
     <td align='center'>Rook</td>
     <td align='center'>Rook-Ceph</td>
     <td align='center'>Rook-EdgeFS</td>
@@ -258,6 +260,7 @@ Solutions to provide storage persistence to stateful applications.
     <td align='center'>Rook-YugabyteDB</td>
   </tr>
   <tr align='center'>
+    <td align='center'><img src='media/velero.png' width="50px"></td>
     <td align='center'><img src='media/rook.png' width="50px"></td>
     <td align='center'><img src='media/ceph.png' width="50px"></td>
     <td align='center'><img src='media/edgefs.png' width="50px"></td>
@@ -270,6 +273,7 @@ Solutions to provide storage persistence to stateful applications.
     <td align='center'><img src='media/yugabytedb.png' width="50px"></td>
   </tr>
   <tr>
+    <td align='center'>Kubernetes cluster and workload backup & restore</td>
     <td align='center'>Storage infrastructure management</td>
     <td align='center'><b>Local</b> Block, Object and File storage</td>
     <td align='center'><b>Geo-Distributed</b> Block, Object and File storage</td>

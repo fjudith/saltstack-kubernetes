@@ -41,3 +41,9 @@ include:
   {%- if common.addons.get('kube_scan', {'enabled': False}).enabled %}
   - kubernetes.addons.kube-scan
   {%- endif %}
+  {%- if common.addons.get('rook_cockroachdb', {'enabled': False}).enabled %}
+  - kubernetes.addons.rook-cockroachdb
+  {%- endif %}
+  {%- if common.addons.get('rook_yugabytedb', {'enabled': False}).enabled %}
+  - kubernetes.addons.rook-yugabytedb
+  {%- endif %}

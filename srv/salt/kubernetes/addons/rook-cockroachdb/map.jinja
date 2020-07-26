@@ -1,0 +1,7 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{% import_yaml tpldir ~ "/defaults.yaml" or {} as defaults %}
+
+{#- Merge in salt pillar #}
+{% set rook_cockroachdb = salt['pillar.get']('kubernetes:common:addons:rook_cockroachdb', default=defaults['rook_cockroachdb'], merge=True) %}

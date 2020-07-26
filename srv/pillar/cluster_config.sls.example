@@ -110,6 +110,10 @@ kubernetes:
         enabled: True
       kube_scan:
         enabled: True
+      rook_cockroachdb:
+        enabled: False
+      rook_yugabytedb:
+        enabled: False
   storage:
     loopback_iscsi:
       enabled: True

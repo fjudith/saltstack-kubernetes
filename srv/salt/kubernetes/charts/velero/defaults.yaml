@@ -1,0 +1,27 @@
+velero:
+  version: 1.4.2
+  ingress_host: velero
+  minio_image: docker.io/minio/minio:latest
+  source_hash: 3dc6a92403165c901cbc29f262b9d656d2cf562da02f29f74f6607908a168c8b
+  # https://velero.io/docs/main/supported-providers/
+  provider:
+    aws_image: docker.io/velero/velero-plugin-for-aws:v1.0.0
+    portworx_image: portworx/velero-plugin:1.0.0
+    openebs_image: openebs/velero-plugin:1.12.0
+    csi_image: velero/velero-plugin-for-csi:v0.1.1
+  backup:
+    cluster_internal: False
+    backupç_sync_period: 1m
+    restic_timeout: 1h
+    restore_resource_priorities: namespaces,persistentvolumes,persistentvolumeclaims,secrets,configmaps,serviceaccounts,limitranges,pods
+    restore_only_mode: false
+    log_level: info
+    log_format: text 
+  s3:
+    enabled: true
+    url: http://minio:9000
+    accesskey: velero
+    secretkey: V3ry1ns3cur3P4ssw0rd
+    bucket: velero
+    region: minio
+    force_path_style: true

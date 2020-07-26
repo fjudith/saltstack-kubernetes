@@ -2,6 +2,9 @@
 
 include:
   - kubernetes.charts.keycloak
+{%- if charts.get('velero', {'enabled': False}).enabled %}
+  - kubernetes.charts.velero
+{%- endif -%}
 {%- if charts.get('mailhog', {'enabled': False}).enabled %}
   - kubernetes.charts.mailhog
 {%- endif -%}

@@ -1,8 +1,23 @@
 ory:
   hydra:
-    version: 1.4.6
-    ingress_host: oauth
+    version: 1.6.0
+    ingress_host: ory
+    source_hash: 433ac706901b0f66f2952c1bd90c6fa3731bf49f22cbccc1260f2b875baccb4f
     # export LC_CTYPE=C; cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1
     system_secret: 2EYfY6MWHd3pXUkqeb3DrPjpsxe6p67i
     cookie_secret: uJd8AOqKyui6PmT54xa34cI52csbwmu6
-    dsn: memory
+    cockroachdb:
+      enabled: True
+      capacity: 4Gi
+      node_count: 3
+  kratos:
+    enabled: True
+    version: 0.4.6-alpha.1-sqlite
+    ingress_host: kratos
+    dns: sqlite
+    log_level: info
+    cockroachdb:
+      enabled: True
+      capacity: 4Gi
+      node_count: 3
+

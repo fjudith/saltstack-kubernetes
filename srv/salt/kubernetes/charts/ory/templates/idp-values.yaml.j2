@@ -1,0 +1,12 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import ory with context %}
+{%- set public_domain = pillar['public-domain'] -%}
+
+image:
+  tag: v{{ ory.hydra.version }}
+
+hydraAdminUrl: https://{{ ory.hydra.ingress_host }}-admin.{{ public_domain }}
+hydraPublicUrl: https://{{ ory.hydra.ingress_host }}-public.{{ public_domain }}

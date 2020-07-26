@@ -17,7 +17,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: hydra-idp
+  name: kratos-public
   namespace: ory
   annotations:
     kubernetes.io/ingress.class: {{ controller }}
@@ -27,24 +27,24 @@ metadata:
     {%- endif %}
 spec:
   rules:
-  - host: {{ ory.hydra.ingress_host }}.{{ public_domain }}
+  - host: {{ ory.kratos.ingress_host }}-public.{{ public_domain }}
     http:
       paths:
       - path: /
         backend:
-          serviceName: hydra-idp-example-idp
-          servicePort: 3000
+          serviceName: kratos-public
+          servicePort: 4433
   {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
   tls:
-  - secretName: hydra-idp-prod-cert
+  - secretName: kratos-public-prod-cert
     hosts:
-    - {{ ory.hydra.ingress_host }}.{{ public_domain }}
+    - {{ ory.kratos.ingress_host }}-public.{{ public_domain }}
   {%- endif %}
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: hydra-public
+  name: kratos-admin
   namespace: ory
   annotations:
     kubernetes.io/ingress.class: {{ controller }}
@@ -54,44 +54,17 @@ metadata:
     {%- endif %}
 spec:
   rules:
-  - host: {{ ory.hydra.ingress_host }}-public.{{ public_domain }}
+  - host: {{ ory.kratos.ingress_host }}-admin.{{ public_domain }}
     http:
       paths:
       - path: /
         backend:
-          serviceName: hydra-public
-          servicePort: 4444
+          serviceName: kratos-admin
+          servicePort: 4434
   {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
   tls:
-  - secretName: hydra-public-prod-cert
+  - secretName: kratos-admin-prod-cert
     hosts:
-    - {{ ory.hydra.ingress_host }}-public.{{ public_domain }}
-  {%- endif %}
----
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: hydra-admin
-  namespace: ory
-  annotations:
-    kubernetes.io/ingress.class: {{ controller }}
-    {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
-    cert-manager.io/cluster-issuer: letsencrypt-prod
-    kubernetes.io/tls-acme: "true"
-    {%- endif %}
-spec:
-  rules:
-  - host: {{ ory.hydra.ingress_host }}-admin.{{ public_domain }}
-    http:
-      paths:
-      - path: /
-        backend:
-          serviceName: hydra-admin
-          servicePort: 4445
-  {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
-  tls:
-  - secretName: hydra-admin-prod-cert
-    hosts:
-    - {{ ory.hydra.ingress_host }}-admin.{{ public_domain }}
+    - {{ ory.kratos.ingress_host }}-admin.{{ public_domain }}
   {%- endif %}
 

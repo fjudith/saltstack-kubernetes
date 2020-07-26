@@ -19,9 +19,11 @@ hydra:
         - 192.168.0.0/16
     urls:
       self:
-        issuer: https://{{ ory.hydra.ingress_host }}-admin.{{ public_domain }}
+        issuer: https://{{ ory.hydra.ingress_host }}-public.{{ public_domain }}
       login: https://{{ ory.hydra.ingress_host }}.{{ public_domain }}/login
       consent: https://{{ ory.hydra.ingress_host }}.{{ public_domain }}/consent
+      logout: https://{{ ory.hydra.ingress_host }}.{{ public_domain }}/logout
+      
         
   autoMigration: False
   dangerousForceHttp: False

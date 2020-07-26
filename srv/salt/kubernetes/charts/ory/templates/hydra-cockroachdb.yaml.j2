@@ -1,0 +1,40 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import ory with context %}
+
+apiVersion: cockroachdb.rook.io/v1alpha1
+kind: Cluster
+metadata:
+  name: hydra-cockroachdb
+  namespace: ory
+spec:
+  # full documentation on all available settings can be found at:
+  # https://rook.io/docs/rook/master/cockroachdb-cluster-crd.html
+  scope:
+    nodeCount: {{ ory.hydra.cockroachdb.node_count }}
+    # You can only have one PersistentVolumeClaim in this list!
+    volumeClaimTemplates:
+    - metadata:
+        name: hydra-cockroachdb-data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        # Uncomment and specify your StorageClass, otherwise
+        # the cluster admin defined default StorageClass will be used.
+        #storageClassName: "your-cluster-storageclass"
+        resources:
+          requests:
+            storage: "{{ ory.hydra.cockroachdb.capacity }}"
+  network:
+    ports:
+    - name: http
+      port: 8080
+    - name: grpc
+      port: 26257
+  secure: false
+  cachePercent: 25
+  maxSQLMemoryPercent: 25
+  # A key/value list of annotations
+  annotations:
+  #  key: value

@@ -27,4 +27,8 @@ ory:
       enabled: True
       capacity: 4Gi
       node_count: 3
+  oathkeeper:
+    enabled: True
+    version: 0.37.1-beta.1
+    ingress_host: oathkeeper
 

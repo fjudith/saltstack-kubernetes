@@ -14,6 +14,10 @@ cockroachdb-remove-charts:
   file.absent:
     - name: /srv/kubernetes/manifests/ory/cockroachdb
 
+oathkeeper-remove-charts:
+  file.absent:
+    - name: /srv/kubernetes/manifests/ory/oathkeeper
+
 hydra-fetch-charts:
   cmd.run:
     - runas: root
@@ -57,6 +61,17 @@ kratos-fetch-charts:
     - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
+
+oathkeeper-fetch-charts:
+  cmd.run:
+    - runas: root
+    - require:
+      - file: oathkeeper-remove-charts
+      - file: /srv/kubernetes/manifests/ory
+      - cmd: hydra-fetch-charts
+    - cwd: /srv/kubernetes/manifests/ory
+    - name: |
+        helm fetch --untar ory/oathkeeper
 
 cockroachdb-fetch-charts:
   cmd.run:

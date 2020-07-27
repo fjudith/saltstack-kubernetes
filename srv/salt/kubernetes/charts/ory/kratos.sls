@@ -69,7 +69,7 @@ kratos:
       - file: /srv/kubernetes/manifests/ory/kratos-selfservice.yaml
       - file: /srv/kubernetes/manifests/ory/kratos-mailslurper.yaml
       - cmd: ory-namespace
-      - cmd: hydra-fetch-charts
+      - cmd: kratos-fetch-charts
     - cwd: /srv/kubernetes/manifests/ory/kratos
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/ory/kratos-selfservice.yaml

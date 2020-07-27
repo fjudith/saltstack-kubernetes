@@ -88,3 +88,15 @@
     - template: jinja
     - context:
       tpldir: {{ tpldir }}
+
+/srv/kubernetes/manifests/ory/oathkeeper-values.yaml:
+  file.managed:
+    - require:
+      - file:  /srv/kubernetes/manifests/ory
+    - source: salt://{{ tpldir }}/templates/oathkeeper-values.yaml.j2
+    - user: root
+    - group: root
+    - mode: "0755"
+    - template: jinja
+    - context:
+      tpldir: {{ tpldir }}

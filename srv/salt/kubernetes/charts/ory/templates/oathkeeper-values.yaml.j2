@@ -1,0 +1,46 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import ory with context %}
+
+# Mode for oathkeeper controller
+# Two possible modes are: controller or sidecar
+global:
+  ory:
+    oathkeeper:
+      maester:
+        mode: controller
+
+# Number of ORY Oathkeeper members
+replicaCount: 1
+
+image:
+  # ORY Oathkeeper version
+  tag: v{{ ory.oathkeeper.version }}
+
+# If enabled, a demo deployment with exemplary access rules
+# and JSON Web Key Secrets will be generated.
+demo: true
+
+# Configure ORY Oathkeeper itself
+oathkeeper:
+  # The ORY Oathkeeper configuration. For a full list of available settings, check:
+  #   https://github.com/ory/oathkeeper/blob/master/docs/config.yaml
+  config:
+    access_rules:
+      repositories:
+        - file:///etc/rules/access-rules.json
+    serve:
+      proxy:
+        port: 4455
+      api:
+        port: 4456
+#  If set, uses the given JSON Web Key Set as the signing key for the ID Token Mutator.
+#  mutatorIdTokenJWKs: {}
+#  If set, uses the given access rules.
+#  accessRules: {}
+
+# Configures controller setup
+maester:
+  enabled: false

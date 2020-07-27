@@ -17,3 +17,6 @@ include:
   {%- if ory.get('kratos', {'enabled': False}).enabled %}
   - .kratos
   {%- endif %}
+  {%- if ory.get('oathkeeper', {'enabled': False}).enabled %}
+  - .oathkeeper
+  {%- endif %}

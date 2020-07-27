@@ -57,7 +57,7 @@ hydra:
   cmd.run:
     - runas: root
     - watch:
-      {%- if ory.get('cockroachdb', {'enabled': False}).enabled %}
+      {%- if ory.hydra.get('cockroachdb', {'enabled': False}).enabled %}
       - cmd: hydra-cockroachdb
       {%- endif %}
       - file: /srv/kubernetes/manifests/ory/hydra-values.yaml

@@ -18,7 +18,7 @@ spec:
     - name: http
       port: 80
       protocol: TCP
-      targetPort: 4455
+      targetPort: 3000
   selector:
     app: kratos-selfservice-ui-node
 ---
@@ -43,7 +43,7 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
         - name: http
-          containerPort: 4455
+          containerPort: 3000
           protocol: TCP
         env:
         - name: KRATOS_PUBLIC_URL

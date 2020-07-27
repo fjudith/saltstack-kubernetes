@@ -47,6 +47,16 @@ spec:
           protocol: TCP
         env:
         - name: KRATOS_PUBLIC_URL
-          value: https://{{ ory.kratos.ingress_host }}-public.{{ public_domain }}
+          value: http://kratos-public
         - name: KRATOS_ADMIN_URL
-          value: https://{{ ory.kratos.ingress_host }}-admin.{{ public_domain }}
+          value: http://kratos-admin
+        - name: KRATOS_BROWSER_URL
+          value: https://{{ ory.kratos.ingress_host }}.{{ public_domain }}
+        - name: PROJECT_NAME
+          value: "SecureApp"
+        - name: BASE_URL
+          value: ""
+        # - name: JWKS_URL
+        #   value: http://oathkeeper-api
+        - name: SECURITY_MODE
+          value: cookie

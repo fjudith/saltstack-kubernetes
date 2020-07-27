@@ -20,24 +20,18 @@ image:
 
 kratos:
   development: false
-  autoMigrate: false
+  autoMigrate: True
   config:
     dsn: "{{ dsn }}"
+
     serve:
       public:
         base_url: "https://{{ selfservice_host }}/.ory/kratos/public/"
         port: 4433
       admin:
         port: 4434
-        base_url: "https://{{ ory.kratos.ingress_host }}-admin.{{ public_domain }}"
-    identity:
-      default_schema_url: file:///etc/config/kratos/identity.traits.schema.json
-    {%- if  charts.get('mailhog', {'enabled': False}).enabled %}
-    courier:
-      smtp:
-        connection_uri: "smtps://test:test@mailslurper:1025/?skip_ssl_verify=true"
-    {%- endif %}
-    
+        # base_url: "https://{{ ory.kratos.ingress_host }}-admin.{{ public_domain }}"
+        base_url: "http://kratos-admin"    
     selfservice:
       default_browser_return_url: https://{{ selfservice_host }}/
       whitelisted_return_urls:
@@ -81,6 +75,15 @@ kratos:
               hooks:
                 -
                   hook: session
+    
+    identity:
+      default_schema_url: file:///etc/config/identity.traits.schema.json
+    
+    {%- if  charts.get('mailhog', {'enabled': False}).enabled %}
+    courier:
+      smtp:
+        connection_uri: "smtps://test:test@mailslurper:1025/?skip_ssl_verify=true"
+    {%- endif %}
 
     secrets:
       default: {{ ory.kratos.default_secret }}

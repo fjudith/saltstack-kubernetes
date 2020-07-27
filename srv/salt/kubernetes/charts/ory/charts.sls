@@ -47,6 +47,17 @@ kratos-fetch-charts:
     - name: |
         helm fetch --untar ory/kratos
 
+/srv/kubernetes/manifests/ory/kratos/templates/configmap-config.yaml:
+  file.managed:
+    - watch:
+      - cmd: kratos-fetch-charts
+    - source: salt://{{ tpldir }}/patch/kratos-configmap.yaml
+    - user: root
+    - group: root
+    - mode: "0644"
+    - context:
+      tpldir: {{ tpldir }}
+
 cockroachdb-fetch-charts:
   cmd.run:
     - runas: root

@@ -166,6 +166,11 @@ spec:
           name: grafana-dashboard-falco
           readOnly: false
         {%- endif %}
+        {%- if common.addons.get('rook_cockroachdb', {'enabled': False}).enabled %}
+        - mountPath: /grafana-dashboard-definitions/0/cockroachdb
+          name: grafana-dashboard-cockroachdb
+          readOnly: false
+        {%- endif %}
       nodeSelector:
         beta.kubernetes.io/os: linux
       securityContext:
@@ -294,4 +299,9 @@ spec:
       - configMap:
           name: grafana-dashboard-falco
         name: grafana-dashboard-falco
+      {%- endif %}
+      {%- if common.addons.get('rook_cockroachdb', {'enabled': False}).enabled %}
+      - configMap:
+          name: grafana-dashboard-cockroachdb
+        name: grafana-dashboard-cockroachdb
       {%- endif %}

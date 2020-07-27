@@ -128,6 +128,20 @@ falco-grafana:
       tpldir: {{ tpldir }}
 {% endif %}
 
+{% if common.addons.get('rook_cockroachdb', {'enabled': False}).enabled %}
+cockroachdb-grafana:
+  file.managed:
+    - name: /srv/kubernetes/manifests/kube-prometheus/manifests/cockroachdb-grafana-dashboard-configmap.yaml
+    - watch:
+      - git: kube-prometheus-repo
+    - source: salt://{{ tpldir }}/patch/cockroachdb-grafana-dashboard-configmap.yaml
+    - user: root
+    - group: root
+    - mode: "0644"
+    - context:
+      tpldir: {{ tpldir }}
+{% endif %}
+
 kube-prometheus-grafana:
   file.managed:
     - name: /srv/kubernetes/manifests/kube-prometheus/manifests/grafana-deployment.yaml

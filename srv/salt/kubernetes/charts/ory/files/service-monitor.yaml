@@ -3,16 +3,16 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: cockroachdb
-  namespace: rook-cockroachdb
+  namespace: ory
   labels:
-    app: rook-cockroachdb
+    app.kubernetes.io/name: cockroachdb
 spec:
   namespaceSelector:
     matchNames:
-    - rook-cockroachdb
+    - ory
   selector:
     matchLabels:
-      app: rook-cockroachdb
+      app.kubernetes.io/name: cockroachdb
   endpoints:
   - port: http
     path: /_status/vars

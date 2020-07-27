@@ -7,6 +7,8 @@
 {% from "kubernetes/map.jinja" import common with context %}
 {% from "kubernetes/map.jinja" import charts with context %}
 
+{% set selfservice_host = ory.kratos.ingress_host ~ "-selfservice." ~ public_domain %}
+
 {% if  ory.kratos.get('cockroachdb', {'enabled': False}).enabled %}
   {% set dsn = "cockroach://root@kratos-cockroachdb:26257/defaultdb?sslmode=disable&max_conns=20&max_idle_conns=4" %}
 {% else  %}
@@ -23,9 +25,11 @@ kratos:
     dsn: "{{ dsn }}"
     serve:
       public:
+        base_url: "https://{{ selfservice_host }}/.ory/kratos/public/"
         port: 4433
       admin:
         port: 4434
+        base_url: "https://{{ ory.kratos.ingress_host }}-admin.{{ public_domain }}"
     identity:
       default_schema_url: file:///etc/config/kratos/identity.traits.schema.json
     {%- if  charts.get('mailhog', {'enabled': False}).enabled %}
@@ -33,10 +37,50 @@ kratos:
       smtp:
         connection_uri: "smtps://test:test@mailslurper:1025/?skip_ssl_verify=true"
     {%- endif %}
+    
     selfservice:
-      default_browser_return_url: https://{{ ory.kratos.ingress_host }}-selfservice.{{ public_domain }}/
+      default_browser_return_url: https://{{ selfservice_host }}/
       whitelisted_return_urls:
-        - https://{{ ory.kratos.ingress_host }}-selfservice.{{ public_domain }}
+        - https://{{ selfservice_host }}
+
+      strategies:
+        password:
+          enabled: true
+
+      flows:
+        error:
+          ui_url: https://{{ selfservice_host }}/error
+
+        settings:
+          ui_url: https://{{ selfservice_host }}/settings
+          privileged_session_max_age: 15m
+
+        recovery:
+          enabled: true
+          ui_url: https://{{ selfservice_host }}/recovery
+
+        verification:
+          enabled: true
+          ui_url: https://{{ selfservice_host }}/verify
+          after:
+            default_browser_return_url: https://{{ selfservice_host }}/
+
+        logout:
+          after:
+            default_browser_return_url: https://{{ selfservice_host }}/auth/login
+
+        login:
+          ui_url: https://{{ selfservice_host }}/auth/login
+          request_lifespan: 10m
+
+        registration:
+          request_lifespan: 10m
+          ui_url: https://{{ selfservice_host }}/auth/registration
+          after:
+            password:
+              hooks:
+                -
+                  hook: session
 
     secrets:
       default: {{ ory.kratos.default_secret }}

@@ -15,11 +15,15 @@ metadata:
     app: mailslurper
 spec:
   ports:
-    - name: http
+    - name: smtps
+      port: 1025
+      protocol: TCP
+      targetPort: 1025
+    - name: http-admin
       port: 80
       protocol: TCP
       targetPort: 4436
-    - name: https
+    - name: https-admin
       port: 443
       protocol: TCP
       targetPort: 4437
@@ -46,9 +50,12 @@ spec:
         image: {{ ory.kratos.mailslurper_image }}
         imagePullPolicy: IfNotPresent
         ports:
-        - name: http
+        - name: smtps
+          containerPort: 1025
+          protocol: TCP
+        - name: http-admin
           containerPort: 4436
           protocol: TCP
-        - name: https
+        - name: https-admin
           containerPort: 4437
           protocol: TCP

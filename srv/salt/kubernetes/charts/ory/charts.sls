@@ -10,6 +10,10 @@ kratos-remove-charts:
   file.absent:
     - name: /srv/kubernetes/manifests/ory/kratos
 
+cockroachdb-remove-charts:
+  file.absent:
+    - name: /srv/kubernetes/manifests/ory/cockroachdb
+
 hydra-fetch-charts:
   cmd.run:
     - runas: root
@@ -42,3 +46,15 @@ kratos-fetch-charts:
     - cwd: /srv/kubernetes/manifests/ory
     - name: |
         helm fetch --untar ory/kratos
+
+cockroachdb-fetch-charts:
+  cmd.run:
+    - runas: root
+    - require:
+      - file: cockroachdb-remove-charts
+      - file: /srv/kubernetes/manifests/ory
+      - cmd: hydra-fetch-charts
+    - cwd: /srv/kubernetes/manifests/ory
+    - name: |
+        helm repo add cockroachdb https://charts.cockroachdb.com
+        helm fetch --untar cockroachdb/cockroachdb

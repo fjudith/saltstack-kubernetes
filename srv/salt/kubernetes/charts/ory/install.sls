@@ -5,24 +5,20 @@
 {% from tpldir ~ "/map.jinja" import ory with context %}
 {%- from "kubernetes/map.jinja" import common with context -%}
 
-{%- if common.addons.get('rook_cockroachdb', {'enabled': False}).enabled and ory.hydra.get('cockroachdb', {'enabled': False}).enabled %}
+{%- if ory.hydra.get('cockroachdb', {'enabled': False}).enabled %}
 hydra-cockroachdb:
-  file.managed:
-    - name: /srv/kubernetes/manifests/hydra-cockroachdb.yaml
-    - source: salt://{{ tpldir }}/templates/hydra-cockroachdb.yaml.j2
-    - user: root
-    - template: jinja
-    - group: root
-    - mode: "0644"
-    - context:
-      tpldir: {{ tpldir }}
   cmd.run:
-    - watch:
-      - file: /srv/kubernetes/manifests/hydra-cockroachdb.yaml
-      - cmd: ory-namespace
     - runas: root
+    - watch:
+      - file: /srv/kubernetes/manifests/ory/hydra-cockroachdb-values.yaml
+      - cmd: ory-namespace
+      - cmd: hydra-fetch-charts
+      - cmd: cockroachdb-fetch-charts
+    - cwd: /srv/kubernetes/manifests/ory/cockroachdb
     - name: |
-        kubectl apply -f /srv/kubernetes/manifests/hydra-cockroachdb.yaml
+        helm upgrade --install hydra-cockroachdb --namespace ory \
+          --values /srv/kubernetes/manifests/ory/hydra-cockroachdb-values.yaml \
+          "./" --wait --timeout 3m
 {%- endif %}
 
 hydra-secrets:

@@ -5,12 +5,18 @@
 {% from tpldir ~ "/map.jinja" import ory with context %}
 {%- set public_domain = pillar['public-domain'] -%}
 
+{% if ory.hydra.get('cockroachdb', {'enabled': False}).enabled %}
+  {% set dsn = "cockroach://root@hydra-cockroachdb:26257/defaultdb?sslmode=disable&max_conns=20&max_idle_conns=4" %}
+{% else  %}
+  {% set dsn = "memory" %}
+{% endif %}
+
 image:
   tag: v{{ ory.hydra.version }}
 
 hydra:
-  existingSecret: hydra-secret
   config:
+    dsn: "{{ dsn }}"
     serve:
       tls:
         allow_termination_from:
@@ -23,10 +29,19 @@ hydra:
       login: https://{{ ory.hydra.ingress_host }}.{{ public_domain }}/login
       consent: https://{{ ory.hydra.ingress_host }}.{{ public_domain }}/consent
       logout: https://{{ ory.hydra.ingress_host }}.{{ public_domain }}/logout
-      
-        
-  autoMigration: False
-  dangerousForceHttp: False
+  
+  # existingSecret: hydra-secret
+  secrets:
+    cookie: "{{ ory.hydra.cookie_secret }}"
+    system: "{{ ory.hydra.system_secret }}"
+
+  {%- if ory.hydra.get('cockroachdb', {'enabled': False}).enabled %}
+  autoMigrate: True
+  {%- else %}
+  autoMigrate: false
+  {%- endif %}
+  dangerousForceHttp: false
+  dangerousAllowInsecureRedirectUrls: false
 
 maester:
   enabled: true

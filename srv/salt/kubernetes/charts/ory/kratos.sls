@@ -5,24 +5,20 @@
 {% from tpldir ~ "/map.jinja" import ory with context %}
 {%- from "kubernetes/map.jinja" import common with context -%}
 
-{%- if common.addons.get('rook_cockroachdb', {'enabled': False}).enabled and ory.kratos.get('cockroachdb', {'enabled': False}).enabled %}
+{%- if ory.kratos.get('cockroachdb', {'enabled': False}).enabled %}
 kratos-cockroachdb:
-  file.managed:
-    - name: /srv/kubernetes/manifests/kratos-cockroachdb.yaml
-    - source: salt://{{ tpldir }}/templates/kratos-cockroachdb.yaml.j2
-    - user: root
-    - template: jinja
-    - group: root
-    - mode: "0644"
-    - context:
-      tpldir: {{ tpldir }}
   cmd.run:
-    - watch:
-      - file: /srv/kubernetes/manifests/kratos-cockroachdb.yaml
-      - cmd: ory-namespace
     - runas: root
+    - watch:
+      - file: /srv/kubernetes/manifests/ory/kratos-cockroachdb-values.yaml
+      - cmd: ory-namespace
+      - cmd: kratos-fetch-charts
+      - cmd: cockroachdb-fetch-charts
+    - cwd: /srv/kubernetes/manifests/ory/cockroachdb
     - name: |
-        kubectl apply -f /srv/kubernetes/manifests/kratos-cockroachdb.yaml
+        helm upgrade --install kratos-cockroachdb --namespace ory \
+          --values /srv/kubernetes/manifests/ory/kratos-cockroachdb-values.yaml \
+          "./" --wait --timeout 3m
 {%- endif %}
 
 kratos-secrets:

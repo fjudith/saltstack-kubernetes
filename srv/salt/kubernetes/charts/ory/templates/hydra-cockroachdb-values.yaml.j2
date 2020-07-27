@@ -1,0 +1,16 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import ory with context %}
+
+image:
+  tag: v{{ ory.hydra.cockroachdb.version }}
+
+statefulset:
+  replicas: {{ ory.hydra.cockroachdb.node_count }}
+
+storage:
+  persistentVolume:
+    enabled: true
+    size: {{ ory.hydra.cockroachdb.capacity }}

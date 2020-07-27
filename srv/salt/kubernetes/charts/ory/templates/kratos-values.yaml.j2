@@ -6,7 +6,7 @@
 {%- set public_domain = pillar['public-domain'] -%}
 {% from "kubernetes/map.jinja" import common with context %}
 
-{% if common.addons.get('rook_cockroachdb', {'enabled': False}).enabled and ory.kratos.get('cockroachdb', {'enabled': False}).enabled %}
+{% if  ory.kratos.get('cockroachdb', {'enabled': False}).enabled %}
   {% set dsn = "cockroach://root@kratos-cockroachdb:26257/defaultdb?sslmode=disable&max_conns=20&max_idle_conns=4" %}
 {% else  %}
   {% set dsn = "sqlite:///var/lib/sqlite/db.sqlite?_fk=true&mode=rwc" %}
@@ -18,8 +18,8 @@ image:
 kratos:
   development: false
   autoMigrate: false
-  dsn: {{ dsn }}
   config:
+    dsn: "{{ dsn }}"
     serve:
       public:
         port: 4433

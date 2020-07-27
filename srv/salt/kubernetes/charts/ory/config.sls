@@ -17,6 +17,18 @@
     - context:
       tpldir: {{ tpldir }}
 
+/srv/kubernetes/manifests/ory/hydra-cockroachdb-values.yaml:
+  file.managed:
+    - require:
+      - file:  /srv/kubernetes/manifests/ory
+    - source: salt://{{ tpldir }}/templates/hydra-cockroachdb-values.yaml.j2
+    - user: root
+    - group: root
+    - mode: "0755"
+    - template: jinja
+    - context:
+      tpldir: {{ tpldir }}
+
 /srv/kubernetes/manifests/ory/idp-values.yaml:
   file.managed:
     - require:
@@ -34,6 +46,18 @@
     - require:
       - file:  /srv/kubernetes/manifests/ory
     - source: salt://{{ tpldir }}/templates/kratos-values.yaml.j2
+    - user: root
+    - group: root
+    - mode: "0755"
+    - template: jinja
+    - context:
+      tpldir: {{ tpldir }}
+
+/srv/kubernetes/manifests/ory/kratos-cockroachdb-values.yaml:
+  file.managed:
+    - require:
+      - file:  /srv/kubernetes/manifests/ory
+    - source: salt://{{ tpldir }}/templates/kratos-cockroachdb-values.yaml.j2
     - user: root
     - group: root
     - mode: "0755"

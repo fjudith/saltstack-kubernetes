@@ -7,6 +7,7 @@ ory:
     system_secret: 2EYfY6MWHd3pXUkqeb3DrPjpsxe6p67i
     cookie_secret: uJd8AOqKyui6PmT54xa34cI52csbwmu6
     cockroachdb:
+      version: 20.1.3
       enabled: True
       capacity: 4Gi
       node_count: 3
@@ -17,6 +18,7 @@ ory:
     dns: sqlite
     log_level: info
     cockroachdb:
+      version: 20.1.3
       enabled: True
       capacity: 4Gi
       node_count: 3

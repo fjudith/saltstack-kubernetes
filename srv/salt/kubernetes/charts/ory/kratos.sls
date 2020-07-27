@@ -62,14 +62,19 @@ kratos:
   cmd.run:
     - runas: root
     - watch:
-      {%- if common.addons.get('rook_cockroachdb', {'enabled': False}).enabled %}
+      {%- if ory.kratos.get('cockroachdb', {'enabled': False}).enabled %}
       - cmd: kratos-cockroachdb
       {%- endif %}
       - file: /srv/kubernetes/manifests/ory/kratos-values.yaml
+      - file: /srv/kubernetes/manifests/ory/kratos-selfservice.yaml
+      - file: /srv/kubernetes/manifests/ory/kratos-mailslurper.yaml
       - cmd: ory-namespace
       - cmd: hydra-fetch-charts
     - cwd: /srv/kubernetes/manifests/ory/kratos
     - name: |
+        kubectl apply -f /srv/kubernetes/manifests/ory/kratos-selfservice.yaml
+        kubectl apply -f /srv/kubernetes/manifests/ory/kratos-mailslurper.yaml
+
         helm upgrade --install kratos --namespace ory \
           --values /srv/kubernetes/manifests/ory/kratos-values.yaml \
           "./" --wait --timeout 3m

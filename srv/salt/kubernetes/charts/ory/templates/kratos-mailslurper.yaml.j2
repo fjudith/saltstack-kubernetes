@@ -1,0 +1,54 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import ory with context %}
+{%- set public_domain = pillar['public-domain'] -%}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mailslurper
+  namespace: ory
+  labels:
+    app: mailslurper
+spec:
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 4436
+    - name: https
+      port: 443
+      protocol: TCP
+      targetPort: 4437
+  selector:
+    app: mailslurper
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mailslurper
+  namespace: ory
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mailslurper
+  template:
+    metadata:
+      labels:
+        app: mailslurper
+    spec:
+      containers:
+      - name: mailslurper
+        image: {{ ory.kratos.mailslurper_image }}
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: http
+          containerPort: 4436
+          protocol: TCP
+        - name: https
+          containerPort: 4437
+          protocol: TCP

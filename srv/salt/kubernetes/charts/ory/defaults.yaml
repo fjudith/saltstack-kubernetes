@@ -17,6 +17,11 @@ ory:
     ingress_host: kratos
     dns: sqlite
     log_level: info
+    # export LC_CTYPE=C; cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1
+    default_secret: sPtbO1x9c9QAAEm3EI0Wuj8GKT0d7ouO
+    cookie_secret: wGs6CJTx1NWxKLFGWszMqek4fusK3JnV
+    selfservice_image: docker.io/oryd/kratos-selfservice-ui-node:latest
+    mailslurper_image: docker.io/oryd/mailslurper:smtps-latest
     cockroachdb:
       version: 20.1.3
       enabled: True

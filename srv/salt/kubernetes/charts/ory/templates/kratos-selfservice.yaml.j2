@@ -1,0 +1,52 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import ory with context %}
+{%- set public_domain = pillar['public-domain'] -%}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kratos-selfservice-ui-node
+  namespace: ory
+  labels:
+    app: kratos-selfservice-ui-node
+spec:
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 4455
+  selector:
+    app: kratos-selfservice-ui-node
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kratos-selfservice-ui-node
+  namespace: ory
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kratos-selfservice-ui-node
+  template:
+    metadata:
+      labels:
+        app: kratos-selfservice-ui-node
+    spec:
+      containers:
+      - name: kratos-selfservice-ui-node
+        image: {{ ory.kratos.selfservice_image }}
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: http
+          containerPort: 4455
+          protocol: TCP
+        env:
+        - name: KRATOS_PUBLIC_URL
+          value: https://{{ ory.kratos.ingress_host }}-public.{{ public_domain }}
+        - name: KRATOS_ADMIN_URL
+          value: https://{{ ory.kratos.ingress_host }}-admin.{{ public_domain }}

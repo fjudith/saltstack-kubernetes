@@ -5,6 +5,7 @@
 {% from tpldir ~ "/map.jinja" import ory with context %}
 {%- set public_domain = pillar['public-domain'] -%}
 {% from "kubernetes/map.jinja" import common with context %}
+{% from "kubernetes/map.jinja" import charts with context %}
 
 {% if  ory.kratos.get('cockroachdb', {'enabled': False}).enabled %}
   {% set dsn = "cockroach://root@kratos-cockroachdb:26257/defaultdb?sslmode=disable&max_conns=20&max_idle_conns=4" %}
@@ -25,10 +26,20 @@ kratos:
         port: 4433
       admin:
         port: 4434
-    
+    identity:
+      default_schema_url: file:///etc/config/kratos/identity.traits.schema.json
+    {%- if  charts.get('mailhog', {'enabled': False}).enabled %}
+    courier:
+      smtp:
+        connection_uri: "smtps://test:test@mailslurper:1025/?skip_ssl_verify=true"
+    {%- endif %}
+    selfservice:
+      default_browser_return_url: https://{{ ory.kratos.ingress_host }}-selfservice.{{ public_domain }}/
+      whitelisted_return_urls:
+        - https://{{ ory.kratos.ingress_host }}-selfservice.{{ public_domain }}
+
     secrets:
-      session:
-        - dolore occaecat nostrud Ut
-        - sit et commodoaute ut voluptate consectetur Duis
+      default: {{ ory.kratos.default_secret }}
+      cookie: {{ ory.kratos.cookie_secret }}
   log:
     level: {{ ory.kratos.log_level }}

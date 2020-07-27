@@ -64,3 +64,27 @@
     - template: jinja
     - context:
       tpldir: {{ tpldir }}
+
+/srv/kubernetes/manifests/ory/kratos-selfservice.yaml:
+  file.managed:
+    - require:
+      - file:  /srv/kubernetes/manifests/ory
+    - source: salt://{{ tpldir }}/templates/kratos-selfservice.yaml.j2
+    - user: root
+    - group: root
+    - mode: "0755"
+    - template: jinja
+    - context:
+      tpldir: {{ tpldir }}
+
+/srv/kubernetes/manifests/ory/kratos-mailslurper.yaml:
+  file.managed:
+    - require:
+      - file:  /srv/kubernetes/manifests/ory
+    - source: salt://{{ tpldir }}/templates/kratos-mailslurper.yaml.j2
+    - user: root
+    - group: root
+    - mode: "0755"
+    - template: jinja
+    - context:
+      tpldir: {{ tpldir }}

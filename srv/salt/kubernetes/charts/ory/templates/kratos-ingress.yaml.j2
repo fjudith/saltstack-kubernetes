@@ -17,6 +17,33 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
+  name: kratos-selfservice
+  namespace: ory
+  annotations:
+    kubernetes.io/ingress.class: {{ controller }}
+    {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/tls-acme: "true"
+    {%- endif %}
+spec:
+  rules:
+  - host: {{ ory.kratos.ingress_host }}-selfservice.{{ public_domain }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: kratos-selfservice-ui-node
+          servicePort: 80
+  {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+  tls:
+  - secretName: kratos-selfservice-prod-cert
+    hosts:
+    - {{ ory.kratos.ingress_host }}-selfservice.{{ public_domain }}
+  {%- endif %}
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
   name: kratos-public
   namespace: ory
   annotations:
@@ -33,7 +60,7 @@ spec:
       - path: /
         backend:
           serviceName: kratos-public
-          servicePort: 4433
+          servicePort: 80
   {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
   tls:
   - secretName: kratos-public-prod-cert
@@ -60,7 +87,7 @@ spec:
       - path: /
         backend:
           serviceName: kratos-admin
-          servicePort: 4434
+          servicePort: 80
   {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
   tls:
   - secretName: kratos-admin-prod-cert

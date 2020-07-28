@@ -20,3 +20,4 @@ include:
   {%- if ory.get('oathkeeper', {'enabled': False}).enabled %}
   - .oathkeeper
   {%- endif %}
+  - .test

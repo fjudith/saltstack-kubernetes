@@ -1,4 +1,3 @@
-{%- set public_domain = pillar['public-domain'] -%}
 {%- from "kubernetes/map.jinja" import charts with context -%}
 {%- from "kubernetes/map.jinja" import storage with context -%}
 {%- from "kubernetes/map.jinja" import common with context -%}

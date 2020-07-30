@@ -169,6 +169,10 @@ kubernetes:
         enabled: True
         name: px-dedicated-sc
   charts:
+    argo:
+      enabled: true
+    kubeapps:
+      enabled: true
     concourse:
       enabled: true
       username: concourse

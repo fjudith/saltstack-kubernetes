@@ -1,0 +1,51 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import kubeapps with context %}
+{%- set public_domain = pillar['public-domain'] -%}
+{%- from "kubernetes/map.jinja" import charts with context -%}
+
+## Enable this feature flag to use Kubeapps with Helm 3 support.
+## If you set it to true, Kubeapps will not work with releases installed with Helm 2.
+useHelm3: true
+
+{%- if charts.get('keycloak', {'enabled': False}).enabled %}
+{%- set keycloak_url = 'https://' + charts.get('keycloak', {}).get('ingress_host') + '.' + pillar['public-domain'] %}
+{%- set keycloak_password = charts.get('keycloak', {}).get('password') %}
+{%- set client_secret     = salt['cmd.shell']('/srv/kubernetes/manifests/kubeapps/kc-clientsecret-kubeapps.sh' + ' ' + 'keycloak' + ' ' + keycloak_password + ' ' + keycloak_url + ' ' + kubeapps.oauth.keycloak.realm) %}
+{%- set realm = kubeapps.oauth.get('keycloak', {}).get('realm') %}
+
+## RBAC paramters
+##
+rbac:
+  ## Perform creation of RBAC resources
+  ##
+  create: true
+
+## Pod Security Context
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+##
+securityContext:
+  enabled: false
+  runAsUser: 1001
+  # fsGroup: 1001
+
+authProxy:
+  enabled: True
+  provider: keycloak
+  clientID: kubeapps
+  clientSecret: {{ client_secret }}
+  ## cookieSecret is used by oauth2-proxy to encrypt any credentials so that it requires
+  ## no storage. Note that it must be a particular number of bytes. Recommend using the
+  ## following to generate a cookieSecret as per the oauth2 configuration documentation
+  ## at https://pusher.github.io/oauth2_proxy/configuration :
+  ## python -c 'import os,base64; print base64.urlsafe_b64encode(os.urandom(16))'
+  cookieSecret: "{{ kubeapps.oauth.cookie_secret }}"
+  additionalFlags:
+  - -login-url={{ keycloak_url }}/auth/realms/{{ kubeapps.oauth.keycloak.realm }}/protocol/openid-connect/auth
+  - -redeem-url={{ keycloak_url }}/auth/realms/{{ kubeapps.oauth.keycloak.realm }}/protocol/openid-connect/token
+  - -validate-url={{ keycloak_url }}/auth/realms/{{ kubeapps.oauth.keycloak.realm }}/protocol/openid-connect/userinfo
+  - -keycloak-group=/kubernetes-users
+
+{%- endif %}

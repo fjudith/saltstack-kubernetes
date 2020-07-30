@@ -1,0 +1,14 @@
+{
+  "name": "userid",
+  "protocol": "openid-connect",
+  "protocolMapper": "oidc-usermodel-property-mapper",
+  "consentRequired": false,
+  "config": {
+      "userinfo.token.claim": "true",
+      "user.attribute": "id",
+      "id.token.claim": "true",
+      "access.token.claim": "true",
+      "claim.name": "userid",
+      "jsonType.label": "String"
+  }
+}

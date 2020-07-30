@@ -1,4 +1,4 @@
 dashboard:
-  dashboard_image: kubernetesui/dashboard:v2.0.0-rc5
-  scraper_image: kubernetesui/metrics-scraper:v1.0.3
+  dashboard_image: kubernetesui/dashboard:v2.0.3
+  scraper_image: kubernetesui/metrics-scraper:v1.0.4
   ingress_host: kubernetes-dashboard

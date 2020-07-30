@@ -46,7 +46,7 @@ The solution design carries the following requirements:
   <tr>
     <td><ul><li><b>hetzner</b></li><li>scaleway</li></ul></td>
     <td><ul><li><b>cloudflare</b></li></ul></td>
-    <td><ul><li>1.16.8</li><li>1.17.4<li><b>1.18.4</b></li></li></ul></td>
+    <td><ul><li>1.16.8</li><li>1.17.4<li><b>1.18.6</b></li></li></ul></td>
     <td><ul><li><b>docker 18.09.8</b></li><li>containerd v1.2.6</li><li>cri-o 1.15</li></ul></td>
     <td><ul><li><b>cni 0.7.5</b></li><li>calico 3.15.0</li><li>canal 3.2.1 (flannel 0.9.1)</li><li>flannel 0.1.0</li><li>weave 2.6.5</li><li>Cillium 1.30.0</li></ul></td>
   </tr>

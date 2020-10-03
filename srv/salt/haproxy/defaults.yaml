@@ -1,5 +1,5 @@
 haproxy:
-  version: 2.1.7-1ppa1~focal
+  version: 2.1.8-1ppa1~focal
   distribution: focal
   repository_name: ppa:vbernat/haproxy-2.1
   keyid: CFFB779AADC995E4F350A060505D97A41C61B9CD 

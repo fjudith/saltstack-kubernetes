@@ -14,7 +14,7 @@
 {%- endif -%}
 
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: hydra-idp
@@ -41,7 +41,7 @@ spec:
     - {{ ory.hydra.ingress_host }}.{{ public_domain }}
   {%- endif %}
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: hydra-public
@@ -68,7 +68,7 @@ spec:
     - {{ ory.hydra.ingress_host }}-public.{{ public_domain }}
   {%- endif %}
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: hydra-admin

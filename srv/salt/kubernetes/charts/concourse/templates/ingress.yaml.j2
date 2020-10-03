@@ -13,7 +13,7 @@
   {%- set controller = "istio" -%}
 {%- endif -%}
 
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: concourse-dashboard
@@ -40,7 +40,7 @@ spec:
     - {{ concourse.ingress_host }}.{{ public_domain }}
   {%- endif %}
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: concourse-minio

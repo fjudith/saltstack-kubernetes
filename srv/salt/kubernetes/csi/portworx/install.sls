@@ -11,7 +11,6 @@ portworx:
     - name: /srv/kubernetes/manifests/portworx/portworx.yaml
     - source: {{ portworx.manifest_url }}
     - skip_verify: true
-    - template: jinja
     - user: root
     - group: root
     - mode: "0644"

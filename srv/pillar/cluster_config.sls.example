@@ -4,7 +4,7 @@ public-domain: example.com
 controlPlaneInterface: wg0
 
 kubeadm:
-  kubernetesVersion: 1.18.6
+  kubernetesVersion: 1.18.9
   # kubeadm token generate
   token: ockpvc.dsmk8rtibt1gr72y
   nodeToken: 4bidtp.y7q8hlsvfro0ech1

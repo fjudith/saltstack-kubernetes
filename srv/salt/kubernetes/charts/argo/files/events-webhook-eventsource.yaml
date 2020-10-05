@@ -3,10 +3,13 @@ kind: EventSource
 metadata:
   name: webhook-event-source
 spec:
-  type: webhook
+  service:
+    ports:
+      - port: 12000
+        targetPort: 12000
   webhook:
-    # gateway can run multiple HTTP servers. Simply define a unique port to start a new HTTP server
-    default:
+    # event-source can run multiple HTTP servers. Simply define a unique port to start a new HTTP server
+    example:
       # port to run HTTP server on
       port: "12000"
       # endpoint to listen to
@@ -24,7 +27,11 @@ spec:
 #      port: "13000"
 #      endpoint: "/secure"
 #      method: "POST"
-#      # path to file that is mounted in gateway pod which contains certs
-#      serverCertPath: "/bin/webhook-secure/crt"
-#      # path to file that is mounted in gateway pod which contains private key
-#      serverKeyPath: "/bin/webhook-secure/key"
+#      # k8s secret that contains the cert
+#      serverCertSecret:
+#        name: my-secret
+#        key: cert-key
+#      # k8s secret that contains the private key
+#      serverKeySecret:
+#        name: my-secret
+#        key: pk-key

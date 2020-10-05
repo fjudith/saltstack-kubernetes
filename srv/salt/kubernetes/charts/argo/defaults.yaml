@@ -1,10 +1,13 @@
 argo:
-  version: 2.9.3
+  version: 2.11.1
   ingress_host: argo
   minio_image: docker.io/minio/minio:latest
   events:
     enabled: true
-    version: 0.16.0
+    version: 1.0.0
+  cd:
+    enabled: true
+    version: 1.7.6
 
   # oauth:
   #   provider: keycloak

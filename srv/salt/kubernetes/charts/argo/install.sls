@@ -7,17 +7,33 @@
 {%- from "kubernetes/map.jinja" import storage with context -%}
 
 /opt/argo-linux-amd64-v{{ argo.version }}:
-  file.managed:
-    - source: https://github.com/argoproj/argo/releases/download/v{{ argo.version }}/argo-linux-amd64
-    - skip_verify: True
-    - mode: "0755"
+  file.directory:
     - user: root
     - group: root
-    - if_missing: /opt/argo-linux-amd64-v{{ argo.version }}
+    - dir_mode: "0750"
+    - makedirs: True
 
-/usr/local/bin/argo:
+/opt/argo-linux-amd64-v{{ argo.version }}/argo-linux-amd64.gz:
+  file.managed:
+    - require:
+      - file: /opt/argo-linux-amd64-v{{ argo.version }}
+    - source: https://github.com/argoproj/argo/releases/download/v{{ argo.version }}/argo-linux-amd64.gz
+    - skip_verify: true
+    - user: root
+    - group: root
+
+argo-client:
+  cmd.run:
+    - require:
+      - file: /opt/argo-linux-amd64-v{{ argo.version }}/argo-linux-amd64.gz
+    - cwd: /opt/argo-linux-amd64-v{{ argo.version }}
+    - name: |
+        gunzip --force argo-linux-amd64.gz && \
+        chmod +x argo-linux-amd64 && \
+        rm -f argo-linux-amd64.gz
   file.symlink:
-    - target: /opt/argo-linux-amd64-v{{ argo.version }}
+    - name: /usr/local/bin/argo
+    - target: /opt/argo-linux-amd64-v{{ argo.version }}/argo-linux-amd64
 
 argo:
   cmd.run:

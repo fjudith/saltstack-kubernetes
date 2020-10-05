@@ -28,4 +28,9 @@ include:
   - .events-namespace
   - .events
   {%- endif %}
+  {%- if argo.get('cd', {'enabled': False}).enabled %}
+  - .cd-namespace
+  - .cd
+  - .cd-ingress
+  {%- endif %}
   

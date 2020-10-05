@@ -1,0 +1,67 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import argo with context %}
+{%- set public_domain = pillar['public-domain'] -%}
+{% from "kubernetes/map.jinja" import storage with context %}
+{% from "kubernetes/map.jinja" import charts with context %}
+
+global:
+  images:
+    tag: v{{ argo.cd.version }}
+
+## Controller
+controller:
+  images:
+    tag: v{{ argo.cd.version }}
+  ## Server metrics controller configuration
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+
+## Dex
+dex:
+  enabled: true
+  ## Server metrics dex configuration
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+
+## Redis
+redis:
+  enabled: false
+# This key configures Redis-HA subchart and when enabled (redis-ha.enabled=true)
+# the custom redis deployment is omitted
+redis-ha:
+  enabled: true
+  # Check the redis-ha chart for more properties
+  exporter:
+    enabled: true
+  haproxy:
+    enabled: true
+    metrics:
+      enabled: true
+
+## Server
+server:
+  image:
+    repository: # argoproj/argocd
+    tag: v{{ argo.cd.version }}
+  ## Server metrics service configuration
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+  ## ArgoCD config
+  ## reference https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-cm.yaml
+  config:
+  ## Enable Admin ClusterRole resources.
+  ## Enable if you would like to grant rights to ArgoCD to deploy to the local Kubernetes cluster.
+  clusterAdminAccess:
+    enabled: true
+
+openshift:
+  enabled: false

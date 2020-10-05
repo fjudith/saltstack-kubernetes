@@ -3,8 +3,6 @@
 
 {#- Get the `tplroot` from `tpldir` #}
 {% from tpldir ~ "/map.jinja" import argo with context %}
-{%- set public_domain = pillar['public-domain'] -%}
-{%- from "kubernetes/map.jinja" import storage with context -%}
 
 /opt/argo-linux-amd64-v{{ argo.version }}:
   file.directory:

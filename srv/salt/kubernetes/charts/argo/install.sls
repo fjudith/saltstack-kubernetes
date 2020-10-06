@@ -37,14 +37,14 @@ argo:
   cmd.run:
     - runas: root
     - watch:
-      - file: /srv/kubernetes/manifests/argo/workflow-values.yaml
-      - file: /srv/kubernetes/manifests/argo/workflow-rbac.yaml
+      - file: /srv/kubernetes/manifests/argo/values.yaml
+      - file: /srv/kubernetes/manifests/argo/rbac.yaml
       - cmd: argo-namespace
       - cmd: argo-fetch-charts
     - cwd: /srv/kubernetes/manifests/argo/argo
     - name: |
-        kubectl -n argo apply -f /srv/kubernetes/manifests/argo/workflow-rbac.yaml
+        kubectl -n argo apply -f /srv/kubernetes/manifests/argo/rbac.yaml
         kubectl apply -f ./crds/ && \
         helm upgrade --install argo --namespace argo \
-            --values /srv/kubernetes/manifests/argo/workflow-values.yaml \
+            --values /srv/kubernetes/manifests/argo/values.yaml \
             "./" --wait --timeout 5m

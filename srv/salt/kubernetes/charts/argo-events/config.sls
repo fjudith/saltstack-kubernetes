@@ -1,14 +1,14 @@
-/srv/kubernetes/manifests/argo:
+/srv/kubernetes/manifests/argo-events:
   file.directory:
     - user: root
     - group: root
     - dir_mode: "0750"
     - makedirs: True
 
-/srv/kubernetes/manifests/argo/values.yaml:
+/srv/kubernetes/manifests/argo-events/values.yaml:
   file.managed:
     - require:
-      - file:  /srv/kubernetes/manifests/argo
+      - file:  /srv/kubernetes/manifests/argo-events
     - source: salt://{{ tpldir }}/templates/values.yaml.j2
     - user: root
     - group: root
@@ -17,11 +17,11 @@
     - context:
       tpldir: {{ tpldir }}
 
-/srv/kubernetes/manifests/argo/rbac.yaml:
+/srv/kubernetes/manifests/argo-events/argo-rbac.yaml:
   file.managed:
     - require:
-      - file:  /srv/kubernetes/manifests/argo
-    - source: salt://{{ tpldir }}/files/rbac.yaml
+      - file:  /srv/kubernetes/manifests/argo-events
+    - source: salt://{{ tpldir }}/files/argo-rbac.yaml
     - user: root
     - group: root
     - mode: "0755"

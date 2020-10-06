@@ -24,8 +24,4 @@ include:
   - .prometheus
   {%- endif %}
   - .test
-  {%- if argo.get('events', {'enabled': False}).enabled %}
-  - .events-namespace
-  - .events
-  {%- endif %}
   

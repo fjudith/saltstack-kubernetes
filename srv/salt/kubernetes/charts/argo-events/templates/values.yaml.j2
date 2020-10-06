@@ -2,17 +2,17 @@
 # vim: ft=jinja
 
 {#- Get the `tplroot` from `tpldir` #}
-{% from tpldir ~ "/map.jinja" import argo with context %}
+{% from tpldir ~ "/map.jinja" import argo_events with context %}
 
 # sensor controller
 sensorController:
-  tag: v{{ argo.events.version }}
+  tag: v{{ argo_events.version }}
   replicaCount: 1
 
 eventsourceController:
-  tag: v{{ argo.events.version }}
+  tag: v{{ argo_events.version }}
   replicaCount: 1
 
 eventbusController:
-  tag: v{{ argo.events.version }}
+  tag: v{{ argo_events.version }}
   replicaCount: 1

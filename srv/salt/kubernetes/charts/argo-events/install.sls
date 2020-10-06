@@ -2,18 +2,18 @@ argo-events:
   cmd.run:
     - runas: root
     - watch:
-      - file: /srv/kubernetes/manifests/argo/events-values.yaml
-      - file: /srv/kubernetes/manifests/argo/events-argo-rbac.yaml
+      - file: /srv/kubernetes/manifests/argo-events/values.yaml
+      - file: /srv/kubernetes/manifests/argo-events/argo-rbac.yaml
       - cmd: argo-events-namespace
       - cmd: argo-events-fetch-charts
-    - cwd: /srv/kubernetes/manifests/argo/argo-events
+    - cwd: /srv/kubernetes/manifests/argo-events/argo-events
     - name: |
         # RBAC allowing Argo-Events to publish workflow in the  `argo` namespace
-        kubectl apply -n argo -f /srv/kubernetes/manifests/argo/events-argo-rbac.yaml
+        kubectl apply -n argo -f /srv/kubernetes/manifests/argo-events/argo-rbac.yaml
         
         kubectl apply -f ./crds/ && \
         helm upgrade --install argo-events --namespace argo-events \
-            --values /srv/kubernetes/manifests/argo/events-values.yaml \
+            --values /srv/kubernetes/manifests/argo-events/values.yaml \
             "./" --wait --timeout 5m
 
 argo-events-wait-api:
@@ -27,9 +27,9 @@ argo-events-wait-api:
 argo-events-webhook-eventsource:
   file.managed:
     - require:
-      - file: /srv/kubernetes/manifests/argo
-    - name: /srv/kubernetes/manifests/argo/events-webhook-eventsource.yaml
-    - source: salt://{{ tpldir }}/files/events-webhook-eventsource.yaml
+      - file: /srv/kubernetes/manifests/argo-events
+    - name: /srv/kubernetes/manifests/argo-events/webhook-eventsource.yaml
+    - source: salt://{{ tpldir }}/files/webhook-eventsource.yaml
     - user: root
     - group: root
     - mode: "0644"
@@ -39,6 +39,6 @@ argo-events-webhook-eventsource:
     - runas: root
     - watch:
       - cmd: argo-events
-      - file: /srv/kubernetes/manifests/argo/events-webhook-eventsource.yaml
+      - file: /srv/kubernetes/manifests/argo-events/webhook-eventsource.yaml
     - name: |
-        kubectl apply -n argo-events -f /srv/kubernetes/manifests/argo/events-webhook-eventsource.yaml
+        kubectl apply -n argo-events -f /srv/kubernetes/manifests/argo-events/webhook-eventsource.yaml

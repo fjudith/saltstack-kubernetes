@@ -173,6 +173,8 @@ kubernetes:
       enabled: true
     argo_cd:
       enabled: true
+    argo_events:
+      enabled: true
     kubeapps:
       enabled: true
     concourse:

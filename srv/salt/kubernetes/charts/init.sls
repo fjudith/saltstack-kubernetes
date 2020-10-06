@@ -26,6 +26,9 @@ include:
 {%- if charts.get('argo', {'enabled': False}).enabled %}
   - kubernetes.charts.argo
 {%- endif -%}
+{%- if charts.get('argo_cd', {'enabled': False}).enabled %}
+  - kubernetes.charts.argo-cd
+{%- endif -%}
 {%- if charts.get('spinnaker', {'enabled': False}).enabled %}
   - kubernetes.charts.spinnaker
 {%- endif -%}

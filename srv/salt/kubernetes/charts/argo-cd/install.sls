@@ -2,33 +2,33 @@
 # vim: ft=jinja
 
 {#- Get the `tplroot` from `tpldir` #}
-{% from tpldir ~ "/map.jinja" import argo with context %}
+{% from tpldir ~ "/map.jinja" import argo_cd with context %}
 
-/opt/argocd-linux-amd64-v{{ argo.cd.version }}:
+/opt/argocd-linux-amd64-v{{ argo_cd.version }}:
   file.managed:
-    - source: https://github.com/argoproj/argo-cd/releases/download/v{{ argo.cd.version }}/argocd-linux-amd64
+    - source: https://github.com/argoproj/argo-cd/releases/download/v{{ argo_cd.version }}/argocd-linux-amd64
     - skip_verify: True
     - mode: "0755"
     - user: root
     - group: root
-    - if_missing: /opt/argocd-linux-amd64-v{{ argo.cd.version }}
+    - if_missing: /opt/argocd-linux-amd64-v{{ argo_cd.version }}
 
 /usr/local/bin/argocd:
   file.symlink:
-    - target: /opt/argocd-linux-amd64-v{{ argo.cd.version }}
+    - target: /opt/argocd-linux-amd64-v{{ argo_cd.version }}
 
 argo-cd:
   cmd.run:
     - runas: root
     - watch:
-      - file: /srv/kubernetes/manifests/argo/cd-values.yaml
+      - file: /srv/kubernetes/manifests/argo-cd/values.yaml
       - cmd: argo-cd-namespace
       - cmd: argo-cd-fetch-charts
-    - cwd: /srv/kubernetes/manifests/argo/argo-cd
+    - cwd: /srv/kubernetes/manifests/argo-cd/argo-cd
     - name: |
         kubectl apply -f ./crds/ && \
         helm upgrade --install argo-cd --namespace argocd \
-            --values /srv/kubernetes/manifests/argo/cd-values.yaml \
+            --values /srv/kubernetes/manifests/argo-cd/values.yaml \
             "./" --wait --timeout 5m
 
 argo-cd-wait-api:
@@ -49,4 +49,4 @@ argo-cd-password:
       - cmd: argo-cd
     - name: |
         PASSWD=$(kubectl get pods -n argocd -l app.kubernetes.io/name=argocd-server -o name | cut -d'/' -f 2)
-        argocd login http://localhost:8001/api/v1/namespaces/argocd/services/https:argo-cd-argocd-server:https/proxy --password ${PASSWD}
+        argocd login http://localhost:8001/api/v1/namespaces/argo-cd/services/https:argo-cd-argocd-server:https/proxy --password ${PASSWD}

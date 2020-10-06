@@ -171,6 +171,8 @@ kubernetes:
   charts:
     argo:
       enabled: true
+    argo_cd:
+      enabled: true
     kubeapps:
       enabled: true
     concourse:

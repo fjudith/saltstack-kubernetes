@@ -1,0 +1,9 @@
+argo_cd:
+  enabled: true
+  version: 1.7.7
+  ingress_host: argocd
+  # oauth:
+  #   provider: keycloak
+  #   keycloak:
+  #     realm: default
+  

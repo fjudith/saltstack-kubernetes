@@ -2,19 +2,19 @@
 # vim: ft=jinja
 
 {#- Get the `tplroot` from `tpldir` #}
-{% from tpldir ~ "/map.jinja" import argo with context %}
+{% from tpldir ~ "/map.jinja" import argo_cd with context %}
 {%- set public_domain = pillar['public-domain'] -%}
 {% from "kubernetes/map.jinja" import storage with context %}
 {% from "kubernetes/map.jinja" import charts with context %}
 
 global:
   images:
-    tag: v{{ argo.cd.version }}
+    tag: v{{ argo_cd.version }}
 
 ## Controller
 controller:
   images:
-    tag: v{{ argo.cd.version }}
+    tag: v{{ argo_cd.version }}
   ## Server metrics controller configuration
   metrics:
     enabled: true
@@ -49,7 +49,7 @@ redis-ha:
 server:
   image:
     repository: # argoproj/argocd
-    tag: v{{ argo.cd.version }}
+    tag: v{{ argo_cd.version }}
   ## Server metrics service configuration
   metrics:
     enabled: true
@@ -62,6 +62,23 @@ server:
   ## Enable if you would like to grant rights to ArgoCD to deploy to the local Kubernetes cluster.
   clusterAdminAccess:
     enabled: true
+
+{% if charts.get('keycloak', {'enabled': False}).enabled %}
+{%- set keycloak_url = 'https://' + charts.get('keycloak', {}).get('ingress_host') + '.' + pillar['public-domain'] -%}
+{%- set realm = argo_cd.oauth.get('keycloak', {}).get('realm') -%}
+{%- set keycloak_password = charts.get('keycloak', {}).get('password') -%}
+{%- set client_secret     = salt['cmd.shell']('/srv/kubernetes/manifests/argo-cd/kc-clientsecret-argo-cd.sh' + ' ' + 'keycloak' + ' ' + keycloak_password + ' ' + keycloak_url + ' ' + argo_cd.oauth.keycloak.realm) -%}
+## Argo Configs
+configs:
+  secret:
+    createSecret: true
+    # Custom secrets. Useful for injecting SSO secrets into environment variables.
+    # Ref: https://argoproj.github.io/argo-cd/operator-manual/sso/
+    # Note that all values must be non-empty.
+    extra:
+      oidc.keycloak.clientSecret: {{ client_secret }}
+      # LDAP_PASSWORD: "mypassword"
+{%- endif %}
 
 openshift:
   enabled: false

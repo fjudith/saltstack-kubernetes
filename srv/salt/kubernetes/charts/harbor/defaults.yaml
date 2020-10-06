@@ -1,23 +1,24 @@
 harbor:
-  version: 1.3.2
+  version: 1.5.0
   adminPassword: Ch4ng3M3
   secretkey: 2Ds7hlY9VHyKAcNd
   databasePassword: Ch4ng3M34ls0
   coreIngressHost: harbor
   notaryIngressHost: notary
-  nginxVersion: 1.10.2
-  portalVersion: 1.10.2
-  coreVersion: 1.10.2
-  jobserviceVersion: 1.10.2
-  registryVersion: 1.10.2
-  controllerVersion: 1.10.2
-  chartmuseumVersion: 1.10.2
-  clairVersion: 1.10.2
-  clairAdapterVersion: 1.10.2
-  notaryServerVersion: 1.10.2
-  notarySignerVersion: 1.10.2
-  databaseVersion: 1.10.2
-  redisVersion: 1.10.2
+  nginxVersion: 2.1.0
+  portalVersion: 2.1.0
+  coreVersion: 2.1.0
+  jobserviceVersion: 2.1.0
+  registryVersion: 2.1.0
+  controllerVersion: 2.1.0
+  chartmuseumVersion: 2.1.0
+  clairVersion: 2.1.0
+  clairAdapterVersion: 2.1.0
+  trivyAdapterVersion: 2.1.0
+  notaryServerVersion: 2.1.0
+  notarySignerVersion: 2.1.0
+  databaseVersion: 2.1.0
+  redisVersion: 2.1.0
   minio_image: docker.io/minio/minio:latest
   s3:
     accesskey: harbor

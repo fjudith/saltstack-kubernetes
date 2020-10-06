@@ -1,8 +1,8 @@
 velero:
-  version: 1.4.2
+  version: 1.5.1
   ingress_host: velero
   minio_image: docker.io/minio/minio:latest
-  source_hash: 3dc6a92403165c901cbc29f262b9d656d2cf562da02f29f74f6607908a168c8b
+  source_hash: b5fcf377a733585ac91c482abcbe3ec44e2c5185f9bb234f779b52b38fec1632
   # https://velero.io/docs/main/supported-providers/
   provider:
     aws_image: docker.io/velero/velero-plugin-for-aws:v1.0.0

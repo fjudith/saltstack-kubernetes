@@ -266,3 +266,5 @@ kubernetes:
     nuclio:
       enabled: False
       ingress_host: nuclio
+    velero:
+      enabled: False

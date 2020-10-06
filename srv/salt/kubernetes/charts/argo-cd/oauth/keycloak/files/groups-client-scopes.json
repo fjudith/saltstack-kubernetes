@@ -1,0 +1,9 @@
+{
+  "name": "groups",
+  "description": "List of approved client ids",
+  "protocol": "openid-connect",
+  "attributes": {
+    "include.in.token.scope": "true",
+    "display.on.consent.screen": "true"
+  }
+}

@@ -86,6 +86,18 @@ argo-cd-create-groups:
     - context:
       tpldir: {{ tpldir }}
 
+/srv/kubernetes/manifests/argo-cd/groups-client-scopes.json:
+  file.managed:
+    - name: 
+    - source: salt://{{ tpldir }}/oauth/keycloak/files/groups-client-scopes.json
+    - require:
+      - file: /srv/kubernetes/manifests/argo-cd
+    - user: root
+    - group: root
+    - mode: "0644"
+    - context:
+      tpldir: {{ tpldir }}
+
 argo-cd-create-client-scopes:
   file.managed:
     - name: /srv/kubernetes/manifests/argo-cd/client-scopes.json
@@ -111,6 +123,7 @@ argo-cd-create-client-scopes:
       - REALM: "{{ argo_cd.oauth.keycloak.realm }}"
     - watch:
       - file: /srv/kubernetes/manifests/argo-cd/client-scopes.json
+      - file: /srv/kubernetes/manifests/argo-cd/groups-client-scopes.json
     - user: root
     - group: root
     - mode: "0644"

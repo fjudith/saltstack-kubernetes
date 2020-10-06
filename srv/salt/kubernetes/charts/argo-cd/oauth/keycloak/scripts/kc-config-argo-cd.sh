@@ -91,6 +91,18 @@ function create-client-scopes {
       "Authorization: Bearer ${TOKEN}" < client-scopes.json
   else
     echo "Allowed-services already exists"
+  fi
+
+  if ! http GET \
+    "${URL}/auth/admin/realms/${REALM}/client-scopes" \
+    "Authorization: Bearer ${TOKEN}" | jq -M -e '.[] | select(.name=="groups")'
+  then
+    http --pretty=none POST \
+      "${URL}/auth/admin/realms/${REALM}/client-scopes" \
+      'Content-Type: application/json' \
+      "Authorization: Bearer ${TOKEN}" < groups-client-scopes.json
+  else
+    echo "Groups already exists"
   fi    
 }
 
@@ -136,6 +148,23 @@ function create-client {
       "${URL}/auth/admin/realms/${REALM}/client-scopes/${CSID}/protocol-mappers/models" \
       'Content-Type: application/json' \
       "Authorization: Bearer ${TOKEN}" < protocolmapper.json
+  else
+    echo "argo-cd protocolmapper already exists"
+  fi
+
+  CSID=$(http GET \
+    "${URL}/auth/admin/realms/${REALM}/client-scopes" \
+    "Authorization: Bearer ${TOKEN}" | jq -M -e -r '.[] | select(.name=="groups") | .id'
+  )
+
+  if ! http GET \
+    "${URL}/auth/admin/realms/${REALM}/client-scopes/${CSID}/protocol-mappers/models" \
+    "Authorization: Bearer ${TOKEN}" | jq -M -e '.[] | select(.name=="groups")'
+  then
+    http --pretty=none POST \
+      "${URL}/auth/admin/realms/${REALM}/client-scopes/${CSID}/protocol-mappers/models" \
+      'Content-Type: application/json' \
+      "Authorization: Bearer ${TOKEN}" < groups-protocolmapper.json
   else
     echo "argo-cd protocolmapper already exists"
   fi

@@ -48,7 +48,6 @@ redis-ha:
 ## Server
 server:
   image:
-    repository: # argoproj/argocd
     tag: v{{ argo_cd.version }}
   ## Server metrics service configuration
   metrics:
@@ -57,17 +56,32 @@ server:
       enabled: true
   ## ArgoCD config
   ## reference https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-cm.yaml
+  {%- if charts.get('keycloak', {'enabled': False}).enabled %}
+  {%- set keycloak_url = 'https://' + charts.get('keycloak', {}).get('ingress_host') + '.' + pillar['public-domain'] %}
+  {%- set realm = argo_cd.oauth.get('keycloak', {}).get('realm') %}
   config:
+    # Argo CD's externally facing base URL (optional). Required when configuring SSO
+    url: {{ "https://" ~ argo_cd.ingress_host ~ "." ~ public_domain }}
+    # Argo CD instance label key
+    application.instanceLabelKey: argocd.argoproj.io/instance
+    oidc.config: |
+      name: Keycloak
+      issuer: {{ keycloak_url ~ "/auth/realms/" ~ realm }}
+      clientID: argo-cd
+      clientSecret: $oidc.keycloak.clientSecret
+      requestedScopes: ["openid", "profile", "email", "groups"]
+  rbacConfig:
+    policy.csv: |
+      g, argo-cd-admins, role:admin
+  {%- endif %}
   ## Enable Admin ClusterRole resources.
   ## Enable if you would like to grant rights to ArgoCD to deploy to the local Kubernetes cluster.
   clusterAdminAccess:
     enabled: true
 
-{% if charts.get('keycloak', {'enabled': False}).enabled %}
-{%- set keycloak_url = 'https://' + charts.get('keycloak', {}).get('ingress_host') + '.' + pillar['public-domain'] -%}
-{%- set realm = argo_cd.oauth.get('keycloak', {}).get('realm') -%}
-{%- set keycloak_password = charts.get('keycloak', {}).get('password') -%}
-{%- set client_secret     = salt['cmd.shell']('/srv/kubernetes/manifests/argo-cd/kc-clientsecret-argo-cd.sh' + ' ' + 'keycloak' + ' ' + keycloak_password + ' ' + keycloak_url + ' ' + argo_cd.oauth.keycloak.realm) -%}
+{%- if charts.get('keycloak', {'enabled': False}).enabled %}
+{%- set keycloak_password = charts.get('keycloak', {}).get('password') %}
+{%- set client_secret     = salt['cmd.shell']('/srv/kubernetes/manifests/argo-cd/kc-clientsecret-argo-cd.sh' + ' ' + 'keycloak' + ' ' + keycloak_password + ' ' + keycloak_url + ' ' + argo_cd.oauth.keycloak.realm) %}
 ## Argo Configs
 configs:
   secret:

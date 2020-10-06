@@ -158,7 +158,7 @@ kube-prometheus-grafana:
 # Modified servicemonitors for https://k8slens.dev
 kube-prometheus-node-exporter:
   file.managed:
-    - name: /srv/kubernetes/manifests/kube-prometheus/manifests/lens-node-exporter-servicemonitor.yaml
+    - name: /srv/kubernetes/manifests/kube-prometheus/manifests/z_lens-node-exporter-servicemonitor.yaml
     - watch:
       - git: kube-prometheus-repo
     - source: salt://{{ tpldir }}/patch/lens-node-exporter-servicemonitor.yaml
@@ -170,7 +170,7 @@ kube-prometheus-node-exporter:
 
 kube-prometheus-kubelet:
   file.managed:
-    - name: /srv/kubernetes/manifests/kube-prometheus/manifests/lens-kubelet-servicemonitor.yaml
+    - name: /srv/kubernetes/manifests/kube-prometheus/manifests/z_lens-kubelet-servicemonitor.yaml
     - watch:
       - git: kube-prometheus-repo
     - source: salt://{{ tpldir }}/patch/lens-kubelet-servicemonitor.yaml

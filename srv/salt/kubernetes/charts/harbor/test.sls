@@ -33,3 +33,14 @@ query-harbor-minio:
     - wait_for: 240
     - request_interval: 5
     - status: 200
+
+harbor-minio-bucket:
+  cmd.run:
+    - require:
+      - http: query-harbor-minio
+    - runas: root
+    - timeout: 180
+    - env:
+      - MC_HOST_harbor: "https://{{ harbor.s3.accesskey }}:{{ harbor.s3.secretkey }}@{{ harbor.coreIngressHost }}-minio.{{ public_domain }}"
+    - name: |
+        /usr/local/bin/mc mb harbor/{{ harbor.s3.bucket }} --ignore-existing

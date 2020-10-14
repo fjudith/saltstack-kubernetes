@@ -2,6 +2,6 @@ include:
   - .config
   - .namespace
   - .install
-  - .certificate
+  # - .certificate
   - .ingress
   - .demo

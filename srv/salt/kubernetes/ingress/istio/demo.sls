@@ -17,7 +17,6 @@ istio-bookinfo:
   cmd.run:
     - cwd: /srv/kubernetes/manifests/istio/istio-{{ istio.version }}
     - watch:
-      - cmd: istio-gateway-certificate
       - file: /srv/kubernetes/manifests/istio/bookinfo-ingress.yaml
     - name: | 
         kubectl apply -n bookinfo -f samples/bookinfo/platform/kube/bookinfo.yaml

@@ -15,52 +15,67 @@
       - archive: /srv/kubernetes/manifests/istio
     - unless: cmp -s /usr/local/bin/istioctl /srv/kubernetes/manifests/istio/istio-{{ istio.version }}/bin/istioctl
 
-istio-cni:
+istio-operator:
   cmd.run:
-    - cwd: /srv/kubernetes/manifests/istio/istio-{{ istio.version }}
     - watch:
-      - archive: /srv/kubernetes/manifests/istio
+      - file: /usr/local/bin/istioctl
     - user: root
     - group: root
     - name: |
-        helm template install/kubernetes/helm/istio-cni \
-          --namespace kube-system | kubectl apply -f -
-    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz'
-
-istio-init:
-  cmd.run:
-    - cwd: /srv/kubernetes/manifests/istio/istio-{{ istio.version }}
-    - watch:
-      - cmd: istio-namespace
-      - cmd: istio-cni
-      - archive: /srv/kubernetes/manifests/istio
-    - user: root
-    - group: root
-    - name: |       
-        helm template install/kubernetes/helm/istio-init \
-          --namespace istio-system | kubectl apply -f -
+        istioctl operator init
     - onlyif: curl --silent 'http://127.0.0.1:8080/healthz'
 
 istio:
-  cmd.run: 
-    - cwd: /srv/kubernetes/manifests/istio/istio-{{ istio.version }}
+  cmd.run:
     - watch:
-      - cmd: istio-init 
-      - archive: /srv/kubernetes/manifests/istio
+      - cmd: istio-operator 
+      - file: /srv/kubernetes/manifests/istio/istio-config.yaml
     - user: root
     - group: root
     - name: |       
-        helm template install/kubernetes/helm/istio \
-          --namespace istio-system \
-          -f install/kubernetes/helm/istio/values-istio-demo.yaml \
-          --set tracing.enabled=true \
-          --set istio_cni.enabled=true \
-          --set kiali.enabled=true \
-          --set gateways.istio-ingressgateway.sds.enabled=true \
-          --set global.k8sIngress.enabled=true \
-          --set global.k8sIngress.enableHttps=true \
-          --set global.k8sIngress.gatewayName=ingressgateway \
-          --set istio_cni.enabled=true | kubectl apply --namespace istio-system -f -
+        kubectl apply -f /srv/kubernetes/manifests/istio/istio-config.yaml
     - onlyif: curl --silent 'http://127.0.0.1:8080/healthz'
 
+istio-kiali:
+  cmd.run:
+    - cwd: /srv/kubernetes/manifests/istio/istio-{{ istio.version }}
+    - watch:
+      - cmd: istio-operator
+    - user: root
+    - group: root
+    - name: |       
+        kubectl apply -f samples/addons/kiali.yaml
+    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz'
 
+istio-jaeger:
+  cmd.run:
+    - cwd: /srv/kubernetes/manifests/istio/istio-{{ istio.version }}
+    - watch:
+      - cmd: istio 
+    - user: root
+    - group: root
+    - name: |       
+        kubectl apply -f samples/addons/jaeger.yaml
+    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz'
+
+istio-prometheus:
+  cmd.run:
+    - cwd: /srv/kubernetes/manifests/istio/istio-{{ istio.version }}
+    - watch:
+      - cmd: istio 
+    - user: root
+    - group: root
+    - name: |       
+        kubectl apply -f samples/addons/prometheus.yaml
+    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz'
+
+istio-grafana:
+  cmd.run:
+    - cwd: /srv/kubernetes/manifests/istio/istio-{{ istio.version }}
+    - watch:
+      - cmd: istio 
+    - user: root
+    - group: root
+    - name: |       
+        kubectl apply -f samples/addons/grafana.yaml
+    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz'

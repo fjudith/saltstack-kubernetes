@@ -1,5 +1,5 @@
 istio:
-  version: 1.4.6
+  version: 1.7.3
   tracing: jaeger
   prometheus_ingress_host: istio-prometheus
   tracing_ingress_host: istio-tracing
@@ -7,4 +7,7 @@ istio:
   grafana_ingress_host: istio-grafana
   kiali_ingress_host: kiali
   bookinfo_ingress_host: bookinfo
-  source_hash: 74480f2c73fad95aba923d16fbdda641f5ac55d1476a716d71cd2a350f48ff10
+  source_hash: 027ca706cadd96b3013b31bae1365ef94ed41feef0018e871f64a8c4e6275402
+  profile: demo
+  cni: true
+  telemetry: false

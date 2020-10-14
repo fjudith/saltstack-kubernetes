@@ -1,10 +1,7 @@
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/2188/badge)](https://bestpractices.coreinfrastructure.org/projects/2188)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Ffjudith%2Fsaltstack-kubernetes.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Ffjudith%2Fsaltstack-kubernetes?ref=badge_shield)
 
-
 <img src="https://i.imgur.com/SJAtDZk.png" width="460" height="125" >
-
-
 
 ---
 

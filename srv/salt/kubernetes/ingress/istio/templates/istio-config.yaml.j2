@@ -1,0 +1,22 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import istio with context %}
+
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+metadata:
+  namespace: istio-system
+  name: example-istiocontrolplane
+spec:
+  profile: {{ istio.profile }}
+  components:
+    cni:
+      enabled: {{ istio.cni }}
+  values:
+    cni:
+      excludeNamespaces:
+       - istio-system
+       - kube-system
+      logLevel: info

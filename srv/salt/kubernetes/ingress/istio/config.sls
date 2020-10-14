@@ -6,8 +6,20 @@
 
 /srv/kubernetes/manifests/istio:
   archive.extracted:
-    - source: https://github.com/istio/istio/releases/download/{{ istio.version }}/istio-{{ istio.version }}-linux.tar.gz
+    - source: https://github.com/istio/istio/releases/download/{{ istio.version }}/istio-{{ istio.version }}-linux-amd64.tar.gz
     - source_hash: {{ istio.source_hash }}
     - user: root
     - group: root
     - archive_format: tar
+
+/srv/kubernetes/manifests/istio/istio-config.yaml:
+  file.managed:
+    - require:
+      - archive: /srv/kubernetes/manifests/istio
+    - source: salt://{{ tpldir }}/templates/istio-config.yaml.j2
+    - template: jinja
+    - user: root
+    - group: root
+    - mode: "0644"
+    - context:
+        tpldir: {{ tpldir }}

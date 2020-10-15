@@ -27,9 +27,6 @@ users:
 
 apt:
   sources:
-    wireguard.list: 
-      source: "deb http://ppa.launchpad.net/wireguard/wireguard/ubuntu focal main"
-      keyid: "e1b39b6ef6ddb96564797591ae33835f504a1a25"
     saltstack.list:
       source: "deb http://repo.saltstack.com/py3/ubuntu/20.04/amd64/archive/3001 focal main"
       key: |

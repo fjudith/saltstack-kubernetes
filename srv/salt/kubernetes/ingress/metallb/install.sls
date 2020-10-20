@@ -1,11 +1,11 @@
-kubernetes-metallb-install:
+metallb:
   cmd.run:
+    - runas: root
     - watch:
-      - file: /srv/kubernetes/manifests/metallb/values.yaml
+      - cmd: metallb-namespace
+      - cmd: metallb-fetch-charts
+    - cwd: /srv/kubernetes/manifests/metallb/metallb
     - name: |
-        helm upgrade --install \
-          metallb \
-          --namespace metallb-system \
-          --values /srv/kubernetes/manifests/metallb/values.yaml \
-          stable/metallb
-    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz'
+        helm upgrade --install metallb --namespace metallb-system \
+            --values /srv/kubernetes/manifests/metallb/values.yaml \
+            "./" --wait --timeout 5m

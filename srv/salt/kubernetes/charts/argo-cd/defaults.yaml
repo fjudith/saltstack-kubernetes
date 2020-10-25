@@ -1,6 +1,6 @@
 argo_cd:
   enabled: true
-  version: 1.7.7
+  version: 1.7.8
   ingress_host: argocd
   # oauth:
   #   provider: keycloak

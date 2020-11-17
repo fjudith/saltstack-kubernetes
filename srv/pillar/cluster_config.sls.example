@@ -3,6 +3,12 @@ public-domain: example.com
 
 controlPlaneInterface: wg0
 
+harpoxy:
+  enabled: false
+
+envoy:
+  enabled: true
+
 kubeadm:
   kubernetesVersion: 1.18.9
   # kubeadm token generate

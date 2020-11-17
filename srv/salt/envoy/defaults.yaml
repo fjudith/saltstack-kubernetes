@@ -1,0 +1,8 @@
+envoy:
+  enabled: true
+  version: 1.16.0.p0.g8fb3cb8-1p69.ga5345f6
+  distribution: focal
+  kubernetes_api_port: 6443
+  overwrite: True
+  service: envoy
+  admin_port: 58080

@@ -1,0 +1,7 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{% import_yaml tpldir ~ "/defaults.yaml" or {} as defaults %}
+
+{#- Merge in salt pillar #}
+{% set envoy = salt['pillar.get']('envoy', default=defaults['envoy'], merge=True) %}

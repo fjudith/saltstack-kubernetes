@@ -1,10 +1,10 @@
 calico:
-  node_image: docker.io/calico/node:v3.16.1
-  typha_image: docker.io/calico/typha:v3.16.1
-  cni_image: docker.io/calico/cni:v3.16.1
-  controller_image: docker.io/calico/kube-controllers:v3.16.1
-  flexvol_image: docker.io/calico/pod2daemon-flexvol:v3.16.1
-  version: 3.16.1
+  node_image: docker.io/calico/node:v3.16.5
+  typha_image: docker.io/calico/typha:v3.16.5
+  cni_image: docker.io/calico/cni:v3.16.5
+  controller_image: docker.io/calico/kube-controllers:v3.16.5
+  flexvol_image: docker.io/calico/pod2daemon-flexvol:v3.16.5
+  version: 3.16.5
   mtu: 1430
   startup_loglevel: info
   ipv4:

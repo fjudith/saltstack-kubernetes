@@ -28,8 +28,8 @@ kubernetes:
       crictl_version: 1.15.0
       runc_version: 1.0.0-rc8
     cni:
-      source: https://github.com/containernetworking/plugins/releases/download/v0.8.5/cni-plugins-linux-amd64-v0.8.5.tgz
-      source_hash: bd682ffcf701e8f83283cdff7281aad0c83b02a56084d6e601216210732833f9
+      source: https://github.com/containernetworking/plugins/releases/download/v0.8.6/cni-plugins-linux-amd64-v0.8.7.tgz
+      source_hash: 977824932d5667c7a37aa6a3cbba40100a6873e7bd97e83e8be837e3e7afd0a8
       network: 10.244.0.0/16
       provider: calico
       calico:

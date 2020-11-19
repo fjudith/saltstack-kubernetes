@@ -10,21 +10,14 @@ contour:
   enabled: true
   image:
     registry: {{ contour.image.split('/')[0] }}
-    repository: {{ contour.image.split('/')[1] }}
+    repository: {{ contour.image.split('/')[1] ~ '/' ~ contour.image.split('/')[2].split(':')[0] }}
     tag: {{ contour.image.split(':')[1] }}
-  tolerations:
-    - key: node-role.kubernetes.io
-      operator: Equal
-      value: ingress
-      effect: NoSchedule
-  nodeSelector:
-    node-role.kubernetes.io/ingress: "true"
 
 envoy:
   enabled: true
   image:
     registry: {{ contour.envoy_image.split('/')[0] }}
-    repository: {{ contour.envoy_image.split('/')[1] }}
+    repository: {{ contour.envoy_image.split('/')[1] ~ '/' ~ contour.envoy_image.split('/')[2].split(':')[0] }}
     tag: {{ contour.envoy_image.split(':')[1] }}
   tolerations:
     - key: node-role.kubernetes.io

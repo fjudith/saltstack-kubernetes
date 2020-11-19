@@ -1,6 +1,6 @@
 falco:
-  version: 0.26.1
-  exporter_version: 0.3.0
+  version: 0.26.2
+  exporter_version: 0.4.1
   pod_security_policy: false
   http_proxy: ""
   https_proxy: ""

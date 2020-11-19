@@ -81,14 +81,14 @@ falco:
     threadiness: 0
 
     # gRPC unix socket with no authentication
-    unixSocketPath: ""
-    # unixSocketPath: "unix:///var/run/falco/falco.sock"
+    # unixSocketPath: ""
+    unixSocketPath: "unix:///var/run/falco/falco.sock"
     
     # gRPC over the network (mTLS) / required when unixSocketPath is empty
-    listenPort: 5060
-    privateKey: "/etc/falco/certs/server.key"
-    certChain: "/etc/falco/certs/server.crt"
-    rootCerts: "/etc/falco/certs/ca.crt"
+    # listenPort: 5060
+    # privateKey: "/etc/falco/certs/server.key"
+    # certChain: "/etc/falco/certs/server.crt"
+    # rootCerts: "/etc/falco/certs/ca.crt"
 
   # gRPC output service.
   # By default it is off.

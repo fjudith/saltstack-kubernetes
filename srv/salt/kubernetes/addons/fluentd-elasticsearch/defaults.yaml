@@ -1,4 +1,4 @@
 fluentd_elasticsearch:
   elasticsearch_image: quay.io/fluentd_elasticsearch/elasticsearch:v7.4.3
-  kibana_image: docker.elastic.co/kibana/kibana-oss:7.4.3
+  kibana_image: docker.elastic.co/kibana/kibana-oss:7.4.2
   fluentd_image: quay.io/fluentd_elasticsearch/fluentd:v3.1.0

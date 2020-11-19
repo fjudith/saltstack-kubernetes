@@ -73,8 +73,10 @@ kubernetes:
         acme_email: user@example.com
       node_problem_detector:
         enabled: True
-      nginx:
+      contour:
         enabled: true
+      nginx:
+        enabled: false
       istio:
         enabled: True
       cert_manager:

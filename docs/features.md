@@ -212,23 +212,29 @@ Solutions to access hosted applications and cluster services.
 
 <table>
   <tr align='center'>
-    <th align='center' colspan='3'>Application endpoint</th>
-    <th align='center'>Cluster endpoint</th>
+    <th align='center' colspan='4'>Application endpoint</th>
+    <th align='center' colspan='2'>Cluster endpoint</th>
   </tr>
   <tr align='center'>
     <td align='center'>Istio Ingress & Egress Gateway</td>
     <td align='center'>Traefik Ingress</td>
     <td align='center'>Nginx Ingress</td>
+    <td align='center'>Contour Ingress</td>
     <td align='center'>HApoxy</td>
+    <td align='center'>Envoy</td>
   </tr>
   <tr align='center'>
     <td align='center'><img src='media/istio.png' width="50px"></td>
     <td align='center'><img src='media/traefik.png' width="50px"></td>
     <td align='center'><img src='media/nginx.png' width="50px"></td>
+    <td align='center'><img src='media/contour.png' width="50px"></td>
     <td align='center'><img src='media/haproxy.png' width="50px"></td>
+    <td align='center'><img src='media/envoy.png' width="50px"></td>
   </tr>
   <tr>
     <td align='center'>Proxy & Reverse proxy</td>
+    <td align='center'>Reverse proxy</td>
+    <td align='center'>Reverse proxy</td>
     <td align='center'>Reverse proxy</td>
     <td align='center'>Reverse proxy</td>
     <td align='center'>Reverse proxy</td>

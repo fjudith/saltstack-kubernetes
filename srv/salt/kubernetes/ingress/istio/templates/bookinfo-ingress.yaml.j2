@@ -12,6 +12,8 @@
   {%- set controller = "traefik" -%}
 {%- elif common.addons.get('istio', {'enabled': False}).enabled %}
   {%- set controller = "istio" -%}
+{%- elif common.addons.get('contour', {'enabled': False}).enabled %}
+  {%- set controller = "contour" -%}
 {%- endif -%}
 
 ---

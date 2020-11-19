@@ -16,7 +16,7 @@
 {%- endif -%}
 
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: hydra-idp
@@ -33,9 +33,12 @@ spec:
     http:
       paths:
       - path: /
+        pathType: Prefix
         backend:
-          serviceName: hydra-idp-example-idp
-          servicePort: 3000
+          service:
+            name: hydra-idp-example-idp
+            port: 
+              number: 3000
   {%- if common.addons.get('nginx', {'enabled': False}).enabled  or common.addons.get('contour', {'enabled': False}).enabled %}
   tls:
   - secretName: hydra-idp-prod-cert
@@ -43,7 +46,7 @@ spec:
     - {{ ory.hydra.ingress_host }}.{{ public_domain }}
   {%- endif %}
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: hydra-public
@@ -60,9 +63,12 @@ spec:
     http:
       paths:
       - path: /
+        pathType: Prefix
         backend:
-          serviceName: hydra-public
-          servicePort: 4444
+          service:
+            name: hydra-public
+            port: 
+              number: 4444
   {%- if common.addons.get('nginx', {'enabled': False}).enabled  or common.addons.get('contour', {'enabled': False}).enabled %}
   tls:
   - secretName: hydra-public-prod-cert
@@ -70,7 +76,7 @@ spec:
     - {{ ory.hydra.ingress_host }}-public.{{ public_domain }}
   {%- endif %}
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: hydra-admin
@@ -87,9 +93,12 @@ spec:
     http:
       paths:
       - path: /
+        pathType: Prefix
         backend:
-          serviceName: hydra-admin
-          servicePort: 4445
+          service:
+            name: hydra-admin
+            port: 
+              number: 4445
   {%- if common.addons.get('nginx', {'enabled': False}).enabled  or common.addons.get('contour', {'enabled': False}).enabled %}
   tls:
   - secretName: hydra-admin-prod-cert

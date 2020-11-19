@@ -17,7 +17,7 @@
 {%- endif -%}
 
 
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: istio-tracing
@@ -34,9 +34,12 @@ spec:
     http:
       paths:
       - path: /
+        pathType: Prefix
         backend:
-          serviceName: jaeger-query
-          servicePort: 16686
+          service:
+            name: jaeger-query
+            port: 
+              number: 16686
   {%- if common.addons.get('nginx', {'enabled': False}).enabled  or common.addons.get('contour', {'enabled': False}).enabled %}
   tls:
   - secretName: tracing-prod-cert
@@ -44,7 +47,7 @@ spec:
     - {{ istio.tracing_ingress_host }}.{{ public_domain }}
   {%- endif %}
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: istio-telemetry
@@ -61,9 +64,12 @@ spec:
     http:
       paths:
       - path: /
+        pathType: Prefix
         backend:
-          serviceName: istio-telemetry
-          servicePort: 9093
+          service:
+            name: istio-telemetry
+            port: 
+              number: 9093
   {%- if common.addons.get('nginx', {'enabled': False}).enabled  or common.addons.get('contour', {'enabled': False}).enabled %}
   tls:
   - secretName: telemetry-web-prod-cert
@@ -71,7 +77,7 @@ spec:
     - {{ istio.telemetry_ingress_host }}.{{ public_domain }}
   {%- endif %}
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: istio-prometheus
@@ -88,9 +94,12 @@ spec:
     http:
       paths:
       - path: /
+        pathType: Prefix
         backend:
-          serviceName: prometheus
-          servicePort: 9090
+          service:
+            name: prometheus
+            port: 
+              number: 9090
   {%- if common.addons.get('nginx', {'enabled': False}).enabled  or common.addons.get('contour', {'enabled': False}).enabled %}
   tls:
   - secretName: prometheus-web-prod-cert
@@ -98,7 +107,7 @@ spec:
     - {{ istio.prometheus_ingress_host }}.{{ public_domain }}
   {%- endif %}
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: istio-grafana
@@ -115,9 +124,12 @@ spec:
     http:
       paths:
       - path: /
+        pathType: Prefix
         backend:
-          serviceName: grafana
-          servicePort: 3000
+          service:
+            name: grafana
+            port: 
+              number: 3000
   {%- if common.addons.get('nginx', {'enabled': False}).enabled  or common.addons.get('contour', {'enabled': False}).enabled %}
   tls:
   - secretName: grafana-prod-cert
@@ -125,7 +137,7 @@ spec:
     - {{ istio.grafana_ingress_host }}.{{ public_domain }}
   {%- endif %}
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: istio-kiali
@@ -142,9 +154,12 @@ spec:
     http:
       paths:
       - path: /kiali
+        pathType: Prefix
         backend:
-          serviceName: kiali
-          servicePort: 20001
+          service:
+            name: kiali
+            port: 
+              number: 20001
   {%- if common.addons.get('nginx', {'enabled': False}).enabled  or common.addons.get('contour', {'enabled': False}).enabled %}
   tls:
   - secretName: kiali-prod-cert

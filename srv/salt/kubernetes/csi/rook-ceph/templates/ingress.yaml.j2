@@ -15,7 +15,7 @@
   {%- set controller = "contour" -%}
 {%- endif -%}
 
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: rook-ceph-mgr-dashboard
@@ -35,9 +35,12 @@ spec:
     http:
       paths:
       - path: /
+        pathType: Prefix
         backend:
-          serviceName: rook-ceph-mgr-dashboard
-          servicePort: https-dashboard
+          service:
+            name: rook-ceph-mgr-dashboard
+            port: 
+              number: https-dashboard
   {%- if common.addons.get('nginx', {'enabled': False}).enabled  or common.addons.get('contour', {'enabled': False}).enabled %}
   tls:
   - secretName: ceph-prod-cert

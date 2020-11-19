@@ -15,7 +15,7 @@
   {%- set controller = "contour" -%}
 {%- endif -%}
 
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: spinnaker
@@ -34,9 +34,12 @@ spec:
     http:
       paths:
       - path: /
+        pathType: Prefix
         backend:
-          serviceName: spin-deck
-          servicePort: 9000
+          service:
+            name: spin-deck
+            port: 
+              number: 9000
   {%- if common.addons.get('nginx', {'enabled': False}).enabled  or common.addons.get('contour', {'enabled': False}).enabled %}
   tls:
   - secretName: spinnaker-prod-cert
@@ -44,7 +47,7 @@ spec:
     - {{ spinnaker.ingress_host }}.{{ public_domain }}
   {%- endif %}
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: spinnaker-gate
@@ -63,9 +66,12 @@ spec:
     http:
       paths:
       - path: /
+        pathType: Prefix
         backend:
-          serviceName: spin-gate
-          servicePort: 8084
+          service:
+            name: spin-gate
+            port: 
+              number: 8084
   {%- if common.addons.get('nginx', {'enabled': False}).enabled  or common.addons.get('contour', {'enabled': False}).enabled %}
   tls:
   - secretName: spinnaker-gate-prod-cert
@@ -73,7 +79,7 @@ spec:
     - {{ spinnaker.ingress_host }}-gate.{{ public_domain }}
   {%- endif %}
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: spinnaker-minio
@@ -90,9 +96,12 @@ spec:
     http:
       paths:
       - path: /
+        pathType: Prefix
         backend:
-          serviceName: minio
-          servicePort: 9000
+          service:
+            name: minio
+            port: 
+              number: 9000
   {%- if common.addons.get('nginx', {'enabled': False}).enabled  or common.addons.get('contour', {'enabled': False}).enabled %}
   tls:
   - secretName: spinnaker-minio-prod-cert

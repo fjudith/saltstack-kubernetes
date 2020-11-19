@@ -17,7 +17,7 @@
 {%- endif -%}
 
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: bookinfo
@@ -34,9 +34,12 @@ spec:
     http:
       paths:
       - path: /
+        pathType: Prefix
         backend:
-          serviceName: productpage
-          servicePort: 9080
+          service:
+            name: productpage
+            port: 
+              number: 9080
   {%- if common.addons.get('nginx', {'enabled': False}).enabled  or common.addons.get('contour', {'enabled': False}).enabled %}
   tls:
   - secretName: bookinfo-prod-cert

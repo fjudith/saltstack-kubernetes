@@ -16,7 +16,7 @@
 {%- endif -%}
 
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: kratos-mail
@@ -33,9 +33,12 @@ spec:
     http:
       paths:
       - path: /
+        pathType: Prefix
         backend:
-          serviceName: mailslurper
-          servicePort: 1025
+          service:
+            name: mailslurper
+            port: 
+              number: 1025
   {%- if common.addons.get('nginx', {'enabled': False}).enabled  or common.addons.get('contour', {'enabled': False}).enabled %}
   tls:
   - secretName: kratos-mail-prod-cert
@@ -43,7 +46,7 @@ spec:
     - {{ ory.kratos.ingress_host }}-mail.{{ public_domain }}
   {%- endif %}
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: kratos-selfservice
@@ -60,9 +63,12 @@ spec:
     http:
       paths:
       - path: /
+        pathType: Prefix
         backend:
-          serviceName: kratos-selfservice-ui-node
-          servicePort: 80
+          service:
+            name: kratos-selfservice-ui-node
+            port: 
+              number: 80
   {%- if common.addons.get('nginx', {'enabled': False}).enabled  or common.addons.get('contour', {'enabled': False}).enabled %}
   tls:
   - secretName: kratos-selfservice-prod-cert
@@ -70,7 +76,7 @@ spec:
     - {{ ory.kratos.ingress_host }}-selfservice.{{ public_domain }}
   {%- endif %}
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: kratos-public
@@ -87,9 +93,12 @@ spec:
     http:
       paths:
       - path: /
+        pathType: Prefix
         backend:
-          serviceName: kratos-public
-          servicePort: 80
+          service:
+            name: kratos-public
+            port: 
+              number: 80
   {%- if common.addons.get('nginx', {'enabled': False}).enabled  or common.addons.get('contour', {'enabled': False}).enabled %}
   tls:
   - secretName: kratos-public-prod-cert
@@ -97,7 +106,7 @@ spec:
     - {{ ory.kratos.ingress_host }}-public.{{ public_domain }}
   {%- endif %}
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: kratos-admin
@@ -114,9 +123,12 @@ spec:
     http:
       paths:
       - path: /
+        pathType: Prefix
         backend:
-          serviceName: kratos-admin
-          servicePort: 80
+          service:
+            name: kratos-admin
+            port: 
+              number: 80
   {%- if common.addons.get('nginx', {'enabled': False}).enabled  or common.addons.get('contour', {'enabled': False}).enabled %}
   tls:
   - secretName: kratos-admin-prod-cert

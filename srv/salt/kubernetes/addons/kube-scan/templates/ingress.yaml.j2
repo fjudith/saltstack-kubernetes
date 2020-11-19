@@ -15,7 +15,7 @@
   {%- set controller = "contour" -%}
 {%- endif -%}
 
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: kube-scan-ui
@@ -32,9 +32,12 @@ spec:
     http:
       paths:
       - path: /
+        pathType: Prefix
         backend:
-          serviceName: kube-scan-ui
-          servicePort: 80
+          service:
+            name: kube-scan-ui
+            port: 
+              number: 80
   {%- if common.addons.get('nginx', {'enabled': False}).enabled  or common.addons.get('contour', {'enabled': False}).enabled %}
   tls:
   - secretName: kube-scan-prod-cert

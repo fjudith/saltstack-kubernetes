@@ -5,7 +5,7 @@
 {% from tpldir ~ "/map.jinja" import proxyinjector with context %}
 {%- set public_domain = pillar['public-domain'] -%}
 {%- from "kubernetes/map.jinja" import common with context -%}
-{%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+{%- if common.addons.get('nginx', {'enabled': False}).enabled  or common.addons.get('contour', {'enabled': False}).enabled %}
   {%- set controller = "nginx" -%}
 {%- elif common.addons.get('traefik', {'enabled': False}).enabled %}
   {%- set controller = "traefik" -%}
@@ -23,7 +23,7 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: {{ controller }}
     ingress.kubernetes.io/ssl-redirect: 'true'
-    {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+    {%- if common.addons.get('nginx', {'enabled': False}).enabled  or common.addons.get('contour', {'enabled': False}).enabled %}
     cert-manager.io/cluster-issuer: letsencrypt-prod
     kubernetes.io/tls-acme: "true"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
@@ -37,7 +37,7 @@ spec:
         backend:
           serviceName: kubehttpbin
           servicePort: 80
-  {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+  {%- if common.addons.get('nginx', {'enabled': False}).enabled  or common.addons.get('contour', {'enabled': False}).enabled %}
   tls:
   - secretName: kubehttpbin-prod-cert
     hosts:

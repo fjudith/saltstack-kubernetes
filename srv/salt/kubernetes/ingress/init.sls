@@ -5,7 +5,7 @@ include:
   {%- if common.addons.get('cert_manager', {'enabled': False}).enabled %}
   - kubernetes.ingress.cert-manager
   {%- endif %}
-  {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+  {%- if common.addons.get('nginx', {'enabled': False}).enabled  or common.addons.get('contour', {'enabled': False}).enabled %}
   - kubernetes.ingress.nginx
   {%- endif %}
   {%- if common.addons.get('traefik', {'enabled': False}).enabled %}

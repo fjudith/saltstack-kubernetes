@@ -1,6 +1,6 @@
 contour-remove-charts:
   file.absent:
-    - name: /srv/kubernetes/manifests/contour/ingress-contour
+    - name: /srv/kubernetes/manifests/contour/contour
 
 contour-fetch-charts:
   cmd.run:

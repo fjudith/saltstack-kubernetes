@@ -6,7 +6,7 @@
 
 {%- set public_domain = pillar['public-domain'] -%}
 {%- from "kubernetes/map.jinja" import common with context -%}
-{%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+{%- if common.addons.get('nginx', {'enabled': False}).enabled  or common.addons.get('contour', {'enabled': False}).enabled %}
   {%- set controller = "nginx" -%}
 {%- elif common.addons.get('traefik', {'enabled': False}).enabled %}
   {%- set controller = "traefik" -%}
@@ -24,7 +24,7 @@ metadata:
   namespace: istio-system
   annotations:
     kubernetes.io/ingress.class: {{ controller }}
-    {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+    {%- if common.addons.get('nginx', {'enabled': False}).enabled  or common.addons.get('contour', {'enabled': False}).enabled %}
     cert-manager.io/cluster-issuer: letsencrypt-prod
     kubernetes.io/tls-acme: "true"
     {%- endif %}
@@ -37,7 +37,7 @@ spec:
         backend:
           serviceName: jaeger-query
           servicePort: 16686
-  {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+  {%- if common.addons.get('nginx', {'enabled': False}).enabled  or common.addons.get('contour', {'enabled': False}).enabled %}
   tls:
   - secretName: tracing-prod-cert
     hosts:
@@ -51,7 +51,7 @@ metadata:
   namespace: istio-system
   annotations:
     kubernetes.io/ingress.class: {{ controller }}
-    {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+    {%- if common.addons.get('nginx', {'enabled': False}).enabled  or common.addons.get('contour', {'enabled': False}).enabled %}
     cert-manager.io/cluster-issuer: letsencrypt-prod
     kubernetes.io/tls-acme: "true"
     {%- endif %}
@@ -64,7 +64,7 @@ spec:
         backend:
           serviceName: istio-telemetry
           servicePort: 9093
-  {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+  {%- if common.addons.get('nginx', {'enabled': False}).enabled  or common.addons.get('contour', {'enabled': False}).enabled %}
   tls:
   - secretName: telemetry-web-prod-cert
     hosts:
@@ -78,7 +78,7 @@ metadata:
   namespace: istio-system
   annotations:
     kubernetes.io/ingress.class: {{ controller }}
-    {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+    {%- if common.addons.get('nginx', {'enabled': False}).enabled  or common.addons.get('contour', {'enabled': False}).enabled %}
     cert-manager.io/cluster-issuer: letsencrypt-prod
     kubernetes.io/tls-acme: "true"
     {%- endif %}
@@ -91,7 +91,7 @@ spec:
         backend:
           serviceName: prometheus
           servicePort: 9090
-  {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+  {%- if common.addons.get('nginx', {'enabled': False}).enabled  or common.addons.get('contour', {'enabled': False}).enabled %}
   tls:
   - secretName: prometheus-web-prod-cert
     hosts:
@@ -105,7 +105,7 @@ metadata:
   namespace: istio-system
   annotations:
     kubernetes.io/ingress.class: {{ controller }}
-    {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+    {%- if common.addons.get('nginx', {'enabled': False}).enabled  or common.addons.get('contour', {'enabled': False}).enabled %}
     cert-manager.io/cluster-issuer: letsencrypt-prod
     kubernetes.io/tls-acme: "true"
     {%- endif %}
@@ -118,7 +118,7 @@ spec:
         backend:
           serviceName: grafana
           servicePort: 3000
-  {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+  {%- if common.addons.get('nginx', {'enabled': False}).enabled  or common.addons.get('contour', {'enabled': False}).enabled %}
   tls:
   - secretName: grafana-prod-cert
     hosts:
@@ -132,7 +132,7 @@ metadata:
   namespace: istio-system
   annotations:
     kubernetes.io/ingress.class: {{ controller }}
-    {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+    {%- if common.addons.get('nginx', {'enabled': False}).enabled  or common.addons.get('contour', {'enabled': False}).enabled %}
     cert-manager.io/cluster-issuer: letsencrypt-prod
     kubernetes.io/tls-acme: "true"
     {%- endif %}
@@ -145,7 +145,7 @@ spec:
         backend:
           serviceName: kiali
           servicePort: 20001
-  {%- if common.addons.get('nginx', {'enabled': False}).enabled %}
+  {%- if common.addons.get('nginx', {'enabled': False}).enabled  or common.addons.get('contour', {'enabled': False}).enabled %}
   tls:
   - secretName: kiali-prod-cert
     hosts:

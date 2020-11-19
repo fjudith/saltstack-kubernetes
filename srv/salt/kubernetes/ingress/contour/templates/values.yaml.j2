@@ -4,9 +4,14 @@
 {#- Get the `tplroot` from `tpldir` #}
 {% from tpldir ~ "/map.jinja" import contour with context %}
 {%- from "kubernetes/map.jinja" import charts with context -%}
+{%- from "kubernetes/map.jinja" import common with context -%}
 
 contour:
   enabled: true
+  image:
+    registry: {{ contour.image.split('/')[0] }}
+    repository: {{ contour.image.split('/')[1] }}
+    tag: {{ contour.image.split(':')[1] }}
   tolerations:
     - key: node-role.kubernetes.io
       operator: Equal
@@ -17,6 +22,10 @@ contour:
 
 envoy:
   enabled: true
+  image:
+    registry: {{ contour.envoy_image.split('/')[0] }}
+    repository: {{ contour.envoy_image.split('/')[1] }}
+    tag: {{ contour.envoy_image.split(':')[1] }}
   tolerations:
     - key: node-role.kubernetes.io
       operator: Equal

@@ -11,7 +11,7 @@ contour-prometheus-rbac:
       tpldir: {{ tpldir }}
   cmd.run:
     - watch:
-        - cmd: contour-ingress-namespace
+        - cmd: contour-namespace
         - file: /srv/kubernetes/manifests/contour/prometheus-k8s-rbac.yaml
     - runas: root
     - onlyif: curl --silent 'http://127.0.0.1:8080/healthz/'

@@ -5,7 +5,7 @@
 {% from tpldir ~ "/map.jinja" import nuclio with context %}
 {%- set public_domain = pillar['public-domain'] -%}
 {%- from "kubernetes/map.jinja" import common with context -%}
-{%- if common.addons.get('nginx', {'enabled': False}).enabled  or common.addons.get('contour', {'enabled': False}).enabled %}
+{%- if common.addons.get('nginx', {'enabled': False}).enabled  %}
   {%- set controller = "nginx" -%}
 {%- elif common.addons.get('traefik', {'enabled': False}).enabled %}
   {%- set controller = "traefik" -%}

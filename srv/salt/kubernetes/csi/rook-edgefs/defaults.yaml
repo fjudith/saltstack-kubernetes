@@ -1,7 +1,7 @@
 rook_edgefs:
   command_timout: 120
   replication: 3
-  image: docker.io/rook/edgefs:v1.3.6
+  image: docker.io/rook/edgefs:v1.5.1
   edgefs_image: docker.io/edgefs/edgefs:1.3.35
   ingress_host: edgefs
   username: admin

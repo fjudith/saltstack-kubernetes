@@ -4,6 +4,14 @@
 {#- Get the `tplroot` from `tpldir` #}
 {% from tpldir ~ "/map.jinja" import rook_ceph with context %}
 
+rook-ceph-crds:
+  cmd.run:
+    - watch:
+      - file: /srv/kubernetes/manifests/rook-ceph/crds.yaml
+    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+    - name: |
+        kubectl apply -f /srv/kubernetes/manifests/rook-ceph/crds.yaml
+
 rook-ceph-common:
   cmd.run:
     - watch:
@@ -130,3 +138,13 @@ rook-ceph-osd-0-wait:
         done && \
         echo "" && \
         kubectl -n rook-ceph get deployment rook-ceph-osd-0
+
+rook-ceph-client:
+  cmd.run:
+    - require:
+      - http: rook-ceph-wait-api
+      - cmd: rook-ceph-operator-wait
+    - watch:
+      - file: /srv/kubernetes/manifests/rook-ceph/client.yaml
+    - name: |
+        kubectl apply -f /srv/kubernetes/manifests/rook-ceph/client.yaml

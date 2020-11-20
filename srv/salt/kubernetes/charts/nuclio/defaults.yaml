@@ -1,5 +1,5 @@
 nuclio:
-  version: 1.4.5
+  version: 1.5.5
   function_worker: 4
   event_worker: 2
   project_worker: 2

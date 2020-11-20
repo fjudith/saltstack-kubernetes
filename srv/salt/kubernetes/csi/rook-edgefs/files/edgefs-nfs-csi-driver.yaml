@@ -39,7 +39,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: edgefs-nfs-csi-controller-service-account
-  namespace: rook-edgefs # replace with non-default namespace name if needed
+  namespace: default # replace with non-default namespace name if needed
 ---
 
 kind: ClusterRole
@@ -103,7 +103,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: edgefs-nfs-csi-controller-service-account
-    namespace: rook-edgefs # replace with non-default namespace name if needed
+    namespace: default # replace with non-default namespace name if needed
 roleRef:
   kind: ClusterRole
   name: edgefs-nfs-csi-controller-cluster-role
@@ -114,7 +114,6 @@ kind: Service
 apiVersion: v1
 metadata:
   name: edgefs-nfs-csi-controller
-  namespace: rook-edgefs
   labels:
     app: edgefs-nfs-csi-controller
 spec:
@@ -129,7 +128,6 @@ kind: StatefulSet
 apiVersion: apps/v1
 metadata:
   name: edgefs-nfs-csi-controller
-  namespace: rook-edgefs
 spec:
   selector:
     matchLabels:
@@ -216,7 +214,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: edgefs-nfs-csi-node-service-account
-  namespace: rook-edgefs # replace with non-default namespace name if needed
+  namespace: default # replace with non-default namespace name if needed
 ---
 
 kind: ClusterRole
@@ -239,7 +237,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: edgefs-nfs-csi-node-service-account
-    namespace: rook-edgefs # replace with non-default namespace name if needed
+    namespace: default # replace with non-default namespace name if needed
 roleRef:
   kind: ClusterRole
   name: edgefs-nfs-csi-node-cluster-role
@@ -252,7 +250,6 @@ kind: DaemonSet
 apiVersion: apps/v1
 metadata:
   name: edgefs-nfs-csi-node
-  namespace: rook-edgefs
 spec:
   selector:
     matchLabels:

@@ -26,5 +26,5 @@ kube-prometheus:
       - http: kube-prometheus-query-api
     - runas: root
     - name: |
-        kubectl apply -f /srv/kubernetes/manifests/kube-prometheus/manifests/
+        kubectl apply -f /srv/kubernetes/manifests/kube-prometheus/manifests/ --validate=false
     - onlyif: curl --silent 'http://127.0.0.1:8080/healthz'

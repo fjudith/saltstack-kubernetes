@@ -5,6 +5,17 @@
     - dir_mode: "0750"
     - makedirs: True
 
+/srv/kubernetes/manifests/rook-ceph/crds.yaml:
+  file.managed:
+    - require:
+      - file: /srv/kubernetes/manifests/rook-ceph
+    - source: salt://{{ tpldir }}/files/ceph-client.yaml
+    - user: root
+    - group: root
+    - mode: "0644"
+    - context:
+      tpldir: {{ tpldir }}
+
 /srv/kubernetes/manifests/rook-ceph/common.yaml:
   file.managed:
     - require:
@@ -37,5 +48,16 @@
     - group: root
     - mode: "0644"
     - template: jinja
+    - context:
+      tpldir: {{ tpldir }}
+
+/srv/kubernetes/manifests/rook-ceph/ceph-client.yaml:
+  file.managed:
+    - require:
+      - file: /srv/kubernetes/manifests/rook-ceph
+    - source: salt://{{ tpldir }}/files/ceph-client.yaml
+    - user: root
+    - group: root
+    - mode: "0644"
     - context:
       tpldir: {{ tpldir }}

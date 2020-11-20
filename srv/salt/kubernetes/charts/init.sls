@@ -44,3 +44,6 @@ include:
 {%- if charts.get('nuclio', {'enabled': False}).enabled %}
   - kubernetes.charts.nuclio
 {%- endif -%}
+{%- if charts.get('jenkins', {'enabled': False}).enabled %}
+  - kubernetes.charts.jenkins
+{%- endif -%}

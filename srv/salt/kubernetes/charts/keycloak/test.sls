@@ -29,3 +29,12 @@ query-keycloak:
       {%- if charts.get('openfaas', {'enabled': False}).enabled %}
       - sls: kubernetes.charts.openfaas.init
       {%- endif %}
+      {%- if charts.get('argo', {'enabled': False}).enabled %}
+      - sls: kubernetes.charts.argo.init
+      {%- endif %}
+      {%- if charts.get('argo_cd', {'enabled': False}).enabled %}
+      - sls: kubernetes.charts.argo_cd.init
+      {%- endif %}
+      {%- if charts.get('keycloak_gatekeeper', {'enabled': False}).enabled %}
+      - sls: kubernetes.charts.keycloak_gatekeeper.init
+      {%- endif %}

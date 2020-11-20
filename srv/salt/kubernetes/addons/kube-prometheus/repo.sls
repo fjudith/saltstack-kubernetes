@@ -9,4 +9,4 @@ kube-prometheus-repo:
     - name: https://github.com/coreos/kube-prometheus
     - target: /srv/kubernetes/manifests/kube-prometheus
     - force_reset: True
-    - rev: v{{ kube_prometheus.version }}
+    - rev: {{ kube_prometheus.version }}

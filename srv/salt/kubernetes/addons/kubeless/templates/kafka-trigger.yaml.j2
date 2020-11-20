@@ -4,60 +4,6 @@
 {#- Get the `tplroot` from `tpldir` #}
 {% from tpldir ~ "/map.jinja" import kubeless with context %}
 
-apiVersion: v1
-kind: Service
-metadata:
-  name: kafka
-  namespace: kubeless
-spec:
-  ports:
-  - port: 9092
-  selector:
-    kubeless: kafka
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: zoo
-  namespace: kubeless
-spec:
-  clusterIP: None
-  ports:
-  - name: peer
-    port: 9092
-  - name: leader-election
-    port: 3888
-  selector:
-    kubeless: zookeeper
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
-    kubeless: kafka-trigger-controller
-  name: kafka-trigger-controller
-  namespace: kubeless
-spec:
-  selector:
-    matchLabels:
-      kubeless: kafka-trigger-controller
-  template:
-    metadata:
-      labels:
-        kubeless: kafka-trigger-controller
-    spec:
-      containers:
-      - env:
-        - name: KUBELESS_NAMESPACE
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.namespace
-        - name: KUBELESS_CONFIG
-          value: kubeless-config
-        image: {{ kubeless.kafka_trigger_image }}
-        imagePullPolicy: IfNotPresent
-        name: kafka-trigger-controller
-      serviceAccountName: controller-acct
 ---
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole
@@ -97,31 +43,30 @@ subjects:
   name: controller-acct
   namespace: kubeless
 ---
-apiVersion: apiextensions.k8s.io/v1beta1
-kind: CustomResourceDefinition
+apiVersion: v1
+kind: Service
 metadata:
-  name: kafkatriggers.kubeless.io
+  name: broker
+  namespace: kubeless
 spec:
-  group: kubeless.io
-  names:
-    kind: KafkaTrigger
-    plural: kafkatriggers
-    singular: kafkatrigger
-  scope: Namespaced
-  version: v1beta1
+  clusterIP: None
+  ports:
+  - port: 9092
+  selector:
+    kubeless: kafka
 ---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: kafka
-  namespace: kubeless
   labels:
     kubeless: kafka
+  name: kafka
+  namespace: kubeless
 spec:
-  serviceName: broker
   selector:
     matchLabels:
       kubeless: kafka
+  serviceName: broker
   template:
     metadata:
       labels:
@@ -177,10 +122,78 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: broker
+  name: zoo
   namespace: kubeless
 spec:
   clusterIP: None
+  ports:
+  - name: peer
+    port: 9092
+  - name: leader-election
+    port: 3888
+  selector:
+    kubeless: zookeeper
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zookeeper
+  namespace: kubeless
+spec:
+  ports:
+  - name: client
+    port: 2181
+  selector:
+    kubeless: zookeeper
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    kubeless: kafka-trigger-controller
+  name: kafka-trigger-controller
+  namespace: kubeless
+spec:
+  selector:
+    matchLabels:
+      kubeless: kafka-trigger-controller
+  template:
+    metadata:
+      labels:
+        kubeless: kafka-trigger-controller
+    spec:
+      containers:
+      - env:
+        - name: KUBELESS_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: KUBELESS_CONFIG
+          value: kubeless-config
+        image: {{ kubeless.kafka_trigger_image }}
+        imagePullPolicy: IfNotPresent
+        name: kafka-trigger-controller
+      serviceAccountName: controller-acct
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: kafkatriggers.kubeless.io
+spec:
+  group: kubeless.io
+  names:
+    kind: KafkaTrigger
+    plural: kafkatriggers
+    singular: kafkatrigger
+  scope: Namespaced
+  version: v1beta1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka
+  namespace: kubeless
+spec:
   ports:
   - port: 9092
   selector:
@@ -189,15 +202,15 @@ spec:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: zoo
-  namespace: kubeless
   labels:
     kubeless: zookeeper
+  name: zoo
+  namespace: kubeless
 spec:
-  serviceName: zoo
   selector:
     matchLabels:
       kubeless: zookeeper
+  serviceName: zoo
   template:
     metadata:
       labels:
@@ -242,15 +255,3 @@ spec:
       resources:
         requests:
           storage: 1Gi
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: zookeeper
-  namespace: kubeless
-spec:
-  ports:
-  - name: client
-    port: 2181
-  selector:
-    kubeless: zookeeper

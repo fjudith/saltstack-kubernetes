@@ -1,0 +1,63 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import gitea with context %}
+{%- set public_domain = pillar['public-domain'] -%}
+{%- from "kubernetes/map.jinja" import common with context -%}
+{%- from "kubernetes/map.jinja" import storage with context -%}
+
+# For FQDN resolving of the master service. Change this value to match your existing configuration.
+# ref: https://github.com/kubernetes/dns/blob/master/docs/specification.md
+clusterDomain: "{{ common.addons.dns.domain }}"
+
+image:
+  version: {{ gitea.version }}
+
+gitea:
+  admin:
+    username: {{ gitea.username }}
+    password: {{ gitea.password }}
+    email: {{ gitea.useremail }}
+  
+  ldap:
+    enabled: false
+
+  config:
+    APP_NAME: "Gitea: Git with a cup of tea"
+    {%- if common.addons.get('kube_prometheus', {'enabled': False}).enabled %}
+    metrics:
+      ENABLED: true
+    {%- endif %}
+
+    {%- if storage.get('minio_operator', {'enabled': False}).enabled %}
+    storage.minio:
+      STORAGE_TYPE: minio
+      # Minio endpoint to connect only available when STORAGE_TYPE is `minio`
+      MINIO_ENDPOINT: "minio:9000"
+      # Minio accessKeyID to connect only available when STORAGE_TYPE is `minio`
+      MINIO_ACCESS_KEY_ID: {{ gitea.s3.accesskey }}
+      # Minio secretAccessKey to connect only available when STORAGE_TYPE is `minio`
+      MINIO_SECRET_ACCESS_KEY: {{ gitea.s3.secretkey }}
+      # Minio bucket to store the attachments only available when STORAGE_TYPE is `minio`
+      MINIO_BUCKET: {{ gitea.s3.bucket }}
+      # Minio location to create bucket only available when STORAGE_TYPE is `minio`
+      MINIO_LOCATION: us-east-1
+      # Minio enabled ssl only available when STORAGE_TYPE is `minio`
+      MINIO_USE_SSL: false
+    {%- endif %}
+
+  database:
+    builtIn:
+      postgresql:
+        enabled: true
+
+postgresql:
+  global:
+    postgresql:
+      postgresqlDatabase: gitea
+      postgresqlUsername: gitea
+      postgresqlPassword: {{ gitea.db_password }}
+      servicePort: 5432
+  persistence:
+    size: 10Gi

@@ -8,6 +8,9 @@ include:
 {%- if charts.get('mailhog', {'enabled': False}).enabled %}
   - kubernetes.charts.mailhog
 {%- endif -%}
+{%- if charts.get('gitea', {'enabled': False}).enabled %}
+  - kubernetes.charts.gitea
+{%- endif -%}
 {%- if charts.get('vistio', {'enabled': False}).enabled %}
   - kubernetes.charts.vistio
 {%- endif -%}
@@ -43,4 +46,7 @@ include:
 {%- endif -%}
 {%- if charts.get('nuclio', {'enabled': False}).enabled %}
   - kubernetes.charts.nuclio
+{%- endif -%}
+{%- if charts.get('jenkins', {'enabled': False}).enabled %}
+  - kubernetes.charts.jenkins
 {%- endif -%}

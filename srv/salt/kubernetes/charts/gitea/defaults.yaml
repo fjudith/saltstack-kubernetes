@@ -1,0 +1,15 @@
+gitea:
+  version: 1.12.6
+  username: gitea
+  password: V3ry1ns3cur3P4ssw0rd
+  useremail: gitea@example.com
+  ingress_host: gitea
+  minio_image: docker.io/minio/minio:latest
+  # oauth:
+  #   provider: keycloak
+  #   keycloak:
+  #     realm: default
+  # s3:
+  #   accesskey: argo
+  #   secretkey: P4ssw0rd
+  #   bucket: argo-artifacts

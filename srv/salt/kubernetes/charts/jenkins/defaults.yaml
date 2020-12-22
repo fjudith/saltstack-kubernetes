@@ -1,0 +1,14 @@
+jenkins:
+  version: 11.0.2
+  username: jenkins
+  password: V3ry1ns3cur3P4ssw0rd
+  ingress_host: jenkins
+  plugins:
+    - kubernetes:1.25.7
+    - workflow-job:2.39
+    - workflow-aggregator:2.6
+    - credentials-binding:1.23
+    - git:4.2.2
+    - configuration-as-code:1.43
+    - oic-auth:1.8
+    - openid:2.4

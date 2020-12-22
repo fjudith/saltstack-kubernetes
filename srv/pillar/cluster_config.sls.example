@@ -279,3 +279,4 @@ kubernetes:
       ingress_host: nuclio
     velero:
       enabled: False
+    jenkins: False

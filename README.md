@@ -205,17 +205,17 @@ Check the Kubernetes cluster nodes status.
 kubectl get nodes
 
 NAME       STATUS   ROLES          AGE   VERSION
-master01   Ready    master         11d   v1.18.9
-master02   Ready    master         11d   v1.18.9
-master03   Ready    master         11d   v1.18.9
-node01     Ready    node           11d   v1.18.9
-node02     Ready    node           11d   v1.18.9
-node03     Ready    node           11d   v1.18.9
-node04     Ready    node           11d   v1.18.9
-node05     Ready    node           11d   v1.18.9
-node06     Ready    node           11d   v1.18.9
-edge01    Ready    ingress,node   11d   v1.18.9
-edge02    Ready    ingress,node   11d   v1.18.9
+edge01     Ready    ingress,node   32d   v1.19.6
+edge02     Ready    ingress,node   32d   v1.19.6
+master01   Ready    master         32d   v1.19.6
+master02   Ready    master         32d   v1.19.6
+master03   Ready    master         32d   v1.19.6
+node01     Ready    node           32d   v1.19.6
+node02     Ready    node           32d   v1.19.6
+node03     Ready    node           32d   v1.19.6
+node04     Ready    node           32d   v1.19.6
+node05     Ready    node           32d   v1.19.6
+node06     Ready    node           32d   v1.19.6
 ```
 
 Retreive the URLs protected by the Kube-APIserver.
@@ -223,14 +223,10 @@ Retreive the URLs protected by the Kube-APIserver.
 ```bash
 kubectl cluster-info
 
-Kubernetes master is running at https://kubernetes.example.com:6443
-Elasticsearch is running at https://kubernetes.example.com:6443/api/v1/namespaces/kube-system/services/elasticsearch-logging/proxy
-Heapster is running at https://kubernetes.example.com:6443/api/v1/namespaces/kube-system/services/heapster/proxy
+Kubernetes control plane is running at https://kubernetes.example.com:6443
+Elasticsearch is running at https://kubernetes.example.com:6443/api/v1/namespaces/kube-system/services/elasticsearch-logging:db/proxy
 Kibana is running at https://kubernetes.example.com:6443/api/v1/namespaces/kube-system/services/kibana-logging/proxy
 CoreDNS is running at https://kubernetes.example.com:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
-kubernetes-dashboard is running at https://kubernetes.example.com:6443/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy
-Grafana is running at https://kubernetes.example.com:6443/api/v1/namespaces/kube-system/services/monitoring-grafana/proxy
-InfluxDB is running at https://kubernetes.example.com:6443/api/v1/namespaces/kube-system/services/monitoring-influxdb:http/proxy
 
 To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 ```

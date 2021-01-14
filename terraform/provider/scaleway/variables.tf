@@ -23,7 +23,7 @@ variable "image" {
 }
 
 variable "apt_packages" {
-  type    = "list"
+  type    = list
   default = []
 }
 

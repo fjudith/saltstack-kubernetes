@@ -35,7 +35,7 @@ resource "null_resource" "cert-etcd-ca" {
 }
 
 resource "null_resource" "cert-admin" {
-  depends_on = ["null_resource.cert-ca"]
+  depends_on = [null_resource.cert-ca]
 
   provisioner "local-exec" {
     interpreter = ["bash", "-c"]
@@ -44,7 +44,7 @@ resource "null_resource" "cert-admin" {
 }
 
 resource "null_resource" "cert-dashboard" {
-  depends_on = ["null_resource.cert-ca"]
+  depends_on = [null_resource.cert-ca]
 
   provisioner "local-exec" {
     interpreter = ["bash", "-c"]
@@ -53,7 +53,7 @@ resource "null_resource" "cert-dashboard" {
 }
 
 resource "null_resource" "cert-controller-manager" {
-  depends_on = ["null_resource.cert-ca"]
+  depends_on = [null_resource.cert-ca]
 
   provisioner "local-exec" {
     interpreter = ["bash", "-c"]
@@ -62,7 +62,7 @@ resource "null_resource" "cert-controller-manager" {
 }
 
 resource "null_resource" "cert-scheduler" {
-  depends_on = ["null_resource.cert-ca"]
+  depends_on = [null_resource.cert-ca]
 
   provisioner "local-exec" {
     interpreter = ["bash", "-c"]
@@ -71,7 +71,7 @@ resource "null_resource" "cert-scheduler" {
 }
 
 resource "null_resource" "cert-service-account" {
-  depends_on = ["null_resource.cert-ca"]
+  depends_on = [null_resource.cert-ca]
 
   provisioner "local-exec" {
     interpreter = ["bash", "-c"]
@@ -80,18 +80,18 @@ resource "null_resource" "cert-service-account" {
 }
 
 resource "null_resource" "cert-etcd" {
-  depends_on = ["null_resource.cert-etcd-ca"]
-  count      = "${var.etcd_count}"
+  depends_on = [null_resource.cert-etcd-ca]
+  count      = var.etcd_count
 
   connection {
     type                = "ssh"
-    host                = "${element(var.etcd_private_ips, count.index)}"
-    user                = "${var.ssh_user}"
-    private_key         = "${file(var.ssh_private_key)}"
+    host                = element(var.etcd_private_ips, count.index)
+    user                = var.ssh_user
+    private_key         = file(var.ssh_private_key)
     agent               = false
-    bastion_host        = "${var.bastion_host}"
-    bastion_user        = "${var.ssh_user}"
-    bastion_private_key = "${file(var.ssh_private_key)}"
+    bastion_host        = var.bastion_host
+    bastion_user        = var.ssh_user
+    bastion_private_key = file(var.ssh_private_key)
     timeout             = "1m"
   }
 
@@ -114,18 +114,18 @@ resource "null_resource" "cert-etcd" {
 }
 
 resource "null_resource" "cert-master" {
-  depends_on = ["null_resource.cert-ca", "null_resource.cert-etcd-ca", "null_resource.cert-kube-aggregator-ca", "null_resource.cert-dashboard"]
-  count      = "${var.master_count}"
+  depends_on = [null_resource.cert-ca, null_resource.cert-etcd-ca, null_resource.cert-kube-aggregator-ca, null_resource.cert-dashboard]
+  count      = var.master_count
 
   connection {
     type                = "ssh"
-    host                = "${element(var.master_private_ips, count.index)}"
-    user                = "${var.ssh_user}"
-    private_key         = "${file(var.ssh_private_key)}"
+    host                = element(var.master_private_ips, count.index)
+    user                = var.ssh_user
+    private_key         = file(var.ssh_private_key)
     agent               = false
-    bastion_host        = "${var.bastion_host}"
-    bastion_user        = "${var.ssh_user}"
-    bastion_private_key = "${file(var.ssh_private_key)}"
+    bastion_host        = var.bastion_host
+    bastion_user        = var.ssh_user
+    bastion_private_key = file(var.ssh_private_key)
     timeout             = "1m"
   }
 
@@ -233,18 +233,18 @@ resource "null_resource" "cert-master" {
 }
 
 resource "null_resource" "cert-node" {
-  depends_on = ["null_resource.cert-ca"]
-  count      = "${var.edge_count + var.node_count}"
+  depends_on = [null_resource.cert-ca]
+  count      = var.edge_count + var.node_count
 
   connection {
     type                = "ssh"
-    host                = "${element(concat(var.edge_private_ips, var.node_private_ips), count.index)}"
-    user                = "${var.ssh_user}"
-    private_key         = "${file(var.ssh_private_key)}"
+    host                = element(concat(var.edge_private_ips, var.node_private_ips), count.index)
+    user                = var.ssh_user
+    private_key         = file(var.ssh_private_key)
     agent               = false
-    bastion_host        = "${var.bastion_host}"
-    bastion_user        = "${var.ssh_user}"
-    bastion_private_key = "${file(var.ssh_private_key)}"
+    bastion_host        = var.bastion_host
+    bastion_user        = var.ssh_user
+    bastion_private_key = file(var.ssh_private_key)
     timeout             = "1m"
   }
 

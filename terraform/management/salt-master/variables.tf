@@ -1,4 +1,4 @@
-variable "count" {}
+variable "master_count" {}
 
 variable "bastion_host" {}
 
@@ -11,7 +11,7 @@ variable "ssh_private_key" {
 }
 
 variable "connections" {
-  type = "list"
+  type = list
 }
 
 variable "salt_master_host" {}

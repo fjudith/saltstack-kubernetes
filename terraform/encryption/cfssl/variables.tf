@@ -23,42 +23,42 @@ variable "master_cluster_ip" {
 
 variable "edge_private_ips" {
   description = "List of edge private ip adresses"
-  type        = "list"
+  type        = list
 }
 
 variable "edge_hostnames" {
   description = "List of Kubernetes edge hostnames"
-  type        = "list"
+  type        = list
 }
 
 variable "etcd_private_ips" {
   description = "List of Etcd private ip adresses"
-  type        = "list"
+  type        = list
 }
 
 variable "etcd_hostnames" {
   description = "List of Etcd hostnames"
-  type        = "list"
+  type        = list
 }
 
 variable "master_private_ips" {
   description = "List of Kubernetes master private ip adresses"
-  type        = "list"
+  type        = list
 }
 
 variable "master_hostnames" {
   description = "List of Kubernetes master hostnames"
-  type        = "list"
+  type        = list
 }
 
 variable "node_private_ips" {
   description = "List of Node private ip adresses"
-  type        = "list"
+  type        = list
 }
 
 variable "node_hostnames" {
   description = "List of Kubernetes node hostnames"
-  type        = "list"
+  type        = list
 }
 
 variable "cert_path" {

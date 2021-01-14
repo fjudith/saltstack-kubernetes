@@ -2,17 +2,17 @@
 # Salt Minion
 ##################################################
 resource "null_resource" "salt-master" {
-  count = "${var.count}"
+  count = var.count
 
   connection {
     type                = "ssh"
-    host                = "${element(var.connections, count.index)}"
-    user                = "${var.ssh_user}"
-    private_key         = "${file(var.ssh_private_key)}"
+    host                = element(var.connections, count.index)
+    user                = var.ssh_user
+    private_key         = file(var.ssh_private_key)
     agent               = false
-    bastion_host        = "${var.bastion_host}"
-    bastion_user        = "${var.ssh_user}"
-    bastion_private_key = "${file(var.ssh_private_key)}"
+    bastion_host        = var.bastion_host
+    bastion_user        = var.ssh_user
+    bastion_private_key = file(var.ssh_private_key)
     timeout             = "1m"
   }
 
@@ -35,7 +35,7 @@ EOF
   }
 
   provisioner "file" {
-    content     = "${element(data.template_file.master-conf.*.rendered, count.index)}"
+    content     = element(data.template_file.master-conf.*.rendered, count.index)
     destination = "/etc/salt/minion.d/master.conf"
   }
 
@@ -56,9 +56,9 @@ EOF
 }
 
 data "template_file" "master-conf" {
-  count    = "${var.count}"
-  template = "${file("${path.module}/templates/master.conf")}"
-  vars {
-    salt_master_host     = "${var.salt_master_host}"
+  count    = var.master_count
+  template = file("${path.module}/templates/master.conf")
+  vars = {
+    salt_master_host     = var.salt_master_host
   }
 }

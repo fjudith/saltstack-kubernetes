@@ -17,5 +17,5 @@ variable "ssh_private_key" {
 }
 
 variable "connections" {
-  type = "list"
+  type = list
 }

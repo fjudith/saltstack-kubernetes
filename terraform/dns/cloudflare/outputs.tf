@@ -1,3 +1,3 @@
 output "domains" {
-  value = ["${cloudflare_record.hosts.*.hostname}"]
+  value = cloudflare_record.hosts.*.hostname
 }

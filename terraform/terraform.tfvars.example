@@ -86,17 +86,13 @@ saltmaster_host = "cfg.domain.tld"
 
 saltsyndic_host = "10.14.63.177"
 
-zerotier_api_key = "0123456789abcdefghijklmnopqrstuv"
+etcd_bit = "50"
 
-zerotier_cidr = "172.16.4.0/24"
+master_bit = "70"
 
-etcdIP = "50"
+node_bit = "100"
 
-masterIP = "70"
-
-nodeIP = "100"
-
-edgeIP = "40"
+edge_bit = "40"
 
 docker_interface = "docker0"
 

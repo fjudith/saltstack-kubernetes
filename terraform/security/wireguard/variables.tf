@@ -33,11 +33,11 @@ variable "ssh_private_key" {
 }
 
 variable "connections" {
-  type = "list"
+  type = list
 }
 
 variable "private_ips" {
-  type = "list"
+  type = list
 }
 
 variable "vpn_interface" {
@@ -49,11 +49,11 @@ variable "vpn_port" {
 }
 
 variable "hostnames" {
-  type = "list"
+  type = list
 }
 
 variable "overlay_cidr" {
-  type = "string"
+  type = string
 }
 
 variable "vpn_iprange" {

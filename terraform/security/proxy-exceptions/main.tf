@@ -1,15 +1,15 @@
 resource "null_resource" "proxy-exceptions-quote" {
-  count = "${var.host_count}"
+  count = var.host_count
 
   connection {
     type                = "ssh"
-    host                = "${element(var.connections, count.index)}"
-    user                = "${var.ssh_user}"
-    private_key         = "${file(var.ssh_private_key)}"
+    host                = element(var.connections, count.index)
+    user                = var.ssh_user
+    private_key         = file(var.ssh_private_key)
     agent               = false
-    bastion_host        = "${var.bastion_host}"
-    bastion_user        = "${var.ssh_user}"
-    bastion_private_key = "${file(var.ssh_private_key)}"
+    bastion_host        = var.bastion_host
+    bastion_user        = var.ssh_user
+    bastion_private_key = file(var.ssh_private_key)
     timeout             = "1m"
   }
 

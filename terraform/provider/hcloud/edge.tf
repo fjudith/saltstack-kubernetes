@@ -4,11 +4,11 @@
 resource "hcloud_server" "edge01" {
   count       = 1
   name        = "edge01"
-  location    = "${var.location}"
-  image       = "${var.image}"
-  server_type = "${var.edge_type}"
-  ssh_keys    = ["${var.ssh_keys}"]
-  user_data   = "${data.template_file.edge01_cloud-init.rendered}"
+  location    = var.location
+  image       = var.image
+  server_type = var.edge_type
+  ssh_keys    = var.ssh_keys
+  user_data   = data.template_file.edge01_cloud-init.rendered
   labels = {
     app  = "kubernetes"
     role = "edge_router"
@@ -17,9 +17,9 @@ resource "hcloud_server" "edge01" {
 
   connection {
     type        = "ssh"
-    host        = "${self.ipv4_address}"
-    user        = "${var.ssh_user}"
-    private_key = "${file(var.ssh_private_key)}"
+    host        = self.ipv4_address
+    user        = var.ssh_user
+    private_key = file(var.ssh_private_key)
     agent       = false
     timeout     = "1m"
   }
@@ -38,7 +38,7 @@ resource "hcloud_server" "edge01" {
   # }
 
   provisioner "file" {
-    content     = "${file(var.ssh_private_key)}"
+    content     = file(var.ssh_private_key)
     destination = "~/.ssh/id_rsa"
   }
 
@@ -49,7 +49,7 @@ resource "hcloud_server" "edge01" {
   }
 
   provisioner "file" {
-    content     = "${file(var.ssh_public_key)}"
+    content     = file(var.ssh_public_key)
     destination = "~/.ssh/id_rsa.pub"
   }
 }
@@ -58,15 +58,15 @@ resource "hcloud_server" "edge01" {
 # edge02
 ##################################################
 resource "hcloud_server" "edge02" {
-  depends_on = ["hcloud_server.edge01"]
+  depends_on = [hcloud_server.edge01]
 
   count       = 1
   name        = "edge02"
-  location    = "${var.location}"
-  image       = "${var.image}"
-  server_type = "${var.edge_type}"
-  ssh_keys    = ["${var.ssh_keys}"]
-  user_data   = "${data.template_file.edge02_cloud-init.rendered}"
+  location    = var.location
+  image       = var.image
+  server_type = var.edge_type
+  ssh_keys    = var.ssh_keys
+  user_data   = data.template_file.edge02_cloud-init.rendered
   labels = {
     app  = "kubernetes"
     role = "edge_router"
@@ -75,13 +75,13 @@ resource "hcloud_server" "edge02" {
 
   connection {
     type                = "ssh"
-    host                = "${self.ipv4_address}"
-    user                = "${var.ssh_user}"
-    private_key         = "${file(var.ssh_private_key)}"
+    host                = self.ipv4_address
+    user                = var.ssh_user
+    private_key         = file(var.ssh_private_key)
     agent               = false
-    bastion_host        = "${hcloud_server.edge01.0.ipv4_address}"
-    bastion_user        = "${var.ssh_user}"
-    bastion_private_key = "${file(var.ssh_private_key)}"
+    bastion_host        = hcloud_server.edge01.0.ipv4_address
+    bastion_user        = var.ssh_user
+    bastion_private_key = file(var.ssh_private_key)
     timeout             = "2m"
   }
 
@@ -99,7 +99,7 @@ resource "hcloud_server" "edge02" {
   # }
 
   provisioner "file" {
-    content     = "${file(var.ssh_private_key)}"
+    content     = file(var.ssh_private_key)
     destination = "~/.ssh/id_rsa"
   }
 
@@ -110,29 +110,29 @@ resource "hcloud_server" "edge02" {
   }
 
   provisioner "file" {
-    content     = "${file(var.ssh_public_key)}"
+    content     = file(var.ssh_public_key)
     destination = "~/.ssh/id_rsa.pub"
   }
 }
 
 data "template_file" "edge01_cloud-init" {
-  template = "${file("${path.module}/../cloud-init/edge_user-data.yaml")}"
-  vars {
+  template = file("${path.module}/../cloud-init/edge_user-data.yaml")
+  vars = {
     SALT_MASTER_HOST     = "localhost"
-    VPN_INTERFACE        = "${var.vpn_interface}"
-    VPN_IP_RANGE         = "${var.vpn_iprange}"
-    VPN_PORT             = "${var.vpn_port}"
+    VPN_INTERFACE        = var.vpn_interface
+    VPN_IP_RANGE         = var.vpn_iprange
+    VPN_PORT             = var.vpn_port
     PRIVATE_INTERFACE    = "eth0"
   }
 }
 
 data "template_file" "edge02_cloud-init" {
-  template = "${file("${path.module}/../cloud-init/edge_user-data.yaml")}"
-  vars {
-    SALT_MASTER_HOST     = "${hcloud_server.edge01.0.name}"
-    VPN_INTERFACE        = "${var.vpn_interface}"
-    VPN_IP_RANGE         = "${var.vpn_iprange}"
-    VPN_PORT             = "${var.vpn_port}"
+  template = file("${path.module}/../cloud-init/edge_user-data.yaml")
+  vars = {
+    SALT_MASTER_HOST     = hcloud_server.edge01.0.name
+    VPN_INTERFACE        = var.vpn_interface
+    VPN_IP_RANGE         = var.vpn_iprange
+    VPN_PORT             = var.vpn_port
     PRIVATE_INTERFACE    = "eth0"
   }
 }

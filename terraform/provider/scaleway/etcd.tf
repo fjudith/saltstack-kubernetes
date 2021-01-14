@@ -2,13 +2,13 @@
 # etcd
 ##################################################
 resource "scaleway_server" "etcd" {
-  depends_on = ["scaleway_server.edge01"]
+  depends_on = [scaleway_server.edge01]
 
-  count       = "${var.etcd_count}"
-  name        = "${format("etcd%02d", count.index + 1)}"
-  image       = "${data.scaleway_image.ubuntu.id}"
-  bootscript  = "${data.scaleway_bootscript.bootscript.id}"
-  type        = "${var.etcd_type}"
+  count       = var.etcd_count
+  name        = format("etcd%02d", count.index + 1)
+  image       = data.scaleway_image.ubuntu.id
+  bootscript  = data.scaleway_bootscript.bootscript.id
+  type        = var.etcd_type
   enable_ipv6 = true
 
   #public_ip = "${element(scaleway_ip.public_ip.*.ip, count.index)}"
@@ -17,13 +17,13 @@ resource "scaleway_server" "etcd" {
 
   connection {
     type                = "ssh"
-    host                = "${self.private_ip}"
-    user                = "${var.ssh_user}"
-    private_key         = "${file(var.ssh_private_key)}"
+    host                = self.private_ip
+    user                = var.ssh_user
+    private_key         = file(var.ssh_private_key)
     agent               = false
-    bastion_host        = "${scaleway_server.edge01.0.public_ip}"
-    bastion_user        = "${var.ssh_user}"
-    bastion_private_key = "${file(var.ssh_private_key)}"
+    bastion_host        = scaleway_server.edge01.0.public_ip
+    bastion_user        = var.ssh_user
+    bastion_private_key = file(var.ssh_private_key)
     timeout             = "2m"
   }
 

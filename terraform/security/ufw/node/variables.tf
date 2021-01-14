@@ -1,4 +1,4 @@
-variable "count" {}
+variable "host_count" {}
 
 variable "bastion_host" {}
 variable "overlay_cidr" {}
@@ -12,25 +12,25 @@ variable "ssh_private_key" {
 }
 
 variable "connections" {
-  type = "list"
+  type = list
 }
 
 variable "private_interface" {
-  type = "string"
+  type = string
 }
 
 variable "docker_interface" {
-  type = "string"
+  type = string
 }
 
 variable "vpn_interface" {
-  type = "string"
+  type = string
 }
 
 variable "vpn_port" {
-  type = "string"
+  type = string
 }
 
 variable "kubernetes_interface" {
-  type = "string"
+  type = string
 }

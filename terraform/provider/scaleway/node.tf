@@ -2,31 +2,31 @@
 # Kubernetes Node
 ##################################################
 resource "scaleway_server" "node" {
-  depends_on = ["scaleway_server.edge01", "scaleway_server.master"]
+  depends_on = [scaleway_server.edge01, scaleway_server.master]
 
-  count       = "${var.node_count}"
-  name        = "${format("node%02d", count.index + 1)}"
-  image       = "${data.scaleway_image.ubuntu.id}"
-  bootscript  = "${data.scaleway_bootscript.bootscript.id}"
-  type        = "${var.node_type}"
+  count       = var.node_count
+  name        = format("node%02d", count.index + 1)
+  image       = data.scaleway_image.ubuntu.id
+  bootscript  = data.scaleway_bootscript.bootscript.id
+  type        = var.node_type
   state       = "running"
   enable_ipv6 = true
   tags        = ["kubernetes", "nodes"]
 
   connection {
     type                = "ssh"
-    host                = "${self.private_ip}"
-    user                = "${var.ssh_user}"
-    private_key         = "${file(var.ssh_private_key)}"
+    host                = self.private_ip
+    user                = var.ssh_user
+    private_key         = file(var.ssh_private_key)
     agent               = false
-    bastion_host        = "${scaleway_server.edge01.0.public_ip}"
-    bastion_user        = "${var.ssh_user}"
-    bastion_private_key = "${file(var.ssh_private_key)}"
+    bastion_host        = scaleway_server.edge01.0.public_ip
+    bastion_user        = var.ssh_user
+    bastion_private_key = file(var.ssh_private_key)
     timeout             = "2m"
   }
 
   volume {
-    size_in_gb = "${var.node_volume_size}"
+    size_in_gb = var.node_volume_size
     type       = "l_ssd"
   }
 

@@ -1,4 +1,4 @@
-variable count {}
+variable route_count {}
 
 variable gateway {}
 
@@ -17,5 +17,5 @@ variable "ssh_private_key" {
 }
 
 variable "connections" {
-  type = "list"
+  type = list
 }

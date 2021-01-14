@@ -6,10 +6,7 @@ variable "token" {}
 
 variable "domain" {}
 
-variable "hostnames" {
-  type = "list"
-}
+variable "zone_id" {}
+variable "hostnames" {}
 
-variable "public_ips" {
-  type = "list"
-}
+variable "public_ips" {}

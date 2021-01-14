@@ -4,17 +4,17 @@
 # variable "count" {}
 
 resource "null_resource" "salt-minion-edge" {
-  count = "${var.edge_count}"
+  count = var.edge_count
 
   connection {
     type                = "ssh"
-    host                = "${element(var.edge_private_ips, count.index)}"
-    user                = "${var.ssh_user}"
-    private_key         = "${file(var.ssh_private_key)}"
+    host                = element(var.edge_private_ips, count.index)
+    user                = var.ssh_user
+    private_key         = file(var.ssh_private_key)
     agent               = false
-    bastion_host        = "${var.bastion_host}"
-    bastion_user        = "${var.ssh_user}"
-    bastion_private_key = "${file(var.ssh_private_key)}"
+    bastion_host        = var.bastion_host
+    bastion_user        = var.ssh_user
+    bastion_private_key = file(var.ssh_private_key)
   }
 
   provisioner "remote-exec" {
@@ -22,7 +22,7 @@ resource "null_resource" "salt-minion-edge" {
   }
 
   provisioner "file" {
-    content     = "${element(data.template_file.master-conf.*.rendered, count.index)}"
+    content     = element(data.template_file.master-conf.*.rendered, count.index)
     destination = "/etc/salt/minion.d/master.conf"
   }
 
@@ -40,17 +40,17 @@ resource "null_resource" "salt-minion-edge" {
 }
 
 resource "null_resource" "salt-minion-etcd" {
-  count = "${var.etcd_count}"
+  count = var.etcd_count
 
   connection {
     type                = "ssh"
-    host                = "${element(var.etcd_private_ips, count.index)}"
-    user                = "${var.ssh_user}"
-    private_key         = "${file(var.ssh_private_key)}"
+    host                = element(var.etcd_private_ips, count.index)
+    user                = var.ssh_user
+    private_key         = file(var.ssh_private_key)
     agent               = false
-    bastion_host        = "${var.bastion_host}"
-    bastion_user        = "${var.ssh_user}"
-    bastion_private_key = "${file(var.ssh_private_key)}"
+    bastion_host        = var.bastion_host
+    bastion_user        = var.ssh_user
+    bastion_private_key = file(var.ssh_private_key)
   }
 
   provisioner "remote-exec" {
@@ -58,7 +58,7 @@ resource "null_resource" "salt-minion-etcd" {
   }
 
   provisioner "file" {
-    content     = "${element(data.template_file.master-conf.*.rendered, count.index)}"
+    content     = element(data.template_file.master-conf.*.rendered, count.index)
     destination = "/etc/salt/minion.d/master.conf"
   }
 
@@ -76,17 +76,17 @@ resource "null_resource" "salt-minion-etcd" {
 }
 
 resource "null_resource" "salt-minion-master" {
-  count = "${var.master_count}"
+  count = var.master_count
 
   connection {
     type                = "ssh"
-    host                = "${element(var.master_private_ips, count.index)}"
-    user                = "${var.ssh_user}"
-    private_key         = "${file(var.ssh_private_key)}"
+    host                = element(var.master_private_ips, count.index)
+    user                = var.ssh_user
+    private_key         = file(var.ssh_private_key)
     agent               = false
-    bastion_host        = "${var.bastion_host}"
-    bastion_user        = "${var.ssh_user}"
-    bastion_private_key = "${file(var.ssh_private_key)}"
+    bastion_host        = var.bastion_host
+    bastion_user        = var.ssh_user
+    bastion_private_key = file(var.ssh_private_key)
   }
 
   provisioner "remote-exec" {
@@ -94,7 +94,7 @@ resource "null_resource" "salt-minion-master" {
   }
 
   provisioner "file" {
-    content     = "${element(data.template_file.master-conf.*.rendered, count.index)}"
+    content     = element(data.template_file.master-conf.*.rendered, count.index)
     destination = "/etc/salt/minion.d/master.conf"
   }
 
@@ -112,17 +112,17 @@ resource "null_resource" "salt-minion-master" {
 }
 
 resource "null_resource" "salt-minion-node" {
-  count = "${var.node_count}"
+  count = var.node_count
 
   connection {
     type                = "ssh"
-    host                = "${element(var.node_private_ips, count.index)}"
-    user                = "${var.ssh_user}"
-    private_key         = "${file(var.ssh_private_key)}"
+    host                = element(var.node_private_ips, count.index)
+    user                = var.ssh_user
+    private_key         = file(var.ssh_private_key)
     agent               = false
-    bastion_host        = "${var.bastion_host}"
-    bastion_user        = "${var.ssh_user}"
-    bastion_private_key = "${file(var.ssh_private_key)}"
+    bastion_host        = var.bastion_host
+    bastion_user        = var.ssh_user
+    bastion_private_key = file(var.ssh_private_key)
     timeout             = "1m"
   }
 
@@ -131,7 +131,7 @@ resource "null_resource" "salt-minion-node" {
   }
 
   provisioner "file" {
-    content     = "${element(data.template_file.master-conf.*.rendered, count.index)}"
+    content     = element(data.template_file.master-conf.*.rendered, count.index)
     destination = "/etc/salt/minion.d/master.conf"
   }
 
@@ -149,9 +149,9 @@ resource "null_resource" "salt-minion-node" {
 }
 
 data "template_file" "master-conf" {
-  count    = "${var.master_count}"
-  template = "${file("${path.module}/templates/master.conf")}"
-  vars {
-    salt_master_host     = "${var.salt_master_host}"
+  count    = var.master_count
+  template = file("${path.module}/templates/master.conf")
+  vars = {
+    salt_master_host     = var.salt_master_host
   }
 }

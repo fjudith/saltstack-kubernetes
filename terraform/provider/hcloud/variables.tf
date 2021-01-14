@@ -9,21 +9,21 @@ variable "token" {
 }
 
 variable "ssh_keys" {
-  type = "list"
+  type = list
 }
 
 variable "image" {
-  type    = "string"
+  type    = string
   default = "ubuntu-20.04"
 }
 
 variable "apt_packages" {
-  type    = "list"
+  type    = list
   default = []
 }
 
 variable "etcd_type" {
-  type    = "string"
+  type    = string
   default = "cx11"
 }
 
@@ -72,7 +72,7 @@ variable "ssh_bastion_host" {
 }
 
 provider "hcloud" {
-  token = "${var.token}"
+  token = var.token
 }
 
 variable "vpn_interface" {

@@ -9,7 +9,7 @@ variable "hcloud_token" {
 }
 
 variable "hcloud_ssh_keys" {
-  default = []
+  type = list
 }
 
 variable "scaleway_region" {
@@ -149,6 +149,11 @@ variable "cloudflare_email" {
 variable "cloudflare_token" {
   description = "Cloudflare API access token"
   default     = "01234567890123456789012345678901234567"
+}
+
+variable "cloudflare_zone_id" {
+  description ="Cloudflare Zone ID"
+  default = "01234567890123456789012345678901"
 }
 
 variable "ovh_endpoint" {

@@ -4,19 +4,19 @@
 resource "scaleway_server" "edge01" {
   count       = 1
   name        = "edge01"
-  image       = "${data.scaleway_image.ubuntu.id}"
-  bootscript  = "${data.scaleway_bootscript.bootscript.id}"
-  type        = "${var.edge_type}"
-  public_ip   = "${element(scaleway_ip.public_ip.*.ip, count.index)}"
+  image       = data.scaleway_image.ubuntu.id
+  bootscript  = data.scaleway_bootscript.bootscript.id
+  type        = var.edge_type
+  public_ip   = element(scaleway_ip.public_ip.*.ip, count.index)
   state       = "running"
   enable_ipv6 = true
   tags        = ["edge", "primary"]
 
   connection {
     type        = "ssh"
-    host        = "${self.public_ip}"
-    user        = "${var.ssh_user}"
-    private_key = "${file(var.ssh_private_key)}"
+    host        = self.public_ip
+    user        = var.ssh_user
+    private_key = file(var.ssh_private_key)
     agent       = false
     timeout     = "1m"
   }
@@ -97,7 +97,7 @@ provisioner "remote-exec" {
   }
 
   provisioner "file" {
-    content     = "${file(var.ssh_private_key)}"
+    content     = file(var.ssh_private_key)
     destination = "~/.ssh/id_rsa"
   }
 
@@ -108,7 +108,7 @@ provisioner "remote-exec" {
   }
 
   provisioner "file" {
-    content     = "${file(var.ssh_public_key)}"
+    content     = file(var.ssh_public_key)
     destination = "~/.ssh/id_rsa.pub"
   }
 
@@ -124,26 +124,26 @@ provisioner "remote-exec" {
 # edge02
 ##################################################
 resource "scaleway_server" "edge02" {
-  depends_on = ["scaleway_server.edge01"]
+  depends_on = [scaleway_server.edge01]
 
   count       = 1
   name        = "edge02"
-  image       = "${data.scaleway_image.ubuntu.id}"
-  bootscript  = "${data.scaleway_bootscript.bootscript.id}"
-  type        = "${var.edge_type}"
+  image       = data.scaleway_image.ubuntu.id
+  bootscript  = data.scaleway_bootscript.bootscript.id
+  type        = var.edge_type
   state       = "running"
   enable_ipv6 = true
   tags        = ["edge", "secondary"]
 
   connection {
     type                = "ssh"
-    host                = "${self.private_ip}"
-    user                = "${var.ssh_user}"
-    private_key         = "${file(var.ssh_private_key)}"
+    host                = self.private_ip
+    user                = var.ssh_user
+    private_key         = file(var.ssh_private_key)
     agent               = false
-    bastion_host        = "${scaleway_server.edge01.0.public_ip}"
-    bastion_user        = "${var.ssh_user}"
-    bastion_private_key = "${file(var.ssh_private_key)}"
+    bastion_host        = scaleway_server.edge01.0.public_ip
+    bastion_user        = var.ssh_user
+    bastion_private_key = file(var.ssh_private_key)
     timeout             = "2m"
   }
 

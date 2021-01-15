@@ -2,6 +2,8 @@
 cloudflare_email = "user@domain.tld"
 
 cloudflare_token = "0123456789abcdefghijklmnopqrstuvwxyz0"
+
+cloudflare_zone_id = "abcdefghij0123456789abcdefghij01"
 /* */
 
 /* OVH */

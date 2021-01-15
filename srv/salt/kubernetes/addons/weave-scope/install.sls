@@ -8,6 +8,7 @@ weave-scope:
         - file: /srv/kubernetes/manifests/weave-scope/ds.yaml
         - file: /srv/kubernetes/manifests/weave-scope/probe-deploy.yaml
         - file: /srv/kubernetes/manifests/weave-scope/svc.yaml
+        - file: /srv/kubernetes/manifests/weave-scope/psp.yaml
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/weave-scope/sa.yaml
         kubectl apply -f /srv/kubernetes/manifests/weave-scope/cluster-role.yaml
@@ -16,4 +17,5 @@ weave-scope:
         kubectl apply -f /srv/kubernetes/manifests/weave-scope/ds.yaml
         kubectl apply -f /srv/kubernetes/manifests/weave-scope/probe-deploy.yaml
         kubectl apply -f /srv/kubernetes/manifests/weave-scope/svc.yaml
+        kubectl apply -f /srv/kubernetes/manifests/weave-scope/psp.yaml
     - onlyif: curl --silent 'http://127.0.0.1:8080/healthz'

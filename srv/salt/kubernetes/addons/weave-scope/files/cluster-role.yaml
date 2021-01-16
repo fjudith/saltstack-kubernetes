@@ -16,6 +16,7 @@ rules:
   - replicationcontrollers
   - services
   - nodes
+  - namespaces
   - persistentvolumes
   - persistentvolumeclaims
   verbs:
@@ -33,6 +34,7 @@ rules:
   resources:
   - deployments
   - statefulsets
+  - daemonsets
   verbs:
   - get
   - list
@@ -62,6 +64,13 @@ rules:
   resources:
   - deployments/scale
   verbs:
+  - update
+- apiGroups:
+  - apps
+  resources:
+  - deployments/scale
+  verbs:
+  - get
   - update
 - apiGroups:
   - storage.k8s.io

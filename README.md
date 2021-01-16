@@ -43,7 +43,7 @@ The solution design carries the following requirements:
   <tr>
     <td><ul><li><b>hetzner</b></li><li>scaleway</li></ul></td>
     <td><ul><li><b>cloudflare</b></li></ul></td>
-    <td><ul><li>1.16.8</li><li>1.17.4</li><li>1.18.10</li><li><b>1.19.6</b></li></ul></td>
+    <td><ul><li>1.16.8</li><li>1.17.4</li><li>1.18.10</li><li><b>1.19.7</b></li></ul></td>
     <td><ul><li><b>docker 19.03.13</b></li><li>containerd v1.2.6</li><li>cri-o 1.15</li></ul></td>
     <td><ul><li><b>cni 0.7.5</b></li><li>calico 3.16.1</li><li>canal 3.2.1 (flannel 0.9.1)</li><li>flannel 0.1.0</li><li>weave 2.6.5</li><li>Cillium 1.30.0</li></ul></td>
   </tr>
@@ -205,17 +205,17 @@ Check the Kubernetes cluster nodes status.
 kubectl get nodes
 
 NAME       STATUS   ROLES          AGE   VERSION
-edge01     Ready    ingress,node   32d   v1.19.6
-edge02     Ready    ingress,node   32d   v1.19.6
-master01   Ready    master         32d   v1.19.6
-master02   Ready    master         32d   v1.19.6
-master03   Ready    master         32d   v1.19.6
-node01     Ready    node           32d   v1.19.6
-node02     Ready    node           32d   v1.19.6
-node03     Ready    node           32d   v1.19.6
-node04     Ready    node           32d   v1.19.6
-node05     Ready    node           32d   v1.19.6
-node06     Ready    node           32d   v1.19.6
+edge01     Ready    ingress,node   32d   v1.19.7
+edge02     Ready    ingress,node   32d   v1.19.7
+master01   Ready    master         32d   v1.19.7
+master02   Ready    master         32d   v1.19.7
+master03   Ready    master         32d   v1.19.7
+node01     Ready    node           32d   v1.19.7
+node02     Ready    node           32d   v1.19.7
+node03     Ready    node           32d   v1.19.7
+node04     Ready    node           32d   v1.19.7
+node05     Ready    node           32d   v1.19.7
+node06     Ready    node           32d   v1.19.7
 ```
 
 Retreive the URLs protected by the Kube-APIserver.

@@ -1,5 +1,5 @@
 kube_prometheus:
-  version: master
+  version: v0.7.0
   grafana_image: docker.io/grafana/grafana:7.3.0
   grafana_ingress_host: grafana
   altermanager_ingress_host: alertmanager

@@ -205,6 +205,7 @@ Check the Kubernetes cluster nodes status.
 kubectl get nodes
 
 NAME       STATUS   ROLES          AGE   VERSION
+<<<<<<< HEAD
 edge01     Ready    ingress,node   32d   v1.20.4
 edge02     Ready    ingress,node   32d   v1.20.4
 master01   Ready    master         32d   v1.20.4
@@ -216,6 +217,19 @@ node03     Ready    node           32d   v1.20.4
 node04     Ready    node           32d   v1.20.4
 node05     Ready    node           32d   v1.20.4
 node06     Ready    node           32d   v1.20.4
+=======
+edge01     Ready    ingress,node   32d   v1.19.7
+edge02     Ready    ingress,node   32d   v1.19.7
+master01   Ready    master         32d   v1.19.7
+master02   Ready    master         32d   v1.19.7
+master03   Ready    master         32d   v1.19.7
+node01     Ready    node           32d   v1.19.7
+node02     Ready    node           32d   v1.19.7
+node03     Ready    node           32d   v1.19.7
+node04     Ready    node           32d   v1.19.7
+node05     Ready    node           32d   v1.19.7
+node06     Ready    node           32d   v1.19.7
+>>>>>>> eb3a656559b5b0afc485005cb51645a4d67f655b
 ```
 
 Retreive the URLs protected by the Kube-APIserver.

@@ -126,13 +126,28 @@ kubectl -n rook-edgefs-system get deployment rook-edgefs-operator
 
 It is required to manually remove the etcd member especially when the kubeadm join fails on `etcd` registration.
 
+#### Stacked Etcd
+
 ```bash
 VERSION=3.4.3
-MEMBER="node_name"
+MEMBER="node-name"
 curl -L https://github.com/coreos/etcd/releases/download/v${VERSION}/etcd-v${VERSION}-linux-amd64.tar.gz | tar -xvzf - && \
 mv etcd-v${VERSION}-linux-amd64/etcdctl /usr/local/bin/ && \
 rm -rf etcd-v${VERSION}-linux-amd64 && \
 alias ec="ETCDCTL_API=3 etcdctl --cacert /etc/kubernetes/pki/etcd/ca.crt --cert /etc/kubernetes/pki/etcd/server.crt --key /etc/kubernetes/pki/etcd/server.key" && \
+MEMBERID=$(ec member list | grep $MEMBER | awk -F ',' '{print($1)}') && \
+ec member remove ${MEMBERID}
+```
+
+### Dedicated Etcd
+
+```bash
+VERSION=3.4.3
+MEMBER="node-name"
+curl -L https://github.com/coreos/etcd/releases/download/v${VERSION}/etcd-v${VERSION}-linux-amd64.tar.gz | tar -xvzf - && \
+mv etcd-v${VERSION}-linux-amd64/etcdctl /usr/local/bin/ && \
+rm -rf etcd-v${VERSION}-linux-amd64 && \
+alias ec="ETCDCTL_API=3 etcdctl --cacert /etc/etcd/ssl/etcd-ca.pem --cert /etc/etcd/ssl/etcd.pem --key /etc/etcd/ssl/etcd-key.pem" && \
 MEMBERID=$(ec member list | grep $MEMBER | awk -F ',' '{print($1)}') && \
 ec member remove ${MEMBERID}
 ```

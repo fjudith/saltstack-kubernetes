@@ -1,6 +1,6 @@
 kubeadm:
   enabled: true
-  kubernetesVersion: 1.19.6
+  kubernetesVersion: 1.20.4
   apiVersion: v1beta2
   token: "abcdef.0123456789abcdef"
   nodeToken: "123456.abcdefghij123456"
@@ -35,7 +35,7 @@ kubeadm:
       audit-log-maxbackup: 3
       audit-log-maxsize: 100
       insecure-bind-address: "127.0.0.1"
-      insecure-port: "8080"
+      insecure-port: "0"
     timeoutForControlPlane: "5m0s"
     certSANs: []
   controllerManager:

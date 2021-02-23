@@ -1,4 +1,5 @@
 openebs:
+  version: 2.5.0
   cstor_replication: 3
   mayastor_nbd_replication: 3
   mayastor_iscsi_replication: 3
@@ -9,30 +10,14 @@ openebs:
   default_storageclass:
     enabled: False
     name: mayastor-iscsi
-  cspc_operator_image: quay.io/openebs/cspc-operator:1.10.0
-  cspi_mgmt_image: quay.io/openebs/cspi-mgmt:1.10.0
-  cvc_operator_image: quay.io/openebs/cvc-operator:1.10.0
-  maya_apiserver_image: quay.io/openebs/m-apiserver:1.11.0
-  jiva_image: quay.io/openebs/jiva:1.11.0
-  cstor_target_image: quay.io/openebs/cstor-istgt:1.11.0
-  cstor_pool_image: quay.io/openebs/cstor-pool:1.11.0
-  cstor_pool_management_image: quay.io/openebs/cstor-pool-mgmt:1.11.0
-  cstor_volume_management_image: quay.io/openebs/cstor-volume-mgmt:1.11.0
-  exporter_image: quay.io/openebs/m-exporter:1.11.0
-  provisioner_image: quay.io/openebs/openebs-k8s-provisioner:1.11.0
-  snapshot_controller_image: quay.io/openebs/snapshot-controller:1.11.0
-  snapshot_provisioner_image: quay.io/openebs/snapshot-provisioner:1.11.0
-  node_disk_manager_image: quay.io/openebs/node-disk-manager-amd64:0.6.0
-  node_disk_operator_image: quay.io/openebs/node-disk-operator-amd64:0.6.0
-  admission_image: quay.io/openebs/admission-server:1.11.0
-  localpv_image: quay.io/openebs/provisioner-localpv:1.11.0
-  linux_utils_image: quay.io/openebs/linux-utils:1.11.0
-  mayastor:
-    enabled: False
-    image: docker.io/mayadata/mayastor:v0.2.0
-    grpc_image: docker.io/mayadata/mayastor-grpc:v0.2.0
-    node_driver_registrar_image: quay.io/k8scsi/csi-node-driver-registrar:v1.3.0
-    nats_image: docker.io/amd64/nats:2.1-alpine3.11
+  maya_apiserver_image: docker.io/openebs/m-apiserver:2.5.0
+  provisioner_image: docker.io/openebs/openebs-k8s-provisioner:2.5.0
+  snapshot_controller_image: docker.io/openebs/snapshot-controller:2.5.0
+  snapshot_provisioner_image: docker.io/openebs/snapshot-provisioner:2.5.0
+  node_disk_manager_image: docker.io/openebs/node-disk-manager:1.1.0
+  node_disk_operator_image: docker.io/openebs/node-disk-operator:1.1.0
+  admission_image: docker.io/openebs/admission-server:2.5.0
+  localpv_image: docker.io/openebs/provisioner-localpv:2.5.0
   csi:
     cstor:
       resizer_image: quay.io/k8scsi/csi-resizer:v0.4.0

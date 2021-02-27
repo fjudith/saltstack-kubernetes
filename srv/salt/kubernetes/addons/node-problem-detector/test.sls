@@ -4,5 +4,5 @@ node-problem-detector-wait:
       - cmd: node-problem-detector
     - runas: root
     - name: |
-        until kubectl -n kube-system get pods --field-selector=status.phase=Running --selector=app=node-problem-detector; do printf 'node-problem-detector is not Running' && sleep 5; done
+        kubectl -n kube-system wait pod --for=condition=Ready -l app=node-problem-detector
     - timeout: 180

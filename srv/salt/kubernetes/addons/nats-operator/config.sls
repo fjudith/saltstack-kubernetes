@@ -5,6 +5,18 @@
     - dir_mode: "0750"
     - makedirs: True
 
+/srv/kubernetes/manifests/nats-operator/nats-crd.yaml:
+  file.managed:
+    - require:
+      - file: /srv/kubernetes/manifests/nats-operator
+    - source: salt://{{ tpldir }}/files/nats-crd.yaml
+    - skip_verify: true
+    - user: root
+    - group: root
+    - mode: "0644"
+    - context:
+      tpldir: {{ tpldir }}
+
 /srv/kubernetes/manifests/nats-operator/00-prereqs.yaml:
   file.managed:
     - require:

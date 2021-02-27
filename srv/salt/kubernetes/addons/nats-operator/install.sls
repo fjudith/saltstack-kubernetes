@@ -3,18 +3,20 @@
 nats-operator:
   cmd.run:
     - watch:
+        - file: /srv/kubernetes/manifests/nats-operator/nats-crd.yaml
         - file: /srv/kubernetes/manifests/nats-operator/00-prereqs.yaml
         - file: /srv/kubernetes/manifests/nats-operator/nats-operator-deployment.yaml
     - runas: root    
     - name: |
+        kubectl apply -f /srv/kubernetes/manifests/nats-operator/nats-crd.yaml
         kubectl apply -f /srv/kubernetes/manifests/nats-operator/00-prereqs.yaml
         kubectl apply -f /srv/kubernetes/manifests/nats-operator/nats-operator-deployment.yaml
     - onlyif: http --verify false https://localhost:6443/livez?verbose
 
 query-nats-api:
+  cmd.run:
     - watch:
       - cmd: nats-operator
-  cmd.run:
     - name: |
         http --check-status --verify false \
           --cert /etc/kubernetes/pki/apiserver-kubelet-client.crt \
@@ -48,9 +50,9 @@ stan-operator:
     - onlyif: http --verify false https://localhost:6443/livez?verbose
 
 query-stan-api:
+  cmd.run:
     - watch:
       - cmd: stan-operator
-  cmd.run:
     - name: |
         http --check-status --verify false \
           --cert /etc/kubernetes/pki/apiserver-kubelet-client.crt \

@@ -6,5 +6,5 @@ kube_prometheus:
   grafana_password: admin
   altermanager_ingress_host: alertmanager
   prometheus_ingress_host: prometheus
-  pushgateway_image: prom/pushgateway:v1.2.0
+  pushgateway_image: docker.io/prom/pushgateway:v1.2.0
   

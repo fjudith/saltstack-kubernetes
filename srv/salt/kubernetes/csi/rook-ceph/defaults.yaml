@@ -6,7 +6,7 @@ rook_ceph:
   filesystem_replication: 3
   image: docker.io/rook/ceph:v1.5.1
   ceph_image: docker.io/ceph/ceph:v15.2.5
-  exporter_image: digitalocean/ceph_exporter:latest
+  exporter_image: docker.io/digitalocean/ceph_exporter:latest
   ingress_host: ceph
   store_type: filestore
   timeout: 260

@@ -15,4 +15,4 @@ kubernetes-dashboard-ingress:
       - file: /srv/kubernetes/manifests/kubernetes-dashboard/ingress.yaml
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/kubernetes-dashboard/ingress.yaml
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose

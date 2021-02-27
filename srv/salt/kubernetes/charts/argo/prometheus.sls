@@ -14,7 +14,7 @@ argo-prometheus-rbac:
         - cmd: argo-namespace
         - file: /srv/kubernetes/manifests/argo/prometheus-k8s-rbac.yaml
     - runas: root
-    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz/'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
     - name: kubectl apply -f /srv/kubernetes/manifests/argo/prometheus-k8s-rbac.yaml
 
 # Service Monitor Managed by the Helm charts

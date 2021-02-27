@@ -9,4 +9,4 @@ nginx-ingress-install:
         helm upgrade --install nginx --namespace ingress-nginx \
           --values /srv/kubernetes/manifests/nginx/values.yaml \
           "./" --timeout 5m
-    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose

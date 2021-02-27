@@ -22,17 +22,23 @@
     - mode: "0755"
 
 query-calico-required-api:
-  http.wait_for_successful_query:
-    - name: 'http://127.0.0.1:8080/apis/apps/v1'
-    - match: DaemonSet
-    - wait_for: 180
-    - request_interval: 5
-    - status: 200
+  cmd.run:
+    - name: |
+        http --verify false \
+          --cert /etc/kubernetes/pki/apiserver-kubelet-client.crt \
+          --cert-key /etc/kubernetes/pki/apiserver-kubelet-client.key \
+          https://127.0.0.1:6443/apis/apps/v1 | grep -niE "daemonset"
+    - use_vt: True
+    - retry:
+        attempts: 10
+        until: True
+        interval: 5
+        splay: 10
 
 calico-install:
   cmd.run:
     - require:
-      - http: query-calico-required-api
+      - cmd: query-calico-required-api
     - watch:
       - file: /srv/kubernetes/manifests/calico/calico-typha.yaml
     - runas: root

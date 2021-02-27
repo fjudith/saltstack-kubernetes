@@ -1,9 +1,15 @@
 query-kube-prometheus-required-api:
-  http.wait_for_successful_query:
+  cmd.run:
     - watch:
-      - cmd: kube-prometheus
-    - name: 'http://127.0.0.1:8080/apis/monitoring.coreos.com'
-    - match: monitoring.coreos.com
-    - wait_for: 180
-    - request_interval: 5
-    - status: 200
+        - cmd: kube-prometheus
+    - name: |
+        http --verify false \
+          --cert /etc/kubernetes/pki/apiserver-kubelet-client.crt \
+          --cert-key /etc/kubernetes/pki/apiserver-kubelet-client.key \
+          https://localhost:6443/apis/monitoring.coreos.com
+    - use_vt: True
+    - retry:
+        attempts: 60
+        until: True
+        interval: 5
+        splay: 10

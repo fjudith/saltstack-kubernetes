@@ -20,7 +20,7 @@ rook-edgefs-local-storage:
       - cmd: rook-edgefs-cluster
     - watch:
       - file: /srv/kubernetes/manifests/rook-edgefs/storage-class.yaml
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/rook-edgefs/storage-class.yaml
 
@@ -42,7 +42,7 @@ rook-edgefs-iscsi-storageclass:
       - cmd: rook-edgefs-iscsi-driver
     - watch:
       - file: /srv/kubernetes/manifests/rook-edgefs/iscsi-storageclass.yaml
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/rook-edgefs/iscsi-storageclass.yaml
 
@@ -64,7 +64,7 @@ rook-edgefs-nfs-storageclass:
       - cmd: rook-edgefs-nfs-driver
     - watch:
       - file: /srv/kubernetes/manifests/rook-edgefs/nfs-storageclass.yaml
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/rook-edgefs/nfs-storageclass.yaml
 
@@ -75,7 +75,7 @@ rook-edgefs-default-storageclass:
       - cmd: rook-edgefs-local-storage
       - cmd: rook-edgefs-iscsi-storageclass
       - cmd: rook-edgefs-nfs-storageclass
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
     - name: |
         kubectl patch storageclass {{ rook_edgefs.default_storageclass.name }} -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}' 
 {% endif %}

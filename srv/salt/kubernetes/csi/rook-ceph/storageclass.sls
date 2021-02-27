@@ -20,7 +20,7 @@ rook-ceph-block:
       - cmd: rook-ceph-cluster
     - watch:
       - file: /srv/kubernetes/manifests/rook-ceph/storageclass.yaml
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/rook-ceph/storageclass.yaml
 
@@ -40,7 +40,7 @@ rook-cephfs:
       - cmd: rook-ceph-cluster
     - watch:
       - file: /srv/kubernetes/manifests/rook-ceph/filesystem-storageclass.yaml
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/rook-ceph/filesystem-storageclass.yaml
 
@@ -50,7 +50,7 @@ rook-ceph-default-storageclass:
     - require:
       - cmd: rook-ceph-block
       - cmd: rook-cephfs
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
     - name: |
         kubectl patch storageclass {{ rook_ceph.default_storageclass.name }} -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}' 
 {% endif %}

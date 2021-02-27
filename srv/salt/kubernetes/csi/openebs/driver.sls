@@ -6,7 +6,7 @@
 
 openebs-csi-driver:
   cmd.run:
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
     - name: |
         kubectl apply -f {{ openebs.csi_driver }}
         kubectl apply -f {{ openebs.csi_nodeinfo }}

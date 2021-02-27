@@ -4,7 +4,7 @@ dns-horizontal-autoscaler-rbac:
       - /srv/kubernetes/manifests/dha-rbac.yaml
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/dha-rbac.yaml
-    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
 
 dns-horizontal-autoscaler-install:
   cmd.run:
@@ -12,4 +12,4 @@ dns-horizontal-autoscaler-install:
       - /srv/kubernetes/manifests/dha-deployment.yaml
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/dha-deployment.yaml
-    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose

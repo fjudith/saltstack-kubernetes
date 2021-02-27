@@ -33,7 +33,7 @@ kubeless:
     - runas: root
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/kubeless/kubeless.yaml
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
 
 kubeless-ui:
   cmd.run:
@@ -42,7 +42,7 @@ kubeless-ui:
     - runas: root
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/kubeless/kubeless-ui.yaml
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
 
 kubeless-kafa-trigger:
   cmd.run:
@@ -51,7 +51,7 @@ kubeless-kafa-trigger:
     - runas: root
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/kubeless/kafka-trigger.yaml
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
 
 kubeless-kinesis-trigger:
   cmd.run:
@@ -60,7 +60,7 @@ kubeless-kinesis-trigger:
     - runas: root
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/kubeless/kinesis-trigger.yaml
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
 
 {% if common.addons.get('nats_operator', {'enabled': False}).enabled %}
 kubeless-nats-trigger:
@@ -72,5 +72,5 @@ kubeless-nats-trigger:
     - runas: root
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/kubeless/nats-trigger.yaml
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
 {% endif %}

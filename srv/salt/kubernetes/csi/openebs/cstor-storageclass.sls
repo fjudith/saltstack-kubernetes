@@ -21,7 +21,7 @@ openebs-cstor-storageclass:
       - cmd: openebs-cstor
     - watch:
       - file: /srv/kubernetes/manifests/openebs/cstor-storage-class.yaml
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/openebs/cstor-storage-class.yaml
 
@@ -30,7 +30,7 @@ openebs-default-cstor-storageclass:
   cmd.run:
     - require:
       - cmd: openebs-cstor-storageclass
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
     - name: |
         kubectl patch storageclass {{ openebs.default_storageclass.name }} -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}' 
 {% endif %}

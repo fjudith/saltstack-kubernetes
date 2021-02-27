@@ -9,7 +9,7 @@
   cmd.run:
     - watch:
       - file: /srv/kubernetes/manifests/rook-edgefs/common.yaml
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/rook-edgefs/common.yaml #}
 
@@ -18,7 +18,7 @@ rook-edgefs-operator:
     - watch:
       - file: /srv/kubernetes/manifests/rook-edgefs/operator.yaml
     - runas: root
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/rook-edgefs/operator.yaml
 
@@ -68,15 +68,18 @@ rook-edgefs-discover-wait:
         kubectl -n rook-edgefs-system get daemonset rook-discover
 
 rook-edgefs-wait-api:
-  http.wait_for_successful_query:
-    - require:
-      - cmd: rook-edgefs-operator-wait
-      - cmd: rook-edgefs-discover-wait
-    - name: 'http://127.0.0.1:8080/apis/edgefs.rook.io/v1'
-    - match: Cluster
-    - wait_for: 180
-    - request_interval: 5
-    - status: 200
+  cmd.run:
+    - name: |
+        http --verify false \
+          --cert /etc/kubernetes/pki/apiserver-kubelet-client.crt \
+          --cert-key /etc/kubernetes/pki/apiserver-kubelet-client.key \
+          https://localhost:6443/apis/edgefs.rook.io/v1 | grep -niE "cluster"
+    - use_vt: True
+    - retry:
+        attempts: 60
+        until: True
+        interval: 5
+        splay: 10
 
 
 rook-edgefs-cluster:

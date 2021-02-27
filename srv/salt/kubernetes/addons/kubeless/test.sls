@@ -54,5 +54,5 @@ test-kubeless-nats-pubsub:
         echo "" && \
 
         kubectl -n default logs -l function=pubsub-python-nats
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
 {% endif %}

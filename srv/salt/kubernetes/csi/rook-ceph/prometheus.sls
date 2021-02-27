@@ -14,7 +14,7 @@ rook-ceph-prometheus-rbac:
         - cmd: rook-ceph-cluster
         - file: /srv/kubernetes/manifests/rook-ceph/prometheus-k8s-rbac.yaml
     - runas: root
-    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz/'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
     - name: kubectl apply -f /srv/kubernetes/manifests/rook-ceph/prometheus-k8s-rbac.yaml
 
 ceph-exporter:
@@ -34,7 +34,7 @@ ceph-exporter:
         - cmd: rook-ceph-cluster
         - file: /srv/kubernetes/manifests/rook-ceph/ceph-exporter.yaml
     - runas: root
-    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz/'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
     - name: kubectl apply -f /srv/kubernetes/manifests/rook-ceph/ceph-exporter.yaml
 
 ceph-exporter-service-monitor:
@@ -54,7 +54,7 @@ ceph-exporter-service-monitor:
         - cmd: rook-ceph-cluster
         - file: /srv/kubernetes/manifests/rook-ceph/ceph-exporter-service-monitor.yaml
     - runas: root
-    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz/'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
     - name: kubectl apply -f /srv/kubernetes/manifests/rook-ceph/ceph-exporter-service-monitor.yaml
 
 csi-service-monitor:
@@ -74,5 +74,5 @@ csi-service-monitor:
         - cmd: rook-ceph-cluster
         - file: /srv/kubernetes/manifests/rook-ceph/csi-service-monitor.yaml
     - runas: root
-    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz/'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
     - name: kubectl apply -f /srv/kubernetes/manifests/rook-ceph/csi-service-monitor.yaml

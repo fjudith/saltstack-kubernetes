@@ -12,4 +12,4 @@ kubernetes-dashboard:
       - file: /srv/kubernetes/manifests/kubernetes-dashboard/08_scraper-deployment.yaml
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/kubernetes-dashboard/
-    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose

@@ -8,7 +8,7 @@ rook-ceph-crds:
   cmd.run:
     - watch:
       - file: /srv/kubernetes/manifests/rook-ceph/crds.yaml
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/rook-ceph/crds.yaml
 
@@ -16,17 +16,23 @@ rook-ceph-common:
   cmd.run:
     - watch:
       - file: /srv/kubernetes/manifests/rook-ceph/common.yaml
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/rook-ceph/common.yaml
 
 rook-ceph-wait-api:
-  http.wait_for_successful_query:
-    - name: 'http://127.0.0.1:8080/apis/ceph.rook.io/v1'
-    - match: CephCluster
-    - wait_for: {{ rook_ceph.timeout }}
-    - request_interval: 5
-    - status: 200
+  cmd.run:
+    - name: |
+        http --verify false \
+          --cert /etc/kubernetes/pki/apiserver-kubelet-client.crt \
+          --cert-key /etc/kubernetes/pki/apiserver-kubelet-client.key \
+          https://localhost:6443/apis/ceph.rook.io/v1
+    - use_vt: True
+    - retry:
+        attempts: 60
+        until: True
+        interval: 5
+        splay: {{ rook_ceph.timeout }}
 
 rook-ceph-operator:
   cmd.run:
@@ -35,7 +41,7 @@ rook-ceph-operator:
       - cmd: rook-ceph-common
     - watch:
       - file: /srv/kubernetes/manifests/rook-ceph/operator.yaml
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/rook-ceph/operator.yaml
 

@@ -21,7 +21,7 @@ portworx-storageclass:
       - cmd: portworx
     - watch:
       - file: /srv/kubernetes/manifests/portworx/storage-class.yaml
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/portworx/storage-class.yaml
 
@@ -30,7 +30,7 @@ portworx-default-storageclass:
   cmd.run:
     - require:
       - cmd: portworx-storageclass
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
     - name: |
         kubectl patch storageclass {{ portworx.default_storageclass.name }} -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}' 
 {% endif %}

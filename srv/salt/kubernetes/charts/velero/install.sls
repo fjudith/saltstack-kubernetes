@@ -45,12 +45,18 @@ velero-crds:
         kubectl apply -f crds/
 
 velero-wait-api:
-  http.wait_for_successful_query:
-    - name: 'http://localhost:8080/apis/velero.io/v1/'
-    - match: VolumeSnapshotLocation
-    - wait_for: 60
-    - request_interval: 5
-    - status: 200
+  cmd.run:
+    - name: |
+        http --verify false \
+          --cert /etc/kubernetes/pki/apiserver-kubelet-client.crt \
+          --cert-key /etc/kubernetes/pki/apiserver-kubelet-client.key \
+          https://localhost:6443/apis/velero.io/v1/ | grep -niE "volumesnapshotlocation"
+    - use_vt: True
+    - retry:
+        attempts: 60
+        until: True
+        interval: 5
+        splay: 10
 
 velero:
   cmd.run:

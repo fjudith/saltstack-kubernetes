@@ -11,12 +11,18 @@
       tpldir: {{ tpldir }}
 
 contour-cert-manager-required-api:
-  http.wait_for_successful_query:
-    - name: 'http://127.0.0.1:8080/apis/cert-manager.io'
-    - match: cert-manager.io
-    - wait_for: 180
-    - request_interval: 5
-    - status: 200
+  cmd.run:
+    - name: |
+        http --verify false \
+          --cert /etc/kubernetes/pki/apiserver-kubelet-client.crt \
+          --cert-key /etc/kubernetes/pki/apiserver-kubelet-client.key \
+          https://localhost:6443/apis/cert-manager.io | grep -niE "cert-manager.io"
+    - use_vt: True
+    - retry:
+        attempts: 60
+        until: True
+        interval: 5
+        splay: 10
 
 contour-certificate:
   cmd.run:
@@ -27,4 +33,4 @@ contour-certificate:
       - file: /srv/kubernetes/manifests/contour/certificate.yaml
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/contour/certificate.yaml
-    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose

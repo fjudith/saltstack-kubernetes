@@ -9,11 +9,18 @@ kubernetes-dashboard-wait:
     - timeout: 180
 
 query-kubernetes-dashboard:
-  http.wait_for_successful_query:
+  cmd.run:
     - watch:
       - cmd: kubernetes-dashboard
       - cmd: kubernetes-dashboard-ingress
-    - name: http://localhost:8080/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:443/proxy
-    - wait_for: 120
-    - request_interval: 5
-    - status: 200
+    - name: |
+        http --verify false \
+          --cert /etc/kubernetes/pki/apiserver-kubelet-client.crt \
+          --cert-key /etc/kubernetes/pki/apiserver-kubelet-client.key \
+          https://localhost:6443/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:443/proxy
+    - use_vt: True
+    - retry:
+        attempts: 60
+        until: True
+        interval: 5
+        splay: 10

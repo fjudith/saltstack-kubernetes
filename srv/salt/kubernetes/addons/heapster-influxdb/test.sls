@@ -1,26 +1,41 @@
 query-heapster:
-  http.wait_for_successful_query:
-    - watch:
-      - cmd: heapster-influxdb-grafana
-    - name: http://localhost:8080/api/v1/namespaces/kube-system/services/heapster/proxy
-    - wait_for: 120
-    - request_interval: 5
-    - status: 503
+  cmd.run:
+    - name: |
+        http --verify false \
+          --cert /etc/kubernetes/pki/apiserver-kubelet-client.crt \
+          --cert-key /etc/kubernetes/pki/apiserver-kubelet-client.key \
+          https://localhost:6443/api/v1/namespaces/kube-system/services/heapster/proxy
+    - use_vt: True
+    - retry:
+        attempts: 60
+        until: True
+        interval: 5
+        splay: 10
 
 query-influxdb:
-  http.wait_for_successful_query:
-    - watch:
-      - cmd: heapster-influxdb-grafana
-    - name: http://localhost:8080/api/v1/namespaces/kube-system/services/monitoring-influxdb:http/proxy
-    - wait_for: 120
-    - request_interval: 5
-    - status: 503
+  cmd.run:
+    - name: |
+        http --verify false \
+          --cert /etc/kubernetes/pki/apiserver-kubelet-client.crt \
+          --cert-key /etc/kubernetes/pki/apiserver-kubelet-client.key \
+          https://localhost:6443/api/v1/namespaces/kube-system/services/monitoring-influxdb:http/proxy
+    - use_vt: True
+    - retry:
+        attempts: 60
+        until: True
+        interval: 5
+        splay: 10
 
 query-grafana:
-  http.wait_for_successful_query:
-    - watch:
-      - cmd: heapster-influxdb-grafana
-    - name: http://localhost:8080/api/v1/namespaces/kube-system/services/monitoring-grafana/proxy
-    - wait_for: 120
-    - request_interval: 5
-    - status: 200
+  cmd.run:
+    - name: |
+        http --verify false \
+          --cert /etc/kubernetes/pki/apiserver-kubelet-client.crt \
+          --cert-key /etc/kubernetes/pki/apiserver-kubelet-client.key \
+          https://localhost:6443/api/v1/namespaces/kube-system/services/monitoring-grafana/proxy
+    - use_vt: True
+    - retry:
+        attempts: 60
+        until: True
+        interval: 5
+        splay: 10

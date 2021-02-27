@@ -1,8 +1,15 @@
 query-metrics-server:
-  http.wait_for_successful_query:
+  cmd.run:
     - watch:
       - cmd: metrics-server
-    - name: http://localhost:8080/api/v1/namespaces/kube-system/services/https:metrics-server:https/proxy
-    - wait_for: 120
-    - request_interval: 5
-    - status: 403
+    - name: |
+        http --verify false \
+          --cert /etc/kubernetes/pki/apiserver-kubelet-client.crt \
+          --cert-key /etc/kubernetes/pki/apiserver-kubelet-client.key \
+          https://localhost:6443/api/v1/namespaces/kube-system/services/https:metrics-server:https/proxy
+    - use_vt: True
+    - retry:
+        attempts: 60
+        until: True
+        interval: 5
+        splay: 10

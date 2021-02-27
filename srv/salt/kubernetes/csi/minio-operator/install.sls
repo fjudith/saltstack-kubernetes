@@ -20,16 +20,23 @@ minio-operator:
     - runas: root
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/minio-operator/minio-operator.yaml
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
 
 query-minio-operator-api:
-  http.wait_for_successful_query:
+  cmd.run:
     - watch:
       - cmd: minio-operator
-    - name: http://127.0.0.1:8080/apis/operator.min.io/v1
-    - wait_for: 120
-    - request_interval: 5
-    - status: 200
+    - name: |
+        http --verify false \
+          --cert /etc/kubernetes/pki/apiserver-kubelet-client.crt \
+          --cert-key /etc/kubernetes/pki/apiserver-kubelet-client.key \
+          https://localhost:6443/apis/operator.min.io/v1
+    - use_vt: True
+    - retry:
+        attempts: 60
+        until: True
+        interval: 5
+        splay: 10
 
 minio-cluster:
   cmd.run:
@@ -40,4 +47,4 @@ minio-cluster:
     - runas: root    
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/minio-operator/minioinstance.yaml
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose

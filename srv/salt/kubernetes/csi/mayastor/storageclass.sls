@@ -21,7 +21,7 @@ mayastor-storageclass:
       - cmd: mayastor
     - watch:
       - file: /srv/kubernetes/manifests/mayastor/storage-class.yaml
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/mayastor/storage-class.yaml
 
@@ -30,7 +30,7 @@ mayastor-default-storageclass:
   cmd.run:
     - require:
       - cmd: mayastor-storageclass
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
     - name: |
         kubectl patch storageclass {{ mayastor.default_storageclass.name }} -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}' 
 {% endif %}

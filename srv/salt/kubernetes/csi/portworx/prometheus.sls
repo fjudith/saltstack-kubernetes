@@ -14,7 +14,7 @@ portworx-prometheus-rbac:
         - cmd: portworx
         - file: /srv/kubernetes/manifests/portworx/prometheus-k8s-rbac.yaml
     - runas: root
-    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz/'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
     - name: kubectl apply -f /srv/kubernetes/manifests/portworx/prometheus-k8s-rbac.yaml
 
 portworx-servicemonitor:
@@ -33,5 +33,5 @@ portworx-servicemonitor:
         - cmd: portworx
         - file: /srv/kubernetes/manifests/portworx/service-monitor.yaml
     - runas: root
-    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz/'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
     - name: kubectl apply -f /srv/kubernetes/manifests/portworx/service-monitor.yaml

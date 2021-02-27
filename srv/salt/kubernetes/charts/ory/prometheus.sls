@@ -14,7 +14,7 @@ ory-prometheus-rbac:
         - cmd: ory-namespace
         - file: /srv/kubernetes/manifests/ory/prometheus-k8s-rbac.yaml
     - runas: root
-    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz/'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
     - name: kubectl apply -f /srv/kubernetes/manifests/ory/prometheus-k8s-rbac.yaml
 
 ory-servicemonitor:
@@ -33,5 +33,5 @@ ory-servicemonitor:
         - cmd: ory-namespace
         - file: /srv/kubernetes/manifests/ory/service-monitor.yaml
     - runas: root
-    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz/'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
     - name: kubectl apply -f /srv/kubernetes/manifests/ory/service-monitor.yaml

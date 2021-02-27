@@ -12,17 +12,23 @@ rook-yugabytedb:
     - runas: root
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/rook-yugabytedb/operator.yaml
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
 
 query-rook-yugabytedb-api:
-  http.wait_for_successful_query:
     - watch:
       - cmd: rook-yugabytedb
-    - name: http://127.0.0.1:8080/apis/yugabytedb.rook.io/v1alpha1
-    - match: YBCluster
-    - wait_for: 120
-    - request_interval: 5
-    - status: 200
+  cmd.run:
+    - name: |
+        http --verify false \
+          --cert /etc/kubernetes/pki/apiserver-kubelet-client.crt \
+          --cert-key /etc/kubernetes/pki/apiserver-kubelet-client.key \
+          https://localhost:6443/apis/yugabytedb.rook.io/v1alpha1
+    - use_vt: True
+    - retry:
+        attempts: 60
+        until: True
+        interval: 5
+        splay: 10
 
 rook-yugabytedb-cluster:
   cmd.run:
@@ -34,4 +40,4 @@ rook-yugabytedb-cluster:
     - runas: root    
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/rook-yugabytedb/cluster.yaml
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose

@@ -14,7 +14,7 @@ falco-prometheus-rbac:
         - cmd: falco-namespace
         - file: /srv/kubernetes/manifests/falco/prometheus-k8s-rbac.yaml
     - runas: root
-    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz/'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
     - name: kubectl apply -f /srv/kubernetes/manifests/falco/prometheus-k8s-rbac.yaml
 
 falco-service-monitor:
@@ -33,5 +33,5 @@ falco-service-monitor:
         - cmd: falco-namespace
         - file: /srv/kubernetes/manifests/falco/service-monitor.yaml
     - runas: root
-    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz/'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
     - name: kubectl apply -f /srv/kubernetes/manifests/falco/service-monitor.yaml

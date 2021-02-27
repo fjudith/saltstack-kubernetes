@@ -5,7 +5,7 @@ descheduler-rbac:
     - runas: root
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/descheduler/rbac.yaml
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
 
 descheduler-configmap:
   cmd.run:
@@ -14,7 +14,7 @@ descheduler-configmap:
     - runas: root
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/descheduler/configmap.yaml
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
 
 descheduler-cronjob:
   cmd.run:
@@ -25,4 +25,4 @@ descheduler-cronjob:
     - runas: root
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/descheduler/cronjob.yaml
-    - onlyif: curl --silent 'http://127.0.0.1:8080/version/'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose

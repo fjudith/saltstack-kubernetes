@@ -7,7 +7,7 @@ heapster-influxdb-grafana:
       - /srv/kubernetes/manifests/heapster-influxdb/influxdb-grafana.yaml
       - /srv/kubernetes/manifests/heapster-influxdb/influxdb-service.yaml
       - /srv/kubernetes/manifests/heapster-influxdb/grafana-service.yaml
-    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/heapster-influxdb/heapster-controller.yaml
         kubectl apply -f /srv/kubernetes/manifests/heapster-influxdb/heapster-rbac.yaml

@@ -18,4 +18,4 @@ weave-scope:
         kubectl apply -f /srv/kubernetes/manifests/weave-scope/probe-deploy.yaml
         kubectl apply -f /srv/kubernetes/manifests/weave-scope/svc.yaml
         kubectl apply -f /srv/kubernetes/manifests/weave-scope/psp.yaml
-    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose

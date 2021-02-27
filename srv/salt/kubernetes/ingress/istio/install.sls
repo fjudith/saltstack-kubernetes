@@ -23,7 +23,7 @@ istio-operator:
     - group: root
     - name: |
         istioctl operator init
-    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
 
 istio:
   cmd.run:
@@ -34,7 +34,7 @@ istio:
     - group: root
     - name: |       
         kubectl apply -f /srv/kubernetes/manifests/istio/istio-config.yaml
-    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
 
 istio-kiali:
   cmd.run:
@@ -45,7 +45,7 @@ istio-kiali:
     - group: root
     - name: |       
         kubectl apply -f samples/addons/kiali.yaml
-    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
 
 istio-jaeger:
   cmd.run:
@@ -56,7 +56,7 @@ istio-jaeger:
     - group: root
     - name: |       
         kubectl apply -f samples/addons/jaeger.yaml
-    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
 
 istio-prometheus:
   cmd.run:
@@ -67,7 +67,7 @@ istio-prometheus:
     - group: root
     - name: |       
         kubectl apply -f samples/addons/prometheus.yaml
-    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
 
 istio-grafana:
   cmd.run:
@@ -78,4 +78,4 @@ istio-grafana:
     - group: root
     - name: |       
         kubectl apply -f samples/addons/grafana.yaml
-    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose

@@ -3,7 +3,7 @@ kube-prometheus-teardown:
     - runas: root
     - name: |
         kubectl delete -f /srv/kubernetes/manifests/kube-prometheus/manifests/
-    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
 
 /srv/kubernetes/manifests/kube-prometheus:
   file.absent:

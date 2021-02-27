@@ -14,7 +14,7 @@ fission-prometheus-rbac:
         - cmd: fission-namespace
         - file: /srv/kubernetes/manifests/fission/prometheus-k8s-rbac.yaml
     - runas: root
-    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz/'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
     - name: kubectl apply -f /srv/kubernetes/manifests/fission/prometheus-k8s-rbac.yaml
 
 fission-service-monitor:
@@ -33,5 +33,5 @@ fission-service-monitor:
         - cmd: fission-namespace
         - file: /srv/kubernetes/manifests/fission/service-monitor.yaml
     - runas: root
-    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz/'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose
     - name: kubectl apply -f /srv/kubernetes/manifests/fission/service-monitor.yaml

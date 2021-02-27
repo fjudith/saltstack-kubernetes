@@ -44,12 +44,18 @@ argo-cd:
             "./" --wait --timeout 5m
 
 argo-cd-wait-api:
-  http.wait_for_successful_query:
-    - name: 'http://localhost:8080/apis/argoproj.io/v1alpha1/'
-    - match: Sensor
-    - wait_for: 60
-    - request_interval: 5
-    - status: 200
+  cmd.run:
+    - name: |
+        http --verify false \
+          --cert /etc/kubernetes/pki/apiserver-kubelet-client.crt \
+          --cert-key /etc/kubernetes/pki/apiserver-kubelet-client.key \
+          https://localhost:6443/apis/argoproj.io/v1alpha1/ | grep -niE "sensor"
+    - use_vt: True
+    - retry:
+        attempts: 60
+        until: True
+        interval: 5
+        splay: 10
 
 
 argo-cd-password:

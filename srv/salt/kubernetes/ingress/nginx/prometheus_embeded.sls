@@ -10,4 +10,4 @@ nginx-ingress-monitoring:
         kubectl apply -f /srv/kubernetes/manifests/nginx/configuration.yaml
         kubectl apply -f /srv/kubernetes/manifests/nginx/prometheus.yaml
         kubectl apply -f /srv/kubernetes/manifests/nginx/grafana.yaml
-    - onlyif: curl --silent 'http://127.0.0.1:8080/healthz'
+    - onlyif: http --verify false https://localhost:6443/livez?verbose

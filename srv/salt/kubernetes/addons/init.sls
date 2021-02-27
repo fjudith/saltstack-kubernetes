@@ -8,6 +8,9 @@ include:
   {%- if common.addons.dns.get('autoscaler', {'enabled': False}).enabled %}
   - kubernetes.addons.dns-horizontal-autoscaler
   {%- endif %}
+  {%- if common.addons.dns.get('open_policy_agent', {'enabled': False}).enabled %}
+  - kubernetes.addons.open-policy-agent
+  {%- endif %}
   {%- if common.addons.get('dashboard', {'enabled': False}).enabled %}
   - kubernetes.addons.kubernetes-dashboard
   {%- endif %}

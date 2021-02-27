@@ -53,6 +53,8 @@ kubernetes:
           enabled: True
         coredns:
           enabled: True
+      open_policy_agent:
+        enabled: True
       helm:
         enabled: true
       kube_prometheus:

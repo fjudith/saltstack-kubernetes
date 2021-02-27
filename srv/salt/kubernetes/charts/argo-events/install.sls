@@ -25,10 +25,8 @@ argo-events-wait-api:
           https://localhost:6443/apis/argoproj.io/v1alpha1/ | grep -niE "sensor"
     - use_vt: True
     - retry:
-        attempts: 60
-        until: True
+        attempts: 10
         interval: 5
-        splay: 10
 
 argo-events-webhook-eventsource:
   file.managed:

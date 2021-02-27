@@ -4,6 +4,9 @@
 {#- Get the `tplroot` from `tpldir` #}
 {% from tpldir ~ "/map.jinja" import argo_events with context %}
 
+# If set to false, skip installing the CRDs. Requires user to have them installed prior to helm chart installation.
+installCRD: false
+
 # sensor controller
 sensorController:
   tag: v{{ argo_events.version }}

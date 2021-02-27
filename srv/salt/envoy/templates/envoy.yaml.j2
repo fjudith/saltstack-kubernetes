@@ -5,17 +5,21 @@
   {%- do masters.append(value) -%}
 {%- endfor -%}
 
+admin:
+  access_log_path: "/dev/null"
+  address:
+    socket_address:
+      address: 0.0.0.0
+      port_value: {{ envoy.admin_port }}
+
 static_resources:
   listeners:
   - name: listener_0
     address:
-      socket_address:
-        address: 0.0.0.0
-        port_value: {{ envoy.kubernetes_api_port }}
-
+      socket_address: {address: 0.0.0.0, port_value: {{ envoy.kubernetes_api_port }}}
     filter_chains:
     - filters:
-      - name: envoy.tcp_proxy
+      - name: envoy.extensions.filters.network.tcp_proxy
         typed_config:
           "@type": type.googleapis.com/envoy.extensions.filters.network.tcp_proxy.v3.TcpProxy
           stat_prefix: tcp_kube-apiserver
@@ -28,18 +32,16 @@ static_resources:
   clusters:
   - name: kube-apiserver
     connect_timeout: 0.25s
-    type: STRICT_DNS
-    dns_lookup_family: V4_ONLY
+    type: STATIC
     lb_policy: ROUND_ROBIN
-    hosts: [
+    load_assignment:
+      cluster_name: kube-apiserver
+      endpoints:
+      - lb_endpoints:
         {%- for server, addrs in salt['mine.get'](tgt='role:master', fun='network.ip_addrs', tgt_type='grain').items() %}
-        { socket_address: { address: {{ addrs[0] }}, port_value: {{ envoy.kubernetes_api_port }} } },
+        - endpoint:
+            address:
+              socket_address:
+                address: {{ addrs[0] }}
+                port_value: {{ envoy.kubernetes_api_port }}
         {%- endfor %}
-    ]
-
-admin:
-  access_log_path: "/dev/null"
-  address:
-    socket_address:
-      address: 0.0.0.0
-      port_value: {{ envoy.admin_port }}

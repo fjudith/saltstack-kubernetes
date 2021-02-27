@@ -10,7 +10,7 @@
     - context:
       tpldir: {{ tpldir }}
 
-contour-cert-manager-required-api:
+contour-cert-manager-api:
   cmd.run:
     - name: |
         http --verify false \
@@ -27,7 +27,7 @@ contour-cert-manager-required-api:
 contour-certificate:
   cmd.run:
     - require:
-      - http: contour-cert-manager-required-api
+      - cmd: contour-cert-manager-api
       - cmd: contour-install
     - watch:
       - file: /srv/kubernetes/manifests/contour/certificate.yaml

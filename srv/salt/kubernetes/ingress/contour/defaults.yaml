@@ -1,4 +1,4 @@
 contour:
-  version: 1.10.0
-  image: docker.io/projectcontour/contour:v1.10.0
-  envoy_image: docker.io/envoyproxy/envoy:v1.16.0
+  version: 1.13.0
+  image: docker.io/projectcontour/contour:v1.13.0
+  envoy_image: docker.io/envoyproxy/envoy:v1.17.1

@@ -44,7 +44,7 @@ velero-crds:
     - name: |
         kubectl apply -f crds/
 
-velero-wait-api:
+query-velero-api:
   cmd.run:
     - name: |
         http --verify false \
@@ -53,10 +53,8 @@ velero-wait-api:
           https://localhost:6443/apis/velero.io/v1/ | grep -niE "volumesnapshotlocation"
     - use_vt: True
     - retry:
-        attempts: 60
-        until: True
+        attempts: 10
         interval: 5
-        splay: 10
 
 velero:
   cmd.run:
@@ -65,7 +63,7 @@ velero:
       - file: /srv/kubernetes/manifests/velero/values.yaml
       - cmd: velero-namespace
       - cmd: velero-fetch-charts
-      - http: velero-wait-api
+      - cmd: query-velero-api
     - cwd: /srv/kubernetes/manifests/velero/velero
     - name: |
         helm upgrade --install velero --namespace velero \

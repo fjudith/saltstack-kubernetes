@@ -43,7 +43,7 @@ argo-cd:
             --values /srv/kubernetes/manifests/argo-cd/values.yaml \
             "./" --wait --timeout 5m
 
-argo-cd-wait-api:
+query-argo-cd-api:
   cmd.run:
     - name: |
         http --verify false \
@@ -52,17 +52,15 @@ argo-cd-wait-api:
           https://localhost:6443/apis/argoproj.io/v1alpha1/ | grep -niE "sensor"
     - use_vt: True
     - retry:
-        attempts: 60
-        until: True
+        attempts: 10
         interval: 5
-        splay: 10
 
 
 argo-cd-password:
   cmd.run:
     - runas: root
     - watch:
-      - http: argo-cd-wait-api
+      - cmd: query-argo-cd-api
       - file: /usr/local/bin/argocd
       - cmd: argo-cd
     - name: |

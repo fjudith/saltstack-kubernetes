@@ -67,7 +67,7 @@ rook-edgefs-discover-wait:
 
         kubectl -n rook-edgefs-system get daemonset rook-discover
 
-rook-edgefs-wait-api:
+query-rook-edgefs-api:
   cmd.run:
     - name: |
         http --verify false \
@@ -85,7 +85,7 @@ rook-edgefs-wait-api:
 rook-edgefs-cluster:
   cmd.run:
     - require:
-      - http: rook-edgefs-wait-api
+      - cmd: query-rook-edgefs-api
     - watch:
       - file: /srv/kubernetes/manifests/rook-edgefs/cluster.yaml
     - name: |

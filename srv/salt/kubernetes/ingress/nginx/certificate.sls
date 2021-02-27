@@ -10,13 +10,13 @@
     - context:
       tpldir: {{ tpldir }}
 
-nginx-ingress-cert-manager-required-api:
+nginx-ingress-cert-manager-api:
   cmd.run:
     - name: |
         http --verify false \
           --cert /etc/kubernetes/pki/apiserver-kubelet-client.crt \
           --cert-key /etc/kubernetes/pki/apiserver-kubelet-client.key \
-          https://localhost:6443/apis/cert-manager.io | grep -niE "cert-manager.io"
+          https://localhost:6443/apis/cert-manager.io
     - use_vt: True
     - retry:
         attempts: 60
@@ -27,7 +27,7 @@ nginx-ingress-cert-manager-required-api:
 nginx-ingress-certificate:
   cmd.run:
     - require:
-      - http: nginx-ingress-cert-manager-required-api
+      - cmd: nginx-ingress-cert-manager-api
       - cmd: nginx-ingress-install
     - watch:
       - file: /srv/kubernetes/manifests/nginx/certificate.yaml

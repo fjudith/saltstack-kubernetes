@@ -19,15 +19,13 @@ query-cilium-required-api:
           https://localhost:6443/apis/apps/v1 | grep -niE "daemonset"
     - use_vt: True
     - retry:
-        attempts: 60
-        until: True
+        attempts: 10
         interval: 5
-        splay: 10
 
 cilium-install:
   cmd.run:
     - require:
-      - http: query-cilium-required-api
+      - cmd: query-cilium-required-api
     - watch:
       - file: /srv/kubernetes/manifests/cilium/cilium.yaml
     - runas: root

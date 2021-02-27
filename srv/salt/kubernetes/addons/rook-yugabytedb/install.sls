@@ -25,15 +25,13 @@ query-rook-yugabytedb-api:
           https://localhost:6443/apis/yugabytedb.rook.io/v1alpha1
     - use_vt: True
     - retry:
-        attempts: 60
-        until: True
+        attempts: 10
         interval: 5
-        splay: 10
 
 rook-yugabytedb-cluster:
   cmd.run:
     - require:
-        - http: query-rook-yugabytedb-api
+        - cmd: query-rook-yugabytedb-api
         - cmd: rook-yugabytedb-namespace
     - watch:
         - file: /srv/kubernetes/manifests/rook-yugabytedb/cluster.yaml

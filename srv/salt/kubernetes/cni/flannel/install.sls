@@ -1,4 +1,4 @@
-query-fannel-required-api:
+query-fannel-api:
   cmd.run:
     - name: |
         http --verify false \
@@ -7,15 +7,13 @@ query-fannel-required-api:
           https://localhost:6443/apis/apps/v1 | grep -niE "daemonset"
     - use_vt: True
     - retry:
-        attempts: 60
-        until: True
+        attempts: 10
         interval: 5
-        splay: 10
 
 flannel-install:
   cmd.run:
     - require:
-      - http: query-fannel-required-api
+      - cmd: query-fannel-api
     - watch:
       - file: /srv/kubernetes/manifests/flannel/flannel.yaml
     - runas: root

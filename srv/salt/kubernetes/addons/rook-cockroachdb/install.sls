@@ -25,15 +25,13 @@ query-rook-cockroachdb-api:
           https://localhost:6443/apis/cockroachdb.rook.io/v1alpha1
     - use_vt: True
     - retry:
-        attempts: 60
-        until: True
+        attempts: 10
         interval: 5
-        splay: 10
 
 rook-cockroachdb-cluster:
   cmd.run:
     - require:
-        - http: query-rook-cockroachdb-api
+        - cmd: query-rook-cockroachdb-api
         - cmd: rook-cockroachdb-namespace
     - watch:
         - file: /srv/kubernetes/manifests/rook-cockroachdb/cluster.yaml

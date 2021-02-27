@@ -22,15 +22,13 @@ query-nats-api:
           https://localhost:6443/apis/nats.io/v1alpha2
     - use_vt: True
     - retry:
-        attempts: 60
-        until: True
+        attempts: 10
         interval: 5
-        splay: 10
 
 nats-cluster:
   cmd.run:
     - require:
-        - http: query-nats-api
+        - cmd: query-nats-api
     - watch:
         - file: /srv/kubernetes/manifests/nats-operator/nats-cluster.yaml
     - runas: root    
@@ -68,7 +66,7 @@ query-stan-api:
 stan-cluster:
   cmd.run:
     - require:
-        - http: query-stan-api
+        - cmd: query-stan-api
     - watch:
         - file: /srv/kubernetes/manifests/nats-operator/stan-cluster.yaml
     - runas: root

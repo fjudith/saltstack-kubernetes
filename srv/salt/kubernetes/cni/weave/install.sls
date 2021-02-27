@@ -1,4 +1,4 @@
-query-weave-required-api:
+query-weave-api:
   cmd.run:
     - name: |
         http --verify false \
@@ -7,15 +7,13 @@ query-weave-required-api:
           https://localhost:6443/apis/apps/v1 | grep -niE "daemonset"
     - use_vt: True
     - retry:
-        attempts: 60
-        until: True
+        attempts: 10
         interval: 5
-        splay: 10
 
 weave-install:
   cmd.run:
     - require:
-      - http: query-weave-required-api
+      - cmd: query-weave-api
     - watch:
       - file: /srv/kubernetes/manifests/weave/weave.yaml
     - runas: root

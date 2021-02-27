@@ -33,15 +33,13 @@ query-minio-operator-api:
           https://localhost:6443/apis/operator.min.io/v1
     - use_vt: True
     - retry:
-        attempts: 60
-        until: True
+        attempts: 10
         interval: 5
-        splay: 10
 
 minio-cluster:
   cmd.run:
     - require:
-        - http: query-minio-operator-api
+        - cmd: query-minio-operator-api
     - watch:
         - file: /srv/kubernetes/manifests/minio-operator/minioinstance.yaml
     - runas: root    

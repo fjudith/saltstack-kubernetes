@@ -20,7 +20,7 @@ rook-ceph-common:
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/rook-ceph/common.yaml
 
-rook-ceph-wait-api:
+query-rook-ceph-api:
   cmd.run:
     - name: |
         http --verify false \
@@ -37,7 +37,7 @@ rook-ceph-wait-api:
 rook-ceph-operator:
   cmd.run:
     - require:
-      - http: rook-ceph-wait-api
+      - cmd: query-rook-ceph-api
       - cmd: rook-ceph-common
     - watch:
       - file: /srv/kubernetes/manifests/rook-ceph/operator.yaml
@@ -84,7 +84,7 @@ rook-ceph-discover-wait:
 rook-ceph-cluster:
   cmd.run:
     - require:
-      - http: rook-ceph-wait-api
+      - cmd: query-rook-ceph-api
       - cmd: rook-ceph-operator-wait
     - watch:
       - file: /srv/kubernetes/manifests/rook-ceph/cluster.yaml
@@ -148,7 +148,7 @@ rook-ceph-osd-0-wait:
 rook-ceph-client:
   cmd.run:
     - require:
-      - http: rook-ceph-wait-api
+      - cmd: query-rook-ceph-api
       - cmd: rook-ceph-operator-wait
     - watch:
       - file: /srv/kubernetes/manifests/rook-ceph/client.yaml

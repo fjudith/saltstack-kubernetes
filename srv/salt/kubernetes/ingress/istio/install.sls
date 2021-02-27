@@ -19,10 +19,7 @@ istio-operator:
   cmd.run:
     - watch:
       - file: /usr/local/bin/istioctl
-    - user: root
-    - group: root
-    - name: |
-        istioctl operator init
+    - name: istioctl operator init
     - onlyif: http --verify false https://localhost:6443/livez?verbose
 
 istio:
@@ -30,52 +27,5 @@ istio:
     - watch:
       - cmd: istio-operator 
       - file: /srv/kubernetes/manifests/istio/istio-config.yaml
-    - user: root
-    - group: root
-    - name: |       
-        kubectl apply -f /srv/kubernetes/manifests/istio/istio-config.yaml
-    - onlyif: http --verify false https://localhost:6443/livez?verbose
-
-istio-kiali:
-  cmd.run:
-    - cwd: /srv/kubernetes/manifests/istio/istio-{{ istio.version }}
-    - watch:
-      - cmd: istio-operator
-    - user: root
-    - group: root
-    - name: |       
-        kubectl apply -f samples/addons/kiali.yaml
-    - onlyif: http --verify false https://localhost:6443/livez?verbose
-
-istio-jaeger:
-  cmd.run:
-    - cwd: /srv/kubernetes/manifests/istio/istio-{{ istio.version }}
-    - watch:
-      - cmd: istio 
-    - user: root
-    - group: root
-    - name: |       
-        kubectl apply -f samples/addons/jaeger.yaml
-    - onlyif: http --verify false https://localhost:6443/livez?verbose
-
-istio-prometheus:
-  cmd.run:
-    - cwd: /srv/kubernetes/manifests/istio/istio-{{ istio.version }}
-    - watch:
-      - cmd: istio 
-    - user: root
-    - group: root
-    - name: |       
-        kubectl apply -f samples/addons/prometheus.yaml
-    - onlyif: http --verify false https://localhost:6443/livez?verbose
-
-istio-grafana:
-  cmd.run:
-    - cwd: /srv/kubernetes/manifests/istio/istio-{{ istio.version }}
-    - watch:
-      - cmd: istio 
-    - user: root
-    - group: root
-    - name: |       
-        kubectl apply -f samples/addons/grafana.yaml
+    - name: kubectl apply -f /srv/kubernetes/manifests/istio/istio-config.yaml
     - onlyif: http --verify false https://localhost:6443/livez?verbose

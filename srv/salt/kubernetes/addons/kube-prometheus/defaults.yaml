@@ -2,6 +2,8 @@ kube_prometheus:
   version: v0.7.0
   grafana_image: docker.io/grafana/grafana:7.3.0
   grafana_ingress_host: grafana
+  grafana_username: admin
+  grafana_password: admin
   altermanager_ingress_host: alertmanager
   prometheus_ingress_host: prometheus
   pushgateway_image: prom/pushgateway:v1.2.0

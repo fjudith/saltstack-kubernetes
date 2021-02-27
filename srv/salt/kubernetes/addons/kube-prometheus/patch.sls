@@ -142,6 +142,19 @@ cockroachdb-grafana:
       tpldir: {{ tpldir }}
 {% endif %}
 
+kube-prometheus-grafana-secret:
+  file.managed:
+    - name: /srv/kubernetes/manifests/kube-prometheus/manifests/grafana-secret.yaml
+    - watch:
+      - git: kube-prometheus-repo
+    - source: salt://{{ tpldir }}/patch/grafana-secret.yaml.j2
+    - user: root
+    - template: jinja
+    - group: root
+    - mode: "0644"
+    - context:
+      tpldir: {{ tpldir }}
+
 kube-prometheus-grafana:
   file.managed:
     - name: /srv/kubernetes/manifests/kube-prometheus/manifests/grafana-deployment.yaml

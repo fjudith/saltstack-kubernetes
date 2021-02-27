@@ -121,6 +121,9 @@ spec:
         - mountPath: /grafana-dashboard-definitions/0/workload-total
           name: grafana-dashboard-workload-total
           readOnly: false
+        - mountPath: /run/secrets/admin_password
+          name: grafana-secret
+          readOnly: true
         {%- if storage.get('rook_ceph', {'enabled': False}).enabled %}
         - mountPath: /grafana-dashboard-definitions/0/rook-ceph
           name: grafana-dashboard-rook-ceph
@@ -255,6 +258,12 @@ spec:
       - configMap:
           name: grafana-dashboard-workload-total
         name: grafana-dashboard-workload-total
+      - name: grafana-secret
+        secret:
+          secretName: grafana-secret
+          items:
+            - key: admin-password
+              path: admin_password
       {%- if storage.get('rook_ceph', {'enabled': False}).enabled %}
       - configMap:
           name: grafana-dashboard-rook-ceph

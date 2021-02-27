@@ -5,7 +5,6 @@ kube-prometheus-crds:
     - runas: root
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/kube-prometheus/manifests/setup/
-        until kubectl get servicemonitors --all-namespaces ; do date; sleep 1; echo ""; done
     - unless: |
         http --verify false \
           --cert /etc/kubernetes/pki/apiserver-kubelet-client.crt \
@@ -19,19 +18,17 @@ kube-prometheus-query-api:
         http --verify false \
           --cert /etc/kubernetes/pki/apiserver-kubelet-client.crt \
           --cert-key /etc/kubernetes/pki/apiserver-kubelet-client.key \
-          https://localhost:6443/apis/monitoring.coreos.com/v1/servicemonitors | grep "servicemonitorlist"
+          https://localhost:6443/apis/monitoring.coreos.com/v1/servicemonitors | grep -niE "servicemonitorlist"
     - use_vt: True
     - retry:
-        attempts: 60
-        until: True
+        attempts: 10
         interval: 5
-        splay: 10
 
 kube-prometheus:
   cmd.run:
     - watch:
       - git: kube-prometheus-repo
-      - http: kube-prometheus-query-api
+      - cmd: kube-prometheus-query-api
     - runas: root
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/kube-prometheus/manifests/ --validate=false

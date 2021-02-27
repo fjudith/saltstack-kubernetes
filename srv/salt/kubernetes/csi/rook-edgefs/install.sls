@@ -70,7 +70,7 @@ rook-edgefs-discover-wait:
 query-rook-edgefs-api:
   cmd.run:
     - name: |
-        http --verify false \
+        http --check-status --verify false \
           --cert /etc/kubernetes/pki/apiserver-kubelet-client.crt \
           --cert-key /etc/kubernetes/pki/apiserver-kubelet-client.key \
           https://localhost:6443/apis/edgefs.rook.io/v1 | grep -niE "cluster"

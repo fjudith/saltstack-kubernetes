@@ -16,7 +16,7 @@ query-nats-api:
       - cmd: nats-operator
   cmd.run:
     - name: |
-        http --verify false \
+        http --check-status --verify false \
           --cert /etc/kubernetes/pki/apiserver-kubelet-client.crt \
           --cert-key /etc/kubernetes/pki/apiserver-kubelet-client.key \
           https://localhost:6443/apis/nats.io/v1alpha2
@@ -52,7 +52,7 @@ query-stan-api:
       - cmd: stan-operator
   cmd.run:
     - name: |
-        http --verify false \
+        http --check-status --verify false \
           --cert /etc/kubernetes/pki/apiserver-kubelet-client.crt \
           --cert-key /etc/kubernetes/pki/apiserver-kubelet-client.key \
           https://localhost:6443/apis/streaming.nats.io/v1alpha1

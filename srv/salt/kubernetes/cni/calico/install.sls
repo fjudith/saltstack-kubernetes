@@ -24,7 +24,7 @@
 query-calico-required-api:
   cmd.run:
     - name: |
-        http --verify false \
+        http --check-status --verify false \
           --cert /etc/kubernetes/pki/apiserver-kubelet-client.crt \
           --cert-key /etc/kubernetes/pki/apiserver-kubelet-client.key \
           https://127.0.0.1:6443/apis/apps/v1 | grep -niE "daemonset"

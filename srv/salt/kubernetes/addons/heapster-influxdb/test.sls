@@ -1,7 +1,7 @@
 query-heapster:
   cmd.run:
     - name: |
-        http --verify false \
+        http --check-status --verify false \
           --cert /etc/kubernetes/pki/apiserver-kubelet-client.crt \
           --cert-key /etc/kubernetes/pki/apiserver-kubelet-client.key \
           https://localhost:6443/api/v1/namespaces/kube-system/services/heapster/proxy
@@ -15,7 +15,7 @@ query-heapster:
 query-influxdb:
   cmd.run:
     - name: |
-        http --verify false \
+        http --check-status --verify false \
           --cert /etc/kubernetes/pki/apiserver-kubelet-client.crt \
           --cert-key /etc/kubernetes/pki/apiserver-kubelet-client.key \
           https://localhost:6443/api/v1/namespaces/kube-system/services/monitoring-influxdb:http/proxy
@@ -29,7 +29,7 @@ query-influxdb:
 query-grafana:
   cmd.run:
     - name: |
-        http --verify false \
+        http --check-status --verify false \
           --cert /etc/kubernetes/pki/apiserver-kubelet-client.crt \
           --cert-key /etc/kubernetes/pki/apiserver-kubelet-client.key \
           https://localhost:6443/api/v1/namespaces/kube-system/services/monitoring-grafana/proxy

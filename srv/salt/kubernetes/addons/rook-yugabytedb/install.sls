@@ -15,11 +15,11 @@ rook-yugabytedb:
     - onlyif: http --verify false https://localhost:6443/livez?verbose
 
 query-rook-yugabytedb-api:
+  cmd.run:
     - watch:
       - cmd: rook-yugabytedb
-  cmd.run:
     - name: |
-        http --verify false \
+        http --check-status --verify false \
           --cert /etc/kubernetes/pki/apiserver-kubelet-client.crt \
           --cert-key /etc/kubernetes/pki/apiserver-kubelet-client.key \
           https://localhost:6443/apis/yugabytedb.rook.io/v1alpha1

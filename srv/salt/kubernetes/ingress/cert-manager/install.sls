@@ -35,7 +35,7 @@ cert-manager:
 query-cert-manager-api:
   cmd.run:
     - name: |
-        http --verify false \
+        http --check-status --verify false \
           --cert /etc/kubernetes/pki/apiserver-kubelet-client.crt \
           --cert-key /etc/kubernetes/pki/apiserver-kubelet-client.key \
           https://localhost:6443/apis/cert-manager.io | grep -niE "apigroup"
@@ -54,7 +54,7 @@ cert-manager-clusterissuer:
         - file: /srv/kubernetes/manifests/cert-manager/clusterissuer.yaml
     - runas: root
     - onlyif: |
-        http --verify false \
+        http --check-status --verify false \
           --cert /etc/kubernetes/pki/apiserver-kubelet-client.crt \
           --cert-key /etc/kubernetes/pki/apiserver-kubelet-client.key \
           https://localhost:6443/apis/cert-manager.io

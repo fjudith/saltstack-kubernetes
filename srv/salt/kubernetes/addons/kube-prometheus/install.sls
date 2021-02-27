@@ -6,7 +6,7 @@ kube-prometheus-crds:
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/kube-prometheus/manifests/setup/
     - unless: |
-        http --verify false \
+        http --check-status --verify false \
           --cert /etc/kubernetes/pki/apiserver-kubelet-client.crt \
           --cert-key /etc/kubernetes/pki/apiserver-kubelet-client.key \
           https://localhost:6443/apis/monitoring.coreos.com/v1
@@ -15,7 +15,7 @@ kube-prometheus-crds:
 kube-prometheus-query-api:
   cmd.run:
     - name: |
-        http --verify false \
+        http --check-status --verify false \
           --cert /etc/kubernetes/pki/apiserver-kubelet-client.crt \
           --cert-key /etc/kubernetes/pki/apiserver-kubelet-client.key \
           https://localhost:6443/apis/monitoring.coreos.com/v1/servicemonitors | grep -niE "servicemonitorlist"

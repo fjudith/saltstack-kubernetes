@@ -4,7 +4,7 @@ include:
   - .osprep
   - .config
   - .install
-  - .label
+  # - .label
   {%- if storage.get('longhorn', {'enabled': False}).enabled %}
   - .mount
   {%- endif %}

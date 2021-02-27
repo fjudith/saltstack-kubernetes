@@ -14,7 +14,7 @@ query-kubernetes-dashboard:
       - cmd: kubernetes-dashboard
       - cmd: kubernetes-dashboard-ingress
     - name: |
-        http --verify false \
+        http --check-status --verify false \
           --cert /etc/kubernetes/pki/apiserver-kubelet-client.crt \
           --cert-key /etc/kubernetes/pki/apiserver-kubelet-client.key \
           https://localhost:6443/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:443/proxy

@@ -32,7 +32,7 @@ cert-manager:
         helm upgrade --install cert-manager --namespace cert-manager \
             "./" --wait --timeout 5m
 
-query-cert-manager-required-api:
+query-cert-manager-api:
   cmd.run:
     - name: |
         http --verify false \
@@ -49,7 +49,7 @@ query-cert-manager-required-api:
 cert-manager-clusterissuer:
   cmd.run:
     - require:
-      - http: query-cert-manager-required-api
+      - cmd: query-cert-manager-api
     - watch:
         - file: /srv/kubernetes/manifests/cert-manager/clusterissuer.yaml
     - runas: root

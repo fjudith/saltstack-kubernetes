@@ -1,3 +1,8 @@
 opa:
   gatekeeper_image:  docker.io/openpolicyagent/gatekeeper:v3.3.0
+  trusted_registries:
+    - docker.io
+    - quay.io
+    - k8s.grc.io
+    - docker.elastic.co
   

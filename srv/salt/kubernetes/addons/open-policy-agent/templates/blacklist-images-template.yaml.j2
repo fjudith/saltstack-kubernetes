@@ -1,0 +1,31 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import opa with context %}
+
+apiVersion: templates.gatekeeper.sh/v1beta1
+kind: ConstraintTemplate
+metadata:
+  name: blacklistimages
+spec:
+  crd:
+    spec:
+      names:
+        kind: BlacklistImages
+  targets:
+  - rego: |
+      package k8strustedimages
+
+      images {
+        image := input.review.object.spec.containers[_].image
+        {%- for item in opa.trusted_registries %}
+        not startswith(image, "{{ item }}/")
+        {%- endfor %}
+      }
+
+      violation[{"msg": msg}] {
+        not images
+        msg := "not trusted image!"
+      }
+    target: admission.k8s.gatekeeper.sh

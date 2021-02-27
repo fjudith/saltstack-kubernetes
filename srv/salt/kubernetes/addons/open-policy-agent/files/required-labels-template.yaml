@@ -1,0 +1,27 @@
+apiVersion: templates.gatekeeper.sh/v1beta1
+kind: ConstraintTemplate
+metadata:
+  name: requiredlabels
+spec:
+  crd:
+    spec:
+      names:
+        kind: RequiredLabels
+      validation:
+        openAPIV3Schema:
+          properties:
+            labels:
+              items: string
+              type: array
+  targets:
+  - rego: |
+      package k8srequiredlabels
+
+      violation[{"msg": msg, "details": {"missing_labels": missing}}] {
+        provided := {label | input.review.object.metadata.labels[label]}
+        required := {label | label := input.parameters.labels[_]}
+        missing := required - provided
+        count(missing) == 1
+        msg := sprintf("you must provide labels: %v", [missing])
+      }
+    target: admission.k8s.gatekeeper.sh

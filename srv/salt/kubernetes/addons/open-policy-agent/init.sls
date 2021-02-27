@@ -4,3 +4,4 @@ include:
   - .config
   - .namespace
   - .install
+  - .policy

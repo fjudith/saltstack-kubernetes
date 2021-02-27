@@ -20,12 +20,21 @@ spec:
       labels:
         app: node-problem-detector
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/os
+                    operator: In
+                    values:
+                      - linux
       containers:
       - name: node-problem-detector
         command:
         - /node-problem-detector
         - --logtostderr
-        - --system-log-monitors=/config/kernel-monitor.json,/config/docker-monitor.json
+        - --config.system-log-monitor=/config/kernel-monitor.json,/config/docker-monitor.json
         image: {{ node_problem_detector.image }}
         resources:
           limits:

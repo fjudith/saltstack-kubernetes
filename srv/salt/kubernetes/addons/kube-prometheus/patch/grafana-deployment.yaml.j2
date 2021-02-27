@@ -25,7 +25,9 @@ spec:
         app: grafana
     spec:
       containers:
-      - env: []
+      - env:
+        - name: GF_SECURITY_ADMIN_PASSWORD__FILE
+          value: /run/secrets/admin_password
         image: {{ kube_prometheus.grafana_image }}
         name: grafana
         ports:

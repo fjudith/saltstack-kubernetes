@@ -139,6 +139,7 @@ spec:
         - --secure-port=4443
         - --kubelet-preferred-address-types={{ metrics_server.preferred_address_types }}
         - --kubelet-use-node-status-port
+        - --kubelet-insecure-tls
         image: {{ metrics_server.image }}
         imagePullPolicy: IfNotPresent
         livenessProbe:

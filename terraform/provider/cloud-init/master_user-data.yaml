@@ -28,7 +28,7 @@ users:
 apt:
   sources:
     saltstack.list:
-      source: "deb http://repo.saltstack.com/py3/ubuntu/20.04/amd64/archive/3002.2 focal main"
+      source: "deb http://https://repo.saltproject.io/py3/ubuntu/20.04/amd64/archive/3002.5 focal main"
       key: |
         -----BEGIN PGP PUBLIC KEY BLOCK-----
         Version: GnuPG v2

@@ -7,8 +7,8 @@ export SALT_USER=salt
 
 apt-get update -yqq && \
 apt-get install -yqq --no-install-recommends curl net-tools gnupg2  && \
-curl -fsSL http://https://repo.saltproject.io/py3/ubuntu/20.04/amd64/archive/${SALT_VERSION}/SALTSTACK-GPG-KEY.pub | sudo apt-key add - && \
-echo "deb http://https://repo.saltproject.io/py3/ubuntu/20.04/amd64/archive/${SALT_VERSION} focal main" > /etc/apt/sources.list.d/saltstack.list && \
+curl -fsSL https://repo.saltproject.io/py3/ubuntu/20.04/amd64/archive/${SALT_VERSION}/SALTSTACK-GPG-KEY.pub | sudo apt-key add - && \
+echo "deb https://repo.saltproject.io/py3/ubuntu/20.04/amd64/archive/${SALT_VERSION} focal main" > /etc/apt/sources.list.d/saltstack.list && \
 echo "install salt-master and salt-api, dependencies" && \
 apt-get update -yqq && \
 apt-get install --no-install-recommends -yq \

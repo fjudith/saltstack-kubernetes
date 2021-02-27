@@ -147,7 +147,7 @@ MEMBER="node-name"
 curl -L https://github.com/coreos/etcd/releases/download/v${VERSION}/etcd-v${VERSION}-linux-amd64.tar.gz | tar -xvzf - && \
 mv etcd-v${VERSION}-linux-amd64/etcdctl /usr/local/bin/ && \
 rm -rf etcd-v${VERSION}-linux-amd64 && \
-alias ec="ETCDCTL_API=3 etcdctl --cacert /etc/etcd/ssl/etcd-ca.pem --cert /etc/etcd/ssl/etcd.pem --key /etc/etcd/ssl/etcd-key.pem" && \
+alias ec="ETCDCTL_API=3 etcdctl --cacert /etc/etcd/pki/ca.crt --cert /etc/etcd/pki/etcdctl-etcd-client.crt --key /etc/etcd/pki/etcdctl-etcd-client.key" && \
 MEMBERID=$(ec member list | grep $MEMBER | awk -F ',' '{print($1)}') && \
 ec member remove ${MEMBERID}
 ```

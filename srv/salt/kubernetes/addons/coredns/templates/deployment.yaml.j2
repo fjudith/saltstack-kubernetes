@@ -68,7 +68,7 @@ data:
         }
         prometheus :9153
         forward . /etc/resolv.conf 127.0.0.1:5301 127.0.0.1:5302 {
-          max_concurrent 1000
+          # max_concurrent 1000
         }
         cache 30
         loop

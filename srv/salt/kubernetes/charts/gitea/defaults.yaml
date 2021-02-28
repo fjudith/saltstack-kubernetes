@@ -1,5 +1,5 @@
 gitea:
-  version: 1.12.6
+  version: 1.13.2
   username: gitea
   password: V3ry1ns3cur3P4ssw0rd
   useremail: gitea@example.com

@@ -141,7 +141,7 @@ falco:
             --set-file certs.server.crt=/srv/kubernetes/manifests/falco/certs/server.crt \
             --set-file certs.ca.crt=/srv/kubernetes/manifests/falco/certs/ca.crt \
             --values=/srv/kubernetes/manifests/falco/values.yaml \
-            "./" --wait --timeout 5m
+            "./" --wait --timeout 10m
 
 falco-exporter:
   cmd.run:

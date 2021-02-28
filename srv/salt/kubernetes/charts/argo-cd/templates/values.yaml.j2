@@ -6,6 +6,10 @@
 {%- set public_domain = pillar['public-domain'] -%}
 {% from "kubernetes/map.jinja" import storage with context %}
 {% from "kubernetes/map.jinja" import charts with context %}
+{% from "kubernetes/map.jinja" import common with context %}
+
+# Optional CRD installation for those without Helm hooks
+installCRDs: false
 
 global:
   images:
@@ -20,6 +24,10 @@ controller:
     enabled: true
     serviceMonitor:
       enabled: true
+
+  # Deploy the application as a StatefulSet instead of a Deployment, this is required for HA capability.
+  # This is a feature flag that will become the default in chart version 3.x
+  enableStatefulSet: true
 
 ## Dex
 dex:
@@ -49,11 +57,22 @@ redis-ha:
 server:
   image:
     tag: v{{ argo_cd.version }}
+  
+  ## Additional command line arguments to pass to argocd-server
+  ##
+  {%- if common.addons.get('contour', {'enabled': False}).enabled %}
+  extraArgs:
+  - --insecure
+  {%- else %}
+  extraArgs: []
+  {%- endif %}
+
   ## Server metrics service configuration
   metrics:
     enabled: true
     serviceMonitor:
       enabled: true
+  
   ## ArgoCD config
   ## reference https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-cm.yaml
   {%- if charts.get('keycloak', {'enabled': False}).enabled %}
@@ -78,6 +97,12 @@ server:
   ## Enable if you would like to grant rights to ArgoCD to deploy to the local Kubernetes cluster.
   clusterAdminAccess:
     enabled: true
+  
+  {%- if common.addons.get('contour', {'enabled': False}).enabled %}
+  service:
+    annotations:
+      projectcontour.io/upstream-protocol.h2c: "https,443"
+  {%- endif %}
 
 {%- if charts.get('keycloak', {'enabled': False}).enabled %}
 {%- set keycloak_password = charts.get('keycloak', {}).get('password') %}

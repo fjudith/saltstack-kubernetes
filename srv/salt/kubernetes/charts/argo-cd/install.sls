@@ -55,14 +55,3 @@ query-argo-cd-api:
         attempts: 10
         interval: 5
 
-
-argo-cd-password:
-  cmd.run:
-    - runas: root
-    - watch:
-      - cmd: query-argo-cd-api
-      - file: /usr/local/bin/argocd
-      - cmd: argo-cd
-    - name: |
-        PASSWD=$(kubectl get pods -n argocd -l app.kubernetes.io/name=argocd-server -o name | cut -d'/' -f 2)
-        argocd login http://localhost:8001/api/v1/namespaces/argo-cd/services/https:argo-cd-argocd-server:https/proxy --password ${PASSWD}

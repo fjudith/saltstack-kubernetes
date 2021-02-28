@@ -12,8 +12,9 @@ spec:
     interval: 5s
     scrapeTimeout: 30s
   selector:
-    matchNames:
-      - gateway-metrics
+    matchLabels:
+      app: openfaas
+      component: gateway
   namespaceSelector:
     matchNames:
       - openfaas

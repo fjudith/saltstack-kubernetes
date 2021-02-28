@@ -5,12 +5,10 @@ metadata:
   labels:
     role: openfaas-system
     access: openfaas-system
-    istio-injection: enabled
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
   name: openfaas-fn
   labels:
-    istio-injection: enabled
     role: openfaas-fn

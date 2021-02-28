@@ -50,14 +50,26 @@ alertmanager:
   create: false
 {% endif %}
 
-{% if common.addons.get('nats_operator', {'enabled': False}).enabled %}
+
 nats:
+  channel: "faas-request"
+  {# {%- if common.addons.get('nats_operator', {'enabled': False}).enabled %}
   external:
     enabled: true
     clusterName: "stan-cluster"
     host: "nats-cluster.nats-io"
     port: "4222"
-{% endif %}
+  {%- else %}
+  image: {{ openfaas.stan_image }}
+  enableMonitoring: true
+  metrics:
+    enabled: true
+  {% endif %} #}
+  image: {{ openfaas.stan_image }}
+  enableMonitoring: true
+  metrics:
+    enabled: true
+
 
 # Ingress managed via Salt states
 ingress:

@@ -1,12 +1,13 @@
 openfaas:
-  client_version: 0.12.19
-  client_source_hash: 4798f7d391508df970b32ea4a7f3ec0c09c820ffcc8317853402577eab5247ec
-  oauth2_image: docker.io/alexellis2/openfaas-oidc-plugin:0.2.6
+  client_version: 0.13.1
+  client_source_hash: a15b120ab2cbd37750b7d0b9be48de8e8df952ff3c05a8d997ed07c22c378dc1
+  oauth2_image: docker.io/openfaas/openfaas-oidc-plugin:0.3.8
   nats_connector_image: docker.io/openfaas/nats-connector:0.2.2
+  stan_image: docker.io/amd64/nats-streaming:0.20.0-scratch
   ingress_host: openfaas
   username: admin
   password: V3ry1ns3cur3
-  nats_topics: "nats_test,"
+  nats_topics: "nats_test,faas-request,"
   oauth:
     enabled: False
     provider: keycloak

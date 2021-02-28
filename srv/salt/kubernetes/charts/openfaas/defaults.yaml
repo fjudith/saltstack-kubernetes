@@ -1,6 +1,6 @@
 openfaas:
   client_version: 0.13.1
-  client_source_hash: a15b120ab2cbd37750b7d0b9be48de8e8df952ff3c05a8d997ed07c22c378dc1
+  client_source_hash: 3c4da3cd862ae606f61b4e725357f805145fd64cc4a8860cc244cd424f0ee666
   oauth2_image: docker.io/openfaas/openfaas-oidc-plugin:0.3.8
   nats_connector_image: docker.io/openfaas/nats-connector:0.2.2
   stan_image: docker.io/amd64/nats-streaming:0.20.0-scratch

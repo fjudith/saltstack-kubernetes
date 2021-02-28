@@ -6,7 +6,6 @@ certs/*.pem
 *.mp4
 .vscode
 /.gtm/
-CHANGELOG.md
 gource.cfg
 *.mp4
 fetch_gravatar.pl

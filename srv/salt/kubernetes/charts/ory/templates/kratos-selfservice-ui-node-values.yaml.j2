@@ -1,0 +1,23 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import ory with context %}
+{%- set public_domain = pillar['public-domain'] -%}
+
+# Set this to ORY Kratos's Admin URL
+kratosAdminUrl: "http://kratos-admin"
+
+# Set this to ORY Kratos's public URL
+kratosPublicUrl: "http://kratos-public"
+
+# Set this to ORY Kratos's public URL accessible from the outside world.
+kratosBrowserUrl: "https://{{ ory.kratos.ingress_host }}-public.{{ public_domain }}"
+
+# The baseUrl
+baseUrl: ""
+
+# The jwksUrl
+jwksUrl: "http://oathkeeper-api"
+
+projectName: "SecureApp"

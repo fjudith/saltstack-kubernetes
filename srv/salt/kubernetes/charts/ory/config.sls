@@ -65,11 +65,11 @@
     - context:
       tpldir: {{ tpldir }}
 
-/srv/kubernetes/manifests/ory/kratos-selfservice.yaml:
+/srv/kubernetes/manifests/ory/kratos-selfservice-ui-node-values.yaml:
   file.managed:
     - require:
       - file:  /srv/kubernetes/manifests/ory
-    - source: salt://{{ tpldir }}/templates/kratos-selfservice.yaml.j2
+    - source: salt://{{ tpldir }}/templates/kratos-selfservice-ui-node-values.yaml.j2
     - user: root
     - group: root
     - mode: "0755"

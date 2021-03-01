@@ -10,6 +10,10 @@ kratos-remove-charts:
   file.absent:
     - name: /srv/kubernetes/manifests/ory/kratos
 
+kratos-selfservice-ui-node-remove-charts:
+  file.absent:
+    - name: /srv/kubernetes/manifests/ory/kratos-selfservice-ui-node
+
 cockroachdb-remove-charts:
   file.absent:
     - name: /srv/kubernetes/manifests/ory/cockroachdb
@@ -50,6 +54,17 @@ kratos-fetch-charts:
     - cwd: /srv/kubernetes/manifests/ory
     - name: |
         helm fetch --untar ory/kratos
+
+kratos-selfservice-ui-node-fetch-charts:
+  cmd.run:
+    - runas: root
+    - require:
+      - file: kratos-selfservice-ui-node-remove-charts
+      - file: /srv/kubernetes/manifests/ory
+      - cmd: hydra-fetch-charts
+    - cwd: /srv/kubernetes/manifests/ory
+    - name: |
+        helm fetch --untar ory/kratos-selfservice-ui-node
 
 /srv/kubernetes/manifests/ory/kratos/templates/configmap-config.yaml:
   file.managed:

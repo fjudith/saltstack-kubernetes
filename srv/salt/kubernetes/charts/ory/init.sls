@@ -16,6 +16,7 @@ include:
   - .install
   {%- if ory.get('kratos', {'enabled': False}).enabled %}
   - .kratos
+  - .kratos-selfservice-ui-node
   {%- endif %}
   {%- if ory.get('oathkeeper', {'enabled': False}).enabled %}
   - .oathkeeper

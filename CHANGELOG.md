@@ -1,20 +1,36 @@
 # Change Log
 
-Tout changement notable à ce livrable projet sera documenté dans ce fichier.
-Le format est basé les bonnes pratiques décrites [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), et adhère au [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
 ## Unreleased
 
 * Kubernetes: Enforcing strict Pod Security Policy
 
-## v7.0.0 - 2021-02-25
+## v7.1.0 - 2021-03-01
+
+## Added
+
+* MailHog: Enabled support of user credentials list
+
+## Changed
+
+* MailHog: Bump version 1.0.1
+* Ory Kratos: Migrated Selfservice UI deployment to Helm chart
+* Rook-CockroachDB: Bump version 1.5.8
+* Rook-YugabyteDB: Bump version 1.5.8
+
+## Fixed
+
+
+* Ory Hydra: Fixed  hydra binary download
+* Ory Kratos: Migration to v0.5 config spec
+
+## v7.0.0 - 2021-02-28
 
 ### Added
 
 * Added Open Policy Agent support
   Bump version 3.3.0
   Whitelisting image registries
-  Enforce resource lables
+  Enforce resource labels
   Enforce unique ingress hosts
 
 ### Changed
@@ -69,6 +85,7 @@ Le format est basé les bonnes pratiques décrites [Keep a Changelog](https://ke
 * Velero: Bump version 1.5.3
 * Rook-Ceph: Bump version 1.5.8
   * Run Ceph version 15.2.9
+
 
 ### Fixed
 

@@ -1,3 +1,16 @@
 containerd:
-  version: 1.2.6
-  source_hash: 3c23bc34c7c0cb2e45fe469f5fcfdb3829aab8e51a425b1efb702f00f215c4c6
+  enabled: true
+  version: 1.4.3
+  root: /var/lib/containerd
+  state: /run/containerd
+  grpc:
+    address: /run/containerd/containerd.sock
+  cni:
+    bin_dir: /opt/cni/bin
+    conf_dir: /etc/cni/net.d
+  opt:
+    path: /opt/containerd
+
+  use_upstream_repo: true
+  use_old_repo: false
+  proxy: false

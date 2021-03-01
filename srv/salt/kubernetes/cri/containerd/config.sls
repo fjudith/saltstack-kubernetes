@@ -1,42 +1,29 @@
-/etc/systemd/system/containerd.service:
+containerd-daemon-dir:
+  file.directory:
+    - name: /etc/containerd
+    - user: root
+    - group: root
+    - mode: "0755"
+
+containerd-module:
   file.managed:
-    - source: salt://{{ tpldir }}/files/containerd.service
+    - name: /etc/modules-load.d/containerd.conf
+    - source: salt://{{ tpldir}}/files/containerd.conf
     - user: root
     - group: root
     - mode: "0644"
     - context:
       tpldir: {{ tpldir }}
-
-/etc/systemd/system/kubelet.service.d:
-  file.directory:
-    - user: root
-    - group: root
-    - dir_mode: "0750"
-    - makedirs: True
-
-/etc/systemd/system/kubelet.service.d/0-containerd.conf:
-  file.managed:
-    - require:
-      - file: /etc/systemd/system/kubelet.service.d
-    - source: salt://{{ tpldir }}/files/0-containerd.conf
-    - user: root
-    - group: root
-    - mode: "0644"
-    - context:
-      tpldir: {{ tpldir }}
-
-/etc/containerd:
-  file.directory:
-    - user: root
-    - group: root
-    - dir_mode: "0750"
-    - makedirs: True
+  cmd.run:
+    - runas: root
+    - name: |
+        modprobe overlay
+        modprobe br_netfilter
 
 /etc/containerd/config.toml:
   file.managed:
-    - require:
-      - file: /etc/containerd
-    - source: salt://{{ tpldir }}/files/config.toml
+    - source: salt://{{ tpldir}}/templates/config.toml.j2
+    - template: jinja
     - user: root
     - group: root
     - mode: "0644"
@@ -46,7 +33,7 @@
 containerd.service:
   service.running:
     - watch:
-      - service: containerd
-      - file: /etc/systemd/system/containerd.service
+      - pkg: containerd
+      - file: /etc/modules-load.d/containerd.conf
       - file: /etc/containerd/config.toml
     - enable: True

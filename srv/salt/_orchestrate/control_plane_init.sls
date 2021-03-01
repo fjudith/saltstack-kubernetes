@@ -8,6 +8,8 @@
 {{ raise('ERROR: at least one master must be specified') }}
 {% endif %}
 
+{% set cri_provider = salt['pillar.get']('kubernetes:common:cri:provider') %}
+
 control_plane_primary_kubeadm_init:
   salt.state:
     - tgt: "{{ masters|first }}"
@@ -15,5 +17,5 @@ control_plane_primary_kubeadm_init:
     - queue: True
     - require:
       - salt: common_state
-      - salt: docker_state
+      - salt: {{ cri_provider }}_state
       - salt: etcd_state

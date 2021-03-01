@@ -6,6 +6,8 @@
 
 {% if masters|length > 1 %}
 
+{% set cri_provider = salt['pillar.get']('kubernetes:common:cri:provider') %}
+
 control_plane_kubeadm_join_master:
   salt.state:
     - tgt: "{{ masters[1:]|join(",") }}"
@@ -15,6 +17,6 @@ control_plane_kubeadm_join_master:
     - batch: 1
     - require:
       - salt: common_state
-      - salt: docker_state
+      - salt: {{ cri_provider }}_state
       - salt: control_plane_primary_kubeadm_init
 {% endif %}

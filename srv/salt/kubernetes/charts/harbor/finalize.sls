@@ -25,4 +25,4 @@ harbor-configure-oidc:
       - file: /srv/kubernetes/manifests/harbor/auth-oidc.json
     - runas: root
     - name: |
-        http --auth "admin:{{ harbor.adminPassword }}" PUT https://{{ harbor.coreIngressHost }}.{{ public_domain }}/api/configurations < /srv/kubernetes/manifests/harbor/auth-oidc.json
+        http --auth "admin:{{ harbor.adminPassword }}" PUT https://{{ harbor.coreIngressHost }}.{{ public_domain }}/api/v2.0/configurations < /srv/kubernetes/manifests/harbor/auth-oidc.json

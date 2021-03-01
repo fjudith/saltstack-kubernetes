@@ -22,6 +22,7 @@
 
 * Ory Hydra: Fixed  hydra binary download
 * Ory Kratos: Migration to v0.5 config spec
+* Harbor: Use v2.0 Api for the OIDC configuration
 
 ## v7.0.0 - 2021-02-28
 

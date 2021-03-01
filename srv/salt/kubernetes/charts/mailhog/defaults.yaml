@@ -1,2 +1,8 @@
 mailhog:
+  version: 1.0.1
   ingress_host: mail
+  users:
+    admin: V3ry1nS3cur3P4ssW0rd
+    user1: Us3r1
+    user2: Us3r2
+    user3: Us3r3

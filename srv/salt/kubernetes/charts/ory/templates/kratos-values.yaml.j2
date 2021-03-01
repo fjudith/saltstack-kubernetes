@@ -18,75 +18,105 @@
 image:
   tag: v{{ ory.kratos.version }}
 
+
+
 kratos:
   development: false
-  autoMigrate: True
+  # autoMigrate is relying on a simple initContainer mechanism
+  # Do not turn it on if the replicaCount > 1
+  autoMigrate: false
+
+
+  ## ORY Kratos Configuration
   config:
+    ## Data Source Name ##
     dsn: "{{ dsn }}"
 
     serve:
       public:
-        base_url: "https://{{ selfservice_host }}/.ory/kratos/public/"
-        port: 4433
+        base_url: "https://{{ ory.kratos.ingress_host }}-public.{{ public_domain }}"
+        # base_url: "http://kratos-public"
+        # port: 4433
+        # cors:
+        #   enabled: true
       admin:
-        port: 4434
-        # base_url: "https://{{ ory.kratos.ingress_host }}-admin.{{ public_domain }}"
-        base_url: "http://kratos-admin"    
+        base_url: "https://{{ ory.kratos.ingress_host }}-admin.{{ public_domain }}"
+        # base_url: "http://kratos-admin"
+        # port: 4434
+
+    ## selfservice ##
     selfservice:
       default_browser_return_url: https://{{ selfservice_host }}/
       whitelisted_return_urls:
         - https://{{ selfservice_host }}
 
-      strategies:
+      methods:
         password:
           enabled: true
 
+      ## flows ##
       flows:
         error:
           ui_url: https://{{ selfservice_host }}/error
-
+        
         settings:
           ui_url: https://{{ selfservice_host }}/settings
           privileged_session_max_age: 15m
-
+        
         recovery:
           enabled: true
           ui_url: https://{{ selfservice_host }}/recovery
-
+        
         verification:
           enabled: true
           ui_url: https://{{ selfservice_host }}/verify
           after:
             default_browser_return_url: https://{{ selfservice_host }}/
-
+        
         logout:
           after:
             default_browser_return_url: https://{{ selfservice_host }}/auth/login
-
+        
         login:
           ui_url: https://{{ selfservice_host }}/auth/login
-          request_lifespan: 10m
-
+          lifespan: 10m
+        
         registration:
-          request_lifespan: 10m
+          lifespan: 10m
           ui_url: https://{{ selfservice_host }}/auth/registration
           after:
             password:
               hooks:
-                -
-                  hook: session
-    
-    identity:
-      default_schema_url: file:///etc/config/identity.traits.schema.json
-    
-    {%- if  charts.get('mailhog', {'enabled': False}).enabled %}
-    courier:
-      smtp:
-        connection_uri: "smtps://test:test@mailslurper:1025/?skip_ssl_verify=true"
-    {%- endif %}
+                - hook: session
+
+    log:
+      level: {{ ory.kratos.log_level }}
+      format: text
+      leak_sensitive_values: true
 
     secrets:
       default: {{ ory.kratos.default_secret }}
       cookie: {{ ory.kratos.cookie_secret }}
-  log:
-    level: {{ ory.kratos.log_level }}
+
+    hashers:
+      argon2:
+        parallelism: 1
+        memory: 131072
+        iterations: 2
+        salt_length: 16
+        key_length: 16
+    
+    ## identity ##
+    identity:
+      ## JSON Schema URL for default identity traits ##
+      default_schema_url: file:///etc/config/identity.traits.schema.json
+
+    {%- if  charts.get('mailhog', {'enabled': False}).enabled %}
+    courier:
+      smtp:
+        connection_uri: "smtp:user1:Us3r1//mailhog.mailhog:1025"
+    {%- else %}
+    courier:
+      smtp:
+        connection_uri: "smtps://test:test@mailslurper:1025/?skip_ssl_verify=true"
+    {%- endif %}   

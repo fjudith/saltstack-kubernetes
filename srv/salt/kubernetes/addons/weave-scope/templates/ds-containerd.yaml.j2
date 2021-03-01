@@ -5,7 +5,6 @@
 {% from tpldir ~ "/map.jinja" import weave_scope with context %}
 {%- from "kubernetes/map.jinja" import common with context -%}
 
-# borrowed from https://cloud.weave.works/k8s/scope.yaml?k8s-version=1.9.3
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
@@ -18,9 +17,6 @@ metadata:
   namespace: weave
 spec:
   minReadySeconds: 5
-  selector:
-    matchLabels:
-      app: weave-scope
   template:
     metadata:
       labels:
@@ -32,11 +28,11 @@ spec:
       containers:
         - name: scope-agent
           args:
-            - '--mode=probe'
-            - '--probe-only'
-            - '--probe.kubernetes.role=host'
-            - '--probe.docker.bridge=docker0'
-            - '--probe.docker=true'
+            - '--no-app'
+            - '--probe.docker=false'
+            - '--probe.kubernetes=true'
+            - '--probe.cri=true'
+            - '--probe.cri.endpoint=unix:///run/containerd/containerd.sock'
             - 'weave-scope-app.weave.svc.cluster.local.:80'
             {%- if common.cni.provider == "weave" %}
             - '--weave=true'
@@ -44,21 +40,18 @@ spec:
             - '--weave=false'
             {%- endif %}
           env:
-            - name: SCOPE_HOSTNAME
+            - name: KUBERNETES_NODENAME
               valueFrom:
                 fieldRef:
+                  apiVersion: v1
                   fieldPath: spec.nodeName
           image: '{{ weave_scope.image }}'
           imagePullPolicy: IfNotPresent
-          resources:
-            requests:
-              cpu: 100m
-              memory: 100Mi
           securityContext:
             privileged: true
           volumeMounts:
-            - name: docker-socket
-              mountPath: /var/run/docker.sock
+            - name: cri-socket
+              mountPath: /run/containerd/containerd.sock
             - name: scope-plugins
               mountPath: /var/run/scope/plugins
             - name: sys-kernel-debug
@@ -66,13 +59,14 @@ spec:
       dnsPolicy: ClusterFirstWithHostNet
       hostNetwork: true
       hostPID: true
+      serviceAccountName: weave-scope
       tolerations:
         - effect: NoSchedule
           operator: Exists
       volumes:
-        - name: docker-socket
+        - name: cri-socket
           hostPath:
-            path: /var/run/docker.sock
+            path: /run/containerd/containerd.sock
         - name: scope-plugins
           hostPath:
             path: /var/run/scope/plugins

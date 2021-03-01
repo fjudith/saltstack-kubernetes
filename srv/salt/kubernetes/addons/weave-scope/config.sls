@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{%- from "kubernetes/map.jinja" import common with context -%}
+
 /srv/kubernetes/manifests/weave-scope:
   file.directory:
     - user: root
@@ -41,6 +47,32 @@
     - context:
         tpldir: {{ tpldir }}
 
+
+{%- if common.cri.provider == 'containerd' %}
+/srv/kubernetes/manifests/weave-scope/ds.yaml:
+    require:
+    - file: /srv/kubernetes/manifests/weave-scope
+    file.managed:
+    - source: salt://{{ tpldir }}/templates/ds-containerd.yaml.j2
+    - user: root
+    - template: jinja
+    - group: root
+    - mode: "0644"
+    - context:
+        tpldir: {{ tpldir }}
+{%- elif common.cri.provider == 'crio' %}
+/srv/kubernetes/manifests/weave-scope/ds.yaml:
+    require:
+    - file: /srv/kubernetes/manifests/weave-scope
+    file.managed:
+    - source: salt://{{ tpldir }}/templates/ds-crio.yaml.j2
+    - user: root
+    - template: jinja
+    - group: root
+    - mode: "0644"
+    - context:
+        tpldir: {{ tpldir }}
+{%- else%}
 /srv/kubernetes/manifests/weave-scope/ds.yaml:
     require:
     - file: /srv/kubernetes/manifests/weave-scope
@@ -52,6 +84,7 @@
     - mode: "0644"
     - context:
         tpldir: {{ tpldir }}
+{%- endif %}
 
 /srv/kubernetes/manifests/weave-scope/probe-deploy.yaml:
     require:

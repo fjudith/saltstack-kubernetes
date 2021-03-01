@@ -3,6 +3,7 @@
 
 {#- Get the `tplroot` from `tpldir` #}
 {% from tpldir ~ "/map.jinja" import weave_scope with context %}
+{%- from "kubernetes/map.jinja" import common with context -%}
 
 # borrowed from https://cloud.weave.works/k8s/scope.yaml?k8s-version=1.9.3
 apiVersion: apps/v1
@@ -33,6 +34,11 @@ spec:
         - name: app
           args:
             - '--no-probe'
+            {%- if common.cni.provider == "weave" %}
+            - '--weave=true'
+            {%- else %}
+            - '--weave=false'
+            {%- endif %}
           env: []
           image: {{ weave_scope.image }}
           imagePullPolicy: IfNotPresent

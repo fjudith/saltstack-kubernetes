@@ -4,7 +4,7 @@ kubeadm:
   apiVersion: v1beta2
   token: "abcdef.0123456789abcdef"
   nodeToken: "123456.abcdefghij123456"
-  criSocket: "/var/run/dockershim.sock"
+  criSocket: "/run/containerd/containerd.sock"
   ignorePreflightErrors: []
   bindPort: 6443
   encryptionKey: vjJjjlJ05TEm4iPJBGs+Pj/HAU7v/rw8NHZoBJ6fvVA=

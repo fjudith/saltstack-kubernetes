@@ -43,7 +43,7 @@ hydra-secrets:
 
 /opt/hydra-linux-amd64-v{{ ory.hydra.version }}:
   archive.extracted:
-    - source: https://github.com/ory/hydra/releases/download/v{{ ory.hydra.version }}/hydra_{{ ory.hydra.version }}_linux_64-bit.tar.gz
+    - source: https://github.com/ory/hydra/releases/download/v{{ ory.hydra.version }}/hydra_{{ ory.hydra.version }}_linux_64bit.tar.gz
     - source_hash: {{ ory.hydra.source_hash }}
     - archive_format: tar
     - enforce_toplevel: False

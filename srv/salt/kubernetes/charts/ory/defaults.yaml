@@ -2,7 +2,7 @@ ory:
   hydra:
     version: 1.9.2
     ingress_host: hydra
-    source_hash: 433ac706901b0f66f2952c1bd90c6fa3731bf49f22cbccc1260f2b875baccb4f
+    source_hash: bd919a7dadd87ebabbf11c457f0b4d172e8ea4281b0932f8cc477560890d327c
     # export LC_CTYPE=C; cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1
     system_secret: 2EYfY6MWHd3pXUkqeb3DrPjpsxe6p67i
     cookie_secret: uJd8AOqKyui6PmT54xa34cI52csbwmu6

@@ -3,7 +3,6 @@ nuclio:
   function_worker: 4
   event_worker: 2
   project_worker: 2
-  container_builder: docker
   ingress_host: nuclio
   registry:
     dockerhub:

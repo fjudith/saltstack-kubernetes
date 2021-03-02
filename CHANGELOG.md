@@ -4,11 +4,13 @@
 
 * Kubernetes: Enforcing strict Pod Security Policy
 
-## v7.1.0 - 2021-03-01
+## v7.1.0 - 2021-03-02
 
 ## Added
 
+* Common: Added eBPF tools package installation
 * Containerd: Bump version 1.4.3
+  * **Nuclio** is not compatible at the moment
 * Orchestration: Enabled CRI runtime customization
 * MailHog: Enabled support of user credentials list
 * Weave-Scope: Added Containerd and Crio support
@@ -16,6 +18,7 @@
 ## Changed
 
 * **Warning**: Enabled containerd as default container runtime
+* Argo: Enabled containerd and Cri-O support
 * MailHog: Bump version 1.0.1
 * Ory Kratos: Migrated Selfservice UI deployment to Helm chart
 * Rook-CockroachDB: Bump version 1.5.8
@@ -26,6 +29,8 @@
 * Ory Hydra: Fixed  hydra binary download
 * Ory Kratos: Migration to v0.5 config spec
 * Harbor: Use v2.0 Api for the OIDC configuration
+* Rook-Ceph: Fixed deployment state
+* Weave-Scope: Fixed missing selectors
 
 ## v7.0.0 - 2021-02-28
 

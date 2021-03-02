@@ -6,6 +6,7 @@
 {%- from "kubernetes/map.jinja" import charts with context -%}
 {%- from "kubernetes/map.jinja" import common with context -%}
 {%- set public_domain = pillar['public-domain'] -%}
+{% set cri_provider = salt['pillar.get']('kubernetes:common:cri:provider') %}
 
 # if true, all components assume no internet connectivity
 offline: false
@@ -27,7 +28,10 @@ dahsboard:
   enabled: True
   image:
     tag: {{ nuclio.version }}-amd64
-  containerBuilderKind: "{{ nuclio.container_builder }}"
+  
+  {%- if not cri_provider == 'docker'  %}
+  containerBuilderKind: "kanico"
+  {%- endif %}
 
 autoscaler:
   enabled: False

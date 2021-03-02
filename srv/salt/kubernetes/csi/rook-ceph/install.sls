@@ -29,10 +29,8 @@ query-rook-ceph-api:
           https://localhost:6443/apis/ceph.rook.io/v1
     - use_vt: True
     - retry:
-        attempts: 60
-        until: True
+        attempts: 10
         interval: 5
-        splay: {{ rook_ceph.timeout }}
 
 rook-ceph-operator:
   cmd.run:
@@ -62,24 +60,6 @@ rook-ceph-operator-wait:
         done && \
         echo "" && \
         kubectl -n rook-ceph get deployment rook-ceph-operator
-
-rook-ceph-discover-wait:
-  cmd.run:
-    - require:
-      - cmd: rook-ceph-operator
-    - runas: root
-    - timeout: {{ rook_ceph.timeout }}
-    - name: |
-        until kubectl -n rook-ceph get daemonset rook-discover; do printf '.' && sleep 5 ; done
-        echo "" && \
-        REPLICAS=$(kubectl -n rook-ceph get daemonset rook-discover -o jsonpath='{.status.desiredNumberScheduled}') && \
-        echo "Waiting for rook-discover to be up and running" && \
-        while [ "$(kubectl -n rook-ceph get daemonset rook-discover -o jsonpath='{.status.numberReady}')" != "${REPLICAS}" ]
-        do
-          printf '.' && sleep 5
-        done && \
-        echo "" && \
-        kubectl -n rook-ceph get daemonset rook-discover
 
 rook-ceph-cluster:
   cmd.run:
@@ -151,6 +131,6 @@ rook-ceph-client:
       - cmd: query-rook-ceph-api
       - cmd: rook-ceph-operator-wait
     - watch:
-      - file: /srv/kubernetes/manifests/rook-ceph/client.yaml
+      - file: /srv/kubernetes/manifests/rook-ceph/ceph-client.yaml
     - name: |
-        kubectl apply -f /srv/kubernetes/manifests/rook-ceph/client.yaml
+        kubectl apply -f /srv/kubernetes/manifests/rook-ceph/ceph-client.yaml

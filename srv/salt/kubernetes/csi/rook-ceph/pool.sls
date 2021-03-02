@@ -3,7 +3,7 @@ rook-ceph-pool:
     - require:
       - file: /srv/kubernetes/manifests/rook-ceph
     - name: /srv/kubernetes/manifests/rook-ceph/pool.yaml
-    - source: salt://{{ tpldir }}/templates/pool.yaml
+    - source: salt://{{ tpldir }}/templates/pool.yaml.j2
     - template: jinja
     - user: root
     - group: root

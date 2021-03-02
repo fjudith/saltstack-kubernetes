@@ -9,7 +9,7 @@
   file.managed:
     - require:
       - file: /srv/kubernetes/manifests/rook-ceph
-    - source: salt://{{ tpldir }}/files/ceph-client.yaml
+    - source: salt://{{ tpldir }}/files/crds.yaml
     - user: root
     - group: root
     - mode: "0644"

@@ -65,6 +65,8 @@ spec:
                   type: boolean
                 continueUpgradeAfterChecksEvenIfNotHealthy:
                   type: boolean
+                waitTimeoutForHealthyOSDInMinutes:
+                  type: integer
                 mon:
                   type: object
                   properties:
@@ -114,6 +116,8 @@ spec:
                   properties:
                     disable:
                       type: boolean
+                    daysToRetain:
+                      type: integer
                 network:
                   type: object
                   nullable: true
@@ -189,6 +193,8 @@ spec:
                               properties:
                                 name:
                                   type: string
+                                fullPath:
+                                  type: string
                                 config:
                                   type: object
                                   nullable: true
@@ -208,6 +214,19 @@ spec:
                       type: object
                       nullable: true
                       x-kubernetes-preserve-unknown-fields: true
+                    devices:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                          fullPath:
+                            type: string
+                          config:
+                            type: object
+                            nullable: true
+                            x-kubernetes-preserve-unknown-fields: true
                     storageClassDeviceSets:
                       type: array
                       nullable: true
@@ -250,24 +269,6 @@ spec:
                             items:
                               type: object
                               x-kubernetes-preserve-unknown-fields: true
-                driveGroups:
-                  type: array
-                  nullable: true
-                  items:
-                    type: object
-                    properties:
-                      name:
-                        type: string
-                      spec:
-                        type: object
-                        x-kubernetes-preserve-unknown-fields: true
-                      placement:
-                        type: object
-                        nullable: true
-                        x-kubernetes-preserve-unknown-fields: true
-                    required:
-                      - name
-                      - spec
                 monitoring:
                   type: object
                   properties:
@@ -282,6 +283,10 @@ spec:
                         properties:
                           ip:
                             type: string
+                    externalMgrPrometheusPort:
+                      type: integer
+                      minimum: 0
+                      maximum: 65535
                 removeOSDsIfOutAndSafeToRemove:
                   type: boolean
                 external:
@@ -321,6 +326,13 @@ spec:
                           x-kubernetes-preserve-unknown-fields: true
                         tokenSecretName:
                           type: string
+                logCollector:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                    periodicity:
+                      type: string
                 annotations:
                   type: object
                   nullable: true
@@ -466,6 +478,51 @@ spec:
         status: {}
 
 # OLM: END CEPH RBD MIRROR CRD
+# OLM: BEGIN CEPH FS MIRROR CRD
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: cephfilesystemmirrors.ceph.rook.io
+spec:
+  group: ceph.rook.io
+  names:
+    kind: CephFilesystemMirror
+    listKind: CephFilesystemMirrorList
+    plural: cephfilesystemmirrors
+    singular: cephfilesystemmirror
+  scope: Namespaced
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                resources:
+                  type: object
+                  nullable: true
+                  x-kubernetes-preserve-unknown-fields: true
+                priorityClassName:
+                  type: string
+                placement:
+                  type: object
+                  nullable: true
+                  x-kubernetes-preserve-unknown-fields: true
+                annotations:
+                  type: object
+                  nullable: true
+                  x-kubernetes-preserve-unknown-fields: true
+            status:
+              type: object
+              x-kubernetes-preserve-unknown-fields: true
+      subresources:
+        status: {}
+# OLM: END CEPH FS MIRROR CRD
 # OLM: BEGIN CEPH FS CRD
 ---
 apiVersion: apiextensions.k8s.io/v1
@@ -619,6 +676,12 @@ spec:
                   type: boolean
                 preserveFilesystemOnDelete:
                   type: boolean
+                mirroring:
+                  type: object
+                  nullable: true
+                  properties:
+                    enabled:
+                      type: boolean
             status:
               type: object
               x-kubernetes-preserve-unknown-fields: true
@@ -769,6 +832,8 @@ spec:
                   properties:
                     failureDomain:
                       type: string
+                    deviceClass:
+                      type: string
                     crushRoot:
                       type: string
                     replicated:
@@ -813,6 +878,8 @@ spec:
                   nullable: true
                   properties:
                     failureDomain:
+                      type: string
+                    deviceClass:
                       type: string
                     crushRoot:
                       type: string
@@ -1178,6 +1245,16 @@ spec:
                             type: string
                           startTime:
                             type: string
+                quotas:
+                  type: object
+                  nullable: true
+                  properties:
+                    maxBytes:
+                      type: integer
+                      minimum: 0
+                    maxObjects:
+                      type: integer
+                      minimum: 0
                 statusCheck:
                   type: object
                   x-kubernetes-preserve-unknown-fields: true
@@ -1303,9 +1380,7 @@ spec:
                 claimRef:
                   type: object
                   nullable: true
-                  items:
-                    type: object
-                    x-kubernetes-preserve-unknown-fields: true
+                  x-kubernetes-preserve-unknown-fields: true
             status:
               type: object
               x-kubernetes-preserve-unknown-fields: true
@@ -1350,6 +1425,8 @@ spec:
                   type: object
                   nullable: true
                   x-kubernetes-preserve-unknown-fields: true
+                objectBucketName:
+                  type: string
             status:
               type: object
               x-kubernetes-preserve-unknown-fields: true

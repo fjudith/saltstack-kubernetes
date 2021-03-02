@@ -8,17 +8,20 @@
 
 ## Added
 
+* Containerd: Bump version 1.4.3
+* Orchestration: Enabled CRI runtime customization
 * MailHog: Enabled support of user credentials list
+* Weave-Scope: Added Containerd and Crio support
 
 ## Changed
 
+* **Warning**: Enabled containerd as default container runtime
 * MailHog: Bump version 1.0.1
 * Ory Kratos: Migrated Selfservice UI deployment to Helm chart
 * Rook-CockroachDB: Bump version 1.5.8
 * Rook-YugabyteDB: Bump version 1.5.8
 
 ## Fixed
-
 
 * Ory Hydra: Fixed  hydra binary download
 * Ory Kratos: Migration to v0.5 config spec

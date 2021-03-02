@@ -5,6 +5,7 @@ kube-prometheus-crds:
     - runas: root
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/kube-prometheus/manifests/setup/
+        until kubectl get servicemonitors --all-namespaces ; do date; sleep 1; echo ""; done
     - unless: |
         http --check-status --verify false \
           --cert /etc/kubernetes/pki/apiserver-kubelet-client.crt \

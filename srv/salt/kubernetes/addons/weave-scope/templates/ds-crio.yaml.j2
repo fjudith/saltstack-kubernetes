@@ -17,6 +17,9 @@ metadata:
   namespace: weave
 spec:
   minReadySeconds: 5
+  selector:
+    matchLabels:
+      app: weave-scope
   template:
     metadata:
       labels:
@@ -28,17 +31,17 @@ spec:
       containers:
         - name: scope-agent
           args:
+            {%- if common.cni.provider == "weave" %}
+            - '--weave=true'
+            {%- else %}
+            - '--weave=false'
+            {%- endif %}
             - '--no-app'
             - '--probe.docker=false'
             - '--probe.kubernetes=true'
             - '--probe.cri=true'
             - '--probe.cri.endpoint=unix:///var/run/crio/crio.sock'
             - 'weave-scope-app.weave.svc.cluster.local.:80'
-            {%- if common.cni.provider == "weave" %}
-            - '--weave=true'
-            {%- else %}
-            - '--weave=false'
-            {%- endif %}
           env:
             - name: KUBERNETES_NODENAME
               valueFrom:

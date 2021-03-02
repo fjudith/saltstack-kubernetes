@@ -2,7 +2,7 @@
 # vim: ft=jinja
 
 {#- Get the `tplroot` from `tpldir` #}
-{%- from "kubernetes/map.jinja" import common with context -%}
+{% from "kubernetes/map.jinja" import common with context %}
 
 /srv/kubernetes/manifests/weave-scope:
   file.directory:
@@ -72,7 +72,7 @@
     - mode: "0644"
     - context:
         tpldir: {{ tpldir }}
-{%- else%}
+{%- else %}
 /srv/kubernetes/manifests/weave-scope/ds.yaml:
     require:
     - file: /srv/kubernetes/manifests/weave-scope

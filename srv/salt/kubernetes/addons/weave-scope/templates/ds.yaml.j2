@@ -32,17 +32,17 @@ spec:
       containers:
         - name: scope-agent
           args:
+            {%- if common.cni.provider == "weave" %}
+            - '--weave=true'
+            {%- else %}
+            - '--weave=false'
+            {%- endif %}
             - '--mode=probe'
             - '--probe-only'
             - '--probe.kubernetes.role=host'
             - '--probe.docker.bridge=docker0'
             - '--probe.docker=true'
             - 'weave-scope-app.weave.svc.cluster.local.:80'
-            {%- if common.cni.provider == "weave" %}
-            - '--weave=true'
-            {%- else %}
-            - '--weave=false'
-            {%- endif %}
           env:
             - name: SCOPE_HOSTNAME
               valueFrom:

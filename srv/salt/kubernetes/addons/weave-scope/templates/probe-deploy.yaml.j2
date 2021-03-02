@@ -36,15 +36,15 @@ spec:
       containers:
         - name: scope-cluster-agent
           args:
-            - '--mode=probe'
-            - '--probe-only'
-            - '--probe.kubernetes.role=cluster'
-            - 'weave-scope-app.weave.svc.cluster.local.:80'
             {%- if common.cni.provider == "weave" %}
             - '--weave=true'
             {%- else %}
             - '--weave=false'
             {%- endif %}
+            - '--mode=probe'
+            - '--probe-only'
+            - '--probe.kubernetes.role=cluster'
+            - 'weave-scope-app.weave.svc.cluster.local.:80'
           command:
             - /home/weave/scope
           image: '{{ weave_scope.image }}'

@@ -66,17 +66,6 @@ kratos-selfservice-ui-node-fetch-charts:
     - name: |
         helm fetch --untar ory/kratos-selfservice-ui-node
 
-/srv/kubernetes/manifests/ory/kratos/templates/configmap-config.yaml:
-  file.managed:
-    - watch:
-      - cmd: kratos-fetch-charts
-    - source: salt://{{ tpldir }}/patch/kratos-configmap.yaml
-    - user: root
-    - group: root
-    - mode: "0644"
-    - context:
-      tpldir: {{ tpldir }}
-
 oathkeeper-fetch-charts:
   cmd.run:
     - runas: root

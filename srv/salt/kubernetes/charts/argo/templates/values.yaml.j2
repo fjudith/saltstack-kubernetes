@@ -6,11 +6,16 @@
 {%- set public_domain = pillar['public-domain'] -%}
 {% from "kubernetes/map.jinja" import storage with context %}
 {% from "kubernetes/map.jinja" import charts with context %}
+{% set cri_provider = salt['pillar.get']('kubernetes:common:cri:provider') %}
 
 images:
   tag: v{{ argo.version }}
 
 controller:
+  {%- if not cri_provider == 'docker' %}
+  containerRuntimeExecutor: pns
+  {%- endif %}
+
   serviceMonitor:
     enabled: true
 

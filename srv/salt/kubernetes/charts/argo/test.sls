@@ -42,6 +42,8 @@ test-workflow:
       - http: query-argo-minio
       - cmd: argo-minio-bucket
     - runas: root
+      env:
+        ARGO_SECURE: false
     - name: |
         argo submit -n argo --watch https://raw.githubusercontent.com/argoproj/argo/stable/examples/nested-workflow.yaml
         argo list -n argo

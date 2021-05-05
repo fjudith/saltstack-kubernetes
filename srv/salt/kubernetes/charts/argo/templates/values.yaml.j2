@@ -18,6 +18,13 @@ controller:
 
   serviceMonitor:
     enabled: true
+  
+  extraEnv:
+    - name: LEADER_ELECTION_IDENTITY
+      valueFrom:
+        fieldRef:
+          apiVersion: v1
+          fieldPath: metadata.name
 
 useDefaultArtifactRepo: True
 useStaticCredentials: True
@@ -52,6 +59,7 @@ server:
   {%- set realm = argo.oauth.get('keycloak', {}).get('realm') -%}
   extraArgs:
   - --auth-mode=sso
+  - --secure=false
   sso:
     issuer: {{ keycloak_url }}/auth/realms/{{ realm }}
     # issuer: {{ keycloak_url }}/

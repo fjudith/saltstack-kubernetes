@@ -1,5 +1,5 @@
 argo:
-  version: 2.12.2
+  version: 3.0.2
   ingress_host: argo
   minio_image: docker.io/minio/minio:latest
   events:

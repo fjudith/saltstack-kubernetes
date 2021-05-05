@@ -40,16 +40,16 @@ dex:
 
 ## Redis
 redis:
-  enabled: false
+  enabled: true
 # This key configures Redis-HA subchart and when enabled (redis-ha.enabled=true)
 # the custom redis deployment is omitted
 redis-ha:
-  enabled: true
+  enabled: false
   # Check the redis-ha chart for more properties
   exporter:
     enabled: true
   haproxy:
-    enabled: true
+    enabled: false
     metrics:
       enabled: true
 
@@ -98,11 +98,12 @@ server:
   clusterAdminAccess:
     enabled: true
   
-  {%- if common.addons.get('contour', {'enabled': False}).enabled %}
-  service:
-    annotations:
-      projectcontour.io/upstream-protocol.h2c: "https,443"
-  {%- endif %}
+  # {%- if common.addons.get('contour', {'enabled': False}).enabled %}
+  # service:
+  #   annotations:
+  #     projectcontour.io/upstream-protocol.h2c: "http,80,https,443"
+  #     projectcontour.io/upstream-protocol.tls: "http,80,https,443"
+  # {%- endif %}
 
 {%- if charts.get('keycloak', {'enabled': False}).enabled %}
 {%- set keycloak_password = charts.get('keycloak', {}).get('password') %}

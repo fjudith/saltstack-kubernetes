@@ -33,9 +33,9 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-passthrough: "true"
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     {%- endif %}
-    {%- if common.addons.get('contour', {'enabled': False}).enabled %}
+    {# {%- if common.addons.get('contour', {'enabled': False}).enabled %}
     ingress.kubernetes.io/force-ssl-redirect: "true"
-    {%- endif %}
+    {%- endif %} #}
 spec:
   rules:
   - host: {{ argo_cd.ingress_host }}.{{ public_domain }}
@@ -54,3 +54,23 @@ spec:
     hosts:
     - {{ argo_cd.ingress_host }}.{{ public_domain }}
   {%- endif %}
+---
+{%- if common.addons.get('contour', {'enabled': False}).enabled %}
+# httpproxy-tls-passthrough.yaml
+apiVersion: projectcontour.io/v1
+kind: HTTPProxy
+metadata:
+  name: argocd-server
+  namespace: argocd
+spec:
+  virtualhost:
+    fqdn: argo-cd.testruction.io
+    tls:
+      passthrough: true
+  tcpproxy:
+    services:
+    - name: argo-cd-argocd-server
+      port: 80
+    - name: argo-cd-argocd-server
+      port: 443
+{%- endif %}

@@ -16,5 +16,9 @@ cert-manager-fetch-charts:
       - file: /srv/kubernetes/manifests/cert-manager
     - cwd: /srv/kubernetes/manifests/cert-manager
     - name: |
-        helm repo add jetstack https://charts.jetstack.io
-        helm fetch --untar jetstack/cert-manager --version v{{ cert_manager.version }}
+        # helm repo add jetstack https://charts.jetstack.io
+        # helm fetch --untar jetstack/cert-manager --version v{{ cert_manager.version }}
+        
+        helm repo add wener https://charts.wener.tech/
+        helm fetch --untar wener/cert-manager --version v{{ cert_manager.version }}
+

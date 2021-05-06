@@ -220,3 +220,41 @@ argo-server-sso-secrets:
       - cmd: argo-namespace
     - name: |
         kubectl apply -f /srv/kubernetes/manifests/argo/secrets.yaml
+
+argo-server-sso-admins-rbac:
+  file.managed:
+    - require:
+      - file:  /srv/kubernetes/manifests/argo
+    - name: /srv/kubernetes/manifests/argo/admins-rbac.yaml
+    - source: salt://{{ tpldir }}/files/admins-rbac.yaml
+    - user: root
+    - group: root
+    - mode: "0755"
+    - context:
+      tpldir: {{ tpldir }}
+  cmd.run:
+    - runas: root
+    - watch:
+      - file: /srv/kubernetes/manifests/argo/admins-rbac.yaml
+      - cmd: argo-namespace
+    - name: |
+        kubectl apply -f /srv/kubernetes/manifests/argo/admins-rbac.yaml
+
+argo-server-sso-users-sa:
+  file.managed:
+    - require:
+      - file:  /srv/kubernetes/manifests/argo
+    - name: /srv/kubernetes/manifests/argo/users-sa.yaml
+    - source: salt://{{ tpldir }}/files/users-sa.yaml
+    - user: root
+    - group: root
+    - mode: "0755"
+    - context:
+      tpldir: {{ tpldir }}
+  cmd.run:
+    - runas: root
+    - watch:
+      - file: /srv/kubernetes/manifests/argo/users-sa.yaml
+      - cmd: argo-namespace
+    - name: |
+        kubectl apply -f /srv/kubernetes/manifests/argo/users-sa.yaml

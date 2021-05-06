@@ -61,13 +61,27 @@ server:
   - --auth-mode=sso
   - --secure=false
   sso:
+    ## SSO configuration when SSO is specified as a server auth mode.
+    ## All the values are required. SSO is activated by adding --auth-mode=sso
+    ## to the server command line.
+    #
+    ## The root URL of the OIDC identity provider.
     issuer: {{ keycloak_url }}/auth/realms/{{ realm }}
-    # issuer: {{ keycloak_url }}/
+    ## Name of a secret and a key in it to retrieve the app OIDC client ID from.
     clientId:
       name: argo-server-sso
       key: client-id
+    ## Name of a secret and a key in it to retrieve the app OIDC client secret from.
     clientSecret:
       name: argo-server-sso
       key: client-secret
+    ## The OIDC redirect URL. Should be in the form <argo-root-url>/oauth2/callback.
     redirectUrl: https://{{ argo.ingress_host }}.{{ public_domain }}/oauth2/callback
+    rbac:
+      enabled: true
+    ## Scopes requested from the SSO ID provider.  The 'groups' scope requests
+    ## group membership information, which is usually used for authorization
+    ## decisions.
+    scopes:
+    - groups
   {%- endif %}

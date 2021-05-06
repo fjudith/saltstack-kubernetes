@@ -1,0 +1,79 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: admins
+  namespace: argo
+  annotations:
+    # The rule is an expression used to determine if this service account 
+    # should be used. 
+    # * `groups` - an array of the OIDC groups
+    # * `iss` - the issuer ("argo-server")
+    # * `sub` - the subject (typically the username)
+    # Must evaluate to a boolean. 
+    # If you want an account to be the default to use, this rule can be "true".
+    # Details of the expression language are available in
+    # https://github.com/antonmedv/expr/blob/master/docs/Language-Definition.md.
+    workflows.argoproj.io/rbac-rule: "'/kubernetes-admins' in groups"
+    # The precedence is used to determine which service account to use whe
+    # Precedence is an integer. It may be negative. If omitted, it defaults to "0".
+    # Numerically higher values have higher precedence (not lower, which maybe 
+    # counter-intuitive to you).
+    # If two rules match and have the same precedence, then which one used will 
+    # be arbitrary.
+    workflows.argoproj.io/rbac-rule-precedence: "1"
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: admins-role
+  namespace: argo
+rules:
+# pod get/watch is used to identify the container IDs of the current pod
+# pod patch is used to annotate the step's outputs back to controller (e.g. artifact location)
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - get
+  - watch
+  - patch
+# logs get/watch are used to get the pods logs for script outputs, and for log archival
+- apiGroups:
+  - ""
+  resources:
+  - pods/log
+  verbs:
+  - get
+  - watch
+- apiGroups:
+  - "argoproj.io"
+  resources:
+    - workflows
+    - workfloweventbindings
+    - workflowtemplates
+    - cronworkflows
+    - cronworkflows/finalizers
+    - clusterworkflowtemplates
+  verbs:
+    - create
+    - get
+    - list
+    - watch
+    - update
+    - patch
+    - delete
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: admins-binding
+  namespace: argo
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: admin
+subjects:
+- kind: ServiceAccount
+  name: admins
+  namespace: argo

@@ -123,6 +123,8 @@ kubernetes:
         enabled: False
       rook_yugabytedb:
         enabled: False
+      tekton:
+        enabled: False
   storage:
     loopback_iscsi:
       enabled: True

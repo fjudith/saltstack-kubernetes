@@ -1,0 +1,5 @@
+tekton:
+  version: 0.23.0-1
+  operator_image: gcr.io/tekton-releases/github.com/tektoncd/operator/cmd/kubernetes/operator:0.23.0-1
+  proxy_image: gcr.io/tekton-releases/github.com/tektoncd/operator/cmd/kubernetes/webhook:0.23.0-1
+  ingress_host: tekton

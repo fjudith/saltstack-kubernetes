@@ -1,0 +1,2 @@
+tektoncd-cli:
+  pkg.latest

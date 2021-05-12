@@ -24,7 +24,6 @@ concourse:
     - runas: root
     - watch:
       - file: /srv/kubernetes/manifests/concourse/values.yaml
-      - file: /srv/kubernetes/manifests/concourse/concourse/requirements.yaml
       - cmd: concourse-namespace
       - cmd: concourse-fetch-charts
     - cwd: /srv/kubernetes/manifests/concourse/concourse

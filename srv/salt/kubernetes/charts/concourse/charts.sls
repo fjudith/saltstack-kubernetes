@@ -12,16 +12,3 @@ concourse-fetch-charts:
     - name: |
         helm repo add concourse https://concourse-charts.storage.googleapis.com/
         helm fetch --untar concourse/concourse
-  file.absent:
-    - name: /srv/kubernetes/manifests/concourse/concourse/requirements.lock
-
-/srv/kubernetes/manifests/concourse/concourse/requirements.yaml:
-  file.managed:
-    - watch:
-      - cmd: concourse-fetch-charts
-    - source: salt://{{ tpldir }}/patch/requirements.yaml
-    - user: root
-    - group: root
-    - mode: "0644"
-    - context:
-      tpldir: {{ tpldir }}

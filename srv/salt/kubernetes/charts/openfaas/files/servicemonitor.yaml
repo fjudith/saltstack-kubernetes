@@ -10,7 +10,7 @@ spec:
   - port: metrics
     path: /metrics
     interval: 5s
-    scrapeTimeout: 30s
+    scrapeTimeout: 3s
   selector:
     matchLabels:
       app: openfaas

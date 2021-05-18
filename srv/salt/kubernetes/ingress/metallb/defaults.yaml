@@ -1,2 +1,2 @@
 metallb:
-  version: 0.9.4-debian-10-r3
+  version: 0.9.6-debian-10-r27

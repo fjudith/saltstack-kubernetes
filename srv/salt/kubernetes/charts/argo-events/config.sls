@@ -16,16 +16,3 @@
     - template: jinja
     - context:
       tpldir: {{ tpldir }}
-
-/srv/kubernetes/manifests/argo-events/argo-rbac.yaml:
-  file.managed:
-    - require:
-      - file:  /srv/kubernetes/manifests/argo-events
-    - source: salt://{{ tpldir }}/files/argo-rbac.yaml
-    - user: root
-    - group: root
-    - mode: "0755"
-    - context:
-      tpldir: {{ tpldir }}
-
-

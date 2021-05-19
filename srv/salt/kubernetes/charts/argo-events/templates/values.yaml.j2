@@ -3,9 +3,19 @@
 
 {#- Get the `tplroot` from `tpldir` #}
 {% from tpldir ~ "/map.jinja" import argo_events with context %}
+{% from "kubernetes/map.jinja" import charts with context %}
 
 # If set to false, skip installing the CRDs. Requires user to have them installed prior to helm chart installation.
 installCRD: false
+
+{% if charts.get('argo', {'enabled': False}).enabled %}
+# Create service accounts in additional namespaces specified
+# The SA will always be created in the release namespaces
+additionalSaNamespaces:
+  - argo
+
+singleNamespace: false
+{% endif %}
 
 # sensor controller
 sensorController:

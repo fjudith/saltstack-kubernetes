@@ -1,0 +1,11 @@
+apiVersion: argoproj.io/v1alpha1
+kind: EventBus
+metadata:
+  name: default
+  namespace: argo
+spec:
+  nats:
+    exotic:
+      url: nats://eventbus-default-stan-svc.argo-events.svc:4222
+      clusterID: eventbus-default
+---

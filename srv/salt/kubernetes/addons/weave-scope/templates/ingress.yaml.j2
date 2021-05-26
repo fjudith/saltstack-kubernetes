@@ -26,6 +26,9 @@ metadata:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     kubernetes.io/tls-acme: "true"
     {%- endif%}
+    {%- if common.addons.get('contour', {'enabled': False}).enabled %}
+    projectcontour.io/websocket-routes: "/"
+    {%- endif%}
 spec:
   rules:
   - host: {{ weave_scope.ingress_host }}.{{ public_domain }}

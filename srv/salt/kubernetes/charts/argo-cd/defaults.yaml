@@ -1,6 +1,6 @@
 argo_cd:
   enabled: true
-  version: 2.0.1
+  version: 2.0.2
   ingress_host: argo-cd
   grpc_ingress_host: grpc-argo-cd
   # oauth:

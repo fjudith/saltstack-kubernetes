@@ -6,3 +6,4 @@ getenvoy-envoy:
     - pkg: envoy-package-repository
   pkg.installed:
     - version: {{ envoy.version | safe }}
+

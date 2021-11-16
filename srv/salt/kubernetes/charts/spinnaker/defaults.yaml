@@ -1,5 +1,5 @@
 spinnaker:
-  version: 1.25.0
+  version: 1.26.6
   halyard_version: 1.41.0
   ingress_host: spinnaker
   minio_image: docker.io/minio/minio:latest

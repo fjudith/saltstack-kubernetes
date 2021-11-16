@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-export SALT_VERSION=3002.5
+export SALT_VERSION=3004
 export DEBIAN_FRONTEND=noninteractive
 export SALT_USER=salt
 

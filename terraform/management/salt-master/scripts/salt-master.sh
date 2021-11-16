@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 
-export SALT_VERSION=3002.5
-export SALTGUI_VERSION=1.23.0
+export SALT_VERSION=3004
+export SALTGUI_VERSION=1.26.0
 export DEBIAN_FRONTEND=noninteractive
 export SALT_USER=salt
 

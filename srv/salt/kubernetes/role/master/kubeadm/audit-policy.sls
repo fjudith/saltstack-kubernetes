@@ -1,11 +1,11 @@
-/etc/kubernetes/audit-policy:
+/var/log/kubernetes/audit:
   file.directory:
     - user: root
     - group: root
     - dir_mode: "0750"
     - makedirs: true
 
-/var/log/kubernetes/audit:
+/etc/kubernetes/audit-policy:
   file.directory:
     - user: root
     - group: root

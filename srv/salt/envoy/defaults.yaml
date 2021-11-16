@@ -1,8 +1,10 @@
 envoy:
   enabled: true
-  version: 1.17.1.p0.gd6a4496-1p74.gbb8060d
+  version: latest
   distribution: focal
   kubernetes_api_port: 6443
   overwrite: True
   service: envoy
   admin_port: 58080
+  gpg_key: https://deb.dl.getenvoy.io/public/gpg.8115BA8E629CC074.key
+  gpg_key_hash: 26f75d4df6c08a9e26593910ca0948325e742b05b5fe70369fa2cfdc3cb57ce4

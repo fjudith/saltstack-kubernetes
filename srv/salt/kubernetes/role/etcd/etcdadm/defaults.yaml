@@ -1,5 +1,5 @@
 etcdadm:
   version: 0.1.3
   source_hash: 1cc781d15cb5994eb9918c9f6947a00481c83494e7fe86eb9aac8ffe70bdfa96
-  client_version: 3.4.10
+  client_version: 3.5.1
   

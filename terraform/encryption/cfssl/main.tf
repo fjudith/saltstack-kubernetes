@@ -97,7 +97,7 @@ resource "null_resource" "cert-etcd" {
 
   provisioner "local-exec" {
     interpreter = ["bash", "-c"]
-    command     = "${path.module}/scripts/cfssl.sh ssl/etcd-${element(var.etcd_hostnames, count.index)} etcd etcd-${element(var.etcd_hostnames, count.index)} ${join(",", list(element(var.etcd_hostnames, count.index), element(var.etcd_private_ips, count.index)))}"
+    command     = "${path.module}/scripts/cfssl.sh ssl/etcd-${element(var.etcd_hostnames, count.index)} etcd etcd-${element(var.etcd_hostnames, count.index)} ${join(",", tolist([element(var.etcd_hostnames, count.index), element(var.etcd_private_ips, count.index)]))}"
   }
 
   provisioner "file" {
@@ -131,7 +131,7 @@ resource "null_resource" "cert-master" {
 
   provisioner "local-exec" {
     interpreter = ["bash", "-c"]
-    command     = "${path.module}/scripts/cfssl.sh ssl/master-${element(var.master_hostnames, count.index)} master master-${element(var.master_hostnames, count.index)} ${join(",", concat(var.master_hostnames, var.master_private_ips, list(var.master_cluster_ip), list(var.cluster_public_dns)))}"
+    command     = "${path.module}/scripts/cfssl.sh ssl/master-${element(var.master_hostnames, count.index)} master master-${element(var.master_hostnames, count.index)} ${join(",", concat(var.master_hostnames, var.master_private_ips, tolist([var.master_cluster_ip]), tolist([var.cluster_public_dns])))}"
   }
 
   provisioner "file" {
@@ -141,7 +141,7 @@ resource "null_resource" "cert-master" {
 
   provisioner "local-exec" {
     interpreter = ["bash", "-c"]
-    command     = "${path.module}/scripts/cfssl.sh ssl/master-${element(var.master_hostnames, count.index)} apiserver kube-apiserver-${element(var.master_hostnames, count.index)} ${join(",", concat(var.master_hostnames, var.master_private_ips, list(var.master_cluster_ip), list(var.cluster_public_dns)))}"
+    command     = "${path.module}/scripts/cfssl.sh ssl/master-${element(var.master_hostnames, count.index)} apiserver kube-apiserver-${element(var.master_hostnames, count.index)} ${join(",", concat(var.master_hostnames, var.master_private_ips, tolist([var.master_cluster_ip]), tolist([var.cluster_public_dns])))}"
   }
 
   provisioner "file" {
@@ -206,7 +206,7 @@ resource "null_resource" "cert-master" {
 
   provisioner "local-exec" {
     interpreter = ["bash", "-c"]
-    command     = "${path.module}/scripts/cfssl.sh ssl/master-${element(var.master_hostnames, count.index)} etcd-client kube-apiserver-etcd-client-${element(var.master_hostnames, count.index)} ${join(",", concat(var.master_hostnames, var.master_private_ips, list(var.master_cluster_ip), list(var.cluster_public_dns)))}"
+    command     = "${path.module}/scripts/cfssl.sh ssl/master-${element(var.master_hostnames, count.index)} etcd-client kube-apiserver-etcd-client-${element(var.master_hostnames, count.index)} ${join(",", concat(var.master_hostnames, var.master_private_ips, tolist([var.master_cluster_ip]), tolist([var.cluster_public_dns])))}"
   }
 
   provisioner "file" {
@@ -250,7 +250,7 @@ resource "null_resource" "cert-node" {
 
   provisioner "local-exec" {
     interpreter = ["bash", "-c"]
-    command     = "${path.module}/scripts/cfssl.sh ssl/node-${element(concat(var.edge_hostnames, var.node_hostnames), count.index)} node node-${element(concat(var.edge_hostnames, var.node_hostnames), count.index)} ${join("," , concat(list(element(concat(var.edge_private_ips, var.node_private_ips), count.index), element(concat(var.edge_hostnames, var.node_hostnames), count.index))))}"
+    command     = "${path.module}/scripts/cfssl.sh ssl/node-${element(concat(var.edge_hostnames, var.node_hostnames), count.index)} node node-${element(concat(var.edge_hostnames, var.node_hostnames), count.index)} ${join("," , concat(tolist([element(concat(var.edge_private_ips, var.node_private_ips), count.index), element(concat(var.edge_hostnames, var.node_hostnames), count.index)])))}"
   }
 
   provisioner "file" {

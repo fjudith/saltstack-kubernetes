@@ -141,5 +141,5 @@ module "encryption" {
 #   bastion_host  = module.provider.bastion_host
 #   vpn_interface = module.wireguard.vpn_interface
 #   gateway       = "${element(module.wireguard.gateway_vpn_ips,0)}"
-#   connections   = "${concat(list(module.wireguard.edge_vpn_ips[1]), module.wireguard.etcd_vpn_ips, module.wireguard.master_vpn_ips, module.wireguard.node_vpn_ips)}"
+#   connections   = "${concat(list([module.wireguard.edge_vpn_ips[1]), module.wireguard.etcd_vpn_ips, module.wireguard.master_vpn_ips, module.wireguard.node_vpn_ips])}"
 # }

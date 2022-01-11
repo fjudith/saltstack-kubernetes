@@ -8,7 +8,7 @@ include:
   {%- if common.addons.get('kube_prometheus', {'enabled': False}).enabled %}
   - .prometheus
   {%- endif%}
-  - .patch
+  {# - .patch #}
   {%- if common.addons.get('cert_manager', {'enabled': False}).enabled %}
   - .certificate
   {%- endif%}

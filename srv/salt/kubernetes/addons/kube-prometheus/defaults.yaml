@@ -1,6 +1,6 @@
 kube_prometheus:
-  version: v0.8.0
-  grafana_image: docker.io/grafana/grafana:7.4.3
+  version: v0.9.0
+  grafana_image: docker.io/grafana/grafana:8.2.3
   grafana_ingress_host: grafana
   grafana_username: admin
   grafana_password: admin

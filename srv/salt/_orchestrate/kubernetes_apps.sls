@@ -46,6 +46,8 @@ kube-prometheus_state:
     - sls: kubernetes.addons.kube-prometheus
     - queue: True
     - require:
+      - salt: compute_kubeadm_join_node
+      - salt: edge_kubeadm_join_edge
       - salt: cni_state
       - salt: metrics-server_state
 
@@ -55,6 +57,8 @@ ingress_state:
     - sls: kubernetes.ingress
     - queue: True
     - require:
+      - salt: compute_kubeadm_join_node
+      - salt: edge_kubeadm_join_edge
       - salt: cni_state
       - salt: metrics-server_state
       - salt: kube-prometheus_state
@@ -66,6 +70,7 @@ loopback_iscsi_state:
     - sls: loopback-iscsi
     - queue: True
     - require:
+      - salt: compute_kubeadm_join_node
       - salt: cni_state
       - salt: metrics-server_state
       - salt: kube-prometheus_state
@@ -76,6 +81,7 @@ csi_state:
     - sls: kubernetes.csi
     - queue: True
     - require:
+      - salt: compute_kubeadm_join_node
       - salt: cni_state
       - salt: metrics-server_state
       - salt: kube-prometheus_state
@@ -87,6 +93,8 @@ addons_state:
     - sls: kubernetes.addons
     - queue: True
     - require:
+      - salt: compute_kubeadm_join_node
+      - salt: edge_kubeadm_join_edge
       - salt: cni_state
       - salt: metrics-server_state
       - salt: kube-prometheus_state
@@ -99,6 +107,8 @@ charts_state:
     - sls: kubernetes.charts
     - queue: True
     - require:
+      - salt: compute_kubeadm_join_node
+      - salt: edge_kubeadm_join_edge
       - salt: cni_state
       - salt: metrics-server_state
       - salt: kube-prometheus_state

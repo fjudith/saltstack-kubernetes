@@ -4,7 +4,7 @@ The following procedure has been successfully tested for bugfix releases ugprade
 Please refer to the kubeadm [upgrade documentation](https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade/) for minor and major upgrades.
 
 ```bash
-VERSION="1.20.4"
+VERSION="1.22.3"
 
 # Install new Kubeadm package on all control-plane nodes
 salt -G role:master cmd.run "apt-mark unhold kubeadm && apt-get update && apt-get install -y kubeadm=${VERSION}-00 --allow-downgrades && apt-mark hold kubeadm"

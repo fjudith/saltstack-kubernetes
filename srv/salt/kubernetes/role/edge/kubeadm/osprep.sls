@@ -64,6 +64,10 @@ net.bridge.bridge-nf-pass-vlan-input-dev:
   sysctl.present:
     - value: 0
 
+net.ipv4.ip_unprivileged_port_start:
+  sysctl.present:
+    - value: 0
+
 
 /usr/lib/coreos:
   file.directory:

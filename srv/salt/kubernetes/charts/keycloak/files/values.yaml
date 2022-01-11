@@ -253,7 +253,8 @@ ingress:
       host: '{{ .Release.Name }}.keycloak.example.com'
       # Paths for the host
       paths:
-        - /
+        - path: /
+          pathType: Prefix
   # TLS configuration
   tls:
     - hosts:

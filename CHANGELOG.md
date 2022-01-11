@@ -4,9 +4,37 @@
 
 * Kubernetes: Enforcing strict Pod Security Policy
 
+## v8.0.0-rc1 - 2021-11-13
+
+### Added
+
+* Terraform: State backend to Scaleway Object Store example
+
+### Changed
+
+* Salt: Bump version 3004
+* SaltGUI: Bump version 1.26.0
+* Envoy: Bump version 1.18.2
+* Etcd: Bump version 3.5.0
+* Containerd: Bump version 1.4.11
+* Kubernetes: Bump version 1.22.3
+* Cert-Manager: Bump version 1.6.1
+* Calico: Bump version 3.21.0
+* Contour: Bump version 1.19.1
+* Harbor: Bump version 2.6.0
+* Spinnaker: Bump version 1.26.6
+
+
+### Fixed
+
+* Containerd: Fixed missing `SystemdCgroup = true` option [ref](https://kubernetes.io/docs/setup/production-environment/container-runtimes/#containerd-systemd)
+* Kubernetes: Fixed access to audit log
+* Keycloak: Fixed issue where 'latest' image tag where alway pulled. 
+
+
 ## v7.1.0 - 2021-03-02
 
-## Added
+### Added
 
 * Common: Added eBPF tools package installation
 * Containerd: Bump version 1.4.3
@@ -15,7 +43,7 @@
 * MailHog: Enabled support of user credentials list
 * Weave-Scope: Added Containerd and Crio support
 
-## Changed
+### Changed
 
 * **Warning**: Enabled containerd as default container runtime
 * Argo: Enabled containerd and Cri-O support
@@ -24,7 +52,7 @@
 * Rook-CockroachDB: Bump version 1.5.8
 * Rook-YugabyteDB: Bump version 1.5.8
 
-## Fixed
+### Fixed
 
 * Ory Hydra: Fixed  hydra binary download
 * Ory Kratos: Migration to v0.5 config spec

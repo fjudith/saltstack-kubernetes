@@ -28,7 +28,7 @@ users:
 apt:
   sources:
     saltstack.list:
-      source: "deb https://repo.saltproject.io/py3/ubuntu/20.04/amd64/archive/3002.5 focal main"
+      source: "deb https://repo.saltproject.io/py3/ubuntu/20.04/amd64/archive/3004 focal main"
       key: |
         -----BEGIN PGP PUBLIC KEY BLOCK-----
         Version: GnuPG v2
@@ -334,9 +334,9 @@ salt_minion:
 
 runcmd:
   # Install SaltGUI
-  - [/usr/bin/curl, -o, "/opt/saltgui.tar.gz", -L, 'https://github.com/erwindon/SaltGUI/archive/1.23.0.tar.gz']
+  - [/usr/bin/curl, -o, "/opt/saltgui.tar.gz", -L, 'https://github.com/erwindon/SaltGUI/archive/1.26.0.tar.gz']
   - [/bin/tar, -xvzf, "/opt/saltgui.tar.gz", -C, '/opt/']
-  - [/bin/ln, -vfs, '/opt/SaltGUI-1.23.0/saltgui', '/srv/saltgui']
+  - [/bin/ln, -vfs, '/opt/SaltGUI-1.26.0/saltgui', '/srv/saltgui']
   - [/bin/rm, -f, "/opt/saltgui.tar.gz"]
   # Start Saltstack
   - [/bin/systemctl, enable, salt-master]

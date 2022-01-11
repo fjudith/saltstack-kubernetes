@@ -151,3 +151,7 @@ alias ec="ETCDCTL_API=3 etcdctl --cacert /etc/etcd/pki/ca.crt --cert /etc/etcd/p
 MEMBERID=$(ec member list | grep $MEMBER | awk -F ',' '{print($1)}') && \
 ec member remove ${MEMBERID}
 ```
+
+
+salt -G role:master cmd.run 'kubeadm reset -f' \
+&& salt -G role:etcd cmd.run 'systemctl stop etcd && rm -vrf /var/lib/etcd && systemctl start etcd'

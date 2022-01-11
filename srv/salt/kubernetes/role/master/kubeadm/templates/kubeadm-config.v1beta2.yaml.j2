@@ -46,9 +46,7 @@ nodeRegistration:
   taints: []
   {%- endif %}
   kubeletExtraArgs:
-    {%- if storage.get('rook_ceph', {'enabled': False}).enabled or storage.get('rook_edgefs', {'enabled': False}).enabled %}
-    feature-gates: VolumeSnapshotDataSource=true,CSIDriverRegistry=true
-    {%- endif %}
+    
     {%- for argument, value in (kubeadm.kubeletExtraArgs).items() %}
     {{ argument }}: "{{ value }}"
     {%- endfor %}
@@ -106,12 +104,7 @@ controlPlaneEndpoint: {{ controlPlaneAddress ~ ':' ~ kubeadm.bindPort }}
 apiServer:
   extraArgs:
     apiserver-count: "{{ apiserverCount|length }}"
-    {%- if storage.get('rook_ceph', {'enabled': False}).enabled or storage.get('rook_edgefs', {'enabled': False}).enabled %}
-    feature-gates: VolumeSnapshotDataSource=true,CSIDriverRegistry=true
-    # allow-privileged: "true"
-    {%- else %}
     allow-privileged: "{{ kubeadm.apiServer.allowPrivileged }}"
-    {%- endif %}
     {%- if charts.get('keycloak', {'enabled': False}).enabled %}
     oidc-client-id: kubernetes
     oidc-groups-claim: groups
@@ -120,7 +113,7 @@ apiServer:
     {%- for argument, value in (kubeadm.apiServer.extraArgs).items() %}
     {{ argument }}: "{{ value }}"
     {%- endfor %}
-    audit-log-path: /var/log/audit/kube-apiserver-audit.log
+    audit-log-path: /var/log/kubernetes/audit/kube-apiserver-audit.log
     encryption-provider-config: /etc/kubernetes/pki/encryption-config.yaml
   extraVolumes:
   - name: audit-policy
@@ -138,9 +131,7 @@ apiServer:
   timeoutForControlPlane: {{ kubeadm.apiServer.timeoutForControlPlane }}
 controllerManager:
   extraArgs:
-    {%- if storage.get('rook_ceph', {'enabled': False}).enabled or storage.get('rook_edgefs', {'enabled': False}).enabled %}
-    feature-gates: VolumeSnapshotDataSource=true,CSIDriverRegistry=true
-    {%- endif %}
+    
     {%- for argument, value in (kubeadm.controllerManager.extraArgs).items() %}
     {{ argument }}: "{{ value }}"
     {%- endfor %}
@@ -152,9 +143,7 @@ controllerManager:
     pathType: File #}
 scheduler:
   extraArgs:
-    {%- if storage.get('rook_ceph', {'enabled': False}).enabled or storage.get('rook_edgefs', {'enabled': False}).enabled %}
-    feature-gates: VolumeSnapshotDataSource=true,CSIDriverRegistry=true
-    {%- endif %}
+    
     {%- for argument, value in (kubeadm.scheduler.extraArgs).items() %}
     {{ argument }}: "{{ value }}"
     {%- endfor %}

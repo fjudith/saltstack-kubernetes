@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      TF_ROOT: examples/terraform-project/code
+      TF_ROOT: terraform
       # This instructs the CLI to send cost estimates to Infracost Cloud. Our SaaS product
       #   complements the open source CLI by giving teams advanced visibility and controls.
       #   The cost estimates are transmitted in JSON format and do not contain any cloud

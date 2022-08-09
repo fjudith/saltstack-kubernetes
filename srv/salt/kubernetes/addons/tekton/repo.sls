@@ -1,7 +1,7 @@
 tekton-repo:
   pkgrepo.managed:
-    - name: deb http://ppa.launchpad.net/tektoncd/cli/ubuntu focal main
-    - dist: focal
+    - name: deb http://ppa.launchpad.net/tektoncd/cli/ubuntu jammy main
+    - dist: jammy
     - file: /etc/apt/sources.list.d/tektoncd-ubuntu-cli.list
     - gpgcheck: 1
     - keyserver: keyserver.ubuntu.com

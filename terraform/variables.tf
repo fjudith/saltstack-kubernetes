@@ -38,7 +38,7 @@ variable "architecture" {
 }
 
 variable "image" {
-  default = "Ubuntu Focal"
+  default = "Ubuntu Jammy"
 }
 
 variable "etcd_type" {

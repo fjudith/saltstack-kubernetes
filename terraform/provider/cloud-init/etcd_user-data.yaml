@@ -26,7 +26,7 @@ users:
 apt:
   sources:
     salt.list:
-      source: "deb [signed-by=/etc/apt/keyrings/salt-archive-keyring.gpg arch=amd64] https://repo.saltproject.io/py3/ubuntu/22.04/amd64/archive/3006 jammy main"
+      source: "deb [signed-by=/etc/apt/keyrings/salt-archive-keyring.gpg arch=amd64] https://repo.saltproject.io/salt/py3/ubuntu/22.04/amd64/3006 jammy main"
 
 
 # package_upgrade: true

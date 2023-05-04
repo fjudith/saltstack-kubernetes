@@ -97,7 +97,7 @@ provisioner "remote-exec" {
   }
 
   provisioner "file" {
-    content     = file(var.ssh_private_key)
+    source      = var.ssh_private_key
     destination = "~/.ssh/id_rsa"
   }
 
@@ -108,7 +108,7 @@ provisioner "remote-exec" {
   }
 
   provisioner "file" {
-    content     = file(var.ssh_public_key)
+    source       = var.ssh_public_key
     destination = "~/.ssh/id_rsa.pub"
   }
 

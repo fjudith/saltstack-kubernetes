@@ -357,6 +357,8 @@ runcmd:
   - [/bin/systemctl, restart, salt-master]
   - [/bin/systemctl, restart, salt-minion]
   - [/bin/systemctl, restart, salt-api]
+  # Non-Root permissions
+  - [/usr/bin/chown, -R, salt, /etc/salt, /var/cache/salt, /var/log/salt, /var/run/salt]
   # Reload SSHd
   - [/bin/systemctl, reload, sshd]
   # Start Squid

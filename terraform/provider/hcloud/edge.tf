@@ -24,11 +24,11 @@ resource "hcloud_server" "edge01" {
     timeout     = "1m"
   }
 
-  provisioner "remote-exec" {
-    inline = [
-      "cloud-init status --long --wait",
-    ]
-  }
+  # provisioner "remote-exec" {
+  #   inline = [
+  #     "cloud-init status --long --wait",
+  #   ]
+  # }
 
   # provisioner "remote-exec" {
   #   inline = [

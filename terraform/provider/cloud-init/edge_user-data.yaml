@@ -354,7 +354,7 @@ runcmd:
   - [/bin/systemctl, enable, salt-api]
   - [/bin/systemctl, daemon-reload]
   - [/bin/systemctl, restart, salt-master]
-  - [/binsystemctl, restart, salt-minion]
+  - [/bin/systemctl, restart, salt-minion]
   - [/bin/systemctl, restart, salt-api]
   # Reload SSHd
   - [/bin/systemctl, reload, sshd]

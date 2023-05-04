@@ -13,20 +13,24 @@
 
 envoy-package-repository:
   file.managed:
-    - name: /tmp/envoy_repo_key.sh
-    - source: salt://{{ tpldir }}/scripts/envoy_repo_key.sh
-    - template: jinja
-    - context:
-        tpldir: {{ tpldir }}
-  cmd.script:
-    - name: repository key
-    - source: /tmp/envoy_repo_key.sh
-    - context:
-        tpldir: {{ tpldir }}
+    - name: /etc/apt/keyrings/getenvoy-keyring.key
+    - source: https://deb.dl.getenvoy.io/public/gpg.8115BA8E629CC074.key
+    - skip_verify: true
+    - makedirs: true
+    - mode: 644
+  cmd.run:
+    - watch:
+      - file: /etc/apt/keyrings/getenvoy-keyring.key
+    - name: |
+        cat /etc/apt/keyrings/getenvoy-keyring.key \
+        | gpg --dearmor | \
+        tee /etc/apt/keyrings/getenvoy-keyring.gpg > /dev/null
   pkgrepo.{{ repoState }}:
     - humanname: {{ grains["os"] }} {{ grains["oscodename"] | capitalize }} Envoy Proxy Package Repository
-    - name: deb [arch={{ grains["osarch"] }} signed-by=/usr/share/keyrings/getenvoy-keyring.gpg] {{ url }}
+    - name: deb [arch={{ grains["osarch"] }} signed-by=/etc/apt/keyrings/getenvoy-keyring.gpg] {{ url }}
     - file: /etc/apt/sources.list.d/envoy.list
+    - aptkey: False
+    - clean_file: True
     {%- if grains['saltversioninfo'] >= [2018, 3, 0] %}
     - refresh: True
     {%- else %}

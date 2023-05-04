@@ -33,12 +33,11 @@
     - bits: 4096
     - new: True
     - cipher: des_ede3_cbc
-    {% if salt['file.file_exists']('/etc/etcd/pki/kube-apiserver-client.key') -%}
-    - prereq:
-      - x509: /etc/etcd/pki/kube-apiserver-client.crt
-    {%- endif %}
 
 /etc/etcd/pki/kube-apiserver-client.crt:
+  file.absent:
+    - onchanges:
+      - x509: /etc/etcd/pki/kube-apiserver-client.key
   x509.certificate_managed:
     - public_key: /etc/etcd/pki/kube-apiserver-client.key
     - signing_private_key: /etc/etcd/pki/ca.key

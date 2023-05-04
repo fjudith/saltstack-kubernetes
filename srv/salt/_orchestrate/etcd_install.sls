@@ -25,5 +25,3 @@ etcd_state:
     - queue: True
     - require:
       - salt: etcd_ca_state
-      - salt: common_state
-      - salt: {{ cri_provider }}_state

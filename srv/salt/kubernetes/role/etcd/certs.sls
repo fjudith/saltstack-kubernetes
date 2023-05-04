@@ -26,12 +26,11 @@
     - bits: 4096
     - new: True
     - cipher: des_ede3_cbc
-    {% if salt['file.file_exists']('/etc/etcd/pki/server.key') -%}
-    - prereq:
-      - x509: /etc/etcd/pki/server.crt
-    {%- endif %}
 
 /etc/etcd/pki/server.crt:
+  file.absent:
+    - onchanges:
+      - x509: /etc/etcd/pki/server.key
   x509.certificate_managed:
     - public_key: /etc/etcd/pki/server.key
     - signing_private_key: /etc/etcd/pki/ca.key
@@ -57,12 +56,11 @@
     - bits: 4096
     - new: True
     - cipher: des_ede3_cbc
-    {% if salt['file.file_exists']('/etc/etcd/pki/peer.key') -%}
-    - prereq:
-      - x509: /etc/etcd/pki/peer.crt
-    {%- endif %}
 
 /etc/etcd/pki/peer.crt:
+  file.absent:
+    - onchanges:
+      - x509: /etc/etcd/pki/peer.key
   x509.certificate_managed:
     - public_key: /etc/etcd/pki/peer.key
     - signing_private_key: /etc/etcd/pki/ca.key
@@ -88,12 +86,11 @@
     - bits: 4096
     - new: True
     - cipher: des_ede3_cbc
-    {% if salt['file.file_exists']('/etc/etcd/pki/etcdctl-etcd-client.key') -%}
-    - prereq:
-      - x509: /etc/etcd/pki/etcdctl-etcd-client.crt
-    {%- endif %}
 
 /etc/etcd/pki/etcdctl-etcd-client.crt:
+  file.absent:
+    - onchanges:
+      - x509: /etc/etcd/pki/etcdctl-etcd-client.key
   x509.certificate_managed:
     - public_key: /etc/etcd/pki/etcdctl-etcd-client.key
     - signing_private_key: /etc/etcd/pki/ca.key

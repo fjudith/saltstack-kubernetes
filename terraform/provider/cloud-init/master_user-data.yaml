@@ -70,7 +70,7 @@ apt:
         =ZKPF
         -----END PGP PUBLIC KEY BLOCK-----
 
-# package_upgrade: true
+package_upgrade: true
 packages:
   - apt-transport-https
   - conntrack

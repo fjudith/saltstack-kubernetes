@@ -205,7 +205,7 @@ bootcmd:
   - [cloud-init-per, once, increase_ssh_sessions, sh, -c, "echo 'MaxSessions 100' | tee -a  /etc/ssh/sshd_config"]
 
 salt_minion:
-  pkg_name: 'salt-minion'
+  # pkg_name: 'salt-minion'
   service_name: 'salt-minion'
   config_dir: '/etc/salt'
   conf:

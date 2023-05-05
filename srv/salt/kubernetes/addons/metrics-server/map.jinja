@@ -1,7 +1,0 @@
-# -*- coding: utf-8 -*-
-# vim: ft=jinja
-
-{% import_yaml tpldir ~ "/defaults.yaml" or {} as defaults %}
-
-{#- Merge in salt pillar #}
-{% set metrics_server = salt['pillar.get']('kubernetes:common:addons:metrics_server', default=defaults['metrics_server'], merge=True) %}

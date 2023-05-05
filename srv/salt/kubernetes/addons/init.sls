@@ -2,9 +2,6 @@
 
 include:
   - kubernetes.addons.default-cluster-role-binding
-  {%- if common.addons.dns.get('coredns', {'enabled': False}).enabled %}
-  - kubernetes.addons.coredns
-  {%- endif %}
   {%- if common.addons.dns.get('autoscaler', {'enabled': False}).enabled %}
   - kubernetes.addons.dns-horizontal-autoscaler
   {%- endif %}

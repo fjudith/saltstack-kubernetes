@@ -7,7 +7,4 @@ edge_kubeadm_join_edge:
     - tgt_type: compound
     - sls: kubernetes.role.edge.kubeadm
     - queue: True
-    - require:
-      - salt: common_state
-      - salt: {{ cri_provider }}_state
-      - salt: compute_kubeadm_join_node
+

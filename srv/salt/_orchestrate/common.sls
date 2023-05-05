@@ -6,6 +6,8 @@ common_state:
     - tgt_type: compound
     - sls: common
     - queue: True
+    - require_in:
+        - state: {{ cri_provider }}_state
 
 {{ cri_provider }}_state:
   salt.state:
@@ -13,5 +15,4 @@ common_state:
     - tgt_type: compound
     - sls: kubernetes.cri.{{ cri_provider }}
     - queue: True
-    - require:
-      - salt: common_state
+

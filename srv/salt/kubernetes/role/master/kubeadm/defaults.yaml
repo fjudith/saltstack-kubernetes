@@ -1,10 +1,10 @@
 kubeadm:
   enabled: true
-  kubernetesVersion: 1.22.3
-  apiVersion: v1beta2
+  kubernetesVersion: 1.26.4
+  apiVersion: v1beta3
   token: "abcdef.0123456789abcdef"
   nodeToken: "123456.abcdefghij123456"
-  criSocket: "/run/containerd/containerd.sock"
+  criSocket: "unix:///run/containerd/containerd.sock"
   ignorePreflightErrors: []
   bindPort: 6443
   encryptionKey: vjJjjlJ05TEm4iPJBGs+Pj/HAU7v/rw8NHZoBJ6fvVA=
@@ -34,12 +34,11 @@ kubeadm:
       audit-log-maxage: 30
       audit-log-maxbackup: 3
       audit-log-maxsize: 100
-      insecure-bind-address: "127.0.0.1"
-      insecure-port: "0"
     timeoutForControlPlane: "5m0s"
     certSANs: []
   controllerManager:
     extraArgs:
+      # controllers: "*,bootstrapsigner,tokencleaner"
       terminated-pod-gc-threshold: "12500"
       node-monitor-grace-period: "40s"
       node-monitor-period: "5s"
@@ -55,6 +54,6 @@ kubeadm:
   dns:
     type: CoreDNS
     imageRepository: k8s.gcr.io
-    imageTag: 1.6.5
+    imageTag: 1.10.1
   kubeletExtraArgs:
     cgroup-driver: systemd

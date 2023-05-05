@@ -15,16 +15,16 @@ control_plane_primary_kubeadm_init:
     - tgt: "{{ masters|first }}"
     - sls: kubernetes.role.master.kubeadm
     - queue: True
-    - require:
-      - salt: common_state
-      - salt: {{ cri_provider }}_state
-      - salt: etcd_state
-      {%- if salt['pillar.get']('haproxy', {'enabled': False}).enabled %}
-      - salt: edge_haproxy_state
-      {%- elif salt['pillar.get']('envoy', {'enabled': False}).enabled %}
-      - salt: edge_envoy_state
-      {%- endif %}
-    - require_in:
-        - salt: control_plane_kubeadm_join_master
-        - salt: edge_kubeadm_join_edge
-        - salt: compute_kubeadm_join_node
+    # - require:
+    #   - salt: common_state
+    #   - salt: {{ cri_provider }}_state
+    #   - salt: etcd_state
+    #   {%- if salt['pillar.get']('haproxy', {'enabled': False}).enabled %}
+    #   - salt: edge_haproxy_state
+    #   {%- elif salt['pillar.get']('envoy', {'enabled': False}).enabled %}
+    #   - salt: edge_envoy_state
+    #   {%- endif %}
+    # - require_in:
+    #     - salt: control_plane_kubeadm_join_master
+    #     - salt: edge_kubeadm_join_edge
+    #     - salt: compute_kubeadm_join_node

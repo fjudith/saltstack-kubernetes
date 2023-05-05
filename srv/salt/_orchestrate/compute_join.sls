@@ -7,7 +7,4 @@ compute_kubeadm_join_node:
     - tgt_type: compound
     - sls: kubernetes.role.node.kubeadm
     - queue: True
-    - require:
-      - salt: common_state
-      - salt: {{ cri_provider }}_state
-      - salt: control_plane_kubeadm_join_master
+

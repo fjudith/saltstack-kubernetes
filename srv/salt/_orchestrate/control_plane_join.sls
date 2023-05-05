@@ -15,8 +15,4 @@ control_plane_kubeadm_join_master:
     - sls: kubernetes.role.master.kubeadm
     - queue: True
     - batch: 1
-    - require:
-      - salt: common_state
-      - salt: {{ cri_provider }}_state
-      - salt: control_plane_primary_kubeadm_init
 {% endif %}

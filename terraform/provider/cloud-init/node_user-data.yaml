@@ -96,6 +96,7 @@ packages:
   - python3-pyinotify
   - python3-ws4py
   - python3-m2crypto
+  - python3-kubernetes
   - salt-minion
   - salt-ssh
   - reclass

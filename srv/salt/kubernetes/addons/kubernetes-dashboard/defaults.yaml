@@ -1,4 +1,0 @@
-dashboard:
-  dashboard_image: docker.io/kubernetesui/dashboard:v2.2.0
-  scraper_image: docker.io/kubernetesui/metrics-scraper:v1.0.6
-  ingress_host: kubernetes-dashboard

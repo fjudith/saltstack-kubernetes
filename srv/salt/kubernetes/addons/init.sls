@@ -11,17 +11,11 @@ include:
   {%- if common.addons.dns.get('open_policy_agent', {'enabled': False}).enabled %}
   - kubernetes.addons.open-policy-agent
   {%- endif %}
-  {%- if common.addons.get('dashboard', {'enabled': False}).enabled %}
-  - kubernetes.addons.kubernetes-dashboard
-  {%- endif %}
   {%- if common.addons.get('helm', {'enabled': False}).enabled %}
   - kubernetes.addons.helm
   {%- endif %}
   {%- if common.addons.get('npd', {'enabled': False}).enabled %}
   - kubernetes.addons.node-problem-detector
-  {%- endif %}
-  {%- if common.addons.get('heapster_influxdb', {'enabled': False}).enabled %}
-  - kubernetes.addons.heapster-influxdb
   {%- endif %}
   {%- if common.addons.get('fluentd_elasticsearch', {'enabled': False}).enabled %}
   - kubernetes.addons.fluentd-elasticsearch

@@ -14,9 +14,6 @@ include:
   {%- if common.addons.get('npd', {'enabled': False}).enabled %}
   - kubernetes.addons.node-problem-detector
   {%- endif %}
-  {%- if common.addons.get('fluentd_elasticsearch', {'enabled': False}).enabled %}
-  - kubernetes.addons.fluentd-elasticsearch
-  {%- endif %}
   {%- if common.addons.get('weave_scope', {'enabled': False}).enabled %}
   - kubernetes.addons.weave-scope
   {%- endif %}

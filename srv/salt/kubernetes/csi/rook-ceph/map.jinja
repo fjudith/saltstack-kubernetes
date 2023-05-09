@@ -4,4 +4,4 @@
 {% import_yaml tpldir ~ "/defaults.yaml" or {} as defaults %}
 
 {#- Merge in salt pillar #}
-{% set rook_ceph = salt['pillar.get']('kubernetes:storage:rook_ceph', default=defaults['rook_ceph'], merge=True) %}
+{% set rook_ceph = salt['pillar.get']('kubernetes:csi:rook_ceph', default=defaults['rook_ceph'], merge=True) %}

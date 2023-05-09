@@ -1,0 +1,30 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{% from tpldir ~ "/map.jinja" import rook_ceph with context %}
+{%- from "kubernetes/map.jinja" import storage with context -%}
+{%- from "kubernetes/map.jinja" import common with context -%}
+
+toolbox:
+  enabled: {{ rook_ceph.toolbox.enabled }}
+
+monitoring:
+  {%- if common.addons.get('kube_prometheus', {'enabled': False}).enabled %}
+  enabled: true
+  {%- endif %}
+
+cephClusterSpec:
+  cephVersion:
+    image: quay.io/ceph/ceph:v{{ rook_ceph.ceph.version }}
+  storage:
+    devicePathFilter: ^/dev/disk/by-path/ip-{{ storage.loopback_iscsi.initiator_address }}:{{ storage.loopback_iscsi.initiator_port }}-iscsi-iqn.0000-00.target.local:ceph[\d]-lun-[\d]{1,}
+  placement:
+    all:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: role
+              operator: In
+              values:
+              - storage-node

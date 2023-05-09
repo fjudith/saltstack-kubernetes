@@ -1,13 +1,14 @@
-test-stop-etcd-service:
-  service.dead:
-    - name: etcd.service
-
 test-etcd-members:
-  service.running:
-    - name: etcd.service
   cmd.wait:
-    - watch:
-      - service: etcd.service
     - name: |
+        systemctl restart etcd.service
+
+        sleep {{ range(10, 30) | random }}
+
         alias ec="ETCDCTL_API=3 etcdctl --cacert /etc/etcd/pki/ca.crt --cert /etc/etcd/pki/server.crt --key /etc/etcd/pki/server.key"
         ec member list
+    - retry:
+        attempts: 60
+        until: True
+        interval: 5
+        splay: 10

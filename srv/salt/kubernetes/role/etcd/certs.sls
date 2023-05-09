@@ -26,12 +26,16 @@
     - bits: 4096
     - new: True
     - cipher: des_ede3_cbc
+    - unless: test -f /etc/etcd/pki/server.key
 
 /etc/etcd/pki/server.crt:
   file.absent:
     - onchanges:
       - x509: /etc/etcd/pki/server.key
   x509.certificate_managed:
+    - require:
+      - x509: /etc/etcd/pki/ca.key
+      - x509: /etc/etcd/pki/ca.crt
     - public_key: /etc/etcd/pki/server.key
     - signing_private_key: /etc/etcd/pki/ca.key
     - signing_cert: /etc/etcd/pki/ca.crt
@@ -47,21 +51,23 @@
     - days_remaining: 30
     - backup: True
     - subjectAltName: 'IP:127.0.0.1, DNS:{{ hostname }}, IP:{{ localIpAddress[0] }}, DNS:etcd, DNS:etcd.kube-system, DNS:etcd.kube-system.svc, DNS:etcd.kube-system.svc.{{ salt['pillar.get']('kubeadm:networking:dnsDomain', default='cluster.local') }}'
-    - require:
-      - x509: /etc/etcd/pki/ca.key
-      - x509: /etc/etcd/pki/ca.crt
+    - unless: test -f /etc/etcd/pki/server.crt
 
 /etc/etcd/pki/peer.key:
   x509.private_key_managed:
     - bits: 4096
     - new: True
     - cipher: des_ede3_cbc
+    - unless: test -f /etc/etcd/pki/peer.crt
 
 /etc/etcd/pki/peer.crt:
   file.absent:
     - onchanges:
       - x509: /etc/etcd/pki/peer.key
   x509.certificate_managed:
+    - require:
+      - x509: /etc/etcd/pki/ca.key
+      - x509: /etc/etcd/pki/ca.crt
     - public_key: /etc/etcd/pki/peer.key
     - signing_private_key: /etc/etcd/pki/ca.key
     - signing_cert: /etc/etcd/pki/ca.crt
@@ -77,21 +83,23 @@
     - days_remaining: 30
     - backup: True
     - subjectAltName: 'IP:{{ localIpAddress[0] }}, DNS:etcd, DNS:etcd.kube-system, DNS:etcd.kube-system.svc, DNS:etcd.kube-system.svc.{{ salt['pillar.get']('kubeadm:networking:dnsDomain', default='cluster.local') }}'
-    - require:
-      - x509: /etc/etcd/pki/ca.key
-      - x509: /etc/etcd/pki/ca.crt
+    - unless: test -f /etc/etcd/pki/peer.crt
 
 /etc/etcd/pki/etcdctl-etcd-client.key:
   x509.private_key_managed:
     - bits: 4096
     - new: True
     - cipher: des_ede3_cbc
+    - unless: test -f /etc/etcd/pki/etcdctl-etcd-client.key
 
 /etc/etcd/pki/etcdctl-etcd-client.crt:
   file.absent:
     - onchanges:
       - x509: /etc/etcd/pki/etcdctl-etcd-client.key
   x509.certificate_managed:
+    - require:
+      - x509: /etc/etcd/pki/ca.key
+      - x509: /etc/etcd/pki/ca.crt  
     - public_key: /etc/etcd/pki/etcdctl-etcd-client.key
     - signing_private_key: /etc/etcd/pki/ca.key
     - signing_cert: /etc/etcd/pki/ca.crt
@@ -107,6 +115,4 @@
     - days_remaining: 30
     - backup: True
     - subjectAltName: 'IP:127.0.0.1, IP:{{ localIpAddress[0] }}'
-    - require:
-      - x509: /etc/etcd/pki/ca.key
-      - x509: /etc/etcd/pki/ca.crt  
+    - unless: test -f /etc/etcd/pki/etcdctl-etcd-client.crt

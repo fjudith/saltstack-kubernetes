@@ -1,4 +1,4 @@
-/srv/kubernetes/manifests/helm:
+/srv/kubernetes/charts:
   file.directory:
     - user: root
     - group: root

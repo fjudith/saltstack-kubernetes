@@ -4,4 +4,4 @@
 {% import_yaml tpldir ~ "/defaults.yaml" or {} as defaults %}
 
 {#- Merge in salt pillar #}
-{% set helm = salt['pillar.get']('kubernetes:common:addons:helm', default=defaults['helm'], merge=True) %}
+{% set helm = salt['pillar.get']('kubernetes:common:helm', default=defaults['helm'], merge=True) %}

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # vim: ft=jinja
 
-{#- Get the `tplroot` from `tpldir` #}
 {% from tpldir ~ "/map.jinja" import helm with context %}
 
 /tmp/helm-v{{ helm.version }}:

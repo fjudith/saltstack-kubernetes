@@ -1,0 +1,4 @@
+include:
+  - .config
+  - .install
+  - .repo

@@ -3,6 +3,7 @@ keycloak:
   version: 21.1.1
   chart_version: 15.0.1
   url: https://charts.bitnami.com/bitnami
+  admin_password: 1nS3cur3P4ssw0rd
   ingress:
     enabled: true
     host: keycloak

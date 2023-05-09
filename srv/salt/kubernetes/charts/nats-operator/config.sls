@@ -1,8 +1,26 @@
 # -*- coding: utf-8 -*-
 # vim: ft=jinja
 
-{#- Get the `tplroot` from `tpldir` #}
-{% from tpldir ~ "/map.jinja" import kubeless with context %}
+{% from tpldir ~ "/map.jinja" import nats_operator with context %}
+
+{% set state = 'absent' %}
+{% if nats_operator.enabled -%}
+  {% set state = 'managed' -%}
+{% endif %}
+
+/srv/kubernetes/charts/nats-operator:
+  file.directory:
+    - user: root
+    - group: root
+    - dir_mode: "0750"
+    - makedirs: True
+
+/srv/kubernetes/manifests/nats-operator:
+  file.directory:
+    - user: root
+    - group: root
+    - dir_mode: "0750"
+    - makedirs: True
 
 nats-operator-namespace:
   file.managed:

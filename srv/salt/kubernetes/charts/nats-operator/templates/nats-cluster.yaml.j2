@@ -11,8 +11,7 @@ metadata:
   namespace: nats-io
 spec:
   size: 3
-  version: {{ nats_operator.nats_cluster_version }}
+  version: {{ nats_operator.nats.version }}
   pod:
     enableMetrics: true
     metricsImage: "synadia/prometheus-nats-exporter"
-    metricsImageTag: {{nats_operator.prometheus_exporter_version }}

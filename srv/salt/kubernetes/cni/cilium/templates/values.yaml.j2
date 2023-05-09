@@ -1,0 +1,10 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{% from tpldir ~ "/map.jinja" import cilium with context %}
+{%- from "kubernetes/map.jinja" import common with context -%}
+
+MTU: 0
+cni:
+  install: true
+  chainingMode: portmap

@@ -1,18 +1,16 @@
-/srv/kubernetes/manifests/cilium:
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+/srv/kubernetes/charts/cilium:
   file.directory:
     - user: root
     - group: root
     - dir_mode: "0750"
     - makedirs: True
 
-/srv/kubernetes/manifests/cilium/cilium.yaml:
-    file.managed:
-    - require:
-      - file: /srv/kubernetes/manifests/cilium
-    - source: salt://{{ tpldir }}/templates/cilium.yaml.j2
+/srv/kubernetes/manifests/cilium:
+  file.directory:
     - user: root
-    - template: jinja
     - group: root
-    - mode: "0644"
-    - context:
-      tpldir: {{ tpldir }}
+    - dir_mode: "0750"
+    - makedirs: True

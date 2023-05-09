@@ -1,32 +1,54 @@
-cilium-etcd-cert:
-  cmd.run:
-    - require:
-      - file: /srv/kubernetes/manifests/cilium/cilium.yaml
-    - runas: root
-    - env:
-      - CA_CERT: /etc/kubernetes/pki/etcd/ca.crt
-      - SERVER_KEY: /etc/kubernetes/pki/apiserver-etcd-client.key
-      - SERVER_CERT: /etc/kubernetes/pki/apiserver-etcd-client.crt
-    - unless: curl http://localhost:8001/api/v1/namespaces/kube-system/secrets/cilium-etcd-secrets
-    - name: kubectl create secret generic -n kube-system cilium-etcd-secrets --from-file=etcd-ca=${CA_CERT} --from-file=etcd-client-key=${SERVER_KEY} --from-file=etcd-client-crt=${SERVER_CERT}
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
 
-query-cilium-required-api:
+{%- from tpldir ~ "/map.jinja" import cilium with context %}
+
+{% set state = 'absent' %}
+{% set file_state = 'absent' %}
+{% if cilium.enabled %}
+  {% set state = 'present' %}
+  {% set file_state = 'managed' %}
+{% endif %}
+
+cilium-cli:
+  archive.extracted:
+    - name: /usr/local/cilium/{{ cilium.cli_version }}
+    - source: https://github.com/cilium/cilium-cli/releases/download/v{{ cilium.cli_version }}/cilium-linux-amd64.tar.gz
+    - source_hash: https://github.com/cilium/cilium-cli/releases/download/v{{ cilium.cli_version }}/cilium-linux-amd64.tar.gz.sha256sum
+    - skip_verify: false
+    - archive_format: tar
+    - enforce_toplevel: false
+  file.symlink:
+    - name: /usr/local/bin/cilium
+    - target: /usr/local/cilium/{{ cilium.cli_version }}/cilium
   cmd.run:
     - name: |
-        http --check-status --verify false \
-          --cert /etc/kubernetes/pki/apiserver-kubelet-client.crt \
-          --cert-key /etc/kubernetes/pki/apiserver-kubelet-client.key \
-          https://localhost:6443/apis/apps/v1 | grep -niE "daemonset"
-    - use_vt: True
-    - retry:
-        attempts: 10
-        interval: 5
+        /usr/local/bin/cilium install \
+        --version {{ cilium.version }} \
+        --helm-set cni.install=true \
+        --helm-set cni.chainingMode=portmap
 
-cilium-install:
-  cmd.run:
-    - require:
-      - cmd: query-cilium-required-api
-    - watch:
-      - file: /srv/kubernetes/manifests/cilium/cilium.yaml
-    - runas: root
-    - name: kubectl apply -f /srv/kubernetes/manifests/cilium/cilium.yaml
+# cilium:
+#   file.{{ file_state }}:
+#     - require:
+#       - file:  /srv/kubernetes/charts/cilium
+#     - name: /srv/kubernetes/charts/cilium/values.yaml
+#     - source: salt://{{ tpldir }}/templates/values.yaml.j2
+#     - user: root
+#     - group: root
+#     - mode: "0644"
+#     - template: jinja
+#     - context:
+#         tpldir: {{ tpldir }}
+#   helm.release_{{ state }}:
+#     - watch:
+#       - file: /srv/kubernetes/charts/cilium/values.yaml
+#     - name: cilium
+#     {%- if cilium.enabled %}
+#     - chart: cilium/cilium
+#     - values: /srv/kubernetes/charts/cilium/values.yaml
+#     - version: {{ cilium.chart_version }}
+#     - flags:
+#       - create-namespace
+#     {%- endif %}
+#     - namespace: kube-system

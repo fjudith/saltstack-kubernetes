@@ -1,0 +1,16 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{% from tpldir ~ "/map.jinja" import cert_manager with context %}
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cloudflare-api-token-secret
+  namespace: cert-manager
+  labels:
+    app: cert-manager
+type: Opaque
+data:
+  api-token: >-
+    {{ cert_manager.dns.cloudflare.secret | base64_encode }}

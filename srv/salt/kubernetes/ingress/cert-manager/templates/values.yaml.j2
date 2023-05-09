@@ -1,0 +1,17 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{% from tpldir ~ "/map.jinja" import cert_manager with context %}
+{% from "kubernetes/map.jinja" import common with context -%}
+
+image:
+  tag: v{{ cert_manager.version }}
+
+
+prometheus:
+  enabled: true
+  {%- if common.addons.get('kube_prometheus', {'enabled': False}).enabled %}
+  servicemonitor:
+    enabled: true
+    namespace: cert-manager
+  {%- endif %}

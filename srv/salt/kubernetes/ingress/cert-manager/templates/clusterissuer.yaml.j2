@@ -34,7 +34,7 @@ spec:
             email: {{ cert_manager.dns.cloudflare.email }}
             # A secretKeyRef to a cloudflare api key
             apiTokenSecretRef:
-              name: public-dns-secret
-              key: secret-access-key
+              name: cloudflare-api-token-secret
+              key: api-token
       {%- endif %}
   

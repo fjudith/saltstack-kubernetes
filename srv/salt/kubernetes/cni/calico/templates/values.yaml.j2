@@ -1,0 +1,24 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{% from tpldir ~ "/map.jinja" import calico with context %}
+{%- from "kubernetes/map.jinja" import common with context -%}
+{%- from "kubernetes/map.jinja" import kubeadm with context -%}
+
+installation:
+  kubernetesProvider: AKS
+  cni:
+    type: Calico
+  calicoNetwork:
+    bgp: Disabled
+    ipPools:
+    - cidr: {{ kubeadm.networking.podSubnet }}
+      encapsulation: VXLAN
+    nodeAddressAutodetectionV4:
+      interface: "{{ calico.ipv4.autodetection_method }}"
+      cidrs:
+        - "{{ kubeadm.networking.podSubnet }}"
+    nodeAddressAutodetectionV6:
+      interface: "{{ calico.ipv6.autodetection_method }}"
+      cidrs:
+        - "{{ calico.ipv6.range }}"

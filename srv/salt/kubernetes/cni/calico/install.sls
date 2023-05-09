@@ -1,46 +1,36 @@
-{%- from tpldir ~ "/map.jinja" import calico with context -%}
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
 
-/usr/bin/calicoctl:
-  file.managed:
-    - source: https://github.com/projectcalico/calicoctl/releases/download/v{{ calico.version }}/calicoctl-linux-amd64
-    - skip_verify: true
-    - group: root
-    - mode: "0755"
+{%- from tpldir ~ "/map.jinja" import calico with context %}
 
-/opt/cni/bin/calico:
-  file.managed:
-    - source: https://github.com/projectcalico/cni-plugin/releases/download/v{{ calico.version }}/calico-amd64
-    - skip_verify: true
-    - group: root
-    - mode: "0755"
+{% set state = 'absent' %}
+{% set file_state = 'absent' %}
+{% if calico.enabled %}
+  {% set state = 'present' %}
+  {% set file_state = 'managed' %}
+{% endif %}
 
-/opt/cni/bin/calico-ipam:
-  file.managed:
-    - source: https://github.com/projectcalico/cni-plugin/releases/download/v{{ calico.version }}/calico-ipam-amd64
-    - skip_verify: true
-    - group: root
-    - mode: "0755"
-
-query-calico-required-api:
-  cmd.run:
-    - name: |
-        http --check-status --verify false \
-          --cert /etc/kubernetes/pki/apiserver-kubelet-client.crt \
-          --cert-key /etc/kubernetes/pki/apiserver-kubelet-client.key \
-          https://127.0.0.1:6443/apis/apps/v1 | grep -niE "daemonset"
-    - use_vt: True
-    - retry:
-        attempts: 10
-        until: True
-        interval: 5
-        splay: 10
-
-calico-install:
-  cmd.run:
+calico:
+  file.{{ file_state }}:
     - require:
-      - cmd: query-calico-required-api
+      - file:  /srv/kubernetes/charts/calico
+    - name: /srv/kubernetes/charts/calico/values.yaml
+    - source: salt://{{ tpldir }}/templates/values.yaml.j2
+    - user: root
+    - group: root
+    - mode: "0644"
+    - template: jinja
+    - context:
+        tpldir: {{ tpldir }}
+  helm.release_{{ state }}:
     - watch:
-      - file: /srv/kubernetes/manifests/calico/calico-typha.yaml
-    - runas: root
-    - name: |
-        kubectl apply -f /srv/kubernetes/manifests/calico/calico-typha.yaml
+      - file: /srv/kubernetes/charts/calico/values.yaml
+    - name: calico
+    {%- if calico.enabled %}
+    - chart: projectcalico/tigera-operator
+    - values: /srv/kubernetes/charts/calico/values.yaml
+    - version: v{{ calico.chart_version }}
+    - flags:
+      - create-namespace
+    {%- endif %}
+    - namespace: tigera-operator

@@ -72,7 +72,7 @@ minio:
 
 server:
   {%- if charts.get('keycloak', {'enabled': False}).enabled %}
-  {%- set keycloak_url = 'https://' ~ charts.keycloak.ingress.host ~ '.' + pillar['public-domain'] %}
+  {%- set keycloak_url = 'https://' ~ charts.keycloak.ingress.host ~ '.' ~ pillar['public-domain'] %}
   extraArgs:
   - --auth-mode=sso
   - --secure=false

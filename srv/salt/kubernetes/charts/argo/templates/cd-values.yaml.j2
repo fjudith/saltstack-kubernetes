@@ -31,7 +31,7 @@ global:
 ## Argo Configs
 configs:
   {%- if charts.get('keycloak', {'enabled': False}).enabled %}
-  {%- set keycloak_url = 'https://' ~ charts.keycloak.ingress.host ~ '.' + pillar['public-domain'] -%}
+  {%- set keycloak_url = 'https://' ~ charts.keycloak.ingress.host ~ '.' ~ pillar['public-domain'] -%}
   {%- set keycloak_username = salt['cmd.shell']('kubectl -n keycloak get configmap keycloak-env-vars --output=jsonpath="{.data.KEYCLOAK_ADMIN}"') %}
   {%- set keycloak_password = salt['cmd.shell']('kubectl -n keycloak get secret keycloak --output=jsonpath="{.data.admin-password}" | base64 -d') %}
   {%- set client_id         = argo.cd.oauth.keycloak.client_id %}

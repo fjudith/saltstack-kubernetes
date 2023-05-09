@@ -16,6 +16,6 @@ include:
   {%- if storage.get('portworx', {'enabled': False}).enabled %}
   - kubernetes.csi.portworx
   {%- endif %}
-  {%- if storage.get('minio_operator', {'enabled': False}).enabled %}
-  - kubernetes.csi.minio-operator
+  {%- if storage.get('minio', {'enabled': False}).enabled %}
+  - kubernetes.csi.minio
   {%- endif %}

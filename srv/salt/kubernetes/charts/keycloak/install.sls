@@ -1,47 +1,36 @@
 # -*- coding: utf-8 -*-
 # vim: ft=jinja
 
-{#- Get the `tplroot` from `tpldir` #}
 {% from tpldir ~ "/map.jinja" import keycloak with context %}
-{%- set public_domain = pillar['public-domain'] -%}
-{%- from "kubernetes/map.jinja" import charts with context -%}
-{%- from "kubernetes/map.jinja" import storage with context -%}
 
-keycloak-secrets:
-  file.managed:
-    - require:
-      - file:  /srv/kubernetes/manifests/keycloak
-    - name: /srv/kubernetes/manifests/keycloak/secrets.yaml
-    - source: salt://{{ tpldir }}/templates/secrets.yaml.j2
-    - user: root
-    - group: root
-    - mode: "0755"
-    - template: jinja
-    - context:
-      tpldir: {{ tpldir }}
-  cmd.run:
-    - runas: root
-    - watch:
-      - file: /srv/kubernetes/manifests/keycloak/secrets.yaml
-      - cmd: keycloak-namespace
-    - name: |
-        kubectl apply -f /srv/kubernetes/manifests/keycloak/secrets.yaml
+{% set state = 'absent' %}
+{% set file_state = 'absent' %}
+{% if keycloak.enabled %}
+  {% set state = 'present' %}
+  {% set file_state = 'managed' %}
+{% endif %}
 
 keycloak:
-  cmd.run:
-    - runas: root
+  file.{{ file_state }}:
+    - require:
+      - file:  /srv/kubernetes/charts/keycloak
+    - name: /srv/kubernetes/charts/keycloak/values.yaml
+    - source: salt://{{ tpldir }}/templates/values.yaml.j2
+    - user: root
+    - group: root
+    - mode: "0644"
+    - template: jinja
+    - context:
+        tpldir: {{ tpldir }}
+  helm.release_{{ state }}:
     - watch:
-      - file: /srv/kubernetes/manifests/keycloak/values.yaml
-      - cmd: keycloak-namespace
-      - cmd: keycloak-fetch-charts
-      - cmd: keycloak-secrets
-    - onlyif: kubectl get storageclass | grep \(default\)
-    - cwd: /srv/kubernetes/manifests/keycloak/keycloak
-    - name: |
-        helm repo update && \
-        helm upgrade --install keycloak --namespace keycloak \
-            --set image.tag={{ keycloak.version }} \
-            {%- if storage.get('rook_ceph', {'enabled': False}).enabled or storage.get('rook_edgefs', {'enabled': False}).enabled or storage.get('portworx', {'enabled': False}).enabled %}
-            -f /srv/kubernetes/manifests/keycloak/values.yaml \
-            {%- endif %}
-            "./" --wait --timeout 5m
+      - file: /srv/kubernetes/charts/keycloak/values.yaml
+    - name: keycloak
+    {%- if keycloak.enabled %}
+    - chart: bitnami/keycloak
+    - values: /srv/kubernetes/charts/keycloak/values.yaml
+    - version: {{ keycloak.chart_version }}
+    - flags:
+      - create-namespace
+    {%- endif %}
+    - namespace: keycloak

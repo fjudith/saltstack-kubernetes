@@ -1,0 +1,186 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{% from tpldir ~ "/map.jinja" import keycloak with context %}
+{%- from "kubernetes/map.jinja" import common with context -%}
+{%- from "kubernetes/map.jinja" import storage with context -%}
+{%- from "kubernetes/map.jinja" import charts with context -%}
+{%- if common.addons.get('nginx', {'enabled': False}).enabled  %}
+  {%- set controller = "nginx" -%}
+{%- elif common.addons.get('traefik', {'enabled': False}).enabled %}
+  {%- set controller = "traefik" -%}
+{%- elif common.addons.get('istio', {'enabled': False}).enabled %}
+  {%- set controller = "istio" -%}
+{%- elif common.addons.get('contour', {'enabled': False}).enabled %}
+  {%- set controller = "contour" -%}
+{%- endif -%}
+{%- set public_domain = pillar['public-domain'] -%}
+
+global:
+  {%- if storage.get('rook_ceph', {'enabled': False}).enabled %}
+  storageClass: ceph-block
+  {%- endif %}
+
+image:
+  tag: {{ keycloak.version }}-debian-11-r0
+
+metrics:
+  {%- if common.addons.get('kube_prometheus', {'enabled': False}).enabled %}
+  enabled: true
+  serviceMonitor:
+    enabled: true
+  {%- endif %}
+
+ingress:
+  enabled: {{ keycloak.ingress.enabled }}
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/tls-acme: "true"
+  ingressClassName: {{ controller }}
+  hostname:  {{ keycloak.ingress.host }}.{{ public_domain }}
+  tls: true
+
+keycloakConfigCli:
+  enabled: true
+  configuration:
+    realm-default.yaml:
+      realm: {{ keycloak.realms[0].name }}
+      enabled: True
+      groups:
+        - name: kubernetes-admins
+        - name: kubernetes-users
+        {%- if charts.argo.cd.get('ingress', {'enabled': False}).enabled %}
+        - name: argo-cd-admins
+        - name: argo-cd-users
+        {%- endif %}
+        {%- if charts.argo.workflows.get('ingress', {'enabled': False}).enabled %}
+        - name: argo-workflows-admins
+        - name: argo-workflows-users
+        {%- endif %}
+      clientScopes:
+        - name: groups
+          description: List of groups membershitp
+          protocol: openid-connect
+          attributes:
+            include.in.token.scope: True
+            display.on.consent.screen: True
+          protocolMappers:
+            - name: groups
+              protocol: openid-connect
+              protocolMapper: oidc-group-membership-mapper
+              consentRequired: False
+              config:
+                full.path: False
+                id.token.claim: True
+                access.token.claim: True
+                claim.name: groups
+                userinfo.token.claim: True
+        - name: allowed-services
+          description: List of approved client ids
+          protocol: openid-connect
+          attributes:
+            include.in.token.scope: true
+            display.on.consent.screen: true
+          protocolMappers:
+            - name: audience-kubernetes
+              protocol: openid-connect
+              protocolMapper: oidc-audience-mapper
+              consentRequired: False
+              config:
+                included.client.audience: kubernetes-dashboard
+                id.token.claim: False
+                access.token.claim: True
+            - name: userid
+              protocol: openid-connect
+              protocolMapper: oidc-usermodel-property-mapper
+              consentRequired: False
+              config:
+                userinfo.token.claim: True
+                user.attribute: id
+                id.token.claim: True
+                access.token.claim: True
+                claim.name: userid
+                jsonType.label: String
+            - name: username
+              protocol: openid-connect
+              protocolMapper: oidc-usermodel-property-mapper
+              consentRequired: False
+              config:
+                userinfo.token.claim: True
+                user.attribute: username
+                id.token.claim: True
+                access.token.claim: True
+                claim.name: username
+                jsonType.label: String
+            {%- if charts.argo.cd.get('ingress', {'enabled': False}).enabled %}
+            - name: audience-argo-cd
+              protocol: openid-connect
+              protocolMapper: oidc-audience-mapper
+              consentRequired: False
+              config:
+                included.client.audience: argo-cd
+                id.token.claim: False
+                access.token.claim: True
+            {%- endif %}
+            {%- if charts.argo.workflows.get('ingress', {'enabled': False}).enabled %}
+            - name: audience-argo-workflows
+              protocol: openid-connect
+              protocolMapper: oidc-audience-mapper
+              consentRequired: False
+              config:
+                included.client.audience: argo-workflows
+                id.token.claim: False
+                access.token.claim: True
+            {%- endif %}
+      clients:
+        - clientId: kubernetes-dashboard
+          name: Kubernetes Dashboard
+          description: >
+            General-purpose web UI for Kubernetes clusters
+            (ref. https://github.com/kubernetes/dashboard).
+          rootUrl: https://{{ common.addons.dashboard.ingress_host }}.{{ public_domain }}
+          adminUrl: https://{{ common.addons.dashboard.ingress_host }}.{{ public_domain }}
+          redirectUris:
+            - https://{{ common.addons.dashboard.ingress_host }}.{{ public_domain }}/oauth/callback/*
+          webOrigins:
+            - https://{{ common.addons.dashboard.ingress_host }}.{{ public_domain }}
+        {%- if charts.argo.cd.get('ingress', {'enabled': False}).enabled %}
+        - clientId: argo-cd
+          name: Argo CD
+          description: >
+            Declarative continuous deployment for Kubernetes
+            (ref. https://github.com/argoproj/argo-cd)
+          rootUrl: https://{{ charts.argo.cd.ingress.host }}.{{ public_domain }}
+          adminUrl: https://{{ charts.argo.cd.ingress.host }}.{{ public_domain }}
+          redirectUris:
+            - https://{{ charts.argo.cd.ingress.host }}.{{ public_domain }}/auth/callback/*
+          webOrigins:
+            - https://{{ charts.argo.cd.ingress.host }}.{{ public_domain }}
+          defaultClientScopes:
+            - web-origins
+            - role_list
+            - profile
+            - roles
+            - email
+            - groups
+        {%- endif %}
+        {%- if charts.argo.workflows.get('ingress', {'enabled': False}).enabled %}
+        - clientId: argo-workflows
+          name: Argo Workflows
+          description: >
+            Workflow engine for Kubernetes
+            (ref. https://github.com/argoproj/argo-workflows)
+          rootUrl: https://{{ charts.argo.workflows.ingress.host }}.{{ public_domain }}
+          adminUrl: https://{{ charts.argo.workflows.ingress.host }}.{{ public_domain }}
+          redirectUris:
+            - https://{{ charts.argo.workflows.ingress.host }}.{{ public_domain }}/oauth2/callback/*
+          webOrigins:
+            - https://{{ charts.argo.workflows.ingress.host }}.{{ public_domain }}
+          defaultClientScopes:
+            - web-origins
+            - role_list
+            - profile
+            - roles
+            - email
+            - groups
+          {%- endif %}

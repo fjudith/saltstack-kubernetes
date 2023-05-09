@@ -1,7 +1,4 @@
 include:
   - .config
-  - .charts
-  - .namespace
+  - .repos
   - .install
-  - .ingress
-  - .test

@@ -1,16 +1,4 @@
-/srv/kubernetes/manifests/contour/certificate.yaml:
-  file.managed:
-    - require:
-      - file: /srv/kubernetes/manifests/contour
-    - source: salt://{{ tpldir }}/templates/certificate.yaml.j2
-    - template: jinja
-    - user: root
-    - group: root
-    - mode: "0644"
-    - context:
-      tpldir: {{ tpldir }}
-
-contour-cert-manager-api:
+contour-cert-manager-wait-api:
   cmd.run:
     - name: |
         http --check-status --verify false \
@@ -25,10 +13,20 @@ contour-cert-manager-api:
         splay: 10
 
 contour-certificate:
+  file.managed:
+    - require:
+      - file: /srv/kubernetes/manifests/contour
+    - name: /srv/kubernetes/manifests/contour/certificate.yaml
+    - source: salt://{{ tpldir }}/templates/certificate.yaml.j2
+    - template: jinja
+    - user: root
+    - group: root
+    - mode: "0644"
+    - context:
+      tpldir: {{ tpldir }}
   cmd.run:
     - require:
-      - cmd: contour-cert-manager-api
-      - cmd: contour-install
+      - cmd: contour-cert-manager-wait-api
     - watch:
       - file: /srv/kubernetes/manifests/contour/certificate.yaml
     - name: |

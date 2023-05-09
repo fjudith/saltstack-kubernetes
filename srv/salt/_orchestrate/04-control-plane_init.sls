@@ -9,22 +9,28 @@
 {% endif %}
 
 {% set cri_provider = salt['pillar.get']('kubernetes:common:cri:provider') %}
+{% set cni_provider = salt['pillar.get']('kubernetes:common:cni:provider') %}
 
-control_plane_primary_kubeadm_init:
+control-plane-cri-main:
+  salt.state:
+    - tgt: "{{ masters|first }}"
+    - sls: kubernetes.cri.{{ cri_provider }}
+    - queue: True
+
+control-plane-kubeadm_init:
   salt.state:
     - tgt: "{{ masters|first }}"
     - sls: kubernetes.role.master.kubeadm
     - queue: True
-    # - require:
-    #   - salt: common_state
-    #   - salt: {{ cri_provider }}_state
-    #   - salt: etcd_state
-    #   {%- if salt['pillar.get']('haproxy', {'enabled': False}).enabled %}
-    #   - salt: edge_haproxy_state
-    #   {%- elif salt['pillar.get']('envoy', {'enabled': False}).enabled %}
-    #   - salt: edge_envoy_state
-    #   {%- endif %}
-    # - require_in:
-    #     - salt: control_plane_kubeadm_join_master
-    #     - salt: edge_kubeadm_join_edge
-    #     - salt: compute_kubeadm_join_node
+    - require:
+      - salt: control-plane-cri-main
+      - salt: envoy
+      - salt: etcd
+
+cni:
+  salt.state:
+    - tgt: "{{ masters|first }}"
+    - sls: kubernetes.cni.{{ cni_provider }}
+    - queue: True
+    - require:
+      - salt: control-plane-kubeadm_init

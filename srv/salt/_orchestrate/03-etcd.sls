@@ -8,20 +8,18 @@
 {{ raise('ERROR: at least one etcd must be specified') }}
 {% endif %}
 
-{% set cri_provider = salt['pillar.get']('kubernetes:common:cri:provider') %}
-
-etcd_ca_state:
+etcd-ca:
   salt.state:
     - tgt: '{{ etcds|first }}'
     - tgt_type: list
     - sls: kubernetes.role.etcd.ca
     - queue: True
 
-etcd_state:
+etcd:
   salt.state:
     - tgt: '{{ etcds|join(",") }}'
     - tgt_type: list
     - sls: kubernetes.role.etcd
     - queue: True
     - require:
-      - salt: etcd_ca_state
+      - salt: etcd-ca

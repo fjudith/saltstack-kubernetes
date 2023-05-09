@@ -1,10 +1,10 @@
 include:
-  - .common
-  - .edge_install
-  - .etcd_install
-  - .control_plane_init
-  - .control_plane_join
-  - .compute_join
-  - .compute_firewall
-  - .edge_join
-  - .kubernetes_apps
+  - .01-common
+  - .02-load-balancer
+  - .03-etcd
+  - .04-control-plane_init
+  - .05-control-plane_join
+  - .06-node_join
+  - .07-edge_join
+  - .08-node-firewall
+  - .09-kubernetes-apps

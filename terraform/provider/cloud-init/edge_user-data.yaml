@@ -237,6 +237,13 @@ write_files:
     content: |
       open_mode: True
       auto_accept: True
+  - path: /etc/salt/master.d/netapi.conf
+    content: |
+      netapi_enable_clients:
+        - local
+        - local_async
+        - local_batch
+        - local_subset
   - path: /etc/salt/master.d/enable-minionfs
     content: |
       file_recv: True

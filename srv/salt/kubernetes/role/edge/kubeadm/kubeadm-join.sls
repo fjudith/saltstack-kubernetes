@@ -52,4 +52,3 @@ kubectl-label-node:
     - name: |
         kubectl label node {{ hostname }} node-role.kubernetes.io/node=true --overwrite
         kubectl label node {{ hostname }} node-role.kubernetes.io/ingress=true --overwrite
-        kubectl label node {{ hostname }} rook-edgefs-nodetype=gateway --overwrite

@@ -3,15 +3,6 @@
 
 {% from tpldir ~ "/map.jinja" import kubeadm with context %}
 
-kubeadm-reset:
-  cmd.run:
-    - onlyif: test -f /etc/kubernetes/admin.conf
-    - require:
-      - pkg: kubeadm
-    - timeout: 300
-    - name: |
-        /usr/bin/kubeadm reset -f --cert-dir /etc/kubernetes/pki
-
 kubeadm-join:
   file.managed:
     - name: /root/kubeadm-controlplane.yaml
@@ -31,10 +22,11 @@ kubeadm-join:
       - pkg: kubectl
       - pkg: kubeadm
     - timeout: 600
-    - unless: test -f /etc/kubernetes/admin.conf
     - name: |
-        sleep {{ range(60, 90) | random }} && \
-        /usr/bin/kubeadm join --config /root/kubeadm-controlplane.yaml --ignore-preflight-errors=all --v=5
+        sleep {{ range(10, 30) | random }} && \
+        /usr/bin/kubeadm join --config /root/kubeadm-controlplane.yaml --ignore-preflight-errors=all --v=5 \
+        || /usr/bin/kubeadm reset -f --cert-dir /etc/kubernetes/pki
+    - unless: test -f /etc/kubernetes/admin.conf
 
 /root/.kube:
   file.directory:

@@ -61,10 +61,13 @@ configs:
       clientID: {{ client_id }}
       clientSecret: $oidc.keycloak.clientSecret
       requestedScopes: ["openid", "profile", "email", "groups"]
-  rbacConfig:
+
+  # Argo CD RBAC policy configuration
+  ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/rbac.md
+  rbac:
     policy.csv: |
       g, argo-cd-admins, role:admin
-      g, argo-cd-users, role:user
+      g, argo-cd-users, role:readonly
   {%- endif %}
 
 ## Application controller
@@ -145,9 +148,3 @@ server:
       hosts:
         - {{ argo.cd.ingress.host }}.{{ public_domain }}
 
-  # {%- if common.addons.get('contour', {'enabled': False}).enabled %}
-  # service:
-  #   annotations:
-  #     projectcontour.io/upstream-protocol.h2c: "http,80,https,443"
-  #     projectcontour.io/upstream-protocol.tls: "http,80,https,443"
-  # {%- endif %}

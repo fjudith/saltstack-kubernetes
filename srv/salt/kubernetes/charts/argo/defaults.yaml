@@ -4,7 +4,7 @@ argo:
   cd:
     enabled: true
     version: 2.7.1
-    chart_version: 5.32.0
+    chart_version: 5.32.2
     ingress:
       enabled: true
       host: argo-cd

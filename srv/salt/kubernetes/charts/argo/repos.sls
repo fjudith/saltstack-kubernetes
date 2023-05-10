@@ -13,3 +13,9 @@ argo-repos:
     - absent:
       - argo
     {%- endif %}
+
+{%- if argo.enabled %}
+argo-repos-update:
+  helm.repo_updated:
+    - name: argo
+{%- endif %}

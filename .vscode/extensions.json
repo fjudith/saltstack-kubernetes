@@ -1,0 +1,10 @@
+{
+    "recommendations": [
+        "warpnet.salt-lint",
+        "warpnet.saltstack-extension-pack",
+        "ms-python.python",
+        "donjayamanne.python-extension-pack",
+        "samuelcolvin.jinjahtml",
+        "artymaury.template-finder"
+    ]
+}

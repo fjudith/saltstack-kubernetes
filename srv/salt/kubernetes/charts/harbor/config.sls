@@ -1,18 +1,23 @@
-/srv/kubernetes/manifests/harbor:
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{% from tpldir ~ "/map.jinja" import harbor with context %}
+
+{% set state = 'absent' %}
+{% if harbor.enabled -%}
+  {% set state = 'managed' -%}
+{% endif %}
+
+/srv/kubernetes/charts/harbor:
   file.directory:
     - user: root
     - group: root
     - dir_mode: "0750"
     - makedirs: True
 
-/srv/kubernetes/manifests/harbor/values.yaml:
-    file.managed:
-    - require:
-      - file: /srv/kubernetes/manifests/harbor
-    - source: salt://{{ tpldir }}/templates/values.yaml.j2
-    - template: jinja
+/srv/kubernetes/manifests/harbor:
+  file.directory:
     - user: root
     - group: root
-    - mode: "0644"
-    - context:
-      tpldir: {{ tpldir }}
+    - dir_mode: "0750"
+    - makedirs: True

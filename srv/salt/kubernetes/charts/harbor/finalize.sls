@@ -6,23 +6,29 @@
 {%- set public_domain = pillar['public-domain'] -%}
 {%- from "kubernetes/map.jinja" import charts with context -%}
 
-harbor-configure-oidc:
+harbor-oidc:
+  http.wait_for_successful_query:
+    - name: https://{{ harbor.ingress.host }}.{{ public_domain }}
+    - wait_for: 120
+    - request_interval: 5
+    - status: 200
   file.managed:
     - watch:
-      - cmd: harbor
+      - helm: harbor
     - name: /srv/kubernetes/manifests/harbor/auth-oidc.json
-    - source: salt://{{ tpldir }}/oauth/keycloak/templates/auth-oidc.json.j2
+    - source: salt://{{ tpldir }}/templates/auth-oidc.json.j2
     - user: root
     - group: root
     - template: jinja
     - mode: "0644"
     - context:
-      tpldir: {{ tpldir }}
+        tpldir: {{ tpldir }}
   cmd.run:
     - require:
-      - http: query-harbor-core
-    - watch:
+      - http: https://{{ harbor.ingress.host }}.{{ public_domain }}
+    - require:
       - file: /srv/kubernetes/manifests/harbor/auth-oidc.json
     - runas: root
     - name: |
-        http --auth "admin:{{ harbor.adminPassword }}" PUT https://{{ harbor.coreIngressHost }}.{{ public_domain }}/api/v2.0/configurations < /srv/kubernetes/manifests/harbor/auth-oidc.json
+        http --auth "admin:{{ harbor.admin_password }}" PUT https://{{ harbor.ingress.host }}.{{ public_domain }}/api/v2.0/configurations < /srv/kubernetes/manifests/harbor/auth-oidc.json
+

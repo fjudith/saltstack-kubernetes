@@ -65,6 +65,10 @@ keycloakConfigCli:
         - name: concourse-admins
         - name: concourse-users
         {%- endif %}
+        {%- if charts.harbor.get('ingress', {'enabled': False}).enabled %}
+        - name: harbor-admins
+        - name: harbor-users
+        {%- endif %}
       clientScopes:
         - name: groups
           description: List of groups membershitp
@@ -164,6 +168,16 @@ keycloakConfigCli:
                 id.token.claim: False
                 access.token.claim: True
             {%- endif %}
+            {%- if charts.harbor.get('ingress', {'enabled': False}).enabled %}
+            - name: audience-harbor
+              protocol: openid-connect
+              protocolMapper: oidc-audience-mapper
+              consentRequired: False
+              config:
+                included.client.audience: harbor
+                id.token.claim: False
+                access.token.claim: True
+            {%- endif %}
       clients:
         - clientId: kubernetes-dashboard
           name: Kubernetes Dashboard
@@ -240,6 +254,33 @@ keycloakConfigCli:
             - username
             - userid
             - allowed-services
+          directAccessGrantsEnabled: True
+          serviceAccountsEnabled: True
+          authorizationServicesEnabled: True
+          {%- endif %}
+          {%- if charts.harbor.get('ingress', {'enabled': False}).enabled %}
+        - clientId: harbor
+          name: Harbor registry
+          description: >
+            An open source trusted cloud native registry project that stores, signs, and scans content.
+            (ref. https://github.com/goharbor/harbor)
+          rootUrl: https://{{ charts.harbor.ingress.host }}.{{ public_domain }}
+          adminUrl: https://{{ charts.harbor.ingress.host }}.{{ public_domain }}
+          redirectUris:
+            - https://{{ charts.harbor.ingress.host }}.{{ public_domain }}/c/oidc/callback/*
+          webOrigins:
+            - https://{{ charts.harbor.ingress.host }}.{{ public_domain }}
+          defaultClientScopes:
+            - web-origins
+            - role_list
+            - profile
+            - roles
+            - email
+            - groups
+            - username
+            - userid
+            - allowed-services
+            - offline_access
           directAccessGrantsEnabled: True
           serviceAccountsEnabled: True
           authorizationServicesEnabled: True

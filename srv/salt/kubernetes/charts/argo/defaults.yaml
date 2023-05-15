@@ -36,7 +36,7 @@ argo:
       minio:
         enabled: true
         access_key: argo-workflows
-        secret_eky: V3ry1ns3cur3P4ssw0rd
+        secret_key: V3ry1ns3cur3P4ssw0rd
         ingress:
           enabled: true
           host: argo-workflows-minio

@@ -29,7 +29,7 @@ tenant:
   pools:
     - servers: 4
       name: pool0
-      volumesPerserver: 1
+      volumesPerServer: 1
       size: 5Gi
       {%- if storage.get('rook_ceph', {'enabled': False}).enabled %}
       storageClassName: ceph-block

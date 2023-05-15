@@ -50,3 +50,12 @@ minio-wait-api:
         until: True
         interval: 5
         splay: 10
+
+minio-cli:
+  file.managed:
+    - name: /usr/local/bin/mc
+    - source: https://dl.min.io/client/mc/release/linux-amd64/archive/mc.RELEASE.{{ minio.client_version }}
+    - source_hash: https://dl.min.io/client/mc/release/linux-amd64/mc.RELEASE.{{ minio.client_version }}.sha256sum
+    - mode: "0555"
+    - user: root
+    - group: root

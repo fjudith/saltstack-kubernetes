@@ -57,7 +57,14 @@ concourse:
     - chart: concourse/concourse
     - values: /srv/kubernetes/charts/concourse/values.yaml
     - version: {{ concourse.chart_version }}
-    - flags:
-      - create-namespace
+pod_security_policy: false
+  http_proxy: ""
+  https_proxy: ""
+  no_proxy: ""
+  ebpf:
+    enable: false
+  audit_log:
+    enable: false
+    dynamic_backend_enable: false
     {%- endif %}
     - namespace: concourse

@@ -14,16 +14,4 @@
     - group: root
     - dir_mode: "0750"
     - makedirs: True
-
-/srv/kubernetes/charts/metrics-server/values.yaml:
-  file.{{ state }}:
-    - require:
-      - file:  /srv/kubernetes/charts/metrics-server
-    - source: salt://{{ tpldir }}/templates/values.yaml.j2
-    - user: root
-    - group: root
-    - mode: "0644"
-    - template: jinja
-    - context:
-        tpldir: {{ tpldir }}
   

@@ -69,6 +69,10 @@ keycloakConfigCli:
         - name: harbor-admins
         - name: harbor-users
         {%- endif %}
+        {%- if charts.spinnaker.get('ingress', {'enabled': False}).enabled %}
+        - name: spinnaker-admins
+        - name: spinnaker-users
+        {%- endif %}
       clientScopes:
         - name: groups
           description: List of groups membershitp
@@ -178,6 +182,16 @@ keycloakConfigCli:
                 id.token.claim: False
                 access.token.claim: True
             {%- endif %}
+            {%- if charts.spinnaker.get('ingress', {'enabled': False}).enabled %}
+            - name: audience-spinnaker
+              protocol: openid-connect
+              protocolMapper: oidc-audience-mapper
+              consentRequired: False
+              config:
+                included.client.audience: spinnaker
+                id.token.claim: False
+                access.token.claim: True
+            {%- endif %}
       clients:
         - clientId: kubernetes-dashboard
           name: Kubernetes Dashboard
@@ -234,7 +248,7 @@ keycloakConfigCli:
         {%- endif %}
         {%- if charts.concourse.get('ingress', {'enabled': False}).enabled %}
         - clientId: concourse
-          name: Concourse CI
+          name: Concourse continuous integration
           description: >
             Concourse is a container-based continuous thing-doer written in Go.
             (ref. https://github.com/concourse/concourse)
@@ -257,8 +271,8 @@ keycloakConfigCli:
           directAccessGrantsEnabled: True
           serviceAccountsEnabled: True
           authorizationServicesEnabled: True
-          {%- endif %}
-          {%- if charts.harbor.get('ingress', {'enabled': False}).enabled %}
+        {%- endif %}
+        {%- if charts.harbor.get('ingress', {'enabled': False}).enabled %}
         - clientId: harbor
           name: Harbor registry
           description: >
@@ -285,3 +299,28 @@ keycloakConfigCli:
           serviceAccountsEnabled: True
           authorizationServicesEnabled: True
           {%- endif %}
+          {%- if charts.spinnaker.get('ingress', {'enabled': False}).enabled %}
+        - clientId: spinnaker
+          name: Spinnaker continuous delivery
+          description: >
+            Spinnaker is an open source, multi-cloud continuous delivery platform for releasing software changes with high velocity and confidence.
+            (ref. https://github.com/spinnaker/spinnaker)
+          rootUrl: https://{{ charts.spinnaker.ingress.host }}-gate.{{ public_domain }}
+          adminUrl: https://{{ charts.spinnaker.ingress.host }}.{{ public_domain }}
+          redirectUris:
+            - https://{{ charts.spinnaker.ingress.host }}-gate.{{ public_domain }}/*
+          webOrigins:
+            - https://{{ charts.spinnaker.ingress.host }}.{{ public_domain }}
+          defaultClientScopes:
+            - web-origins
+            - role_list
+            - profile
+            - roles
+            - email
+            - groups
+            - allowed-services
+          directAccessGrantsEnabled: True
+          serviceAccountsEnabled: True
+          authorizationServicesEnabled: True
+          {%- endif %}
+          

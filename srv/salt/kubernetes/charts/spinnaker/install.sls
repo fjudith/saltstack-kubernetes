@@ -1,26 +1,63 @@
 # -*- coding: utf-8 -*-
 # vim: ft=jinja
 
-{#- Get the `tplroot` from `tpldir` #}
 {% from tpldir ~ "/map.jinja" import spinnaker with context %}
+{%- from "kubernetes/map.jinja" import storage with context -%}
+
+{% set state = 'absent' %}
+{% set file_state = 'absent' %}
+{% if spinnaker.enabled %}
+  {% set state = 'present' %}
+  {% set file_state = 'managed' %}
+{% endif %}
+
+{%- if storage.get('minio', {'enabled': False}).enabled %}
+spinnaker-minio:
+  file.{{ file_state }}:
+    - require:
+      - file:  /srv/kubernetes/charts/spinnaker
+    - name: /srv/kubernetes/charts/spinnaker/minio-values.yaml
+    - source: salt://{{ tpldir }}/templates/minio-values.yaml.j2
+    - user: root
+    - group: root
+    - mode: "0644"
+    - template: jinja
+    - context:
+        tpldir: {{ tpldir }}
+  helm.release_{{ state }}:
+    - watch:
+      - file: /srv/kubernetes/charts/spinnaker/minio-values.yaml
+    - name: spinnaker-minio
+    {%- if spinnaker.enabled %}
+    - chart: minio/tenant
+    - values: /srv/kubernetes/charts/spinnaker/minio-values.yaml
+    - flags:
+      - create-namespace
+    {%- endif %}
+    - namespace: spinnaker
+{%- endif %}
 
 spinnaker:
-  cmd.run:
-    - runas: root
-    - onlyif: kubectl get storageclass | grep \(default\)
-    - cwd: /srv/kubernetes/manifests/spinnaker/spinnaker
+  file.{{ file_state }}:
     - require:
-      - cmd: spinnaker-namespace
-    - watch:
-      - file: /srv/kubernetes/manifests/spinnaker/values.yaml
-      - file: /srv/kubernetes/manifests/spinnaker/spinnaker/requirements.yaml
-      - file: /srv/kubernetes/manifests/spinnaker/spinnaker/requirements.lock
-      - file: /srv/kubernetes/manifests/spinnaker/spinnaker/Charts.yaml
-      - cmd: spinnaker-fetch-charts
-    - name: |
-        helm dependency update && \
-        helm upgrade --install spinnaker --namespace spinnaker \
-          --set halyard.spinnakerVersion={{ spinnaker.version }} \
-          --set halyard.image.tag={{ spinnaker.halyard_version }} \
-          --values /srv/kubernetes/manifests/spinnaker/values.yaml \
-          "./" --timeout 10m
+      - file:  /srv/kubernetes/charts/spinnaker
+    - name: /srv/kubernetes/charts/spinnaker/values.yaml
+    - source: salt://{{ tpldir }}/templates/values.yaml.j2
+    - user: root
+    - group: root
+    - mode: "0644"
+    - template: jinja
+    - context:
+        tpldir: {{ tpldir }}
+  helm.release_{{ state }}:
+    - onchanges:
+      - file: /srv/kubernetes/charts/spinnaker/values.yaml
+    - name: spinnaker
+    {%- if spinnaker.enabled %}
+    - chart: spinnaker/spinnaker
+    - values: /srv/kubernetes/charts/spinnaker/values.yaml
+    - version: {{ spinnaker.chart_version }}
+    - flags:
+      - create-namespace
+    {%- endif %}
+    - namespace: spinnaker

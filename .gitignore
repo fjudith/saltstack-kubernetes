@@ -4,10 +4,11 @@ certs/*.crt
 certs/*.pem
 *.ppm
 *.mp4
-.vscode
+.vscode/*
 /.gtm/
 gource.cfg
 *.mp4
 fetch_gravatar.pl
 bendy.png
 gravatar.sh
+!.vscode/extensions.json

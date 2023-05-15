@@ -53,11 +53,11 @@ configs:
   ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-cm.yaml
   cm:
     # Argo CD's externally facing base URL (optional). Required when configuring SSO
-    url: {{ "https://" ~ argo.cd.ingress.host ~ "." ~ public_domain }}
+    url: https://{{ argo.cd.ingress.host }}.{{ public_domain }}
     # Argo CD instance label key
     oidc.config: |
       name: Keycloak
-      issuer: {{ keycloak_url ~ "/realms/" ~ argo.cd.oauth.keycloak.realm }}
+      issuer: {{ keycloak_url }}/realms/{{ argo.cd.oauth.keycloak.realm }}
       clientID: {{ client_id }}
       clientSecret: $oidc.keycloak.clientSecret
       requestedScopes: ["openid", "profile", "email", "groups"]
@@ -144,7 +144,7 @@ server:
     hosts:
       - {{ argo.cd.ingress.host }}.{{ public_domain }}
     tls:
-    - secretName: argocd-general-cert
+    - secretName: argo-cd-general-cert
       hosts:
         - {{ argo.cd.ingress.host }}.{{ public_domain }}
 

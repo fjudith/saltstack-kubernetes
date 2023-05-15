@@ -111,6 +111,6 @@ server:
     hosts:
       - {{ argo.workflows.ingress.host }}.{{ public_domain }}
     tls:
-    - secretName: argoworkflows-general-cert
+    - secretName: argo-workflows-general-cert
       hosts:
         - {{ argo.workflows.ingress.host }}.{{ public_domain }}

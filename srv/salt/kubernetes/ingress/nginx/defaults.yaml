@@ -1,4 +1,0 @@
-nginx:
-  repository: us.gcr.io/k8s-artifacts-prod/ingress-nginx/controller
-  version: 0.34.1
-  backend_version: 1.5

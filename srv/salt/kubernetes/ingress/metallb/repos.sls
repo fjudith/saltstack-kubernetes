@@ -9,7 +9,7 @@ metallb-repos:
     - present:
       - name: metallb
         url: {{ metallb.url }}
-    {%- else%}
+    {%- else %}
     - absent:
       - metallb
     {%- endif %}

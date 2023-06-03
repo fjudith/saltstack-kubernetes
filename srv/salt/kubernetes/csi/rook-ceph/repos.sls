@@ -9,7 +9,7 @@ rook-repos:
     - present:
       - name: rook-release
         url: {{ rook_ceph.url }}
-    {%- else%}
+    {%- else %}
     - absent:
       - rook-release
     {%- endif %}

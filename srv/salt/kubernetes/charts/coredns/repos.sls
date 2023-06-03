@@ -9,7 +9,13 @@ coredns-repos:
     - present:
       - name: coredns
         url: {{ coredns.url }}
-    {%- else%}
+    {%- else %}
     - absent:
       - coredns
     {%- endif %}
+
+{%- if coredns.enabled %}
+coredns-repos-update:
+  helm.repo_updated:
+    - name: coredns
+{%- endif %}

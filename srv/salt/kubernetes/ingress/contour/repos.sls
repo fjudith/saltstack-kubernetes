@@ -9,7 +9,7 @@ contour-repos:
     - present:
       - name: bitnami
         url: {{ contour.url }}
-    {%- else%}
+    {%- else %}
     - absent:
       - bitnami
     {%- endif %}

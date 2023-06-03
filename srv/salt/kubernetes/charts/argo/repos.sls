@@ -9,7 +9,7 @@ argo-repos:
     - present:
       - name: argo
         url: {{ argo.url }}
-    {%- else%}
+    {%- else %}
     - absent:
       - argo
     {%- endif %}

@@ -9,7 +9,7 @@ cert-manager-repos:
     - present:
       - name: jetstack
         url: {{ cert_manager.url }}
-    {%- else%}
+    {%- else %}
     - absent:
       - jetstack
     {%- endif %}

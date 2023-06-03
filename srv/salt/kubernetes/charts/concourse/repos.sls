@@ -9,7 +9,13 @@ concourse-repos:
     - present:
       - name: concourse
         url: {{ concourse.url }}
-    {%- else%}
+    {%- else %}
     - absent:
       - concourse
     {%- endif %}
+
+{%- if concourse.enabled %}
+concourse-repos-update:
+  helm.repo_updated:
+    - name: concourse
+{%- endif %}

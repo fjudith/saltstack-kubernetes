@@ -9,7 +9,13 @@ falcosecrutiy-repos:
     - present:
       - name: falcosecurity
         url: {{ falco.url }}
-    {%- else%}
+    {%- else %}
     - absent:
       - falcosecurity
     {%- endif %}
+
+{%- if falco.enabled %}
+falcosecrutiy-repos-update:
+  helm.repo_updated:
+    - name: falcosecrutiy
+{%- endif %}

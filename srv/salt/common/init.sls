@@ -1,3 +1,3 @@
 include:
-  - common.repo
-  - common.install
+  - .repo
+  - .install

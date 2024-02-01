@@ -1,0 +1,21 @@
+{% from tpldir ~ "/map.jinja" import harbor with context %}
+{%- set public_domain = pillar['public-domain'] -%}
+{%- from "kubernetes/map.jinja" import charts with context -%}
+
+{%- set keycloak_url = 'https://' ~ charts.keycloak.ingress.host ~ '.' ~ pillar['public-domain'] -%}
+{%- set keycloak_username = salt['cmd.shell']('kubectl -n keycloak get configmap keycloak-env-vars --output=jsonpath="{.data.KEYCLOAK_ADMIN}"') %}
+{%- set keycloak_password = salt['cmd.shell']('kubectl -n keycloak get secret keycloak --output=jsonpath="{.data.admin-password}" | base64 -d') %}
+{%- set client_id         = harbor.oauth.keycloak.client_id %}
+{%- set client_secret     = salt['cmd.shell']('/srv/keycloak/scripts/kc-clientsecret.sh' + ' ' + keycloak_username + ' ' + keycloak_password + ' ' + keycloak_url + ' ' + harbor.oauth.keycloak.realm + ' ' + client_id) %}
+
+{
+  "oidc_verify_cert": true,
+  "auth_mode": "oidc_auth",
+  "self_registration": true,
+  "oidc_scope": "openid,profile,email,offline_access",
+  "oidc_name": "keycloak",
+  "oidc_endpoint": "https://{{ charts.keycloak.ingress.host }}.{{ public_domain }}/realms/{{ harbor.oauth.keycloak.realm }}",
+  "oidc_client_secret": "{{ client_secret }}",
+  "oidc_client_id": "harbor",
+  "oidc_groups_claim": "groups"
+}

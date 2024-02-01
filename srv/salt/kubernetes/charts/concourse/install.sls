@@ -1,40 +1,70 @@
 # -*- coding: utf-8 -*-
 # vim: ft=jinja
 
-{#- Get the `tplroot` from `tpldir` #}
 {% from tpldir ~ "/map.jinja" import concourse with context %}
-{%- set public_domain = pillar['public-domain'] -%}
 {%- from "kubernetes/map.jinja" import storage with context -%}
 
-/opt/fly-linux-amd64-v{{ concourse.version }}:
-  archive.extracted:
-    - source: https://github.com/concourse/concourse/releases/download/v{{ concourse.version }}/fly-{{ concourse.version }}-linux-amd64.tgz
-    - source_hash: {{ concourse.source_hash }}
-    - archive_format: tar
-    - enforce_toplevel: false
-    - if_missing: /opt/fly-linux-amd64-v{{ concourse.version }}
+{% set state = 'absent' %}
+{% set file_state = 'absent' %}
+{% if concourse.enabled %}
+  {% set state = 'present' %}
+  {% set file_state = 'managed' %}
+{% endif %}
 
-/usr/local/bin/fly:
-  file.symlink:
-    - target: /opt/fly-linux-amd64-v{{ concourse.version }}/fly
-
+{%- if storage.get('minio', {'enabled': False}).enabled %}
+concourse-minio:
+  file.{{ file_state }}:
+    - require:
+      - file:  /srv/kubernetes/charts/concourse
+    - name: /srv/kubernetes/charts/concourse/minio-values.yaml
+    - source: salt://{{ tpldir }}/templates/minio-values.yaml.j2
+    - user: root
+    - group: root
+    - mode: "0644"
+    - template: jinja
+    - context:
+        tpldir: {{ tpldir }}
+  helm.release_{{ state }}:
+    - watch:
+      - file: /srv/kubernetes/charts/concourse/minio-values.yaml
+    - name: concourse-minio
+    {%- if concourse.enabled %}
+    - chart: minio/tenant
+    - values: /srv/kubernetes/charts/concourse/minio-values.yaml
+    - flags:
+      - create-namespace
+    {%- endif %}
+    - namespace: concourse
+{%- endif %}
 
 concourse:
-  cmd.run:
-    - runas: root
+  file.{{ file_state }}:
+    - require:
+      - file:  /srv/kubernetes/charts/concourse
+    - name: /srv/kubernetes/charts/concourse/values.yaml
+    - source: salt://{{ tpldir }}/templates/values.yaml.j2
+    - user: root
+    - group: root
+    - mode: "0644"
+    - template: jinja
+    - context:
+        tpldir: {{ tpldir }}
+  helm.release_{{ state }}:
     - watch:
-      - file: /srv/kubernetes/manifests/concourse/values.yaml
-      - cmd: concourse-namespace
-      - cmd: concourse-fetch-charts
-    - cwd: /srv/kubernetes/manifests/concourse/concourse
-    - name: |
-        helm upgrade --install concourse --namespace concourse \
-            --set concourse.web.externalUrl=https://{{ concourse.ingress_host }}.{{ public_domain }} \
-            --set concourse.worker.driver=detect \
-            --set imageTag="{{ concourse.version }}" \
-            --set postgresql.enabled=true \
-            --set postgresql.password={{ concourse.db_password }} \
-            {%- if storage.get('rook_ceph', {'enabled': False}).enabled or storage.get('rook_edgefs', {'enabled': False}).enabled or storage.get('portworx', {'enabled': False}).enabled %}
-            --values /srv/kubernetes/manifests/concourse/values.yaml \
-            {%- endif %}
-            "./" --wait --timeout 5m
+      - file: /srv/kubernetes/charts/concourse/values.yaml
+    - name: concourse
+    {%- if concourse.enabled %}
+    - chart: concourse/concourse
+    - values: /srv/kubernetes/charts/concourse/values.yaml
+    - version: {{ concourse.chart_version }}
+pod_security_policy: false
+  http_proxy: ""
+  https_proxy: ""
+  no_proxy: ""
+  ebpf:
+    enable: false
+  audit_log:
+    enable: false
+    dynamic_backend_enable: false
+    {%- endif %}
+    - namespace: concourse

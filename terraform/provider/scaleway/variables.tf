@@ -19,7 +19,7 @@ variable "architecture" {
 }
 
 variable "image" {
-  default = "Ubuntu Focal"
+  default = "Ubuntu Jammy"
 }
 
 variable "apt_packages" {

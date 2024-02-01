@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # vim: ft=jinja
 
-{#- Get the `tplroot` from `tpldir` #}
 {% from tpldir ~ "/map.jinja" import harbor with context %}
 {%- set public_domain = pillar['public-domain'] -%}
 {%- from "kubernetes/map.jinja" import common with context -%}
@@ -18,24 +17,24 @@
 {%- endif -%}
 
 expose:
-  # Set the way how to expose the service. Set the type as "ingress",
-  # "clusterIP", "nodePort" or "loadBalancer" and fill the information
-  # in the corresponding section
-  type: clusterIP
+  # Set how to expose the service. Set the type as "ingress", "clusterIP", "nodePort" or "loadBalancer"
+  # and fill the information in the corresponding section
+  type: ingress
   tls:
-    # Enable the tls or not. Note: if the type is "ingress" and the tls
-    # is disabled, the port must be included in the command when pull/push
-    # images. Refer to https://github.com/goharbor/harbor/issues/5291
-    # for the detail.
-    enabled: false
-    # The source of the tls certificate. Set it as "auto", "secret" 
+    # Enable TLS or not.
+    # Delete the "ssl-redirect" annotations in "expose.ingress.annotations" when TLS is disabled and "expose.type" is "ingress"
+    # Note: if the "expose.type" is "ingress" and TLS is disabled,
+    # the port must be included in the command when pulling/pushing images.
+    # Refer to https://github.com/goharbor/harbor/issues/5291 for details.
+    enabled: True
+    # The source of the tls certificate. Set as "auto", "secret"
     # or "none" and fill the information in the corresponding section
     # 1) auto: generate the tls certificate automatically
     # 2) secret: read the tls certificate from the specified secret.
     # The tls certificate can be generated manually or by cert manager
     # 3) none: configure no tls certificate for the ingress. If the default
     # tls certificate is configured in the ingress controller, choose this option
-    certSource: auto
+    certSource: secret
     auto:
       # The common name used to generate the certificate, it's necessary
       # when the type isn't "ingress"
@@ -44,29 +43,31 @@ expose:
       # The name of secret which contains keys named:
       # "tls.crt" - the certificate
       # "tls.key" - the private key
-      secretName: ""
+      secretName: "harbor-general-cert"
       # The name of secret which contains keys named:
       # "tls.crt" - the certificate
       # "tls.key" - the private key
       # Only needed when the "expose.type" is "ingress".
-      notarySecretName: ""
+      notarySecretName: "harbor-general-cert"
   ingress:
     hosts:
-      core: {{ harbor.coreIngressHost ~ "." ~ public_domain }}
-      notary: {{ harbor.notaryIngressHost ~ "." ~ public_domain }}
+      core: {{ harbor.ingress.host }}.{{ public_domain }}
+      notary: {{ harbor.ingress.notary_host }}.{{ public_domain }}
     # set to the type of ingress controller if it has specific requirements.
     # leave as `default` for most ingress controllers.
     # set to `gce` if using the GCE ingress controller
     # set to `ncp` if using the NCP (NSX-T Container Plugin) ingress controller
+    # set to `alb` if using the ALB ingress controller
+    # set to `f5-bigip` if using the F5 BIG-IP ingress controller
     controller: default
+    ## Allow .Capabilities.KubeVersion.Version to be overridden while creating ingress
+    kubeVersionOverride: ""
+    className: "{{ controller }}"
     annotations:
-      kubernetes.io/ingress.class: "{{ controller }}"
-      kubernetes.io/tls-acme: "true"
-      cert-manager.io/cluster-issuer: "letsencrypt-prod"
+      # note different ingress controllers may require a different ssl-redirect annotation
+      # for Envoy, use ingress.kubernetes.io/force-ssl-redirect: "true" and remove the nginx lines below
       ingress.kubernetes.io/ssl-redirect: "true"
       ingress.kubernetes.io/proxy-body-size: "0"
-      nginx.ingress.kubernetes.io/ssl-redirect: "true"
-      nginx.ingress.kubernetes.io/proxy-body-size: "0"
   clusterIP:
     # The name of ClusterIP service
     name: harbor
@@ -127,7 +128,7 @@ expose:
 # the IP address of k8s node
 #
 # If Harbor is deployed behind the proxy, set it as the URL of proxy
-externalURL: {{ "https://" ~ harbor.coreIngressHost ~ "." ~ public_domain }}
+externalURL: https://{{ harbor.ingress.host }}.{{ public_domain }}
 
 # The internal TLS used for harbor components secure communicating. In order to enable https
 # in each components tls cert files need to provided in advance.
@@ -219,12 +220,10 @@ persistence:
   resourcePolicy: "keep"
   persistentVolumeClaim:
     registry:
-      {%- if storage.get('rook_ceph', {'enabled': False}).enabled or storage.get('rook_edgefs', {'enabled': False}).enabled or storage.get('portworx', {'enabled': False}).enabled %}
+      {%- if storage.get('rook_ceph', {'enabled': False}).enabled or storage.get('portworx', {'enabled': False}).enabled %}
       accessMode: ReadWriteMany
       {%- if storage.get('rook_ceph', {'enabled': False}).enabled %}
-      storageClass: "rook-cephfs"
-      {%- elif storage.get('rook_edgefs', {'enabled': False}).enabled %}
-      storageClass: "edgefs-nfs-csi-storageclass"
+      storageClass: "ceph-filesystem"
       {%- elif storage.get('portworx', {'enabled': False}).enabled %}
       storageClass: "px-shared-sc"
       {%- endif %}
@@ -243,12 +242,10 @@ persistence:
       size: 5Gi
       {%- endif %}
     chartmuseum:
-      {%- if storage.get('rook_ceph', {'enabled': False}).enabled or storage.get('rook_edgefs', {'enabled': False}).enabled or storage.get('portworx', {'enabled': False}).enabled %}
+      {%- if storage.get('rook_ceph', {'enabled': False}).enabled or storage.get('portworx', {'enabled': False}).enabled %}
       accessMode: ReadWriteMany
       {%- if storage.get('rook_ceph', {'enabled': False}).enabled %}
       storageClass: "rook-cephfs"
-      {%- elif storage.get('rook_edgefs', {'enabled': False}).enabled %}
-      storageClass: "edgefs-nfs-csi-storageclass"
       {%- elif storage.get('portworx', {'enabled': False}).enabled %}
       storageClass: "px-shared-sc"
       {%- endif %}
@@ -262,12 +259,10 @@ persistence:
       size: 5Gi
       {%- endif %}
     jobservice:
-      {%- if storage.get('rook_ceph', {'enabled': False}).enabled or storage.get('rook_edgefs', {'enabled': False}).enabled or storage.get('portworx', {'enabled': False}).enabled %}
+      {%- if storage.get('rook_ceph', {'enabled': False}).enabled or storage.get('portworx', {'enabled': False}).enabled %}
       accessMode: ReadWriteMany
       {%- if storage.get('rook_ceph', {'enabled': False}).enabled %}
       storageClass: "rook-cephfs"
-      {%- elif storage.get('rook_edgefs', {'enabled': False}).enabled %}
-      storageClass: "edgefs-nfs-csi-storageclass"
       {%- elif storage.get('portworx', {'enabled': False}).enabled %}
       storageClass: "px-shared-sc"
       {%- endif %}
@@ -313,7 +308,7 @@ persistence:
     # Refer to
     # https://github.com/docker/distribution/blob/master/docs/configuration.md#redirect
     # for the detail.
-    {%- if storage.get('minio_operator', {'enabled': False}).enabled %}
+    {%- if storage.get('minio', {'enabled': False}).enabled %}
     disableredirect: true
     {%- else -%}
     disableredirect: false
@@ -327,7 +322,7 @@ persistence:
     # "oss" and fill the information needed in the corresponding section. The type
     # must be "filesystem" if you want to use persistent volumes for registry
     # and chartmuseum
-{%- if storage.get('minio_operator', {'enabled': False}).enabled %}
+    {%- if storage.get('minio', {'enabled': False}).enabled %}
     type: s3
     {%- else -%}
     type: filesystem
@@ -346,12 +341,12 @@ persistence:
       encodedkey: base64-encoded-json-key-file
       #rootdirectory: /gcs/object/name/prefix
       #chunksize: "5242880"
-    {%- if storage.get('minio_operator', {'enabled': False}).enabled %}
+    {%- if storage.get('minio', {'enabled': False}).enabled %}
     s3:
       region: us-west-1
-      bucket: {{ harbor.s3.bucket }}
-      accesskey: {{ harbor.s3.accesskey }}
-      secretkey: {{ harbor.s3.secretkey }}
+      bucket: {{ harbor.s3.minio.bucket }}
+      accesskey: {{ harbor.s3.minio.access_key }}
+      secretkey: {{ harbor.s3.minio.secret_key }}
       regionendpoint: http://minio:9000
       encrypt: false
       #keyid: mykeyid
@@ -427,7 +422,7 @@ updateStrategy:
 logLevel: info
 
 # The initial password of Harbor admin. Change it from portal after launching Harbor
-harborAdminPassword: "{{ harbor.adminPassword }}"
+harborAdminPassword: "{{ harbor.admin_password }}"
 
 # The name of the secret which contains key named "ca.crt". Setting this enables the
 # download link on portal to download the certificate of CA when the certificate isn't
@@ -435,7 +430,7 @@ harborAdminPassword: "{{ harbor.adminPassword }}"
 caSecretName: ""
 
 # The secret key used for encryption. Must be a string of 16 chars.
-secretKey: "{{ harbor.secretkey }}"
+secretKey: "{{ harbor.secret_key }}"
 
 # The proxy settings for updating clair vulnerabilities from the Internet and replicating
 # artifacts from/to the registries that cannot be reached directly
@@ -464,7 +459,7 @@ proxy:
 nginx:
   image:
     repository: goharbor/nginx-photon
-    tag: v{{ harbor.nginxVersion }}
+    tag: v{{ harbor.version }}
   # set the service account to be used, default if left empty
   serviceAccountName: ""
   replicas: 1
@@ -481,7 +476,7 @@ nginx:
 portal:
   image:
     repository: goharbor/harbor-portal
-    tag: v{{ harbor.portalVersion }}
+    tag: v{{ harbor.version }}
   # set the service account to be used, default if left empty
   serviceAccountName: ""
   replicas: 1
@@ -498,7 +493,7 @@ portal:
 core:
   image:
     repository: goharbor/harbor-core
-    tag: v{{ harbor.coreVersion }}
+    tag: v{{ harbor.version }}
   # set the service account to be used, default if left empty
   serviceAccountName: ""
   replicas: 1
@@ -531,7 +526,7 @@ core:
 jobservice:
   image:
     repository: goharbor/harbor-jobservice
-    tag: v{{ harbor.jobserviceVersion }}
+    tag: v{{ harbor.version }}
   replicas: 1
   # set the service account to be used, default if left empty
   serviceAccountName: ""
@@ -558,7 +553,7 @@ registry:
   registry:
     image:
       repository: goharbor/registry-photon
-      tag: v{{ harbor.registryVersion }}
+      tag: v{{ harbor.version }}
     # resources:
     #  requests:
     #    memory: 256Mi
@@ -566,7 +561,7 @@ registry:
   controller:
     image:
       repository: goharbor/harbor-registryctl
-      tag: v{{ harbor.controllerVersion }}
+      tag: v{{ harbor.version }}
 
     # resources:
     #  requests:
@@ -604,56 +599,14 @@ registry:
       # The secret key that should be present is CLOUDFRONT_KEY_DATA, which should be the encoded private key
       # that allows access to CloudFront
       privateKeySecret: "my-secret"
-
-chartmuseum:
-  enabled: true
-  # set the service account to be used, default if left empty
-  serviceAccountName: ""
-  # Harbor defaults ChartMuseum to returning relative urls, if you want using absolute url you should enable it by change the following value to 'true'
-  absoluteUrl: false
-  image:
-    repository: goharbor/chartmuseum-photon
-    tag: v{{ harbor.chartmuseumVersion }}
-  replicas: 1
-  # resources:
-  #  requests:
-  #    memory: 256Mi
-  #    cpu: 100m
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
-  ## Additional deployment annotations
-  podAnnotations: {}
-
-clair:
-  enabled: true
-  # set the service account to be used, default if left empty
-  serviceAccountName: ""
-  clair:
-    image:
-      repository: goharbor/clair-photon
-      tag: v{{ harbor.clairVersion }}
-    # resources:
-    #  requests:
-    #    memory: 256Mi
-    #    cpu: 100m
-  adapter:
-    image:
-      repository: goharbor/clair-adapter-photon
-      tag: v{{ harbor.clairAdapterVersion }}
-    # resources:
-    #  requests:
-    #    memory: 256Mi
-    #    cpu: 100m
-  replicas: 1
-  # The interval of clair updaters, the unit is hour, set to 0 to
-  # disable the updaters
-  updatersInterval: 12
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
-  ## Additional deployment annotations
-  podAnnotations: {}
+  # enable purge _upload directories
+  upload_purging:
+    enabled: true
+    # remove files in _upload directories which exist for a period of time, default is one week.
+    age: 168h
+    # the interval of the purge operations
+    interval: 24h
+    dryrun: false
 
 trivy:
   # enabled the flag to enable Trivy scanner
@@ -662,7 +615,7 @@ trivy:
     # repository the repository for Trivy adapter image
     repository: goharbor/trivy-adapter-photon
     # tag the tag for Trivy adapter image
-    tag: v{{ harbor.trivyAdapterVersion }}
+    tag: v{{ harbor.version }}
   # set the service account to be used, default if left empty
   serviceAccountName: ""
   # replicas the number of Pod replicas
@@ -719,7 +672,7 @@ notary:
     serviceAccountName: ""
     image:
       repository: goharbor/notary-server-photon
-      tag: v{{ harbor.notaryServerVersion }}
+      tag: v{{ harbor.version }}
     replicas: 1
     # resources:
     #  requests:
@@ -730,7 +683,7 @@ notary:
     serviceAccountName: ""
     image:
       repository: goharbor/notary-signer-photon
-      tag: v{{ harbor.notarySignerVersion }}
+      tag: v{{ harbor.version }}
     replicas: 1
     # resources:
     #  requests:
@@ -758,9 +711,9 @@ database:
     serviceAccountName: ""
     image:
       repository: goharbor/harbor-db
-      tag: v{{ harbor.databaseVersion }}
+      tag: v{{ harbor.version }}
     # The initial superuser password for internal database
-    password: "{{ harbor.databasePassword }}"
+    password: "{{ harbor.database.postgres.password }}"
     # resources:
     #  requests:
     #    memory: 256Mi
@@ -804,7 +757,7 @@ redis:
     serviceAccountName: ""
     image:
       repository: goharbor/redis-photon
-      tag: v{{ harbor.redisVersion }}
+      tag: v{{ harbor.version }}
     # resources:
     #  requests:
     #    memory: 256Mi
@@ -830,4 +783,108 @@ redis:
     password: ""
   ## Additional deployment annotations
   podAnnotations: {}
-  
+
+exporter:
+  replicas: 1
+  revisionHistoryLimit: 10
+  # resources:
+  #  requests:
+  #    memory: 256Mi
+  #    cpu: 100m
+  podAnnotations: {}
+  serviceAccountName: ""
+  # mount the service account token
+  automountServiceAccountToken: false
+  image:
+    repository: goharbor/harbor-exporter
+    tag: v2.8.0
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  cacheDuration: 23
+  cacheCleanInterval: 14400
+  ## The priority class to run the pod as
+  priorityClassName:
+
+metrics:
+  {%- if common.addons.get('kube_prometheus', {'enabled': False}).enabled %}
+  enabled: true
+  core:
+    path: /metrics
+    port: 8001
+  registry:
+    path: /metrics
+    port: 8001
+  jobservice:
+    path: /metrics
+    port: 8001
+  exporter:
+    path: /metrics
+    port: 8001
+  {%- endif %}
+  ## Create prometheus serviceMonitor to scrape harbor metrics.
+  ## This requires the monitoring.coreos.com/v1 CRD. Please see
+  ## https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/user-guides/getting-started.md
+  ##
+  serviceMonitor:
+    {%- if common.addons.get('kube_prometheus', {'enabled': False}).enabled %}
+    enabled: true
+    {%- endif %}
+    additionalLabels: {}
+    # Scrape interval. If not set, the Prometheus default scrape interval is used.
+    interval: ""
+    # Metric relabel configs to apply to samples before ingestion.
+    metricRelabelings:
+      []
+      # - action: keep
+      #   regex: 'kube_(daemonset|deployment|pod|namespace|node|statefulset).+'
+      #   sourceLabels: [__name__]
+    # Relabel configs to apply to samples before ingestion.
+    relabelings:
+      []
+      # - sourceLabels: [__meta_kubernetes_pod_node_name]
+      #   separator: ;
+      #   regex: ^(.*)$
+      #   targetLabel: nodename
+      #   replacement: $1
+      #   action: replace
+
+trace:
+  enabled: true
+  # trace provider: jaeger or otel
+  # jaeger should be 1.26+
+  provider: jaeger
+  # set sample_rate to 1 if you wanna sampling 100% of trace data; set 0.5 if you wanna sampling 50% of trace data, and so forth
+  sample_rate: 1
+  # namespace used to differentiate different harbor services
+  # namespace:
+  # attributes is a key value dict contains user defined attributes used to initialize trace provider
+  # attributes:
+  #   application: harbor
+  jaeger:
+    # jaeger supports two modes:
+    #   collector mode(uncomment endpoint and uncomment username, password if needed)
+    #   agent mode(uncomment agent_host and agent_port)
+    endpoint: http://hostname:14268/api/traces
+    # username:
+    # password:
+    # agent_host: hostname
+    # export trace data by jaeger.thrift in compact mode
+    # agent_port: 6831
+  otel:
+    endpoint: hostname:4318
+    url_path: /v1/traces
+    compression: false
+    insecure: true
+    # timeout is in seconds
+    timeout: 10
+
+# cache layer configurations
+# if this feature enabled, harbor will cache the resource
+# `project/project_metadata/repository/artifact/manifest` in the redis
+# which help to improve the performance of high concurrent pulling manifest.
+cache:
+  # default is not enabled.
+  enabled: false
+  # default keep cache for one day.
+  expireHours: 24

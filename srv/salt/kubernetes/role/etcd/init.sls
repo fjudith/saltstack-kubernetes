@@ -5,6 +5,6 @@
 
 include:
   - .config
-  - .cert
+  - .certs
   - .install
   - .test

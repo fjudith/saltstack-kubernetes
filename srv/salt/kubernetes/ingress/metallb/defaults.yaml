@@ -1,2 +1,6 @@
 metallb:
-  version: 0.9.6-debian-10-r27
+  enabled: true
+  version: 0.13.9
+  chart_version: 0.13.9
+  api_version: metallb.io/v1beta2
+  url: https://metallb.github.io/metallb

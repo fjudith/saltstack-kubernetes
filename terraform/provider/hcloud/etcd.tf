@@ -40,7 +40,8 @@ resource "hcloud_server" "etcd" {
 
   provisioner "remote-exec" {
     inline = [
-      "cloud-init status --long --wait",
+      # "cloud-init status --long --wait",
+      "while [ ! -f /var/lib/cloud/instance/boot-finished ]; do echo 'Waiting for cloud-init...'; sleep 1; done"
     ]
   }
 }

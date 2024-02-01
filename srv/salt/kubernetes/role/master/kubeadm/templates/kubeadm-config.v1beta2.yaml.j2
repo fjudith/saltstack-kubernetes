@@ -108,7 +108,7 @@ apiServer:
     {%- if charts.get('keycloak', {'enabled': False}).enabled %}
     oidc-client-id: kubernetes
     oidc-groups-claim: groups
-    oidc-issuer-url: https://{{ charts.keycloak.ingress_host }}.{{ public_domain }}/auth/realms/default
+    oidc-issuer-url: https://{{ charts.keycloak.ingress.host }}.{{ public_domain }}/auth/realms/default
     {%- endif %}
     {%- for argument, value in (kubeadm.apiServer.extraArgs).items() %}
     {{ argument }}: "{{ value }}"

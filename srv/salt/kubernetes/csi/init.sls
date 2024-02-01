@@ -4,9 +4,6 @@ include:
   {%- if storage.get('rook_ceph', {'enabled': False}).enabled %}
   - kubernetes.csi.rook-ceph
   {%- endif %}
-  {%- if storage.get('rook_edgefs', {'enabled': False}).enabled %}
-  - kubernetes.csi.rook-edgefs
-  {%- endif %}
   {%- if storage.get('longhorn', {'enabled': False}).enabled %}
   - kubernetes.csi.longhorn
   {%- endif %}
@@ -19,6 +16,6 @@ include:
   {%- if storage.get('portworx', {'enabled': False}).enabled %}
   - kubernetes.csi.portworx
   {%- endif %}
-  {%- if storage.get('minio_operator', {'enabled': False}).enabled %}
-  - kubernetes.csi.minio-operator
+  {%- if storage.get('minio', {'enabled': False}).enabled %}
+  - kubernetes.csi.minio
   {%- endif %}

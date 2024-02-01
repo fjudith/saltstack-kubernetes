@@ -1,0 +1,5 @@
+helm:
+  enabled: true
+  version: 3.11.3
+  source_hash: ca2d5d40d4cdfb9a3a6205dd803b5bc8def00bd2f13e5526c127e9b667974a89
+  url: https://charts.helm.sh/stable

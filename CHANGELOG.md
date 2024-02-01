@@ -13,7 +13,7 @@
 ### Changed
 
 * Salt: Bump version 3004
-* SaltGUI: Bump version 1.26.0
+* SaltGUI: Bump version 1.28.0
 * Envoy: Bump version 1.18.2
 * Etcd: Bump version 3.5.0
 * Containerd: Bump version 1.4.11

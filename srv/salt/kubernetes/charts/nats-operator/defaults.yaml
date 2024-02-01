@@ -1,0 +1,10 @@
+nats_operator:
+  enabled: true
+  version: 0.8.3
+  chart_version: 0.8.3
+  api_version: nats.io/v1alpha2
+  url: https://nats-io.github.io/k8s/helm/charts/
+  nats:
+    version: 2.9.16
+  stan:
+    version: 0.24.1

@@ -1,5 +1,6 @@
-open-iscsi:
-  pkg.latest
-
-tgt:
-  pkg.latest
+iscsi:
+  pkg.latest:
+    - pkgs:
+      - open-iscsi
+      - tgt
+      - targetcli-fb

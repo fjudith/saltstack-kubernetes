@@ -23,7 +23,8 @@ kubeadm-init:
     - unless: test -f /etc/kubernetes/admin.conf
     - timeout: 300
     - name: |
-        /usr/bin/kubeadm init --config /root/kubeadm-config.yaml --ignore-preflight-errors=all --upload-certs --v=5
+        /usr/bin/kubeadm init --config /root/kubeadm-config.yaml --ignore-preflight-errors=all --upload-certs --v=5 \
+        || /usr/bin/kubeadm reset -f --cert-dir /etc/kubernetes/pki
     - require_in:
       - sls: kubernetes.role.master.kubeadm.join
       - sls: kubernetes.role.node.kubeadm.join

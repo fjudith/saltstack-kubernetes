@@ -4,4 +4,4 @@
 {% import_yaml tpldir ~ "/defaults.yaml" or {} as defaults %}
 
 {#- Merge in salt pillar #}
-{% set contour = salt['pillar.get']('kubernetes:common:addons:contour', default=defaults['contour'], merge=True) %}
+{% set contour = salt['pillar.get']('kubernetes:common:ingress:contour', default=defaults['contour'], merge=True) %}

@@ -1,0 +1,20 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{% from tpldir ~ "/map.jinja" import harbor with context %}
+{%- set public_domain = pillar['public-domain'] -%}
+
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: harbor
+  namespace: harbor
+spec:
+  commonName: {{ harbor.ingress.host }}.{{ public_domain }}
+  dnsNames:
+  - {{ harbor.ingress.host }}.{{ public_domain }}
+  - {{ harbor.ingress.notary_host }}.{{ public_domain }}
+  issuerRef:
+    kind: ClusterIssuer
+    name: letsencrypt-prod
+  secretName: harbor-general-cert

@@ -1,26 +1,22 @@
-/srv/kubernetes/manifests/concourse:
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{% from tpldir ~ "/map.jinja" import concourse with context %}
+
+{% set file_state = 'absent' %}
+{% if concourse.enabled -%}
+  {% set file_state = 'managed' -%}
+{% endif %}
+
+/srv/kubernetes/charts/concourse:
   file.directory:
     - user: root
     - group: root
     - dir_mode: "0750"
     - makedirs: True
 
-/srv/kubernetes/manifests/concourse/values.yaml:
-  file.managed:
-    - require:
-      - file:  /srv/kubernetes/manifests/concourse
-    - source: salt://{{ tpldir }}/templates/values.yaml.j2
-    - user: root
-    - group: root
-    - mode: "0755"
-    - template: jinja
-    - context:
-      tpldir: {{ tpldir }}
-
-/srv/kubernetes/manifests/concourse/secrets:
+/srv/kubernetes/manifests/concourse:
   file.directory:
-    - require:
-      - file: /srv/kubernetes/manifests/concourse
     - user: root
     - group: root
     - dir_mode: "0750"

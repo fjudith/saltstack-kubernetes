@@ -1,6 +1,11 @@
 keycloak:
-  version: 12.0.3
-  username: keycloak
-  password: V3ry1ns3cur3P4ssw0rd
-  db_size: 8Gi
-  ingress_host: signin
+  enabled: true
+  version: 21.1.1
+  chart_version: 15.0.1
+  url: https://charts.bitnami.com/bitnami
+  admin_password: 1nS3cur3P4ssw0rd
+  ingress:
+    enabled: true
+    host: keycloak
+  realms:
+    - name: default

@@ -1,0 +1,150 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{% from tpldir ~ "/map.jinja" import argo with context %}
+{% from "kubernetes/map.jinja" import storage with context %}
+{% from "kubernetes/map.jinja" import charts with context %}
+{% from "kubernetes/map.jinja" import common with context %}
+{%- if common.addons.get('nginx', {'enabled': False}).enabled  %}
+  {%- set controller = "nginx" -%}
+{%- elif common.addons.get('traefik', {'enabled': False}).enabled %}
+  {%- set controller = "traefik" -%}
+{%- elif common.addons.get('istio', {'enabled': False}).enabled %}
+  {%- set controller = "istio" -%}
+{%- elif common.addons.get('contour', {'enabled': False}).enabled %}
+  {%- set controller = "contour" -%}
+{%- endif -%}
+{%- set public_domain = pillar['public-domain'] -%}
+
+## Custom resource configuration
+crds:
+  # -- Install and upgrade CRDs
+  install: true
+
+
+## Globally shared configuration
+global:
+  image:
+    tag: v{{ argo.cd.version }}
+
+
+## Argo Configs
+configs:
+  {%- if charts.get('keycloak', {'enabled': False}).enabled %}
+  {%- set keycloak_url = 'https://' ~ charts.keycloak.ingress.host ~ '.' ~ pillar['public-domain'] -%}
+  {%- set keycloak_username = salt['cmd.shell']('kubectl -n keycloak get configmap keycloak-env-vars --output=jsonpath="{.data.KEYCLOAK_ADMIN}"') %}
+  {%- set keycloak_password = salt['cmd.shell']('kubectl -n keycloak get secret keycloak --output=jsonpath="{.data.admin-password}" | base64 -d') %}
+  {%- set client_id         = argo.cd.oauth.keycloak.client_id %}
+  {%- set client_secret     = salt['cmd.shell']('/srv/keycloak/scripts/kc-clientsecret.sh' + ' ' + keycloak_username + ' ' + keycloak_password + ' ' + keycloak_url + ' ' + argo.cd.oauth.keycloak.realm + ' ' + client_id) %}
+  secret:
+    createSecret: true
+    # Custom secrets. Useful for injecting SSO secrets into environment variables.
+    # Ref: https://argoproj.github.io/argo-cd/operator-manual/sso/
+    # Note that all values must be non-empty.
+    extra:
+      oidc.keycloak.clientSecret: {{ client_secret }}
+
+    # -- Bcrypt hashed admin password
+    ## Argo expects the password in the secret to be bcrypt hashed. You can create this hash with
+    ## htpasswd -nbBC 10 "" $ARGO_PWD | tr -d ':\n' | sed 's/$2y/$2a/'
+    argocdServerAdminPassword: {{ argo.cd.admin_password }}
+
+  # General Argo CD configuration
+  ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-cm.yaml
+  cm:
+    # Argo CD's externally facing base URL (optional). Required when configuring SSO
+    url: https://{{ argo.cd.ingress.host }}.{{ public_domain }}
+    # Argo CD instance label key
+    oidc.config: |
+      name: Keycloak
+      issuer: {{ keycloak_url }}/realms/{{ argo.cd.oauth.keycloak.realm }}
+      clientID: {{ client_id }}
+      clientSecret: $oidc.keycloak.clientSecret
+      requestedScopes: ["openid", "profile", "email", "groups"]
+
+  # Argo CD RBAC policy configuration
+  ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/rbac.md
+  rbac:
+    policy.csv: |
+      g, argo-cd-admins, role:admin
+      g, argo-cd-users, role:readonly
+  {%- endif %}
+
+## Application controller
+controller:
+  image:
+    tag: v{{ argo.cd.version }}
+
+  ## Server metrics controller configuration
+  metrics:
+    enabled: true
+    serviceMonitor:
+      {%- if common.addons.get('kube_prometheus', {'enabled': False}).enabled %}
+      enabled: true
+      {%- endif %}
+
+
+## Dex
+# dex:
+#   enabled: true
+#   ## Server metrics dex configuration
+#   metrics:
+#     enabled: true
+#     serviceMonitor:
+#       {%- if common.addons.get('kube_prometheus', {'enabled': False}).enabled %}
+#       enabled: true
+#       {%- endif %}
+
+
+## Redis
+redis:
+  enabled: true
+
+
+# This key configures Redis-HA subchart and when enabled (redis-ha.enabled=true)
+# the custom redis deployment is omitted
+# Check the redis-ha chart for more properties
+redis-ha:
+  enabled: false
+  # Check the redis-ha chart for more properties
+  exporter:
+    enabled: true
+  haproxy:
+    enabled: true
+
+
+## Server
+server:
+  image:
+    tag: v{{ argo.cd.version }}
+  
+  ## Additional command line arguments to pass to argocd-server
+  ##
+  {%- if common.addons.get('contour', {'enabled': False}).enabled %}
+  extraArgs:
+  - --insecure
+  {%- else %}
+  extraArgs: []
+  {%- endif %}
+
+  ## Server metrics service configuration
+  metrics:
+    enabled: true
+    serviceMonitor:
+      {%- if common.addons.get('kube_prometheus', {'enabled': False}).enabled %}
+      enabled: true
+      {%- endif %}
+
+  ingress:
+    enabled: {{ argo.cd.ingress.enabled }}
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+      kubernetes.io/tls-acme: "true"
+    ingressClassName: {{ controller }}
+    hosts:
+      - {{ argo.cd.ingress.host }}.{{ public_domain }}
+    tls:
+    - secretName: argo-cd-general-cert
+      hosts:
+        - {{ argo.cd.ingress.host }}.{{ public_domain }}
+

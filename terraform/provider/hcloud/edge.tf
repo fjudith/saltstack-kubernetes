@@ -26,7 +26,8 @@ resource "hcloud_server" "edge01" {
 
   provisioner "remote-exec" {
     inline = [
-      "cloud-init status --long --wait",
+      # "cloud-init status --long --wait",
+      "while [ ! -f /var/lib/cloud/instance/boot-finished ]; do echo 'Waiting for cloud-init...'; sleep 1; done"
     ]
   }
 
@@ -38,8 +39,8 @@ resource "hcloud_server" "edge01" {
   # }
 
   provisioner "file" {
-    content     = file(var.ssh_private_key)
-    destination = "~/.ssh/id_rsa"
+    source      = var.ssh_private_key
+    destination = ".ssh/id_rsa"
   }
 
   provisioner "remote-exec" {
@@ -49,8 +50,8 @@ resource "hcloud_server" "edge01" {
   }
 
   provisioner "file" {
-    content     = file(var.ssh_public_key)
-    destination = "~/.ssh/id_rsa.pub"
+    source       = var.ssh_public_key
+    destination = ".ssh/id_rsa.pub"
   }
 }
 
@@ -87,7 +88,8 @@ resource "hcloud_server" "edge02" {
 
   provisioner "remote-exec" {
     inline = [
-      "cloud-init status --long --wait",
+      # "cloud-init status --long --wait",
+      "while [ ! -f /var/lib/cloud/instance/boot-finished ]; do echo 'Waiting for cloud-init...'; sleep 1; done"
     ]
   }
 
@@ -99,8 +101,8 @@ resource "hcloud_server" "edge02" {
   # }
 
   provisioner "file" {
-    content     = file(var.ssh_private_key)
-    destination = "~/.ssh/id_rsa"
+    source      = var.ssh_private_key
+    destination = ".ssh/id_rsa"
   }
 
   provisioner "remote-exec" {
@@ -110,8 +112,8 @@ resource "hcloud_server" "edge02" {
   }
 
   provisioner "file" {
-    content     = file(var.ssh_public_key)
-    destination = "~/.ssh/id_rsa.pub"
+    source       = var.ssh_public_key
+    destination = ".ssh/id_rsa.pub"
   }
 }
 

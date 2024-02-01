@@ -1,0 +1,17 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{#- Get the `tplroot` from `tpldir` #}
+{% from tpldir ~ "/map.jinja" import nats_operator with context %}
+
+apiVersion: nats.io/v1alpha2
+kind: NatsCluster
+metadata:
+  name: nats-cluster
+  namespace: nats-io
+spec:
+  size: 3
+  version: {{ nats_operator.nats.version }}
+  pod:
+    enableMetrics: true
+    metricsImage: "synadia/prometheus-nats-exporter"

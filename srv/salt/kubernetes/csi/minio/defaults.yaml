@@ -1,0 +1,10 @@
+minio:
+  enabled: true
+  version: 5.0.4
+  chart_version: 5.0.4
+  client_version: 2023-05-04T18-10-16Z
+  api_version: minio.min.io/v2
+  url: https://operator.min.io/
+  ingress:
+    enabled: true
+    host: minio-operator

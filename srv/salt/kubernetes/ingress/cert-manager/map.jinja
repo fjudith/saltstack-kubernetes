@@ -4,4 +4,4 @@
 {% import_yaml tpldir ~ "/defaults.yaml" or {} as defaults %}
 
 {#- Merge in salt pillar #}
-{% set cert_manager = salt['pillar.get']('kubernetes:common:addons:cert_manager', default=defaults['cert_manager'], merge=True) %}
+{% set cert_manager = salt['pillar.get']('kubernetes:common:ingress:cert_manager', default=defaults['cert_manager'], merge=True) %}

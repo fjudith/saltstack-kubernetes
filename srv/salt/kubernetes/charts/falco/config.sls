@@ -1,37 +1,17 @@
-/srv/kubernetes/manifests/falco:
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{% from tpldir ~ "/map.jinja" import falco with context %}
+
+{% set state = 'absent' %}
+{% if falco.enabled -%}
+  {% set state = 'managed' -%}
+{% endif %}
+
+/srv/kubernetes/charts/falco:
   file.directory:
     - user: root
     - group: root
     - dir_mode: "0750"
     - makedirs: True
-
-/srv/kubernetes/manifests/falco/certs:
-  file.directory:
-    - user: root
-    - group: root
-    - dir_mode: "0750"
-    - makedirs: True
-
-/srv/kubernetes/manifests/falco/values.yaml:
-  file.managed:
-    - require:
-      - file:  /srv/kubernetes/manifests/falco
-    - source: salt://{{ tpldir }}/templates/values.yaml.j2
-    - template: jinja
-    - user: root
-    - group: root
-    - mode: "0644"
-    - context:
-      tpldir: {{ tpldir }}
-
-/srv/kubernetes/manifests/falco/exporter-values.yaml:
-  file.managed:
-    - require:
-      - file:  /srv/kubernetes/manifests/falco
-    - source: salt://{{ tpldir }}/templates/exporter-values.yaml.j2
-    - template: jinja
-    - user: root
-    - group: root
-    - mode: "0644"
-    - context:
-      tpldir: {{ tpldir }}
+  

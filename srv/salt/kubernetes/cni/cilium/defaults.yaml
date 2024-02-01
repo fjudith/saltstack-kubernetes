@@ -1,5 +1,6 @@
 cilium:
-  cilium_image: docker.io/cilium/cilium:v1.3.2
-  etcd_ca_crt: /etc/kubernetes/pki/etcd/ca.crt
-  etcd_server_crt: /etc/kubernetes/pki/apiserver-etcd-client.crt
-  etcd_server_key: /etc/kubernetes/pki/apiserver-etcd-client.key
+  enabled: true
+  version: 1.13.2
+  chart_version: 1.13.2
+  cli_version: 0.14.1
+  url: https://helm.cilium.io/

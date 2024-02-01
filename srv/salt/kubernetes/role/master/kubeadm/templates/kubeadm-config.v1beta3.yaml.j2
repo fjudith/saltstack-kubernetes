@@ -1,0 +1,160 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{% from tpldir ~ "/map.jinja" import kubeadm with context %}
+{%- set hostname = salt['grains.get']('fqdn') -%}
+{%- set public_domain = pillar['public-domain'] -%}
+{%- set clusterHost = pillar['cluster-host'] -%}
+{%- set hostArchitecture = salt['grains.get']('osarch') -%}
+{%- set controlPlaneInterface = pillar['controlPlaneInterface'] -%}
+{%- set localIpAddress = salt['network.ip_addrs'](controlPlaneInterface) -%}
+{%- from "kubernetes/map.jinja" import charts with context -%}
+{%- from "kubernetes/map.jinja" import storage with context -%}
+
+{%- set apiserverCount = [] -%}
+{%- for hostname in salt['mine.get'](tgt='role:master', fun='network.get_hostname', tgt_type='grain') -%}
+  {%- do apiserverCount.append(hostname) -%}
+{%- endfor -%}
+
+{%- if apiserverCount|length == 1 -%}
+  {%- set controlPlaneAddress = localIpAddress  -%}
+{%- else-%}
+  {%- set controlPlaneAddress = clusterHost ~ '.' ~ public_domain -%}
+{% endif %}
+
+apiVersion: kubeadm.k8s.io/v1beta3
+kind: InitConfiguration
+bootstrapTokens:
+- token: {{ kubeadm.token }}
+  description: kubeadm bootstrap token
+  ttl: 24h
+  usages:
+  - authentication
+  - signing
+  groups:
+  - system:bootstrappers:kubeadm:default-node-token
+- token: {{ kubeadm.nodeToken }}
+  description: Node bootstrap token
+  usages:
+  - authentication
+  - signing
+  groups:
+  - system:bootstrappers:kubeadm:default-node-token
+nodeRegistration:
+  name: {{ hostname }}
+  criSocket: {{ kubeadm.criSocket }}
+  {%- if "master" in grains.get('role', []) %}
+  taints:
+  - key: node-role.kubernetes.io/control-plane
+    effect: NoSchedule
+  {%- else %}
+  taints: []
+  {%- endif %}
+  kubeletExtraArgs:
+    {%- for argument, value in (kubeadm.kubeletExtraArgs).items() %}
+    {{ argument }}: "{{ value }}"
+    {%- endfor %}
+localAPIEndpoint:
+  advertiseAddress: {{ localIpAddress[0] }}
+  bindPort: {{ kubeadm.bindPort }}
+certificateKey: "{{ kubeadm.certificateKey }}"
+---
+apiVersion: kubeadm.k8s.io/v1beta3
+kind: ClusterConfiguration
+etcd:
+  {%- if not kubeadm.etcd.external %}
+  # one of local or external
+  local:
+    dataDir: {{ kubeadm.etcd.datadir }}
+    extraArgs:
+      {%- for argument, value in (kubeadm.etcd.extraArgs).items() %}
+      {{ argument }}: "{{ value }}"
+      {%- endfor %}
+      {%- if hostArchitecture != "amd64" -%}
+      etcd-unsupported-arch: {{hostArchitecture}}
+      {%- endif %}
+    serverCertSANs:
+      {%- for san in kubeadm.etcd.serverCertSANs %}
+      - {{ san }}
+      {%- endfor %}
+      - etcd.kube-system.svc.{{ kubeadm.networking.dnsDomain }}
+      - etcd.kube-system.svc
+      - etcd.kube-system
+      - etcd
+    peerCertSANs:
+      {%- for peersan in kubeadm.etcd.peerCertSANs %}
+      - {{ peersan }}
+      {%- endfor %}
+      - etcd.kube-system.svc.{{ kubeadm.networking.dnsDomain }}
+      - etcd.kube-system.svc
+      - etcd.kube-system
+      - etcd
+  {%- else %}
+  external:
+    endpoints:
+      {%- for server, addrs in salt['mine.get'](tgt='role:etcd', fun='network.ip_addrs', tgt_type='grain').items() %}
+      - https://{{ addrs[0] }}:{{ kubeadm.etcd.port }}
+      {%- endfor %}
+    caFile: /etc/etcd/pki/ca.crt
+    certFile: /etc/etcd/pki/kube-apiserver-client.crt
+    keyFile: /etc/etcd/pki/kube-apiserver-client.key
+  {%- endif %}
+networking:
+  serviceSubnet: {{ kubeadm.networking.serviceSubnet }}
+  podSubnet: {{ kubeadm.networking.podSubnet }}
+  dnsDomain: {{ kubeadm.networking.dnsDomain }}
+kubernetesVersion: v{{ kubeadm.kubernetesVersion }}
+controlPlaneEndpoint: {{ controlPlaneAddress ~ ':' ~ kubeadm.bindPort }}
+apiServer:
+  extraArgs:
+    apiserver-count: "{{ apiserverCount|length }}"
+    allow-privileged: "{{ kubeadm.apiServer.allowPrivileged }}"
+    {%- if charts.get('keycloak', {'enabled': False}).enabled %}
+    oidc-client-id: kubernetes
+    oidc-groups-claim: groups
+    oidc-issuer-url: https://{{ charts.keycloak.ingress.host }}.{{ public_domain }}/auth/realms/default
+    {%- endif %}
+    {%- for argument, value in (kubeadm.apiServer.extraArgs).items() %}
+    {{ argument }}: "{{ value }}"
+    {%- endfor %}
+    audit-log-path: /var/log/kubernetes/audit/kube-apiserver-audit.log
+    encryption-provider-config: /etc/kubernetes/pki/encryption-config.yaml
+  extraVolumes:
+  - name: audit-policy
+    hostPath: /etc/kubernetes/audit-policy/kube-apiserver-audit-policy.yaml
+    mountPath: /etc/kubernetes/audit-policy/kube-apiserver-audit-policy.yaml
+    readOnly: true
+  - name: audit-log
+    hostPath: /var/log/kubernetes/audit
+    mountPath: /var/log/kubernetes/audit
+    readOnly: false
+  certSANs:
+    {%- for san in kubeadm.apiServer.certSANs %}
+    - {{ san }}
+    {%- endfor %}
+  timeoutForControlPlane: {{ kubeadm.apiServer.timeoutForControlPlane }}
+controllerManager:
+  extraArgs:
+    {%- for argument, value in (kubeadm.controllerManager.extraArgs).items() %}
+    {{ argument }}: "{{ value }}"
+    {%- endfor %}
+scheduler:
+  extraArgs:
+    {%- for argument, value in (kubeadm.scheduler.extraArgs).items() %}
+    {{ argument }}: "{{ value }}"
+    {%- endfor %}
+certificatesDir: {{ kubeadm.certificatesDir }}
+clusterName: {{ kubeadm.clusterName }}
+dns:
+  type: {{ kubeadm.dns.type | regex_replace('/coredns$','') }}
+  # imageTag: {{ kubeadm.dns.imageTag }}
+---
+apiVersion: kubelet.config.k8s.io/v1beta1
+kind: KubeletConfiguration
+clusterDNS:
+  - {{ kubeadm.clusterDNSIP }}
+---
+apiVersion: kubeproxy.config.k8s.io/v1alpha1
+kind: KubeProxyConfiguration
+# kube-proxy specific options here
+---

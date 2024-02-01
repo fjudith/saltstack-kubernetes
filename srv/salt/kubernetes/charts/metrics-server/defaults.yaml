@@ -1,0 +1,5 @@
+metrics_server:
+  enabled: true
+  version: 0.6.3
+  chart_version: 3.10.0
+  url: https://kubernetes-sigs.github.io/metrics-server/

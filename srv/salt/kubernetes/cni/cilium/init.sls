@@ -1,5 +1,6 @@
 
 
 include:
-  - kubernetes.cni.cilium.config
-  - kubernetes.cni.cilium.install
+  - .config
+  - .repos
+  - .install

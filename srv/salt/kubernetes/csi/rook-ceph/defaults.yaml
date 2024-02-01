@@ -1,15 +1,10 @@
-
 rook_ceph:
-  replication: 3
-  block_replication: 3
-  object_replication: 3
-  filesystem_replication: 3
-  image: docker.io/rook/ceph:v1.5.8
-  ceph_image: docker.io/ceph/ceph:v15.2.9
-  exporter_image: docker.io/digitalocean/ceph_exporter:latest
-  ingress_host: ceph
-  store_type: filestore
-  timeout: 260
-  default_storageclass:
+  enabled: true
+  version: 1.11.5
+  chart_version: 1.11.5
+  api_version: ceph.rook.io/v1
+  url: https://charts.rook.io/release
+  ceph:
+    version: 17.2.6
+  toolbox:
     enabled: true
-    name: rook-ceph-block

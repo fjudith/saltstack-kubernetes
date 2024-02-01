@@ -43,9 +43,9 @@ The solution design carries the following requirements:
   <tr>
     <td><ul><li><b>hetzner</b></li><li>scaleway</li></ul></td>
     <td><ul><li><b>cloudflare</b></li></ul></td>
-    <td><ul><li>1.16.8</li><li>1.17.4</li><li>1.18.10</li><li>1.19.7</li><li><b>1.22.3</b></li></ul></td>
-    <td><ul><li>docker 19.03.13</li><li><b>containerd v1.4.11</b></li><li>cri-o 1.15</li></ul></td>
-    <td><ul><li><b>cni 0.7.5</b></li><li>calico 3.16.1</li><li>canal 3.2.1 (flannel 0.9.1)</li><li>flannel 0.1.0</li><li>weave 2.6.5</li><li>Cillium 1.30.0</li></ul></td>
+    <td><ul><li><b>1.26.4</b></li></ul></td>
+    <td><ul><li>docker 19.03.13</li><li><b>containerd 1.6.20</b></li><li>cri-o 1.27.0</li></ul></td>
+    <td><ul><li><b>cni 1.2.0</b></li><li>calico 3.25.1</li><li>flannel 0.1.0</li><li>weave 2.6.5</li><li><b>cillium 1.13.2</b></li></ul></td>
   </tr>
 </table>
 
@@ -205,17 +205,17 @@ Check the Kubernetes cluster nodes status.
 kubectl get nodes
 
 NAME       STATUS   ROLES          AGE   VERSION
-edge01     Ready    ingress,node   32d   v1.22.3
-edge02     Ready    ingress,node   32d   v1.22.3
-master01   Ready    master         32d   v1.22.3
-master02   Ready    master         32d   v1.22.3
-master03   Ready    master         32d   v1.22.3
-node01     Ready    node           32d   v1.22.3
-node02     Ready    node           32d   v1.22.3
-node03     Ready    node           32d   v1.22.3
-node04     Ready    node           32d   v1.22.3
-node05     Ready    node           32d   v1.22.3
-node06     Ready    node           32d   v1.22.3
+edge01     Ready    ingress,node   32d   v1.26.4
+edge02     Ready    ingress,node   32d   v1.26.4
+master01   Ready    master         32d   v1.26.4
+master02   Ready    master         32d   v1.26.4
+master03   Ready    master         32d   v1.26.4
+node01     Ready    node           32d   v1.26.4
+node02     Ready    node           32d   v1.26.4
+node03     Ready    node           32d   v1.26.4
+node04     Ready    node           32d   v1.26.4
+node05     Ready    node           32d   v1.26.4
+node06     Ready    node           32d   v1.26.4
 ```
 
 Retreive the URLs protected by the Kube-APIserver.

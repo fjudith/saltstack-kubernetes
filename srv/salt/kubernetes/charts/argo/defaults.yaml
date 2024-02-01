@@ -1,15 +1,42 @@
 argo:
-  version: 3.0.7
-  ingress_host: argo
-  minio_image: docker.io/minio/minio:latest
+  enabled: true
+  url: https://argoproj.github.io/argo-helm
+  cd:
+    enabled: true
+    version: 2.7.1
+    chart_version: 5.32.2
+    ingress:
+      enabled: true
+      host: argo-cd
+    oauth:
+      keycloak:
+        enabled: true
+        realm: default
+        client_id: argo-cd
+    admin_password: V3ry1ns3cur3P4ssw0rd
+  
   events:
     enabled: true
-    version: 1.3.1
-  # oauth:
-  #   provider: keycloak
-  #   keycloak:
-  #     realm: default
-  # s3:
-  #   accesskey: argo
-  #   secretkey: P4ssw0rd
-  #   bucket: argo-artifacts
+    version: 1.7.6
+    chart_version: 2.3.0
+  
+  workflows:
+    enabled: true
+    version: 3.4.7
+    chart_version: 0.25.1
+    ingress:
+      enabled: true
+      host: argo-workflows
+    oauth:
+      keycloak:
+        enabled: true
+        realm: default
+        client_id: argo-workflows
+    s3:
+      minio:
+        enabled: true
+        access_key: argo-workflows
+        secret_key: V3ry1ns3cur3P4ssw0rd
+        ingress:
+          enabled: true
+          host: argo-workflows-minio

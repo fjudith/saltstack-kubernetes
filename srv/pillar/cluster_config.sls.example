@@ -10,7 +10,7 @@ envoy:
   enabled: true
 
 kubeadm:
-  kubernetesVersion: 1.22.3
+  kubernetesVersion: 1.26.4
   # kubeadm token generate
   token: ockpvc.dsmk8rtibt1gr72y
   nodeToken: 4bidtp.y7q8hlsvfro0ech1

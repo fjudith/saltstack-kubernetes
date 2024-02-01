@@ -1,0 +1,326 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{% from tpldir ~ "/map.jinja" import keycloak with context %}
+{%- from "kubernetes/map.jinja" import common with context -%}
+{%- from "kubernetes/map.jinja" import storage with context -%}
+{%- from "kubernetes/map.jinja" import charts with context -%}
+{%- if common.addons.get('nginx', {'enabled': False}).enabled  %}
+  {%- set controller = "nginx" -%}
+{%- elif common.addons.get('traefik', {'enabled': False}).enabled %}
+  {%- set controller = "traefik" -%}
+{%- elif common.addons.get('istio', {'enabled': False}).enabled %}
+  {%- set controller = "istio" -%}
+{%- elif common.addons.get('contour', {'enabled': False}).enabled %}
+  {%- set controller = "contour" -%}
+{%- endif -%}
+{%- set public_domain = pillar['public-domain'] -%}
+
+global:
+  {%- if storage.get('rook_ceph', {'enabled': False}).enabled %}
+  storageClass: ceph-block
+  {%- endif %}
+
+image:
+  tag: {{ keycloak.version }}-debian-11-r0
+
+metrics:
+  {%- if common.addons.get('kube_prometheus', {'enabled': False}).enabled %}
+  enabled: true
+  serviceMonitor:
+    enabled: true
+  {%- endif %}
+
+auth:
+  adminUser: admin
+  password: {{ keycloak.admin_password }}
+
+ingress:
+  enabled: {{ keycloak.ingress.enabled }}
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/tls-acme: "true"
+  ingressClassName: {{ controller }}
+  hostname:  {{ keycloak.ingress.host }}.{{ public_domain }}
+  tls: true
+
+keycloakConfigCli:
+  enabled: true
+  configuration:
+    realm-default.yaml:
+      realm: {{ keycloak.realms[0].name }}
+      enabled: True
+      groups:
+        - name: kubernetes-admins
+        - name: kubernetes-users
+        {%- if charts.argo.cd.get('ingress', {'enabled': False}).enabled %}
+        - name: argo-cd-admins
+        - name: argo-cd-users
+        {%- endif %}
+        {%- if charts.argo.workflows.get('ingress', {'enabled': False}).enabled %}
+        - name: argo-workflows-admins
+        - name: argo-workflows-users
+        {%- endif %}
+        {%- if charts.concourse.get('ingress', {'enabled': False}).enabled %}
+        - name: concourse-admins
+        - name: concourse-users
+        {%- endif %}
+        {%- if charts.harbor.get('ingress', {'enabled': False}).enabled %}
+        - name: harbor-admins
+        - name: harbor-users
+        {%- endif %}
+        {%- if charts.spinnaker.get('ingress', {'enabled': False}).enabled %}
+        - name: spinnaker-admins
+        - name: spinnaker-users
+        {%- endif %}
+      clientScopes:
+        - name: groups
+          description: List of groups membershitp
+          protocol: openid-connect
+          attributes:
+            include.in.token.scope: True
+            display.on.consent.screen: True
+          protocolMappers:
+            - name: groups
+              protocol: openid-connect
+              protocolMapper: oidc-group-membership-mapper
+              consentRequired: False
+              config:
+                full.path: False
+                id.token.claim: True
+                access.token.claim: True
+                claim.name: groups
+                userinfo.token.claim: True
+        - name: userid
+          description: ID of the user
+          protocol: openid-connect
+          attributes:
+            include.in.token.scope: True
+            display.on.consent.screen: True
+          protocolMappers:
+            - name: userid
+              protocol: openid-connect
+              protocolMapper: oidc-usermodel-property-mapper
+              consentRequired: False
+              config:
+                userinfo.token.claim: True
+                user.attribute: id
+                id.token.claim: True
+                access.token.claim: True
+                claim.name: userid
+                jsonType.label: String
+        - name: username
+          description: ID of the user
+          protocol: openid-connect
+          attributes:
+            include.in.token.scope: True
+            display.on.consent.screen: True
+          protocolMappers:
+            - name: username
+              protocol: openid-connect
+              protocolMapper: oidc-usermodel-property-mapper
+              consentRequired: False
+              config:
+                userinfo.token.claim: True
+                user.attribute: username
+                id.token.claim: True
+                access.token.claim: True
+                claim.name: username
+                jsonType.label: String
+        - name: allowed-services
+          description: List of approved client ids
+          protocol: openid-connect
+          attributes:
+            include.in.token.scope: true
+            display.on.consent.screen: true
+          protocolMappers:
+            - name: audience-kubernetes
+              protocol: openid-connect
+              protocolMapper: oidc-audience-mapper
+              consentRequired: False
+              config:
+                included.client.audience: kubernetes-dashboard
+                id.token.claim: False
+                access.token.claim: True
+            {%- if charts.argo.cd.get('ingress', {'enabled': False}).enabled %}
+            - name: audience-argo-cd
+              protocol: openid-connect
+              protocolMapper: oidc-audience-mapper
+              consentRequired: False
+              config:
+                included.client.audience: argo-cd
+                id.token.claim: False
+                access.token.claim: True
+            {%- endif %}
+            {%- if charts.argo.workflows.get('ingress', {'enabled': False}).enabled %}
+            - name: audience-argo-workflows
+              protocol: openid-connect
+              protocolMapper: oidc-audience-mapper
+              consentRequired: False
+              config:
+                included.client.audience: argo-workflows
+                id.token.claim: False
+                access.token.claim: True
+            {%- endif %}
+            {%- if charts.concourse.get('ingress', {'enabled': False}).enabled %}
+            - name: audience-concourse
+              protocol: openid-connect
+              protocolMapper: oidc-audience-mapper
+              consentRequired: False
+              config:
+                included.client.audience: concourse
+                id.token.claim: False
+                access.token.claim: True
+            {%- endif %}
+            {%- if charts.harbor.get('ingress', {'enabled': False}).enabled %}
+            - name: audience-harbor
+              protocol: openid-connect
+              protocolMapper: oidc-audience-mapper
+              consentRequired: False
+              config:
+                included.client.audience: harbor
+                id.token.claim: False
+                access.token.claim: True
+            {%- endif %}
+            {%- if charts.spinnaker.get('ingress', {'enabled': False}).enabled %}
+            - name: audience-spinnaker
+              protocol: openid-connect
+              protocolMapper: oidc-audience-mapper
+              consentRequired: False
+              config:
+                included.client.audience: spinnaker
+                id.token.claim: False
+                access.token.claim: True
+            {%- endif %}
+      clients:
+        - clientId: kubernetes-dashboard
+          name: Kubernetes Dashboard
+          description: >
+            General-purpose web UI for Kubernetes clusters
+            (ref. https://github.com/kubernetes/dashboard).
+          rootUrl: https://{{ common.addons.dashboard.ingress_host }}.{{ public_domain }}
+          adminUrl: https://{{ common.addons.dashboard.ingress_host }}.{{ public_domain }}
+          redirectUris:
+            - https://{{ common.addons.dashboard.ingress_host }}.{{ public_domain }}/oauth/callback/*
+          webOrigins:
+            - https://{{ common.addons.dashboard.ingress_host }}.{{ public_domain }}
+        {%- if charts.argo.cd.get('ingress', {'enabled': False}).enabled %}
+        - clientId: argo-cd
+          name: Argo CD
+          description: >
+            Declarative continuous deployment for Kubernetes
+            (ref. https://github.com/argoproj/argo-cd)
+          rootUrl: https://{{ charts.argo.cd.ingress.host }}.{{ public_domain }}
+          adminUrl: https://{{ charts.argo.cd.ingress.host }}.{{ public_domain }}
+          redirectUris:
+            - https://{{ charts.argo.cd.ingress.host }}.{{ public_domain }}/auth/callback/*
+          webOrigins:
+            - https://{{ charts.argo.cd.ingress.host }}.{{ public_domain }}
+          defaultClientScopes:
+            - web-origins
+            - role_list
+            - profile
+            - roles
+            - email
+            - groups
+            - allowed-services
+        {%- endif %}
+        {%- if charts.argo.workflows.get('ingress', {'enabled': False}).enabled %}
+        - clientId: argo-workflows
+          name: Argo Workflows
+          description: >
+            Workflow engine for Kubernetes
+            (ref. https://github.com/argoproj/argo-workflows)
+          rootUrl: https://{{ charts.argo.workflows.ingress.host }}.{{ public_domain }}
+          adminUrl: https://{{ charts.argo.workflows.ingress.host }}.{{ public_domain }}
+          redirectUris:
+            - https://{{ charts.argo.workflows.ingress.host }}.{{ public_domain }}/oauth2/callback/*
+          webOrigins:
+            - https://{{ charts.argo.workflows.ingress.host }}.{{ public_domain }}
+          defaultClientScopes:
+            - web-origins
+            - role_list
+            - profile
+            - roles
+            - email
+            - groups
+            - allowed-services
+        {%- endif %}
+        {%- if charts.concourse.get('ingress', {'enabled': False}).enabled %}
+        - clientId: concourse
+          name: Concourse continuous integration
+          description: >
+            Concourse is a container-based continuous thing-doer written in Go.
+            (ref. https://github.com/concourse/concourse)
+          rootUrl: https://{{ charts.concourse.ingress.host }}.{{ public_domain }}
+          adminUrl: https://{{ charts.concourse.ingress.host }}.{{ public_domain }}
+          redirectUris:
+            - https://{{ charts.concourse.ingress.host }}.{{ public_domain }}/sky/issuer/callback/*
+          webOrigins:
+            - https://{{ charts.concourse.ingress.host }}.{{ public_domain }}
+          defaultClientScopes:
+            - web-origins
+            - role_list
+            - profile
+            - roles
+            - email
+            - groups
+            - username
+            - userid
+            - allowed-services
+          directAccessGrantsEnabled: True
+          serviceAccountsEnabled: True
+          authorizationServicesEnabled: True
+        {%- endif %}
+        {%- if charts.harbor.get('ingress', {'enabled': False}).enabled %}
+        - clientId: harbor
+          name: Harbor registry
+          description: >
+            An open source trusted cloud native registry project that stores, signs, and scans content.
+            (ref. https://github.com/goharbor/harbor)
+          rootUrl: https://{{ charts.harbor.ingress.host }}.{{ public_domain }}
+          adminUrl: https://{{ charts.harbor.ingress.host }}.{{ public_domain }}
+          redirectUris:
+            - https://{{ charts.harbor.ingress.host }}.{{ public_domain }}/c/oidc/callback/*
+          webOrigins:
+            - https://{{ charts.harbor.ingress.host }}.{{ public_domain }}
+          defaultClientScopes:
+            - web-origins
+            - role_list
+            - profile
+            - roles
+            - email
+            - groups
+            - username
+            - userid
+            - allowed-services
+            - offline_access
+          directAccessGrantsEnabled: True
+          serviceAccountsEnabled: True
+          authorizationServicesEnabled: True
+          {%- endif %}
+          {%- if charts.spinnaker.get('ingress', {'enabled': False}).enabled %}
+        - clientId: spinnaker
+          name: Spinnaker continuous delivery
+          description: >
+            Spinnaker is an open source, multi-cloud continuous delivery platform for releasing software changes with high velocity and confidence.
+            (ref. https://github.com/spinnaker/spinnaker)
+          rootUrl: https://{{ charts.spinnaker.ingress.host }}-gate.{{ public_domain }}
+          adminUrl: https://{{ charts.spinnaker.ingress.host }}.{{ public_domain }}
+          redirectUris:
+            - https://{{ charts.spinnaker.ingress.host }}-gate.{{ public_domain }}/*
+          webOrigins:
+            - https://{{ charts.spinnaker.ingress.host }}.{{ public_domain }}
+          defaultClientScopes:
+            - web-origins
+            - role_list
+            - profile
+            - roles
+            - email
+            - groups
+            - allowed-services
+          directAccessGrantsEnabled: True
+          serviceAccountsEnabled: True
+          authorizationServicesEnabled: True
+          {%- endif %}
+          

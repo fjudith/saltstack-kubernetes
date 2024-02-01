@@ -1,3 +1,3 @@
 etcd:
-  version: 3.5.1
+  version: 3.5.8
   initial_cluster_token: b1483289

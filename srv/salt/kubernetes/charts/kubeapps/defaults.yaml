@@ -1,8 +1,0 @@
-kubeapps:
-  ingress_host: kubeapps
-  oauth:
-    provider: keycloak
-    # export LC_CTYPE=C; cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1
-    cookie_secret: zcvzIO204VpQw21YL2IICHJCxp8LlXA2
-    keycloak:
-      realm: default

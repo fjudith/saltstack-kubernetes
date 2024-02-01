@@ -1,18 +1,27 @@
 concourse:
-  username: concourse
-  password: C0nC0urs3
-  db_password: V3ry1ns3sur3P4ssw0rd
-  db_size: 8Gi
-  version: 7.2.0
-  source_hash: 4bdde9dfc316aec695beea617f4ec5c8b6da78f6
-  ingress_host: concourse
-  minio_image: docker.io/minio/minio:latest
-  worker_capacity: 20Gi
-  # oauth:
-  #   provider: keycloak
-  #   keycloak:
-  #     realm: default
-  # s3:
-  #   accesskey: concourse
-  #   secretkey: C0nc0ur53P4ssw0rd
-  #   bucket: concourse
+  enabled: true
+  version: 7.9.1
+  chart_version: 17.1.1
+  url: https://concourse-charts.storage.googleapis.com/
+  admin_password: V3ry1ns3cur3P4ssw0rd
+  worker_capacity: 32Gi
+  ingress:
+    enabled: true
+    host: concourse
+  database:
+    postgres:
+      password: V3ry1ns3cur3P4ssw0rd
+      size: 5Gi
+  oauth:
+    keycloak:
+      enabled: true
+      realm: default
+      client_id: concourse
+  s3:
+    minio:
+      enabled: true
+      access_key: concourse
+      secret_key: V3ry1ns3cur3P4ssw0rd
+      ingress:
+        enabled: true
+        host: concourse-minio

@@ -1,5 +1,9 @@
 cert_manager:
-  version: 1.6.1
+  enabled: true
+  version: 1.11.1
+  chart_version: 1.11.1
+  api_version: cert-manager.io/v1
+  url: https://charts.jetstack.io
   acme_email: user@example.com
   dns:
     enabled: False

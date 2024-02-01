@@ -11,16 +11,20 @@
 
 /etc/etcd/pki/ca.key:
   x509.private_key_managed:
+    - require:
+      - file: /etc/etcd/pki
     - bits: 4096
-    - new: True
+    - new: true
     - cipher: des_ede3_cbc
-    {% if salt['file.file_exists']('/etc/etcd/pki/ca.key') -%}
-    - prereq:
-      - x509: /etc/etcd/pki/ca.crt
-    {%- endif %}
+    - unless: test -f /etc/etcd/pki/ca.key
 
 /etc/etcd/pki/ca.crt:
+  file.absent:
+    - onchanges:
+      - x509: /etc/etcd/pki/ca.key
   x509.certificate_managed:
+    - require:
+      - x509: /etc/etcd/pki/ca.key
     - signing_private_key: /etc/etcd/pki/ca.key
     - CN: "Etcd Root CA"
     - O: kubernetes
@@ -32,14 +36,14 @@
     - days_valid: 3650
     - days_remaining: 30
     - backup: True
-    - require:
-      - file: /etc/etcd/pki
+    - unless: test -f /etc/etcd/pki/ca.crt
+    
 
 send-etcd-ca-certificate:
   module.run:
     - mine.send:
       - name: x509.get_pem_entries 
       - glob_path: /etc/etcd/pki/ca.*
-    - watch:
+    - onchanges:
       - x509: /etc/etcd/pki/ca.crt
       - x509: /etc/etcd/pki/ca.key

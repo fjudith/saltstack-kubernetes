@@ -1,4 +1,0 @@
-coredns:
-  image: docker.io/coredns/coredns:1.6.5
-  domain: cluster.local
-  server: 10.96.0.10 
